@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-23T23:51:32.072Z",
+  "files": {
+    "src/check/evidence.ts": "280f9a388ffa139ddcb2e9cd6e423910d86cfa82d87d1676a41b6ab509e9442c",
+    "tests/check/evidence.test.ts": "8bee0bdf9cbbc875eba798f602dedfe7c6b21c58b64d80898e32c60716d67e3f",
+    "tests/check/strict.test.ts": "e95568d94ba69b5daa51900de25634da41938b4f3358c6c9e294c47c028183ea"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-003"
+  ],
+  "task": "002/5.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check/evidence.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 10 expect() calls\nRan 5 tests across 1 file. [100.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

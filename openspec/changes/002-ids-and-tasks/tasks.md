@@ -23,8 +23,8 @@
 
 ## 5. Check and CLI
 
-- [ ] 5.1 Add the three evidence rules to `check --strict`. [REQ-CHK-003] Verify: `bun test tests/check/evidence.test.ts`
-- [ ] 5.2 Add the new commands to the CLI with help groups and lazy imports. Lint help text. [REQ-CLI-001, REQ-CLI-003] Verify: `bun test tests/cli/*.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
+- [x] 5.1 Add the three evidence rules to `check --strict`. [REQ-CHK-003] Verify: `bun test tests/check/evidence.test.ts`
+- [x] 5.2 Add the new commands to the CLI with help groups and lazy imports. Lint help text. [REQ-CLI-001, REQ-CLI-003] Verify: `bun test tests/cli/*.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
 
 ## 6. Dogfood on this repo
 
