@@ -1,5 +1,10 @@
 # check
 
+## RENAMED Requirements
+
+- FROM: `### Requirement: REQ-CHK-003 Evidence rules are reserved`
+- TO: `### Requirement: REQ-CHK-003 Evidence rules`
+
 ## MODIFIED Requirements
 
 ### Requirement: REQ-CHK-003 Evidence rules
