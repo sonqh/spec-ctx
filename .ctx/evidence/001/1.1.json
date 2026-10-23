@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-23T23:51:41.077Z",
+  "files": {
+    "tests/cli/startup.test.ts": "51ec6d7f3b0e18fbe11cb6a49906392f5253086d4e8ef11e66bdbe93a18e4caa"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-DIST-001"
+  ],
+  "task": "001/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun install && bun run typecheck",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

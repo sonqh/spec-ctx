@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-23T23:51:41.428Z",
+  "files": {
+    "src/graph/query.ts": "54c688d8b99955ee76089889b8a8dae9e66b48e3742a284cebd37a5d5f02eecc",
+    "tests/query/query.test.ts": "c2a4afcbd18012cf19cfe4783b32ecb633c0b3576f0a5509b01a4d30d8b70eda"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-QRY-001"
+  ],
+  "task": "001/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/query/query.test.ts",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

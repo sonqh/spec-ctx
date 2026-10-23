@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-23T23:51:41.774Z",
+  "files": {
+    "src/graph/bundle.ts": "4aff5aeb012e5befb9d310151221b1b363b64447bc6df368c3a17bf42a6f820a",
+    "src/graph/related.ts": "222fbaf2ffa6ac9574e7054b56ace71381543b95665e9b6d45012ca8f04c845a",
+    "src/index/scan.ts": "630b71f80c230f0c5169ef3cbde86788b8259887ec0d84afdf2fe45fc8520a96",
+    "src/index/types.ts": "127848416b695a808769022623639a102def5c51ec240f953ccf4f525f9b2221",
+    "src/util/json.ts": "10801d188a0198b559486542fc4c4d756b3728c15ce210db5af0f5c0aff8c90a",
+    "src/util/pystr.ts": "a3e1ef6adedf7c44f5b98aa0779b966e4bf03db67a346fda2e13e25f726ec10a",
+    "tests/check/strict.test.ts": "e95568d94ba69b5daa51900de25634da41938b4f3358c6c9e294c47c028183ea",
+    "tests/gov/governance.test.ts": "4a83b7fb3fae0f44041d99177971d241b358e708a7c903e81c219365d43a30b5",
+    "tests/index/determinism.test.ts": "fc7584ce55ff1bfadac64b48a2e3942303b3deb3d2ed6a02324a8cf39301864b",
+    "tests/query/bundle.test.ts": "f145b5f3bfe4058b72887d48afb4e48fde9ba1851280022375485dadeae5a0e0"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-DIST-003",
+    "REQ-IDX-002",
+    "REQ-QRY-003",
+    "REQ-CHK-002"
+  ],
+  "task": "001/6.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/parity/run.sh",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

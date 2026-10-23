@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-23T23:51:41.884Z",
+  "files": {
+    "tests/gov/governance.test.ts": "4a83b7fb3fae0f44041d99177971d241b358e708a7c903e81c219365d43a30b5"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "task": "001/6.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-23T23:51:41.314Z",
+  "files": {
+    "src/index/canonical.ts": "fe490f58f80dc242a66a963b471a3c2adba6a39c1b16b09ea1740db65ff79b23",
+    "src/index/scan.ts": "630b71f80c230f0c5169ef3cbde86788b8259887ec0d84afdf2fe45fc8520a96",
+    "src/index/types.ts": "127848416b695a808769022623639a102def5c51ec240f953ccf4f525f9b2221",
+    "src/util/json.ts": "10801d188a0198b559486542fc4c4d756b3728c15ce210db5af0f5c0aff8c90a",
+    "src/util/pystr.ts": "a3e1ef6adedf7c44f5b98aa0779b966e4bf03db67a346fda2e13e25f726ec10a",
+    "tests/index/canonical.test.ts": "bd82ef83bda9952656c5d2726c122260c331a5a3bcb5513c1cd85a5a78d30fe1",
+    "tests/index/determinism.test.ts": "fc7584ce55ff1bfadac64b48a2e3942303b3deb3d2ed6a02324a8cf39301864b"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-IDX-002",
+    "REQ-IDX-003"
+  ],
+  "task": "001/2.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/index/canonical.test.ts tests/index/determinism.test.ts",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

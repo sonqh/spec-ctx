@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-23T23:51:42.012Z",
+  "files": {
+    "src/check/evidence.ts": "280f9a388ffa139ddcb2e9cd6e423910d86cfa82d87d1676a41b6ab509e9442c",
+    "tests/check/evidence.test.ts": "8bee0bdf9cbbc875eba798f602dedfe7c6b21c58b64d80898e32c60716d67e3f",
+    "tests/check/strict.test.ts": "e95568d94ba69b5daa51900de25634da41938b4f3358c6c9e294c47c028183ea",
+    "tests/tasks/done.test.ts": "7536c69c36f685e8892df4cccfeb3dfeea463437850bb704437b9b12a21649df"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-003",
+    "REQ-CHK-003"
+  ],
+  "task": "002/6.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js check --strict",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "dc120acf688956e8b6def2c6afbecd30e0ab17f95822ce50b89783d628522fa2"
+  }
+}

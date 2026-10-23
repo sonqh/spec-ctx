@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-23T23:51:41.717Z",
+  "files": {
+    "src/cli.ts": "57a9b47849e9fad3f4af9bb359827ce7055302df10b194e45c58ec505c733c53",
+    "src/cli/args.ts": "c663b302052c913ae43e3a49ce93c4124eb559d6d8c68ee7f5e5df81a5b1c2e2",
+    "src/cli/commands.ts": "8793879d0cee2e4ed406ff39dee1c59101dbd06c8c71a5130090523c18e6464e",
+    "src/cli/errors.ts": "f39519f705eb98e8403113b14c4e45336da3dc22e5d78398d8db3253047348cd",
+    "src/cli/help.ts": "2016e67745c227150075b16e0f3229d9624fe00d1af15f4e41ca52aa7a342e03",
+    "src/cli/root.ts": "3757ffd35491a8b4e50a3ff9ad6ea905b085181b9a5047e463e48fb072e068ee",
+    "src/cli/status.ts": "fe47913292ef3b7a26cb0d7f7ab60b444c29efec44e70dbf68560f699c4d9894",
+    "src/main.ts": "8ae4d55b92e8901d70fde1b7f545f600569647be042fb7265d2eef0f5e180122",
+    "src/version.ts": "2e8e00bfe3888b6376eeefcb43c418fd87983a24c80c922b37ac3111f03807b1",
+    "tests/cli/cli.test.ts": "23976cea1c306b6f1fca085afd0ccdd15bb92f1d6f2000ba7458ba0532fa32bd",
+    "tests/cli/startup.test.ts": "51ec6d7f3b0e18fbe11cb6a49906392f5253086d4e8ef11e66bdbe93a18e4caa"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-CLI-001",
+    "REQ-CLI-002",
+    "REQ-CLI-003"
+  ],
+  "task": "001/5.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/*.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

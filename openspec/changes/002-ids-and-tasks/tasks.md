@@ -28,7 +28,7 @@
 
 ## 6. Dogfood on this repo
 
-- [ ] 6.1 From this task on, tick tasks only with `specctx task done`. Backfill evidence for the tasks of 001 and 002 done before this point with `--manual "pre-dogfood"`. [REQ-TASK-003, REQ-CHK-003] Verify: `node dist/cli.js check --strict`
+- [x] 6.1 From this task on, tick tasks only with `specctx task done`. Backfill evidence for the tasks of 001 and 002 done before this point with `--manual "pre-dogfood"`. [REQ-TASK-003, REQ-CHK-003] Verify: `node dist/cli.js check --strict`
 - [ ] 6.2 Update the bootstrap skill and `CLAUDE.md` to the new flow: `status`, `task next`, `task start`, work, `task done`, `handoff write`. Write `docs/verification/002.md`. [REQ-HND-001, REQ-GOV-001] Verify: `node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-23T23:51:41.366Z",
+  "files": {
+    "src/index/build.ts": "225501be9cba36d07504449e87dc1858409c31dfe6b4a01072d26c4be6c42a36",
+    "src/index/scan.ts": "630b71f80c230f0c5169ef3cbde86788b8259887ec0d84afdf2fe45fc8520a96",
+    "src/tasks/tasks.ts": "fcc7faf5336672379e9bbec95cf721a001ebc72503914e9fd907a10bb228dd7d",
+    "tests/index/perf.test.ts": "6ed63638b31f001d2b344d8b03924c77b9ba5542300a9993d7340e0dee71bfb8",
+    "tests/index/stale.test.ts": "70493f9dca6dbc556c1905d2b21f3d9e1c6354acf13791e57ef649cfc996e3c8"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-IDX-004"
+  ],
+  "task": "001/2.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/index/stale.test.ts tests/index/perf.test.ts",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

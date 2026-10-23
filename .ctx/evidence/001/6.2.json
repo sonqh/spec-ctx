@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-23T23:51:41.828Z",
+  "files": {
+    "tests/cli/startup.test.ts": "51ec6d7f3b0e18fbe11cb6a49906392f5253086d4e8ef11e66bdbe93a18e4caa",
+    "tests/gov/governance.test.ts": "4a83b7fb3fae0f44041d99177971d241b358e708a7c903e81c219365d43a30b5"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-GOV-003",
+    "REQ-DIST-001"
+  ],
+  "task": "001/6.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash .githooks/pre-commit",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

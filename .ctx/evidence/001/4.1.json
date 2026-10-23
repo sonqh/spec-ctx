@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-23T23:51:41.601Z",
+  "files": {
+    "src/check/check.ts": "33382f1518263054f0a27fcda7eea98ac621a9d43087f32d09282d9ba2d9796c",
+    "tests/check/base.test.ts": "fdc78b527280ca1f871135bc3df2efc5bcadae6964394a69fce2f04bd5107d74"
+  },
+  "kind": "manual",
+  "note": "pre-dogfood",
+  "reqs": [
+    "REQ-CHK-001",
+    "REQ-GOV-002"
+  ],
+  "task": "001/4.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check/base.test.ts",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}
