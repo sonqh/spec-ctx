@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-23T23:51:31.404Z",
+  "files": {
+    "tests/tasks/reopen.test.ts": "2c9ec17fc34e82c6c8063f5ff52d4ca55168288dd4c77f7578e9a2c0ac267afb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-005"
+  ],
+  "task": "002/3.4",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/tasks/reopen.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 2 pass\n 0 fail\n 11 expect() calls\nRan 2 tests across 1 file. [66.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

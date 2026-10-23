@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-23T23:51:30.837Z",
+  "files": {
+    "src/tasks/tasks.ts": "fcc7faf5336672379e9bbec95cf721a001ebc72503914e9fd907a10bb228dd7d",
+    "tests/tasks/next.test.ts": "e920a347a85dea7ec75bae1159ce385826c201c99a0a45a678afc0115b212b57"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-001"
+  ],
+  "task": "002/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/tasks/next.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 4 pass\n 0 fail\n 7 expect() calls\nRan 4 tests across 1 file. [44.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

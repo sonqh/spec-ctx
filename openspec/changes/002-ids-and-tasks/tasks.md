@@ -12,10 +12,10 @@
 
 ## 3. Task workflow
 
-- [ ] 3.1 Implement `task next` with group order and `--json`. [REQ-TASK-001] Verify: `bun test tests/tasks/next.test.ts`
-- [ ] 3.2 Implement `task start` with the bundle and `.ctx/current.json`. [REQ-TASK-002] Verify: `bun test tests/tasks/start.test.ts`
-- [ ] 3.3 Implement `task done`: run Verify, write evidence with sorted keys and file digests, flip only the checkbox characters, `--manual`. [REQ-TASK-003, REQ-TASK-004] Verify: `bun test tests/tasks/done.test.ts tests/tasks/evidence.test.ts`
-- [ ] 3.4 Implement `task reopen`. [REQ-TASK-005] Verify: `bun test tests/tasks/reopen.test.ts`
+- [x] 3.1 Implement `task next` with group order and `--json`. [REQ-TASK-001] Verify: `bun test tests/tasks/next.test.ts`
+- [x] 3.2 Implement `task start` with the bundle and `.ctx/current.json`. [REQ-TASK-002] Verify: `bun test tests/tasks/start.test.ts`
+- [x] 3.3 Implement `task done`: run Verify, write evidence with sorted keys and file digests, flip only the checkbox characters, `--manual`. [REQ-TASK-003, REQ-TASK-004] Verify: `bun test tests/tasks/done.test.ts tests/tasks/evidence.test.ts`
+- [x] 3.4 Implement `task reopen`. [REQ-TASK-005] Verify: `bun test tests/tasks/reopen.test.ts`
 
 ## 4. Handoff
 
