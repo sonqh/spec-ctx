@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-23T23:58:13.770Z",
+  "files": {
+    "tests/skills/lint.test.ts": "22047062568a0f2accfe9aaecf0e2ee7c3f5daef32040b5112d559cd57175de0"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SKL-001"
+  ],
+  "task": "003/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/skills/lint.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 4 pass\n 0 fail\n 21 expect() calls\nRan 4 tests across 1 file. [252.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}
