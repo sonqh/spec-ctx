@@ -25,7 +25,7 @@
 
 ## 5. CLI
 
-- [ ] 5.1 Implement the command surface, root discovery, `status`, exit codes, `--json`, lazy imports, help text. [REQ-CLI-001, REQ-CLI-002, REQ-CLI-003] Verify: `bun test tests/cli/*.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
+- [x] 5.1 Implement the command surface, root discovery, `status`, exit codes, `--json`, lazy imports, help text. [REQ-CLI-001, REQ-CLI-002, REQ-CLI-003] Verify: `bun test tests/cli/*.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
 
 ## 6. Parity and gates
 
