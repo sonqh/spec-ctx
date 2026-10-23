@@ -31,7 +31,7 @@
 
 - [x] 6.1 Make the parity harness run both engines and diff. Fix differences. A Python bug found this way is fixed in both engines and noted in `docs/verification/001.md`. [REQ-DIST-003, REQ-IDX-002, REQ-QRY-003, REQ-CHK-002] Verify: `bash tests/parity/run.sh`
 - [x] 6.2 Write `.github/workflows/ci.yml` with jobs `specs` (validate, check, linters) and `code` on a Bun and a Node 22 matrix. Update `.githooks/pre-commit` to call `specctx` when `dist/` exists, else the Python engine. [REQ-GOV-003, REQ-DIST-001] Verify: `bash .githooks/pre-commit`
-- [ ] 6.3 Write `docs/verification/001.md`. Tag code and tests. Run `specctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: `node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
+- [x] 6.3 Write `docs/verification/001.md`. Tag code and tests. Run `specctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: `node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up
 
