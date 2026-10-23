@@ -6,7 +6,7 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 ## Requirements
 
 ### Requirement: REQ-CLI-001 Commands and flags
-`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`. Global flags: `--root <path>` (default: nearest parent with `spec-ctx.toml` or `openspec/`), `--json`, `--help`, `--version`. `status` SHALL print active changes with done and open task counts and the uncovered REQ count. With no active change it SHALL print the last archived change and the open questions from `.ctx/handoff.md`.
+`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
 
 #### Scenario: SCN-CLI-001-1 Version
 - **WHEN** `specctx --version` runs
@@ -19,6 +19,10 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 #### Scenario: SCN-CLI-001-3 Nothing active
 - **WHEN** every change is archived
 - **THEN** `status` prints `no active change` and the last archived change by archive time
+
+#### Scenario: SCN-CLI-001-4 Help groups
+- **WHEN** `specctx --help` runs
+- **THEN** the output has the headers `Read`, `Write`, and `Setup`
 
 ### Requirement: REQ-CLI-002 Exit codes and output style
 Exit codes: 0 ok, 1 findings or drift, 2 usage or missing input, 3 internal error. Human output SHALL be one line per item, no color when stdout is not a TTY, no emoji. `--json` SHALL print one JSON document on stdout and nothing else. Help text SHALL pass `scripts/ste-lint.py --baseline 0`.
