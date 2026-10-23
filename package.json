@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
-    "build:bin": "bun build src/cli.ts --compile --outfile dist/specctx",
+    "build:bin": "bun build src/cli.ts --compile --outfile build/specctx",
     "typecheck": "tsc -p tsconfig.json",
     "test": "bun test",
     "test:node": "vitest run",

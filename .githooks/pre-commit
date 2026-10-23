@@ -3,18 +3,17 @@
 set -euo pipefail
 if [ -f dist/cli.js ]; then CTX="node dist/cli.js"; else CTX="python3 tools/ctx/ctx.py"; fi
 $CTX build >/dev/null
-$CTX check
+$CTX check --strict
 staged_md=$(git diff --cached --name-only --diff-filter=ACM -- '*.md' || true)
-[ -z "$staged_md" ] && exit 0
 spec_changed=0
 for f in $staged_md; do
-  # REQ-GOV-003 lint markdown under openspec/, decisions/, and the repository root
-  if [[ "$f" == openspec/* || "$f" == decisions/* || "$f" != */* ]]; then
+  # lint markdown under openspec/, decisions/, docs/, skills/, and the repository root
+  if [[ "$f" == openspec/* || "$f" == decisions/* || "$f" == docs/* || "$f" == skills/* || "$f" != */* ]]; then
     python3 scripts/tells-lint.py --baseline 0 "$f" >/dev/null || { python3 scripts/tells-lint.py --baseline 0 "$f"; exit 1; }
     python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f" >/dev/null || { python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f"; exit 1; }
   fi
   if [[ "$f" == openspec/* ]]; then spec_changed=1; fi
 done
-if [ "$spec_changed" = 1 ]; then
-  npx -y @fission-ai/openspec@latest validate --all --no-interactive
+if [ "$spec_changed" = 1 ] || git diff --cached --name-only -- 'openspec/*' | grep -q .; then
+  npx -y @fission-ai/openspec@latest validate --all --strict --no-interactive
 fi
