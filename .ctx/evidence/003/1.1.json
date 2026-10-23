@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-23T23:56:44.505Z",
+  "files": {
+    "tests/schema/validate.sh": "b30b819c9a3e4b9a64f187f48d1c14bff82f485080483cea7f13672d25efc171"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-001",
+    "REQ-SCH-003"
+  ],
+  "task": "003/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/schema/validate.sh",
+    "exit": 0,
+    "stderr_tail": "Note: Schema commands are experimental and may change.",
+    "stdout_sha256": "c058dc51ac621153f8d3490dd06e4f167515a574fbeef1ae136dc072cbba5d45"
+  }
+}

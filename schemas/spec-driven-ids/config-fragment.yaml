@@ -1,0 +1,25 @@
+# spec-ctx fragment for openspec/config.yaml. specctx init --schema adds each top-level key
+# that the project config does not have yet. It never changes a key that exists.
+rules:
+  specs:
+    - Every requirement header starts with its ID, e.g. "### Requirement: REQ-ABC-001 Name". Get the ID from `specctx id new REQ ABC`.
+    - Every scenario header starts with its ID, e.g. "#### Scenario: SCN-ABC-001-1 Name".
+    - A requirement may end with a line "Refs: REQ-ABC-002, ADR-001" to link related IDs.
+    - Requirement text stays under 500 characters. Move detail into scenarios.
+  design:
+    - Each decision is one bullet under "## Decisions". Add new decisions at the end.
+  tasks:
+    - Every task cites at least one REQ ID in square brackets, e.g. "[REQ-ABC-001]".
+    - Every task states its verification as a command in a code span after "Verify:".
+
+operations:
+  apply:
+    guidance:
+      - Start each task with `specctx task start <id>` and read the bundle it prints before you read specs.
+      - Tag code with the REQ ID it implements (a comment `// REQ-ABC-001`). Tag tests with `// Covers: REQ-ABC-001`.
+      - Close each task with `specctx task done <id>`. Never tick a checkbox by hand.
+      - Run `specctx check --strict` after each task group.
+  archive:
+    guidance:
+      - Run `specctx check --strict` and `openspec validate --all --strict`. Both must pass before archive.
+      - Run `openspec validate --all --strict` again after archive and before push.
