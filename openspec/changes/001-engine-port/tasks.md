@@ -20,8 +20,8 @@
 
 ## 4. Check
 
-- [ ] 4.1 Implement the base rules including `code-tag-no-canonical` and `unknown-cap`. [REQ-CHK-001, REQ-GOV-002] Verify: `bun test tests/check/base.test.ts`
-- [ ] 4.2 Implement strict rules. Ignore `.ctx/evidence/**`. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/strict.test.ts`
+- [x] 4.1 Implement the base rules including `code-tag-no-canonical` and `unknown-cap`. [REQ-CHK-001, REQ-GOV-002] Verify: `bun test tests/check/base.test.ts`
+- [x] 4.2 Implement strict rules. Ignore `.ctx/evidence/**`. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/strict.test.ts`
 
 ## 5. CLI
 
