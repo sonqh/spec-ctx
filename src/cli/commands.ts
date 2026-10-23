@@ -44,6 +44,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   const { data, rebuilt } = loadIndex(root, cfg);
   if (rebuilt) io.err("index rebuilt\n");
   const entries = data.entries;
+  if (cmd.includes(" ")) {
+    const { runWorkflow } = await import("./workflow.ts");
+    return runWorkflow({ root, cfg, data, p, io, json });
+  }
   const all = !!f.all;
   switch (cmd) {
     case "status": {

@@ -1,3 +1,5 @@
+.ctx/evidence/007/1.1.json:1  stale-evidence  007/1.1 src/cli/commands.ts
+.ctx/evidence/007/1.2.json:1  evidence-without-done  007/1.2
 openspec/changes/007-parity-plant/specs/plant/spec.md:5  dangling-ref  REQ-NOPE-001
 openspec/changes/007-parity-plant/specs/plant/spec.md:5  reused-id  REQ-ZZZ-001
 openspec/changes/007-parity-plant/specs/plant/spec.md:5  unknown-cap  REQ-ZZZ-001
@@ -269,4 +271,4 @@ openspec/specs/spec-governance/spec.md:40  uncovered  REQ-GOV-005
 openspec/specs/spec-governance/spec.md:43  scenario-untested  SCN-GOV-005-1
 src/plant.ts:2  code-tag-no-canonical  REQ-OLD-001
 src/plant.ts:6  dangling-ref  REQ-NOPE-002
-271 finding(s)
+273 finding(s)

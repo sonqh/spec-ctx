@@ -1,0 +1,24 @@
+{
+  "at": "2026-01-01T00:00:00.000Z",
+  "files": {
+    "src/apply/lockfile.ts": "d64837e3f43a74b5509b2c2be25a7448905ab3b9f352007d306cea2491f678e2",
+    "src/apply/pipeline.ts": "a5206388744f21585335526df74fad5c500ad3a27ccda5276a5df1d4d59dd909",
+    "src/cli/commands.ts": "0000000000000000000000000000000000000000000000000000000000000000",
+    "tests/apply/status.test.ts": "0601c9921ddc1a1bef55ebabcb2a909c84f1dc9dc3789f56b45baa34027bf00c",
+    "tests/e2e/init.test.ts": "aada6af965693397d14fa38ac8d9889fba85d39f4d7b0aee58a65b4fd4e61c82",
+    "tests/plant.cases.ts": "b2267402ab469797d9e653b4786a1617e8f2013130b0648a4bfffd3fa508f284"
+  },
+  "kind": "manual",
+  "note": "planted evidence with one stale digest",
+  "reqs": [
+    "REQ-APPLY-005"
+  ],
+  "task": "007/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "true",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

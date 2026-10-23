@@ -1,5 +1,5 @@
 // REQ-CLI-001 REQ-CLI-002 REQ-CLI-003 command dispatch. Each command loads its modules inside its action.
-import { COMMANDS, parseArgs, UsageError } from "./cli/args.ts";
+import { COMMANDS, GROUPS, parseArgs, UsageError } from "./cli/args.ts";
 import { VERSION } from "./version.ts";
 
 export interface Io {
@@ -31,6 +31,11 @@ export async function main(argv: string[], io: Io): Promise<number> {
     }
     io.out(HELP);
     return 0;
+  }
+  if (GROUPS.includes(parsed.command)) {
+    const subs = COMMANDS.filter((c) => c.startsWith(parsed.command + " ")).map((c) => c.split(" ")[1]);
+    io.err(`specctx: ${parsed.command} needs a subcommand: ${subs.join(", ")}\n`);
+    return 2;
   }
   if (!COMMANDS.includes(parsed.command)) {
     const { commandList } = await import("./cli/help.ts");

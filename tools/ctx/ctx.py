@@ -16,6 +16,7 @@ Every command except build rebuilds a stale index first (agentrc:CTX-010).
 Exit codes: 0 ok, 1 check failed, 2 usage error.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -566,6 +567,51 @@ def bundle(entries, wanted, budget, depth, all_=False):
     return text
 
 
+def evidence_findings(entries):
+    """spec-ctx REQ-CHK-003 done-without-evidence, stale-evidence, evidence-without-done."""
+    out = []
+    tasks = {}
+    for e in entries:
+        if e["kind"] == "task":
+            tasks.setdefault(e["id"], []).append(e)
+    have = set()
+    base = ROOT / ".ctx" / "evidence"
+    files = []
+    if base.is_dir():
+        for c in sorted(os.listdir(base)):
+            if (base / c).is_dir():
+                files += [f".ctx/evidence/{c}/{n}" for n in sorted(os.listdir(base / c))
+                          if n.endswith(".json") and ".reopened-" not in n]
+    for rel_path in files:
+        parts = rel_path.split("/")
+        tid = f"{parts[2]}/{parts[3][:-5]}"
+        have.add(tid)
+        copies = tasks.get(tid, [])
+        active = next((t for t in copies if "/archive/" not in t["file"]), None)
+        task = active or (copies[0] if copies else None)
+        if not task or task["status"] != "done":
+            out.append((rel_path, 1, "evidence-without-done", tid))
+            continue
+        if not active:
+            continue
+        try:
+            ev_files = json.loads((ROOT / rel_path).read_bytes().decode("utf-8")).get("files") or {}
+        except ValueError:
+            out.append((rel_path, 1, "stale-evidence", f"{tid} {rel_path}"))
+            continue
+        for path, digest in ev_files.items():
+            try:
+                now = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+            except OSError:
+                now = None
+            if now != digest:
+                out.append((rel_path, 1, "stale-evidence", f"{tid} {path}"))
+    for e in entries:
+        if e["kind"] == "task" and e["status"] == "done" and "/archive/" not in e["file"] and e["id"] not in have:
+            out.append((e["file"], e["line"], "done-without-evidence", e["id"]))
+    return out
+
+
 def check(data, strict, as_json=False):
     entries, problems = data["entries"], data["problems"]
     findings = list(problems)
@@ -602,6 +648,7 @@ def check(data, strict, as_json=False):
             if m and m.group(1) not in caps:
                 findings.append((e["file"], e["line"], "unknown-cap", e["id"]))
     if strict:
+        findings += evidence_findings(entries)
         covered = {r for e in entries if e["kind"] == "test" for r in e["refs"]}
         named = set(data.get("scn_named", []))
         for e in entries:
@@ -664,9 +711,14 @@ def status(entries):
     print(f"uncovered active REQs in main: {len(uncovered)}")
     if HANDOFF.exists():
         print(f"handoff: {rel(HANDOFF)} (read it first)")
+        # spec-ctx REQ-HND-003 current task and question count from the handoff
+        for line in split_lines(read(HANDOFF)):
+            if line.startswith("current: "):
+                print(f"current: {line[9:].strip()}")
+                break
+        qs = open_questions()
+        print(f"open_questions: {len(qs)}")
         if not changes:
-            qs = open_questions()
-            print(f"open_questions: {len(qs)}")
             for q in qs:
                 print(f"- {q}")
 

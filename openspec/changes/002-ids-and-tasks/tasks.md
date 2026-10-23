@@ -2,8 +2,8 @@
 
 ## 1. ID allocation
 
-- [ ] 1.1 Implement `id new` for REQ, SCN, ADR, DEC with `--for`, `--count`, `--json`, and the unknown-cap error. [REQ-IDS-001, REQ-IDS-002] Verify: `bun test tests/ids/new.test.ts`
-- [ ] 1.2 Implement `id retire` with the in-use guard. [REQ-IDS-003] Verify: `bun test tests/ids/retire.test.ts`
+- [x] 1.1 Implement `id new` for REQ, SCN, ADR, DEC with `--for`, `--count`, `--json`, and the unknown-cap error. [REQ-IDS-001, REQ-IDS-002] Verify: `bun test tests/ids/new.test.ts`
+- [x] 1.2 Implement `id retire` with the in-use guard. [REQ-IDS-003] Verify: `bun test tests/ids/retire.test.ts`
 
 ## 2. Verify runner
 

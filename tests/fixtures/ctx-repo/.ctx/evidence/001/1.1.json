@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-23T00:00:00.000Z",
+  "files": {
+    "src/a.ts": "1b7a28bf36a504af089b5b846be8e8375c8e5bde5edc5071f221e46183838652",
+    "tests/a.cases.ts": "9bfab01c3a499eb1d7cd35a7dae3f29c529baee6c151eb980d807746fba164ed"
+  },
+  "kind": "manual",
+  "note": "fixture evidence",
+  "reqs": [
+    "REQ-AAA-001"
+  ],
+  "task": "001/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": null,
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

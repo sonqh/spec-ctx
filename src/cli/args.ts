@@ -6,6 +6,7 @@ export interface FlagSpec {
 
 export const GLOBAL_FLAGS: FlagSpec = { root: "string", json: "bool", help: "bool", version: "bool" };
 
+/** Flags per command. A group command such as `task done` has a two word key. */
 export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   build: {},
   status: {},
@@ -13,14 +14,26 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   related: { depth: "int", all: "bool" },
   bundle: { budget: "int", depth: "int", all: "bool" },
   check: { strict: "bool" },
+  "id new": { for: "string", count: "int" },
+  "id retire": {},
+  "task next": { change: "string" },
+  "task start": {},
+  "task verify": {},
+  "task done": { manual: "string" },
+  "task reopen": {},
+  "handoff write": {},
+  "handoff ask": {},
+  "handoff resolve": {},
   init: {},
 };
 
+export const GROUPS = ["id", "task", "handoff"];
 export const COMMANDS = Object.keys(COMMAND_FLAGS);
 
 export class UsageError extends Error {}
 
 export interface Parsed {
+  /** `status`, `task done`, and so on. `id` alone when the subcommand is missing. */
   command: string | null;
   positional: string[];
   flags: Record<string, string | number | boolean>;
@@ -30,22 +43,17 @@ const SHORT: Record<string, string> = { "-h": "help", "-V": "version" };
 
 export function parseArgs(argv: string[]): Parsed {
   const out: Parsed = { command: null, positional: [], flags: {} };
-  const rest: string[] = [];
-  // the first word that is not a flag is the command
+  const spec = (): FlagSpec => ({ ...GLOBAL_FLAGS, ...(out.command ? COMMAND_FLAGS[out.command] ?? {} : {}) });
+  let onlyPositional = false;
+  const positional = (a: string): void => {
+    if (out.command === null) out.command = a;
+    else if (GROUPS.includes(out.command) && !out.positional.length && !COMMAND_FLAGS[out.command]) out.command = `${out.command} ${a}`;
+    else out.positional.push(a);
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
-    if (out.command === null && !a.startsWith("-")) {
-      out.command = a;
-      continue;
-    }
-    rest.push(a);
-  }
-  const spec: FlagSpec = { ...GLOBAL_FLAGS, ...(out.command ? COMMAND_FLAGS[out.command] ?? {} : {}) };
-  let onlyPositional = false;
-  for (let i = 0; i < rest.length; i++) {
-    const a = rest[i]!;
     if (onlyPositional || !a.startsWith("-") || a === "-") {
-      out.positional.push(a);
+      positional(a);
       continue;
     }
     if (a === "--") {
@@ -60,7 +68,7 @@ export function parseArgs(argv: string[]): Parsed {
       name = eq < 0 ? a.slice(2) : a.slice(2, eq);
       value = eq < 0 ? undefined : a.slice(eq + 1);
     } else throw new UsageError(`unknown flag: ${a}`);
-    const kind = spec[name];
+    const kind = spec()[name];
     if (!kind) throw new UsageError(`unknown flag: --${name}`);
     if (kind === "bool") {
       if (value !== undefined) throw new UsageError(`flag --${name} takes no value`);
@@ -68,7 +76,7 @@ export function parseArgs(argv: string[]): Parsed {
       continue;
     }
     if (value === undefined) {
-      value = rest[++i];
+      value = argv[++i];
       if (value === undefined) throw new UsageError(`flag --${name} needs a value`);
     }
     if (kind === "int") {

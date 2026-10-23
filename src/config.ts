@@ -14,6 +14,7 @@ export interface Config {
   };
   ids: { caps: string[]; task_pattern: string };
   bundle: { budget: number; depth: number };
+  verify: { timeout_s: number };
 }
 
 export const CONFIG_FILE = "spec-ctx.toml";
@@ -30,6 +31,7 @@ export function defaults(): Config {
     },
     ids: { caps: [], task_pattern: "\\d+\\.\\d+" },
     bundle: { budget: 8000, depth: 1 },
+    verify: { timeout_s: 600 },
   };
 }
 
@@ -76,6 +78,12 @@ export function loadConfig(root: string): Config {
       cfg.bundle[k] = v;
     }
   }
+  const verify = sec("verify");
+  if ("timeout_s" in verify) {
+    const v = verify.timeout_s;
+    if (typeof v !== "number" || !(v > 0)) throw new ConfigError(`${CONFIG_FILE}: verify.timeout_s must be a number above 0.`);
+    cfg.verify.timeout_s = v;
+  }
   return cfg;
 }
 
@@ -107,4 +115,8 @@ task_pattern = '\\d+\\.\\d+'
 budget = 8000
 # Default depth of related entries in a bundle.
 depth = 1
+
+[verify]
+# Seconds before task done stops a Verify command.
+timeout_s = 600
 `;

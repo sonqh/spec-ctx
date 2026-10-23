@@ -4,7 +4,9 @@ import { join } from "node:path";
 import type { Config } from "../config.ts";
 import { canon, SPEC_KINDS } from "../index/canonical.ts";
 import type { Index, Problem } from "../index/types.ts";
+import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
+import { evidenceFindings } from "./evidence.ts";
 
 const RETIRED_RE = /\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b/g;
 const REQ_CAP = /^REQ-([A-Z]+)-/;
@@ -22,7 +24,7 @@ export interface Finding {
   id: string;
 }
 
-/** Sorted, unique findings. REQ-CHK-003 the evidence tree under .ctx/ is never scanned, so it adds none. */
+/** Sorted, unique findings. The scan never reads .ctx/, so evidence adds no index entry. */
 export function check(root: string, cfg: Config, data: Index, strict: boolean): Finding[] {
   const entries = data.entries;
   const findings: Problem[] = data.problems.map((p) => [...p] as Problem);
@@ -67,6 +69,7 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
       if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
       if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
     }
+    findings.push(...evidenceFindings(root, entries, listEvidence(root)));
   }
   const uniq = new Map<string, Problem>();
   for (const f of findings) uniq.set(JSON.stringify(f), f);

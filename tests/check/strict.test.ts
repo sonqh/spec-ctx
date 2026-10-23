@@ -56,9 +56,10 @@ describe("check strict rules", () => {
     }
   });
 
-  test("SCN-CHK-003-1 evidence files under .ctx/evidence do not produce findings", async () => {
+  test("SCN-CHK-003-1 evidence that matches the tree adds no finding", async () => {
     p = new Project();
-    p.write(".ctx/evidence/001/1.1.json", JSON.stringify({ refs: ["REQ-NOPE-001"], note: "// " + COVERS + "REQ-NOPE-002" }) + "\n");
+    // the base fixture holds evidence for the ticked task 001/1.1 with the digests of its tagged files
+    expect(p.read(".ctx/evidence/001/1.1.json")).toContain('"task": "001/1.1"');
     const r = await check("--strict");
     expect(r.out).toBe("0 finding(s)\n");
     expect(r.code).toBe(0);

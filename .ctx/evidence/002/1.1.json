@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-23T23:50:56.886Z",
+  "files": {
+    "src/cli/workflow.ts": "5483cbb33c63417deeccf342c535573cf33fe6a2e2cdb167ab0c1704c6509f61",
+    "src/ids/ids.ts": "168df98fcd6b77164d0f052fa1503f51870f4fda61bd4be7d68a347c48b6de83",
+    "tests/ids/new.test.ts": "2a0528521ea0fc2c435bb6fac18e2e3f14526bbbad857e95277cf08009b709d1"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDS-001",
+    "REQ-IDS-002"
+  ],
+  "task": "002/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/ids/new.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 6 pass\n 0 fail\n 19 expect() calls\nRan 6 tests across 1 file. [133.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

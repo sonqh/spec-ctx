@@ -63,12 +63,14 @@ describe("commands and flags", () => {
 
   test("status reads only the index", async () => {
     p = new Project();
-    await p.build();
-    const { statSync, utimesSync } = await import("node:fs");
+    const { utimesSync } = await import("node:fs");
     const rel = "openspec/changes/001-x/tasks.md";
-    const st = statSync(p.path(rel));
+    const old = new Date("2026-01-01T00:00:00Z");
+    utimesSync(p.path(rel), old, old);
+    await p.build();
+    // same file count and mtime, so the index stays fresh and status must not parse the file
     p.write(rel, p.read(rel).replace("- [ ] 1.2", "- [x] 1.2"));
-    utimesSync(p.path(rel), st.atime, st.mtime);
+    utimesSync(p.path(rel), old, old);
     expect((await p.run("status")).out).toContain("001-x  done 1  open 1");
   });
 
@@ -76,8 +78,23 @@ describe("commands and flags", () => {
     p = new Project();
     const r = await p.run("--help");
     expect(r.code).toBe(0);
-    for (const c of ["build", "status", "query", "related", "bundle", "check", "init"]) expect(r.out).toContain(`  ${c}`);
+    for (const c of ["build", "status", "query", "related", "bundle", "check", "init"]) expect(r.out).toContain(`  \`${c}`);
     expect((await p.run()).code).toBe(2);
+  });
+
+  test("SCN-CLI-001-4 help groups the commands under Read, Write, and Setup", async () => {
+    p = new Project();
+    const lines = (await p.run("--help")).out.split("\n");
+    for (const h of ["Read:", "Write:", "Setup:"]) expect(lines).toContain(h);
+    const cmds = ["id new", "id retire", "task next", "task start", "task verify", "task done", "task reopen", "handoff write", "handoff ask", "handoff resolve"];
+    for (const c of cmds) expect(lines.some((l) => l.startsWith(`  \`${c}`)), c).toBe(true);
+  });
+
+  test("a group command without a subcommand exits 2 and names the subcommands", async () => {
+    p = new Project();
+    const r = await p.run("task");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("task needs a subcommand: next, start, verify, done, reopen");
   });
 });
 
@@ -86,7 +103,7 @@ describe("exit codes and output style", () => {
     p = new Project();
     const r = await p.run("frobnicate");
     expect(r.code).toBe(2);
-    expect(r.err).toContain("commands: build, status, query, related, bundle, check, init");
+    expect(r.err).toContain("commands: build, status, query, related, bundle, check, id new, id retire, task next, task start, task verify, task done, task reopen, handoff write, handoff ask, handoff resolve, init");
   });
 
   test("SCN-CLI-002-2 check --json prints JSON only", async () => {

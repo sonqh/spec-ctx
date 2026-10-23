@@ -22,7 +22,7 @@ run_engine() {
   local engine=$1 out=$2 repo="$work/repo-$(basename "$2")"
   mkdir -p "$out"
   cp -R "$fixture" "$repo"
-  rm -rf "$repo/.ctx"
+  rm -f "$repo/.ctx/index.json"
   # a fixed mtime makes the scanned record, and so the index file, the same on every machine
   find "$repo" -exec env TZ=UTC touch -h -t 202601010000 {} +
   for i in "${!cmds[@]}"; do

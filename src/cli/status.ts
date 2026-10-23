@@ -30,7 +30,19 @@ export interface StatusReport {
   last_archived: string | null;
   uncovered: number;
   handoff: boolean;
+  current: string | null;
   open_questions: string[];
+}
+
+/** REQ-HND-003 the current task from the handoff file. */
+function handoffCurrent(root: string): string | null {
+  const p = join(root, HANDOFF_PATH);
+  if (!existsSync(p)) return null;
+  for (const line of splitLines(readFileSync(p).toString("utf8"))) {
+    const m = /^current: (.*)$/s.exec(line);
+    if (m) return pyStrip(m[1]!);
+  }
+  return null;
 }
 
 export function statusReport(root: string, entries: Entry[]): StatusReport {
@@ -58,7 +70,8 @@ export function statusReport(root: string, entries: Entry[]): StatusReport {
     last_archived: last ? changeOf(`openspec/changes/archive/${last}/`) : null,
     uncovered: uncovered.length,
     handoff,
-    open_questions: handoff && changes.size === 0 ? openQuestions(root) : [],
+    current: handoff ? handoffCurrent(root) : null,
+    open_questions: handoff ? openQuestions(root) : [],
   };
 }
 
@@ -71,10 +84,10 @@ export function statusLines(r: StatusReport): string[] {
   out.push(`uncovered active REQs in main: ${r.uncovered}`);
   if (r.handoff) {
     out.push(`handoff: ${HANDOFF_PATH} (read it first)`);
-    if (!r.changes.length) {
-      out.push(`open_questions: ${r.open_questions.length}`);
-      for (const q of r.open_questions) out.push(`- ${q}`);
-    }
+    if (r.current !== null) out.push(`current: ${r.current}`);
+    out.push(`open_questions: ${r.open_questions.length}`);
+    // with no active change the questions are the agenda, so status prints them
+    if (!r.changes.length) for (const q of r.open_questions) out.push(`- ${q}`);
   }
   return out;
 }

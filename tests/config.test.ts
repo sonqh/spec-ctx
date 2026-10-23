@@ -62,7 +62,7 @@ describe("config", () => {
         expect(lines[i - 1]!.startsWith("#"), l).toBe(true);
       }
     });
-    expect(keys).toBe(10);
+    expect(keys).toBe(11);
     // the written file parses to the defaults
     expect(loadConfig(p.root)).toEqual(defaults());
   });
