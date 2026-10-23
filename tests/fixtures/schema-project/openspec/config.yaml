@@ -1,0 +1,4 @@
+schema: spec-driven-ids
+
+context: |
+  A tiny export tool. The fixture for the spec-ctx schema round trip.

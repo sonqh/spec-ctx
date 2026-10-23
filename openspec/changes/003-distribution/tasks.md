@@ -3,7 +3,7 @@
 ## 1. Schema bundle
 
 - [x] 1.1 Fork `spec-driven` into `schemas/spec-driven-ids/`. Add ID placeholders and the allocation, Refs, and Verify instructions. Add the config fragment. [REQ-SCH-001, REQ-SCH-003] Verify: `bash tests/schema/validate.sh`
-- [ ] 1.2 Build a fixture project, write one change with the bundle, archive it, and check IDs survive. [REQ-SCH-002] Verify: `bash tests/schema/roundtrip.sh`
+- [x] 1.2 Build a fixture project, write one change with the bundle, archive it, and check IDs survive. [REQ-SCH-002] Verify: `bash tests/schema/roundtrip.sh`
 
 ## 2. Skills
 
