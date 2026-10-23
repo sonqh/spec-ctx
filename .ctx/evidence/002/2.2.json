@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-23T23:51:14.580Z",
+  "files": {
+    "tests/verify/dry.test.ts": "b73557ed65bebd1683de942f3156790b812fd1c4b29b2db4f168998359471b90"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-002"
+  ],
+  "task": "002/2.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/verify/dry.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 3 pass\n 0 fail\n 11 expect() calls\nRan 3 tests across 1 file. [56.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

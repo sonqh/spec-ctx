@@ -7,8 +7,8 @@
 
 ## 2. Verify runner
 
-- [ ] 2.1 Implement Verify parsing from code spans, `sh -c` run, timeout, output tail. [REQ-VER-001, REQ-VER-003] Verify: `bun test tests/verify/parse.test.ts tests/verify/run.test.ts`
-- [ ] 2.2 Implement `task verify` dry run. [REQ-VER-002] Verify: `bun test tests/verify/dry.test.ts`
+- [x] 2.1 Implement Verify parsing from code spans, `sh -c` run, timeout, output tail. [REQ-VER-001, REQ-VER-003] Verify: `bun test tests/verify/parse.test.ts tests/verify/run.test.ts`
+- [x] 2.2 Implement `task verify` dry run. [REQ-VER-002] Verify: `bun test tests/verify/dry.test.ts`
 
 ## 3. Task workflow
 

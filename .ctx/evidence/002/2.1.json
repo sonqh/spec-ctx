@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-23T23:51:14.434Z",
+  "files": {
+    "src/verify/parse.ts": "05e542bd822a1016e7cb66a0d58cea3042a58ed47ab33bc240e4b43b69db88bc",
+    "src/verify/run.ts": "56dfb3ec04a8ca3d208bfcd5d42537c324e4fd82b221798d0c3306d001853a67",
+    "tests/verify/parse.test.ts": "ac9d8b5417f08618949aedd2191927b5216e52e7991e261d5794abbec085b925",
+    "tests/verify/run.test.ts": "65cbea466aefb761621bbfbabb0e935dd2464f8a97d58e84281c0dcff85bbc9b"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-001",
+    "REQ-VER-003"
+  ],
+  "task": "002/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/verify/parse.test.ts tests/verify/run.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 10 pass\n 0 fail\n 24 expect() calls\nRan 10 tests across 2 files. [2.06s]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}
