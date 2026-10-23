@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-23T23:52:58.700Z",
+  "files": {
+    "src/handoff/handoff.ts": "19ce85dddd66516c74a87dee1c3140ac744afc204348051c7b67df8ad472d8ff",
+    "tests/gov/governance.test.ts": "4a83b7fb3fae0f44041d99177971d241b358e708a7c903e81c219365d43a30b5",
+    "tests/handoff/handoff.test.ts": "c08c08783ced4ff2b6b9b67f96cb6b0f6d9598b124fb6c6d61e343da1df6dace"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-HND-001",
+    "REQ-GOV-001"
+  ],
+  "task": "002/6.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict",
+    "exit": 0,
+    "stderr_tail": "  ℹ [INFO] check/spec.md: Archive would refuse this delta: check MODIFIED failed for header \"### Requirement: REQ-CHK-003 Evidence rules\" - not found\n  ℹ [INFO] distribution/spec.md: Archive would refuse this delta: distribution MODIFIED failed for header \"### Requirement: REQ-DIST-002 Config file and init\" - not found",
+    "stdout_sha256": "4107a7b2c452c145613464ebd5205bc05f6ca9f0ff195c65186c6e5f99d05157"
+  }
+}

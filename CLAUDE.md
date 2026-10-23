@@ -4,33 +4,28 @@ spec-ctx is a deterministic context engine and task workflow for OpenSpec projec
 
 ## First thing in every session
 
-Run the `bootstrap-context` skill. It gives you only the specs for your task.
+Run the `bootstrap-context` skill. It gives you only the specs for your task. The engine is the TypeScript CLI. Run `bun run build` once if `dist/` is missing.
 
-Until change 001 is archived, the engine is the Python bootstrap copy:
-
-```bash
-python3 tools/ctx/ctx.py status
-python3 tools/ctx/ctx.py bundle REQ-XXX-001 REQ-YYY-002 --budget 6000
-```
-
-After change 001 is archived, the TypeScript engine replaces it with the same subcommands:
+The loop for every task:
 
 ```bash
 node dist/cli.js status
-node dist/cli.js bundle REQ-XXX-001 --budget 6000
+node dist/cli.js task next
+node dist/cli.js task start <task>     # prints the bundle and sets the current task
+# work
+node dist/cli.js task done <task>      # runs Verify, writes evidence, sets the checkbox
+node dist/cli.js handoff write
 ```
 
-After change 002 is archived, the loop is: `status`, `task next`, `task start <id>`, work, `task done <id>`, `handoff write`. Tick no checkbox by hand from then on.
-
-Do not open `openspec/specs/` or `openspec/changes/*/specs/` by hand. Use `bundle`.
+Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not open `openspec/specs/` or `openspec/changes/*/specs/` by hand. Use `bundle` or `task start`.
 
 ## Workflow
 
 - One OpenSpec change at a time, in order: 001, 002, 003. Use `/opsx:apply <change>` and `/opsx:archive <change>`.
 - Tag code with its REQ: `// REQ-IDX-001`. Tag tests: `// Covers: REQ-IDX-001`.
-- A task is done when its `Verify:` command exited 0. Not before.
+- A task closes when `task done` ran its `Verify:` command with exit 0 and wrote the evidence under `.ctx/evidence/`.
 - Before archive: `check --strict` and `npx -y @fission-ai/openspec@latest validate --all --strict` must both exit 0. Run validate again after archive, before push.
-- Write `.ctx/handoff.md` before you stop. After 002, `specctx handoff write` does it.
+- Run `node dist/cli.js handoff write` before you stop. Commit `.ctx/` with the work. Only `.ctx/index.json` stays out of git.
 
 ## Writing rules
 
