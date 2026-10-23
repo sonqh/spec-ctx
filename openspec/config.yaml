@@ -1,0 +1,39 @@
+schema: spec-driven
+
+context: |
+  spec-ctx is a deterministic context engine and task workflow for OpenSpec projects.
+  It indexes stable IDs (REQ, SCN, ADR, task, decision), links them to code and tests,
+  returns a budgeted bundle for one task, allocates IDs, runs Verify commands, records
+  evidence, and writes the session handoff. No LLM call and no daemon anywhere (ADR-003).
+  Runtime: TypeScript, Bun for development, Node 22 compatible at run time (ADR-001).
+  The Python engine under tools/ctx/ is the bootstrap tool for this repo until change 001
+  lands. Its tests under tests/parity/ define the port.
+  Every requirement, scenario, decision, and task carries a stable ID (decisions/ADR-002-id-scheme.md).
+
+rules:
+  proposal:
+    - Under 400 words.
+    - Name what is out of scope.
+  specs:
+    - Every requirement header starts with its ID, e.g. "### Requirement: REQ-IDX-001 Index sources".
+    - Every scenario header starts with its ID, e.g. "#### Scenario: SCN-IDX-001-1 Clean build".
+    - A requirement may end with a line "Refs: REQ-X-001, ADR-002" to link related IDs.
+    - Write in English. Short sentences. Active voice. No semicolons, no dashes. Keep technical terms as the field uses them.
+    - Requirement text stays under 500 characters. Move detail into scenarios.
+  design:
+    - Each decision references an ADR ID or states that it creates one.
+  tasks:
+    - Every task cites at least one REQ ID in square brackets, e.g. "[REQ-IDX-001]".
+    - Every task states its verification as a command in a code span after "Verify:".
+
+operations:
+  apply:
+    guidance:
+      - Before reading specs, run `python3 tools/ctx/ctx.py bundle <IDs from the task> --budget 6000` and read that output first. After change 001 lands, use `bun run ctx bundle` instead.
+      - Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.
+      - Run `ctx check` after each task group.
+  archive:
+    guidance:
+      - Run `ctx check --strict` and `openspec validate --all --strict`. Both must pass before archive.
+      - Rebuild the index after archive.
+      - Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.

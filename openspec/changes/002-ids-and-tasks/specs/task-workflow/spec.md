@@ -1,0 +1,72 @@
+# task-workflow
+
+## Purpose
+
+Three commands own the task checkbox and the evidence behind it.
+
+## ADDED Requirements
+
+### Requirement: REQ-TASK-001 Next task
+`specctx task next [--change <name>]` SHALL pick the lowest numbered active change. In it, it SHALL pick the first open task whose earlier tasks in the same group are done. It SHALL print `<id>  <text>`, then the REQ IDs the task cites, then its Verify command. With no open task it SHALL print `no open task` and exit 1. `--json` SHALL include `id`, `text`, `reqs`, `verify`, `bundle_command`.
+
+#### Scenario: SCN-TASK-001-1 Order within a group
+- **WHEN** tasks 2.1 is open and 2.2 is open
+- **THEN** `task next` prints 2.1
+
+#### Scenario: SCN-TASK-001-2 Skip done
+- **WHEN** 1.1 and 1.2 are done and 1.3 is open
+- **THEN** `task next` prints 1.3
+
+#### Scenario: SCN-TASK-001-3 Nothing open
+- **WHEN** every task in every active change is done
+- **THEN** it prints `no open task` and exits 1
+
+### Requirement: REQ-TASK-002 Start
+`specctx task start <id>` SHALL print the bundle for the REQ IDs the task cites with the configured budget, then write `.ctx/current.json` with the task id and start time. It SHALL exit 2 if the task is done or does not exist.
+
+Refs: REQ-QRY-003
+
+#### Scenario: SCN-TASK-002-1 Start prints the bundle
+- **WHEN** `task start 002/2.1` runs and the task cites `[REQ-TASK-001]`
+- **THEN** stdout starts with `-- REQ-TASK-001 |` and `.ctx/current.json` names `002/2.1`
+
+#### Scenario: SCN-TASK-002-2 Already done
+- **WHEN** the task is `[x]`
+- **THEN** it exits 2 and prints `task 002/2.1 is done`
+
+### Requirement: REQ-TASK-003 Done
+`specctx task done <id>` SHALL parse the task's Verify command, run it in the project root, and on exit 0 write `.ctx/evidence/<change>/<task>.json` and change `[ ]` to `[x]` on that task line only. On a non-zero exit it SHALL write nothing, print the last 20 lines of output, and exit 1. `--manual "<note>"` SHALL be required when the task has no Verify command.
+
+Refs: ADR-004, REQ-VER-001
+
+#### Scenario: SCN-TASK-003-1 Passing verify
+- **WHEN** the Verify command exits 0
+- **THEN** the task line is `[x]`, the evidence file exists, and the rest of `tasks.md` is byte-identical
+
+#### Scenario: SCN-TASK-003-2 Failing verify
+- **WHEN** the Verify command exits 1
+- **THEN** `tasks.md` is unchanged, no evidence file exists, and `task done` exits 1
+
+#### Scenario: SCN-TASK-003-3 Manual evidence
+- **WHEN** the task has prose Verify and `--manual "reviewed output by eye"` is given
+- **THEN** the evidence has `kind: manual` and the note
+
+#### Scenario: SCN-TASK-003-4 Manual required
+- **WHEN** the task has prose Verify and no `--manual`
+- **THEN** it exits 2 and says a `--manual` note is required
+
+### Requirement: REQ-TASK-004 Evidence shape
+Each evidence file SHALL be JSON with sorted keys: `task`, `reqs`, `kind`, `verify`, `files`, `at` (ISO 8601 UTC), `tool_version`. `verify` SHALL hold `command`, `exit`, `stdout_sha256`, and `stderr_tail` of at most 20 lines. `files` SHALL map each code and test file tagged with a cited REQ to its sha256. Two runs with the same inputs SHALL differ only in `at`.
+
+Refs: ADR-004
+
+#### Scenario: SCN-TASK-004-1 Files digested
+- **WHEN** `src/a.ts` carries `// REQ-TASK-001` and the task cites it
+- **THEN** evidence `files` has `src/a.ts` with its sha256
+
+### Requirement: REQ-TASK-005 Reopen
+`specctx task reopen <id> "<reason>"` SHALL change `[x]` to `[ ]`, move the evidence file to `.ctx/evidence/<change>/<task>.reopened-<n>.json`, and append the reason to `.ctx/handoff.md` under `reopened`.
+
+#### Scenario: SCN-TASK-005-1 Reopen after spec change
+- **WHEN** `task reopen 005/1.1 "REQ-APPLY-002 changed"` runs
+- **THEN** the task is open, the old evidence is kept under the new name, and the handoff lists the reason
