@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""ctx: deterministic context engine over the agentrc spec repository.
+"""ctx: deterministic context engine over an OpenSpec repository.
 
 Reference implementation for agentrc:CTX-001 to agentrc:CTX-012. Stdlib only.
+Parity oracle for the spec-ctx TypeScript engine. It reads spec-ctx.toml at the root.
 
 Commands:
     ctx build                      write .ctx/index.json
@@ -19,27 +20,103 @@ import json
 import os
 import re
 import sys
+import tomllib
 from pathlib import Path
 
-ROOT = Path(os.environ.get("AGENTRC_REPO", Path(__file__).resolve().parents[2]))
+ROOT = Path(os.environ.get("SPECCTX_ROOT") or os.environ.get("AGENTRC_REPO") or Path(__file__).resolve().parents[2])
 INDEX = ROOT / ".ctx" / "index.json"
 HANDOFF = ROOT / ".ctx" / "handoff.md"
 
-ID_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})\b")
-SCN_RE = re.compile(r"\bSCN-[A-Z]+-\d{3}-\d+\b")
-REQ_HDR = re.compile(r"^### Requirement:\s*(REQ-[A-Z]+-\d{3})?\s*(.*)$")
-SCN_HDR = re.compile(r"^#### Scenario:\s*(SCN-[A-Z]+-\d{3}-\d+)?\s*(.*)$")
-ADR_HDR = re.compile(r"^# (ADR-\d{3})\s+(.*)$")
-REFS_RE = re.compile(r"^Refs:\s*(.+)$")
-TASK_RE = re.compile(r"^\s*- \[([ xX]?)\]\s*(\d+\.\d+)\s+(.*)$")
-TASK_REQ = re.compile(r"\[(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)\]")
-CODE_TAG = re.compile(r"(?://|#|/\*|\*)\s*(REQ-[A-Z]+-\d{3})")
-COVER_TAG = re.compile(r"Covers:\s*(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)")
-RETIRED_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b")
-SENTENCE_END = re.compile(r"(?<=[.!?])\s")
+# Every pattern is ASCII only so that both engines give the same matches. Python str patterns
+# are Unicode aware by default and would match non-ASCII digits and word characters.
+A = re.ASCII
+ID_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})\b", A)
+SCN_RE = re.compile(r"\bSCN-[A-Z]+-\d{3}-\d+\b", A)
+REQ_HDR = re.compile(r"^### Requirement:\s*(REQ-[A-Z]+-\d{3})?\s*(.*)$", A | re.S)
+SCN_HDR = re.compile(r"^#### Scenario:\s*(SCN-[A-Z]+-\d{3}-\d+)?\s*(.*)$", A | re.S)
+ADR_HDR = re.compile(r"^# (ADR-\d{3})\s+(.*)$", A | re.S)
+REFS_RE = re.compile(r"^Refs:\s*(.+)$", A | re.S)
+TASK_REQ = re.compile(r"\[(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)\]", A)
+CODE_TAG = re.compile(r"(?://|#|/\*|\*)\s*(REQ-[A-Z]+-\d{3})", A)
+COVER_TAG = re.compile(r"Covers:\s*(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)", A)
+RETIRED_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b", A)
+SENTENCE_END = re.compile(r"(?<=[.!?])\s", A)
+COMMA = re.compile(r"\s*,\s*", A)
+REQ_CAP = re.compile(r"^REQ-([A-Z]+)-", A)
 
-SRC_EXT = {".ts", ".tsx", ".js", ".mjs", ".py", ".sh"}
 SKIP_DIRS = {"node_modules", ".git"}
+
+# spec-ctx REQ-DIST-002 defaults. They match REQ-IDX-001 and REQ-QRY-003.
+DEFAULTS = {
+    "scan": {"specs": ["openspec/specs/**/*.md"], "changes": ["openspec/changes/**/*.md"],
+             "decisions": ["decisions/*.md"], "code": ["src/**"], "tests": ["tests/**"], "ignore": []},
+    "ids": {"caps": [], "task_pattern": r"\d+\.\d+"},
+    "bundle": {"budget": 8000, "depth": 1},
+}
+
+
+def load_config():
+    cfg = {k: dict(v) for k, v in DEFAULTS.items()}
+    p = ROOT / "spec-ctx.toml"
+    if p.exists():
+        raw = tomllib.loads(p.read_text(encoding="utf-8"))
+        for sec, vals in cfg.items():
+            for k, v in (raw.get(sec) or {}).items():
+                if k in vals:
+                    vals[k] = [v] if isinstance(v, str) and isinstance(DEFAULTS[sec][k], list) else v
+    return cfg
+
+
+CFG = load_config()
+TASK_RE = re.compile(r"^\s*- \[([ xX]?)\]\s*(" + CFG["ids"]["task_pattern"] + r")\s+(.*)$", A | re.S)
+
+
+def glob_re(pattern):
+    """Glob to regex. `**/` is zero or more directories, `**` is anything, `*` and `?` stay in one segment."""
+    out, i = "", 0
+    while i < len(pattern):
+        c = pattern[i]
+        if pattern.startswith("**/", i):
+            out += "(?:.*/)?"
+            i += 3
+            continue
+        if pattern.startswith("**", i):
+            out += ".*"
+            i += 2
+            continue
+        if c == "*":
+            out += "[^/]*"
+        elif c == "?":
+            out += "[^/]"
+        elif c in ".^$+{}()[]|\\":
+            out += "\\" + c
+        else:
+            out += c
+        i += 1
+    return re.compile(out, re.S)
+
+
+def glob_base(pattern):
+    """Directory part of a glob before the first wildcard segment."""
+    parts = []
+    for seg in pattern.split("/")[:-1]:
+        if any(ch in seg for ch in "*?"):
+            break
+        parts.append(seg)
+    return "/".join(parts)
+
+
+def read(path):
+    """UTF-8 text with no newline translation. Path.read_text would turn a lone CR into a line break."""
+    return path.read_bytes().decode("utf-8", errors="replace")
+
+
+def split_lines(text):
+    """Lines split on LF only, with a trailing CR removed. Editors count lines the same way."""
+    lines = text.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return [line[:-1] if line.endswith("\r") else line for line in lines]
 SPEC_KINDS = ("req", "scn", "adr")
 # agentrc:CTX-006 fixed block order after the requested IDs
 KIND_RANK = {"adr": 0, "decision": 1, "req": 2, "scn": 2, "task": 3, "code": 4, "test": 5}
@@ -60,38 +137,55 @@ def change_of(path: str) -> str:
     return "main"
 
 
+def change_num(change: str) -> str:
+    """ADR-002: task and decision IDs use the number prefix of the change folder, e.g. 002/3.2 and 002/D3."""
+    return change.split("-")[0]
+
+
 def squash(lines) -> str:
     return " ".join(" ".join(lines).split()).lower()
 
 
+SCAN = CFG["scan"]
+MD_GLOBS = [glob_re(g) for k in ("specs", "changes", "decisions") for g in SCAN[k]]
+SRC_GLOBS = [glob_re(g) for k in ("code", "tests") for g in SCAN[k]]
+TEST_GLOBS = [glob_re(g) for g in SCAN["tests"]]
+IGNORE = [glob_re(g) for g in SCAN["ignore"]]
+
+
 # agentrc:CTX-001 source walk. agentrc:CTX-010 uses the same walk for the stale check, so it never parses files.
 def walk():
-    files = []
-    for base, md_only in (("openspec", True), ("decisions", True), ("src", False), ("tests", False), ("tools", False)):
-        top = ROOT / base
+    """Files that match the scan globs, sorted by path. Ignored directories are pruned."""
+    bases = sorted({glob_base(g) for k in ("specs", "changes", "decisions", "code", "tests") for g in SCAN[k]})
+    seen = {}
+    for base in bases:
+        top = ROOT / base if base else ROOT
         if not top.is_dir():
             continue
         for dirpath, dirnames, filenames in os.walk(top):
             r = rel(Path(dirpath))
-            # fixture repos hold sample IDs for the ctx tests. They are data, not code or coverage.
-            dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS and f"{r}/{d}" != "tests/fixtures")
-            for f in sorted(filenames):
-                p = Path(dirpath) / f
-                if md_only and p.suffix == ".md":
-                    files.append((p, "md"))
-                elif not md_only and p.suffix in SRC_EXT:
-                    files.append((p, "src"))
-    return files
+            pre = "" if r == "." else r + "/"
+            dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS
+                                 and not any(g.fullmatch(f"{pre}{d}/") for g in IGNORE))
+            for f in filenames:
+                path = pre + f
+                if path in seen or any(g.fullmatch(path) for g in IGNORE):
+                    continue
+                if any(g.fullmatch(path) for g in MD_GLOBS):
+                    seen[path] = "md"
+                elif any(g.fullmatch(path) for g in SRC_GLOBS):
+                    seen[path] = "src"
+    return [(ROOT / p, seen[p]) for p in sorted(seen)]
 
 
 def scanned_of(files):
     newest = 0
     for p, _ in files:
         try:
-            newest = max(newest, os.stat(p).st_mtime_ns)
+            newest = max(newest, os.stat(p).st_mtime_ns // 1_000_000)
         except OSError:
             pass
-    return {"files": len(files), "mtime_ns": newest}
+    return {"count": len(files), "newest_mtime_ms": newest}
 
 
 def block_range(lines, start):
@@ -113,8 +207,8 @@ def block_range(lines, start):
 
 
 def scan_markdown(path: Path, entries, problems):
-    text = path.read_text(encoding="utf-8", errors="replace")
-    lines = text.splitlines()
+    text = read(path)
+    lines = split_lines(text)
     rpath = rel(path)
     change = change_of(rpath)
     status = "archived" if "/archive/" in rpath else "active"
@@ -143,7 +237,7 @@ def scan_markdown(path: Path, entries, problems):
             section = line[3:].strip().split(" ")[0].upper()
             continue
         if is_design and section == "DECISIONS" and line.startswith("- "):
-            decision = {"id": f"{change}/D{len(decisions) + 1}", "kind": "decision", "file": rpath, "line": i,
+            decision = {"id": f"{change_num(change)}/D{len(decisions) + 1}", "kind": "decision", "file": rpath, "line": i,
                         "change": change, "status": status, "refs": [], "_lines": [line[2:].strip()]}
             entries.append(decision)
             decisions.append(decision)
@@ -194,7 +288,7 @@ def scan_markdown(path: Path, entries, problems):
             continue
         m = REFS_RE.match(line.strip())
         if m and cur_entry is not None:
-            for ref in re.split(r"\s*,\s*", m.group(1).strip()):
+            for ref in COMMA.split(m.group(1).strip()):
                 if ID_RE.fullmatch(ref):
                     cur_entry["refs"].append(ref)
                 else:
@@ -202,11 +296,12 @@ def scan_markdown(path: Path, entries, problems):
             continue
         m = TASK_RE.match(line)
         if m and rpath.endswith("tasks.md"):
-            box, num, body = m.groups()
-            tid = f"{change.split('-')[0]}/{num}"
+            # a task_pattern with its own groups shifts the group numbers, so the body is the last group
+            box, num, body = m.group(1), m.group(2), m.groups()[-1]
+            tid = f"{change_num(change)}/{num}"
             reqs = []
             for grp in TASK_REQ.findall(body):
-                reqs += re.split(r"\s*,\s*", grp)
+                reqs += COMMA.split(grp)
             if not reqs:
                 problems.append((rpath, i, "task-without-req", tid))
             if "Verify:" not in body:
@@ -229,19 +324,20 @@ def scan_markdown(path: Path, entries, problems):
 
 def scan_source(path: Path, entries, scn_named):
     rpath = rel(path)
-    is_test = "/tests/" in rpath or rpath.startswith("tests/") or ".test." in rpath or "test_" in path.name
+    is_test = (any(g.fullmatch(rpath) for g in TEST_GLOBS) or "/tests/" in rpath or rpath.startswith("tests/")
+               or ".test." in rpath or "test_" in path.name)
     try:
-        content = path.read_text(encoding="utf-8", errors="replace")
+        content = read(path)
     except OSError:
         return
     if is_test:
         # agentrc:CTX-007 a scenario is tested when a test file names it
         scn_named.update(SCN_RE.findall(content))
-    for i, line in enumerate(content.splitlines(), 1):
+    for i, line in enumerate(split_lines(content), 1):
         if is_test:
             m = COVER_TAG.search(line)
             if m:
-                for rid in re.split(r"\s*,\s*", m.group(1)):
+                for rid in COMMA.split(m.group(1)):
                     entries.append({"id": f"{rpath}:{i}", "kind": "test", "file": rpath, "line": i,
                                     "title": line.strip(), "text": "", "change": "main", "status": "active",
                                     "refs": [rid]})
@@ -286,7 +382,7 @@ def retired_ids():
     p = ROOT / "decisions" / "retired-ids.md"
     if not p.exists():
         return set()
-    return set(RETIRED_RE.findall(p.read_text(encoding="utf-8")))
+    return set(RETIRED_RE.findall(read(p)))
 
 
 def build(files=None):
@@ -304,8 +400,13 @@ def build(files=None):
     data = {"entries": entries, "problems": problems, "scanned": scanned_of(files),
             "scn_named": sorted(scn_named)}
     INDEX.parent.mkdir(parents=True, exist_ok=True)
-    INDEX.write_text(json.dumps(data, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    INDEX.write_text(dumps(data) + "\n", encoding="utf-8")
     return data
+
+
+def dumps(obj):
+    """REQ-IDX-002 two-space indent, sorted keys, UTF-8 text kept as is."""
+    return json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False)
 
 
 def load():
@@ -396,7 +497,7 @@ _lines_cache = {}
 
 def file_lines(rpath):
     if rpath not in _lines_cache:
-        _lines_cache[rpath] = (ROOT / rpath).read_text(encoding="utf-8", errors="replace").splitlines()
+        _lines_cache[rpath] = split_lines(read(ROOT / rpath))
     return _lines_cache[rpath]
 
 
@@ -461,7 +562,7 @@ def bundle(entries, wanted, budget, depth, all_=False):
     return text
 
 
-def check(data, strict):
+def check(data, strict, as_json=False):
     entries, problems = data["entries"], data["problems"]
     findings = list(problems)
     seen = {}
@@ -476,6 +577,7 @@ def check(data, strict):
     known = {e["id"] for e in entries if e["kind"] in ("req", "scn", "adr", "task")}
     ids = canon(entries)
     retired = retired_ids()
+    caps = set(CFG["ids"]["caps"])
     for e in entries:
         if e["kind"] in ("req", "adr") and e["id"] in retired and e["status"] == "active":
             findings.append((e["file"], e["line"], "reused-id", e["id"]))
@@ -490,6 +592,11 @@ def check(data, strict):
                 findings.append((e["file"], e["line"], "code-tag-no-canonical", r))
         if e["kind"] == "req" and e["status"] != "removed" and not e.get("scenarios"):
             findings.append((e["file"], e["line"], "req-without-scn", e["id"]))
+        if caps and e["kind"] == "req" and e["status"] != "archived":
+            # spec-ctx REQ-CHK-001 a capability code that the config does not list
+            m = REQ_CAP.match(e["id"])
+            if m and m.group(1) not in caps:
+                findings.append((e["file"], e["line"], "unknown-cap", e["id"]))
     if strict:
         covered = {r for e in entries if e["kind"] == "test" for r in e["refs"]}
         named = set(data.get("scn_named", []))
@@ -501,6 +608,10 @@ def check(data, strict):
             if e["kind"] == "scn" and e["id"] not in named:
                 findings.append((e["file"], e["line"], "scenario-untested", e["id"]))
     findings = sorted(set(findings))
+    if as_json:
+        print(dumps({"count": len(findings),
+                     "findings": [{"file": f, "line": l, "rule": rule, "id": i} for f, l, rule, i in findings]}))
+        return 1 if findings else 0
     for f, l, rule, i in findings:
         print(f"{f}:{l}  {rule}  {i}")
     print(f"{len(findings)} finding(s)")
@@ -512,7 +623,7 @@ def open_questions():
     if not HANDOFF.exists():
         return []
     items, inside = [], False
-    for line in HANDOFF.read_text(encoding="utf-8", errors="replace").splitlines():
+    for line in split_lines(read(HANDOFF)):
         if line.startswith("open_questions:"):
             inside = True
             continue
@@ -579,6 +690,7 @@ def main(argv):
     b.add_argument("--all", action="store_true")
     c = sub.add_parser("check")
     c.add_argument("--strict", action="store_true")
+    c.add_argument("--json", action="store_true")
     sub.add_parser("status")
     a = ap.parse_args(argv)
 
@@ -605,7 +717,7 @@ def main(argv):
         if a.limit > 0:
             hits = hits[:a.limit]
         if a.json:
-            print(json.dumps(hits, indent=1))
+            print(dumps(hits))
         else:
             for e in hits:
                 print(f"{e['id']}  {e['kind']}  {e['status']}  {e['file']}:{e['line']}  {e['title']}")
@@ -621,7 +733,7 @@ def main(argv):
             copies.sort(key=lambda e: not e.get("canonical"))
             rows += [(e, reason) for e in copies]
         if a.json:
-            print(json.dumps([dict(e, reason=reason) for e, reason in rows], indent=1))
+            print(dumps([dict(e, reason=reason) for e, reason in rows]))
         else:
             for e, reason in rows:
                 print(f"{e['kind']}  {e['id']}  {e['status']}  {e['file']}:{e['line']}  {reason}")
@@ -635,7 +747,7 @@ def main(argv):
         sys.stdout.write(bundle(entries, a.ids, a.budget, a.depth, a.all))
         return 0
     if a.cmd == "check":
-        return check(data, a.strict)
+        return check(data, a.strict, a.json)
     if a.cmd == "status":
         status(entries)
         return 0

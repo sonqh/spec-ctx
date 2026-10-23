@@ -1,0 +1,12 @@
+openspec/changes/007-parity-plant/specs/plant/spec.md:5  dangling-ref  REQ-NOPE-001
+openspec/changes/007-parity-plant/specs/plant/spec.md:5  reused-id  REQ-ZZZ-001
+openspec/changes/007-parity-plant/specs/plant/spec.md:5  unknown-cap  REQ-ZZZ-001
+openspec/changes/007-parity-plant/specs/plant/spec.md:8  bad-ref  not-an-id
+openspec/changes/007-parity-plant/specs/plant/spec.md:14  scenario-id-mismatch  SCN-ZZZ-002-1 under REQ-ZZZ-001
+openspec/changes/007-parity-plant/specs/plant/spec.md:18  req-without-scn  REQ-APPLY-099
+openspec/changes/007-parity-plant/specs/plant/spec.md:25  missing-id  Missing identifier
+openspec/changes/007-parity-plant/tasks.md:7  task-without-req  007/1.3
+openspec/changes/007-parity-plant/tasks.md:8  task-without-verify  007/1.4
+src/plant.ts:2  code-tag-no-canonical  REQ-OLD-001
+src/plant.ts:6  dangling-ref  REQ-NOPE-002
+11 finding(s)

@@ -1,0 +1,4 @@
+[test]
+root = "tests"
+timeout = 20000
+pathIgnorePatterns = ["tests/fixtures/**"]

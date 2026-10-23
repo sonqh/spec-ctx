@@ -1,0 +1,9 @@
+# Parity fixture config. The tree is a copy of the agentrc specs plus planted findings.
+
+[scan]
+code = ["src/**"]
+tests = ["tests/**"]
+ignore = ["src/ignored/**"]
+
+[ids]
+caps = ["PROF", "IC", "ADPT", "CLD", "CDX", "APPLY", "CLI", "ELIC", "IMP", "CAT", "CTX", "BOOT", "GOV"]

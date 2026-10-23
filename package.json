@@ -1,0 +1,33 @@
+{
+  "name": "spec-ctx",
+  "version": "0.1.0",
+  "description": "Deterministic context engine and task workflow for OpenSpec projects.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "specctx": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "build:bin": "bun build src/cli.ts --compile --outfile dist/specctx",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "bun test",
+    "test:node": "vitest run",
+    "lint": "bash scripts/lint-md.sh",
+    "ctx": "node dist/cli.js"
+  },
+  "dependencies": {
+    "smol-toml": "^1.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

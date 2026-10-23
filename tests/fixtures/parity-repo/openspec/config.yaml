@@ -1,0 +1,37 @@
+schema: spec-driven
+
+context: |
+  agentrc compiles a personal profile.yaml into native config for AI coding agents
+  (Claude Code and Codex in the MVP; Cursor and Gemini CLI later).
+  Compile is a pure function. No LLM and no daemon in the compile or apply path.
+  Every requirement, scenario, decision, and task carries a stable ID (see decisions/ADR-005-id-scheme.md).
+  The context engine (tools/ctx/ctx.py) indexes those IDs. Run `python3 tools/ctx/ctx.py check` before archive.
+  Target platforms for the MVP: macOS and Linux. Windows paths are out of scope until 005.
+  Runtime: TypeScript on Node 22 or bun. Tests: vitest with golden files under tests/golden/.
+
+rules:
+  proposal:
+    - Under 400 words.
+    - Name what is out of scope.
+  specs:
+    - Every requirement header starts with its ID, e.g. "### Requirement: REQ-PROF-001 Profile location".
+    - Every scenario header starts with its ID, e.g. "#### Scenario: SCN-PROF-001-1 Default path".
+    - A requirement may end with a line "Refs: REQ-X-001, ADR-002" to link related IDs.
+    - Write in English. Short sentences. Active voice. No semicolons, no dashes. Keep technical terms as the field uses them.
+  design:
+    - Each decision references an ADR ID or states that it creates one.
+  tasks:
+    - Every task cites at least one REQ ID in square brackets, e.g. "[REQ-PROF-001]".
+    - Every task states its verification command or artifact.
+
+operations:
+  apply:
+    guidance:
+      - Before reading specs, run `python3 tools/ctx/ctx.py bundle <IDs from the task> --budget 6000` and read that output first.
+      - Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.
+      - Run `python3 tools/ctx/ctx.py check` after each task group.
+  archive:
+    guidance:
+      - Run `python3 tools/ctx/ctx.py check --strict` and `openspec validate --all --strict`. Both must pass before archive.
+      - Rebuild the index after archive with `python3 tools/ctx/ctx.py build`.
+      - Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.

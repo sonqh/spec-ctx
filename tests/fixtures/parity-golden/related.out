@@ -1,0 +1,17 @@
+adr  ADR-004  active  decisions/ADR-004-catalog-is-external.md:1  ref from REQ-APPLY-005
+req  REQ-APPLY-001  active  openspec/specs/apply-pipeline/spec.md:8  ref to REQ-APPLY-005
+req  REQ-CAT-004  active  openspec/specs/catalog-resolver/spec.md:33  ref to REQ-APPLY-005
+scn  SCN-APPLY-005-1  modified  openspec/changes/007-parity-plant/specs/apply-pipeline/spec.md:8  scenario of REQ-APPLY-005
+task  002/1.8  done  openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:12  task cites REQ-APPLY-005
+task  002/5.1  done  openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:42  task cites REQ-APPLY-005
+task  007/1.1  done  openspec/changes/007-parity-plant/tasks.md:5  task cites REQ-APPLY-005
+code  src/apply/lockfile.ts:16  active  src/apply/lockfile.ts:16  implements REQ-APPLY-005
+code  src/apply/pipeline.ts:252  active  src/apply/pipeline.ts:252  implements REQ-APPLY-005
+code  src/apply/pipeline.ts:325  active  src/apply/pipeline.ts:325  implements REQ-APPLY-005
+code  src/cli/commands.ts:198  active  src/cli/commands.ts:198  implements REQ-APPLY-005
+test  tests/apply/status.test.ts:19  active  tests/apply/status.test.ts:19  covers REQ-APPLY-005
+test  tests/apply/status.test.ts:30  active  tests/apply/status.test.ts:30  covers REQ-APPLY-005
+test  tests/apply/status.test.ts:39  active  tests/apply/status.test.ts:39  covers REQ-APPLY-005
+test  tests/apply/status.test.ts:48  active  tests/apply/status.test.ts:48  covers REQ-APPLY-005
+test  tests/e2e/init.test.ts:6  active  tests/e2e/init.test.ts:6  covers REQ-APPLY-005
+test  tests/plant.cases.ts:1  active  tests/plant.cases.ts:1  covers REQ-APPLY-005

@@ -1,0 +1,74 @@
+// REQ-CHK-001 REQ-CHK-002 REQ-GOV-002 integrity rules over the index.
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { Config } from "../config.ts";
+import { canon, SPEC_KINDS } from "../index/canonical.ts";
+import type { Index, Problem } from "../index/types.ts";
+import { cmpTuple } from "../util/pystr.ts";
+
+const RETIRED_RE = /\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b/g;
+const REQ_CAP = /^REQ-([A-Z]+)-/;
+
+export function retiredIds(root: string): Set<string> {
+  const p = join(root, "decisions", "retired-ids.md");
+  if (!existsSync(p)) return new Set();
+  return new Set([...readFileSync(p, "utf8").matchAll(RETIRED_RE)].map((m) => m[1]!));
+}
+
+export interface Finding {
+  file: string;
+  line: number;
+  rule: string;
+  id: string;
+}
+
+/** Sorted, unique findings. REQ-CHK-003 the evidence tree under .ctx/ is never scanned, so it adds none. */
+export function check(root: string, cfg: Config, data: Index, strict: boolean): Finding[] {
+  const entries = data.entries;
+  const findings: Problem[] = data.problems.map((p) => [...p] as Problem);
+  const seen = new Set<string>();
+  for (const e of entries) {
+    if (!SPEC_KINDS.has(e.kind)) continue;
+    // archived folders keep a copy of main specs. A MODIFIED or REMOVED block is a pending edit of one.
+    if (e.status === "archived" || e.status === "modified" || e.status === "removed") continue;
+    if (seen.has(e.id)) findings.push([e.file, e.line, "duplicate-id", e.id]);
+    seen.add(e.id);
+  }
+  const known = new Set(entries.filter((e) => ["req", "scn", "adr", "task"].includes(e.kind)).map((e) => e.id));
+  const ids = canon(entries);
+  const retired = retiredIds(root);
+  const caps = new Set(cfg.ids.caps);
+  for (const e of entries) {
+    if ((e.kind === "req" || e.kind === "adr") && retired.has(e.id) && e.status === "active") {
+      findings.push([e.file, e.line, "reused-id", e.id]);
+    }
+    for (const r of e.refs) {
+      if (!known.has(r)) {
+        if (e.kind === "task" && !strict) continue;
+        findings.push([e.file, e.line, e.kind === "task" ? "unknown-task-req" : "dangling-ref", r]);
+      } else if (e.kind === "code" && (!ids.has(r) || ids.get(r)!.status === "archived")) {
+        // the tag points at a requirement that lives only in an archived change
+        findings.push([e.file, e.line, "code-tag-no-canonical", r]);
+      }
+    }
+    if (e.kind === "req" && e.status !== "removed" && !(e.scenarios ?? []).length) {
+      findings.push([e.file, e.line, "req-without-scn", e.id]);
+    }
+    if (caps.size && e.kind === "req" && e.status !== "archived") {
+      const m = REQ_CAP.exec(e.id);
+      if (m && !caps.has(m[1]!)) findings.push([e.file, e.line, "unknown-cap", e.id]);
+    }
+  }
+  if (strict) {
+    const covered = new Set(entries.filter((e) => e.kind === "test").flatMap((e) => e.refs));
+    const named = new Set(data.scn_named ?? []);
+    for (const e of entries) {
+      if (e.change !== "main" || e.status !== "active") continue;
+      if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
+      if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
+    }
+  }
+  const uniq = new Map<string, Problem>();
+  for (const f of findings) uniq.set(JSON.stringify(f), f);
+  return [...uniq.values()].sort((a, b) => cmpTuple(a, b)).map(([file, line, rule, id]) => ({ file, line, rule, id }));
+}

@@ -1,0 +1,15 @@
+002/2.4  task  done  openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:21  Render `settings.json` owned keys, hooks as `jq` matchers, sorted unique deny list. [REQ-CLD-004, REQ-CLD-005] Verify: tests for SCN-CLD-004-2 and SCN-CLD-005-1, plus a shell test that the rendered hook exits 2 on `git push origin main`.
+SCN-ZZZ-001-1  scn  active  openspec/changes/007-parity-plant/specs/plant/spec.md:10  Guarded push
+REQ-CDX-004  req  active  openspec/specs/adapter-codex/spec.md:39  Destructive ops without hooks
+REQ-CLD-004  req  active  openspec/specs/adapter-claude-code/spec.md:39  settings.json merge
+REQ-CTX-002  req  active  openspec/specs/context-engine/spec.md:21  Index record shape
+REQ-CTX-004  req  active  openspec/specs/context-engine/spec.md:39  query
+REQ-ELIC-002  req  active  openspec/specs/elicit/spec.md:25  Preview per question
+REQ-IC-005  req  active  openspec/specs/intermediate-config/spec.md:46  hooks shape
+REQ-ZZZ-001  req  active  openspec/changes/007-parity-plant/specs/plant/spec.md:5  Unknown capability
+SCN-CDX-004-1  scn  active  openspec/specs/adapter-codex/spec.md:44  Degradation recorded
+SCN-CLD-004-2  scn  active  openspec/specs/adapter-claude-code/spec.md:48  Hook rendering
+SCN-CTX-002-2  scn  active  openspec/specs/context-engine/spec.md:28  Text field
+SCN-CTX-004-2  scn  active  openspec/specs/context-engine/spec.md:48  Two terms
+SCN-ELIC-002-1  scn  active  openspec/specs/elicit/spec.md:28  Preview text
+SCN-IC-005-1  scn  active  openspec/specs/intermediate-config/spec.md:51  Block destructive ops

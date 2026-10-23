@@ -1,0 +1,57 @@
+-- REQ-APPLY-001 | openspec/specs/apply-pipeline/spec.md:8 | active | requested
+### Requirement: REQ-APPLY-001 Plan is read-only
+`plan` SHALL compile, render for every enabled and installed agent, read current disk state, and print one line per artifact with one of `create`, `update`, `unchanged`, `skip`, `remove`. `remove` SHALL apply to an owned artifact the last apply wrote that the profile no longer renders. `plan` SHALL write nothing.
+
+Refs: ADR-002, REQ-ADPT-006, REQ-APPLY-005
+
+#### Scenario: SCN-APPLY-001-1 Nothing on disk
+- **WHEN** no agent config exists
+- **THEN** every artifact is listed as `create` and the filesystem is unchanged after plan
+
+#### Scenario: SCN-APPLY-001-2 Dropped language
+- **WHEN** the last apply wrote `rules/lang-python.md` and the profile no longer lists python
+- **THEN** `plan` lists `rules/lang-python.md` as `remove`
+
+-- ADR-002 | decisions/ADR-002-no-llm-in-compile.md:1 | active | ref from REQ-APPLY-001
+# ADR-002 No LLM in the compile and apply path
+
+Status: accepted. Date: 2026-10-23.
+
+## Decision
+
+`compile`, `render`, `plan`, `apply` are deterministic. Same profile, same catalog digests, same output bytes. An LLM may assist `elicit` through an explicit `--assist` flag. Its output is a profile draft that goes through the same deterministic compile.
+
+## Why
+
+- Golden-file tests need stable output.
+- Users must trust what gets written into `~/.claude` and `~/.codex`. A diff they can read beats a model they cannot audit.
+
+## Consequences
+
+- The mapping from profile fields to artifacts is a table in code, not a prompt.
+- New behavior means a new mapping row and a new golden file.
+
+Refs: REQ-IC-001, REQ-APPLY-001, ADR-001
+
+-- 007/D2 | openspec/changes/007-parity-plant/design.md:6 | active | decision for REQ-APPLY-001
+- The second decision spans
+  two lines! It refs a plan. Refs: REQ-APPLY-001, ADR-004.
+
+-- REQ-ADPT-006 | openspec/specs/adapter-contract/spec.md:57 | active | ref from REQ-APPLY-001
+### Requirement: REQ-ADPT-006 read returns current state
+`read()` SHALL return the artifacts currently on disk at the paths `render` would write, with `content` as found. A missing file SHALL be returned with `content: null`.
+
+Refs: REQ-APPLY-002, REQ-IMP-001
+
+#### Scenario: SCN-ADPT-006-1 Missing file
+- **WHEN** `~/.codex/config.toml` does not exist
+- **THEN** `read()` returns that path with `content: null`
+
+-- 002/1.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:5 | done | task cites REQ-APPLY-001
+- [x] 1.1 Implement `src/apply/plan.ts`: compile, render, read, classify create/update/unchanged/skip. [REQ-APPLY-001] Verify: `tests/apply/plan.test.ts` covers SCN-APPLY-001-1 and asserts no filesystem writes with a temp home.
+
+-- 007/1.2 | openspec/changes/007-parity-plant/tasks.md:6 | open | task cites REQ-APPLY-001
+- [ ] 1.2 Open task that cites two IDs. [REQ-APPLY-001, REQ-ZZZ-001] Verify: `true`
+
+-- src/apply/pipeline.ts:160 | src/apply/pipeline.ts:160 | active | implements REQ-APPLY-001
+truncated: 11 entries omitted: REQ-APPLY-005, 002/5.1, 005/1.1, 007/1.4, src/cli/commands.ts:115, src/plant.ts:4, tests/apply/plan.test.ts:12, tests/apply/plan.test.ts:23, tests/apply/plan.test.ts:37, tests/apply/plan.test.ts:48, tests/e2e/init.test.ts:6

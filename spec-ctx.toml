@@ -1,0 +1,27 @@
+# spec-ctx configuration for this repository.
+
+[scan]
+# Main specs. Markdown with requirement and scenario headers.
+specs = ["openspec/specs/**/*.md"]
+# Active and archived changes.
+changes = ["openspec/changes/**/*.md"]
+# Decision records.
+decisions = ["decisions/*.md"]
+# Source files that carry code tags.
+code = ["src/**"]
+# Test files that carry Covers tags and scenario IDs.
+tests = ["tests/**"]
+# Paths that the scan skips. Fixtures hold sample IDs. They are data, not coverage.
+ignore = ["tests/fixtures/**"]
+
+[ids]
+# Capability codes from ADR-002.
+caps = ["IDX", "QRY", "CHK", "IDS", "TASK", "VER", "HND", "CLI", "SCH", "SKL", "DIST", "GOV"]
+# Pattern of the task number in a tasks.md checkbox.
+task_pattern = '\d+\.\d+'
+
+[bundle]
+# Default character budget of a bundle.
+budget = 8000
+# Default depth of related entries in a bundle.
+depth = 1

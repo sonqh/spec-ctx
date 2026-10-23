@@ -2,9 +2,9 @@
 
 ## 1. Project setup
 
-- [ ] 1.1 Create `package.json` (name `spec-ctx`, bin `specctx`, `type: module`, engines node >=22), `tsconfig.json`, `bun` scripts for `build`, `test`, `typecheck`, `lint`. Add `smol-toml`. [REQ-DIST-001] Verify: `bun install && bun run typecheck`
-- [ ] 1.2 Write `spec-ctx.toml` for this repo and implement config loading with defaults and `specctx init`. [REQ-DIST-002] Verify: `bun test tests/config.test.ts`
-- [ ] 1.3 Build the parity fixture under `tests/fixtures/parity-repo/`. Copy the agentrc openspec tree and decisions. Add a few tagged src and test files and planted findings for check. Add `tests/parity/run.sh` that runs the Python engine only and records its outputs as goldens. [REQ-DIST-003] Verify: `bash tests/parity/run.sh --record`
+- [x] 1.1 Create `package.json` (name `spec-ctx`, bin `specctx`, `type: module`, engines node >=22), `tsconfig.json`, `bun` scripts for `build`, `test`, `typecheck`, `lint`. Add `smol-toml`. [REQ-DIST-001] Verify: `bun install && bun run typecheck`
+- [x] 1.2 Write `spec-ctx.toml` for this repo and implement config loading with defaults and `specctx init`. [REQ-DIST-002] Verify: `bun test tests/config.test.ts`
+- [x] 1.3 Build the parity fixture under `tests/fixtures/parity-repo/`. Copy the agentrc openspec tree and decisions. Add a few tagged src and test files and planted findings for check. Add `tests/parity/run.sh` that runs the Python engine only and records its outputs as goldens. [REQ-DIST-003] Verify: `bash tests/parity/run.sh --record`
 
 ## 2. Index
 
