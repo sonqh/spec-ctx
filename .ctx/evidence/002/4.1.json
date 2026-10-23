@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-23T23:51:31.752Z",
+  "files": {
+    "src/cli/status.ts": "fe47913292ef3b7a26cb0d7f7ab60b444c29efec44e70dbf68560f699c4d9894",
+    "src/handoff/handoff.ts": "19ce85dddd66516c74a87dee1c3140ac744afc204348051c7b67df8ad472d8ff",
+    "tests/handoff/handoff.test.ts": "c08c08783ced4ff2b6b9b67f96cb6b0f6d9598b124fb6c6d61e343da1df6dace"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-HND-001",
+    "REQ-HND-002",
+    "REQ-HND-003"
+  ],
+  "task": "002/4.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/handoff/*.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 6 pass\n 0 fail\n 16 expect() calls\nRan 6 tests across 1 file. [108.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

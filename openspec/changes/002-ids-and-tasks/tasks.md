@@ -19,7 +19,7 @@
 
 ## 4. Handoff
 
-- [ ] 4.1 Implement `handoff write`, `ask`, `resolve`, and the `status` lines. [REQ-HND-001, REQ-HND-002, REQ-HND-003] Verify: `bun test tests/handoff/*.test.ts`
+- [x] 4.1 Implement `handoff write`, `ask`, `resolve`, and the `status` lines. [REQ-HND-001, REQ-HND-002, REQ-HND-003] Verify: `bun test tests/handoff/*.test.ts`
 
 ## 5. Check and CLI
 
