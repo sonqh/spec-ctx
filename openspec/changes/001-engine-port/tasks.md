@@ -14,9 +14,9 @@
 
 ## 3. Query, related, bundle
 
-- [ ] 3.1 Implement `query` with token AND, scoring, flags. [REQ-QRY-001] Verify: `bun test tests/query/query.test.ts`
-- [ ] 3.2 Implement `related` with reasons. [REQ-QRY-002] Verify: `bun test tests/query/related.test.ts`
-- [ ] 3.3 Implement `bundle` with provenance lines, fixed order, budget, trailer. [REQ-QRY-003] Verify: `bun test tests/query/bundle.test.ts`
+- [x] 3.1 Implement `query` with token AND, scoring, flags. [REQ-QRY-001] Verify: `bun test tests/query/query.test.ts`
+- [x] 3.2 Implement `related` with reasons. [REQ-QRY-002] Verify: `bun test tests/query/related.test.ts`
+- [x] 3.3 Implement `bundle` with provenance lines, fixed order, budget, trailer. [REQ-QRY-003] Verify: `bun test tests/query/bundle.test.ts`
 
 ## 4. Check
 
