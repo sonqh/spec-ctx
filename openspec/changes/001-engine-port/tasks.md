@@ -8,9 +8,9 @@
 
 ## 2. Index
 
-- [ ] 2.1 Implement the scan: markdown IDs, Refs lines, design decisions, code and test tags, ignore globs. [REQ-IDX-001] Verify: `bun test tests/index/scan.test.ts`
-- [ ] 2.2 Implement the record shape, canonical selection, sorted deterministic JSON, `scanned` record. [REQ-IDX-002, REQ-IDX-003] Verify: `bun test tests/index/canonical.test.ts tests/index/determinism.test.ts`
-- [ ] 2.3 Implement stale detection and the rebuild on every command. Add the 2,000 file perf fixture generator and the timing test. [REQ-IDX-004] Verify: `bun test tests/index/stale.test.ts tests/index/perf.test.ts`
+- [x] 2.1 Implement the scan: markdown IDs, Refs lines, design decisions, code and test tags, ignore globs. [REQ-IDX-001] Verify: `bun test tests/index/scan.test.ts`
+- [x] 2.2 Implement the record shape, canonical selection, sorted deterministic JSON, `scanned` record. [REQ-IDX-002, REQ-IDX-003] Verify: `bun test tests/index/canonical.test.ts tests/index/determinism.test.ts`
+- [x] 2.3 Implement stale detection and the rebuild on every command. Add the 2,000 file perf fixture generator and the timing test. [REQ-IDX-004] Verify: `bun test tests/index/stale.test.ts tests/index/perf.test.ts`
 
 ## 3. Query, related, bundle
 

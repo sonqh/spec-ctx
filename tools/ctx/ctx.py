@@ -308,10 +308,14 @@ def scan_markdown(path: Path, entries, problems):
                 problems.append((rpath, i, "task-without-verify", tid))
             # agentrc:CTX-004 the full task body is the title, so query output shows the Verify clause
             entries.append({"id": tid, "kind": "task", "file": rpath, "line": i, "title": body.strip(),
-                            "text": squash([body]), "change": change,
+                            "text": "", "change": change,
                             "status": "done" if box.strip().lower() == "x" else "open", "refs": reqs})
     # agentrc:CTX-002 text holds the lower-cased body of each block
     for e in blocks:
+        # spec-ctx REQ-IDX-002 text is empty for adr and task entries
+        if e["kind"] == "adr":
+            e["text"] = ""
+            continue
         s, end = block_range(lines, e["line"] - 1)
         e["text"] = squash(lines[s + 1:end])
     for e in decisions:

@@ -278,13 +278,15 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       if (!body.includes("Verify:")) problems.push([rpath, i, "task-without-verify", tid]);
       // the full task body is the title, so query output shows the Verify clause
       entries.push(entry({
-        id: tid, kind: "task", file: rpath, line: i, title: pyStrip(body), text: squash([body]), change,
+        id: tid, kind: "task", file: rpath, line: i, title: pyStrip(body), change,
         status: pyStrip(box).toLowerCase() === "x" ? "done" : "open", refs: reqs,
       }));
     }
   }
   // REQ-IDX-002 text holds the lower-cased body of each block
   for (const e of blocks) {
+    // text is empty for adr and task entries
+    if (e.kind === "adr") continue;
     const [s, end] = blockRange(lines, e.line - 1);
     e.text = squash(lines.slice(s + 1, end));
   }

@@ -11,7 +11,7 @@
         "REQ-CLI-001"
       ],
       "status": "done",
-      "text": "create package.json (name agentrc, node 22, bun compatible), tsconfig strict, vitest, and `bin: agentrc`. [req-cli-001] verify: `bun install && bun run test` passes with zero tests.",
+      "text": "",
       "title": "Create package.json (name agentrc, Node 22, bun compatible), tsconfig strict, vitest, and `bin: agentrc`. [REQ-CLI-001] Verify: `bun install && bun run test` passes with zero tests."
     },
     {
@@ -25,7 +25,7 @@
         "REQ-GOV-003"
       ],
       "status": "done",
-      "text": "copy `scripts/ste-lint.py` and `scripts/tells-lint.py` from sonqh/ste-humanize-skill into `scripts/`. [req-gov-003] verify: `python3 scripts/tells-lint.py --selftest` prints ok.",
+      "text": "",
       "title": "Copy `scripts/ste-lint.py` and `scripts/tells-lint.py` from sonqh/ste-humanize-skill into `scripts/`. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --selftest` prints ok."
     },
     {
@@ -40,7 +40,7 @@
         "REQ-GOV-005"
       ],
       "status": "done",
-      "text": "add `.github/workflows/ci.yml` running `openspec validate --all --strict`, `python3 tools/ctx/ctx.py check --strict`, both linters on markdown, and `bun run test`. [req-gov-003, req-gov-005] verify: workflow file parses and runs on a pull request.",
+      "text": "",
       "title": "Add `.github/workflows/ci.yml` running `openspec validate --all --strict`, `python3 tools/ctx/ctx.py check --strict`, both linters on markdown, and `bun run test`. [REQ-GOV-003, REQ-GOV-005] Verify: workflow file parses and runs on a pull request."
     },
     {
@@ -54,7 +54,7 @@
         "REQ-GOV-005"
       ],
       "status": "done",
-      "text": "add a pre-commit hook via `.githooks/pre-commit` and `git config core.hookspath .githooks` documented in readme. [req-gov-005] verify: a commit with a dangling refs line is rejected.",
+      "text": "",
       "title": "Add a pre-commit hook via `.githooks/pre-commit` and `git config core.hooksPath .githooks` documented in README. [REQ-GOV-005] Verify: a commit with a dangling Refs line is rejected."
     },
     {
@@ -69,7 +69,7 @@
         "REQ-CTX-002"
       ],
       "status": "done",
-      "text": "implement `tools/ctx/ctx.py build` scanning the sources in req-ctx-001 and writing a sorted `.ctx/index.json`. [req-ctx-001, req-ctx-002] verify: `tests/ctx/test_build.py` asserts every id in `tests/fixtures/ctx-repo/` is indexed and two builds are byte-identical.",
+      "text": "",
       "title": "Implement `tools/ctx/ctx.py build` scanning the sources in REQ-CTX-001 and writing a sorted `.ctx/index.json`. [REQ-CTX-001, REQ-CTX-002] Verify: `tests/ctx/test_build.py` asserts every ID in `tests/fixtures/ctx-repo/` is indexed and two builds are byte-identical."
     },
     {
@@ -85,7 +85,7 @@
         "REQ-CTX-006"
       ],
       "status": "done",
-      "text": "implement `query`, `related`, `bundle` with `--budget` and `--depth`. [req-ctx-004, req-ctx-005, req-ctx-006] verify: `tests/ctx/test_query.py` covers scn-ctx-004-1, scn-ctx-005-1, scn-ctx-006-1, scn-ctx-006-2.",
+      "text": "",
       "title": "Implement `query`, `related`, `bundle` with `--budget` and `--depth`. [REQ-CTX-004, REQ-CTX-005, REQ-CTX-006] Verify: `tests/ctx/test_query.py` covers SCN-CTX-004-1, SCN-CTX-005-1, SCN-CTX-006-1, SCN-CTX-006-2."
     },
     {
@@ -102,7 +102,7 @@
         "REQ-GOV-004"
       ],
       "status": "done",
-      "text": "implement `check` with rules duplicate-id, dangling-ref, req-without-scn, missing-id, reused-id, task-without-req, and `--strict` uncovered and unknown-task-req. [req-ctx-007, req-gov-001, req-gov-002, req-gov-004] verify: `tests/ctx/test_check.py` has one failing fixture per rule.",
+      "text": "",
       "title": "Implement `check` with rules duplicate-id, dangling-ref, req-without-scn, missing-id, reused-id, task-without-req, and `--strict` uncovered and unknown-task-req. [REQ-CTX-007, REQ-GOV-001, REQ-GOV-002, REQ-GOV-004] Verify: `tests/ctx/test_check.py` has one failing fixture per rule."
     },
     {
@@ -116,7 +116,7 @@
         "REQ-CTX-008"
       ],
       "status": "done",
-      "text": "implement `status`. [req-ctx-008] verify: output on this repo lists four active changes with task counts.",
+      "text": "",
       "title": "Implement `status`. [REQ-CTX-008] Verify: output on this repo lists four active changes with task counts."
     },
     {
@@ -130,7 +130,7 @@
         "REQ-CTX-003"
       ],
       "status": "done",
-      "text": "measure build time on the ci runner with 2,000 generated files. [req-ctx-003] verify: `tests/ctx/test_perf.py` asserts under 1.0 s.",
+      "text": "",
       "title": "Measure build time on the CI runner with 2,000 generated files. [REQ-CTX-003] Verify: `tests/ctx/test_perf.py` asserts under 1.0 s."
     },
     {
@@ -147,7 +147,7 @@
         "REQ-BOOT-005"
       ],
       "status": "done",
-      "text": "write `.claude/skills/bootstrap-context/skill.md` per req-boot-002 and req-boot-003, and symlink it to `.agents/skills/bootstrap-context/skill.md`. [req-boot-001, req-boot-002, req-boot-003, req-boot-005] verify: ci step `diff` of the two files is empty.",
+      "text": "",
       "title": "Write `.claude/skills/bootstrap-context/SKILL.md` per REQ-BOOT-002 and REQ-BOOT-003, and symlink it to `.agents/skills/bootstrap-context/SKILL.md`. [REQ-BOOT-001, REQ-BOOT-002, REQ-BOOT-003, REQ-BOOT-005] Verify: CI step `diff` of the two files is empty."
     },
     {
@@ -161,7 +161,7 @@
         "REQ-BOOT-004"
       ],
       "status": "done",
-      "text": "implement handoff write and read in the skill text and add `.ctx/handoff.md` to `.gitignore`. [req-boot-004] verify: manual run of scn-boot-004-1 recorded in `docs/verification/001.md`.",
+      "text": "",
       "title": "Implement handoff write and read in the skill text and add `.ctx/handoff.md` to `.gitignore`. [REQ-BOOT-004] Verify: manual run of SCN-BOOT-004-1 recorded in `docs/verification/001.md`."
     },
     {
@@ -176,7 +176,7 @@
         "REQ-GOV-003"
       ],
       "status": "done",
-      "text": "write root `claude.md` and `agents.md` (one-liner `@claude.md`) stating the ctx-first rule, the id scheme, the writing rule, and the commands. [req-boot-002, req-gov-003] verify: both files pass both linters.",
+      "text": "",
       "title": "Write root `CLAUDE.md` and `AGENTS.md` (one-liner `@CLAUDE.md`) stating the ctx-first rule, the ID scheme, the writing rule, and the commands. [REQ-BOOT-002, REQ-GOV-003] Verify: both files pass both linters."
     },
     {
@@ -197,7 +197,7 @@
         "REQ-PROF-009"
       ],
       "status": "done",
-      "text": "implement `src/profile/schema.ts` with zod for req-prof-002 to req-prof-009 including defaults and the autonomy-sandbox rule. [req-prof-002, req-prof-003, req-prof-004, req-prof-005, req-prof-006, req-prof-007, req-prof-008, req-prof-009] verify: `tests/profile/schema.test.ts` has one test per scenario scn-prof-002-1 to scn-prof-009-1.",
+      "text": "",
       "title": "Implement `src/profile/schema.ts` with zod for REQ-PROF-002 to REQ-PROF-009 including defaults and the autonomy-sandbox rule. [REQ-PROF-002, REQ-PROF-003, REQ-PROF-004, REQ-PROF-005, REQ-PROF-006, REQ-PROF-007, REQ-PROF-008, REQ-PROF-009] Verify: `tests/profile/schema.test.ts` has one test per scenario SCN-PROF-002-1 to SCN-PROF-009-1."
     },
     {
@@ -211,7 +211,7 @@
         "REQ-PROF-001"
       ],
       "status": "done",
-      "text": "implement `src/profile/load.ts` resolving the path per req-prof-001. [req-prof-001] verify: tests for scn-prof-001-1 to scn-prof-001-3.",
+      "text": "",
       "title": "Implement `src/profile/load.ts` resolving the path per REQ-PROF-001. [REQ-PROF-001] Verify: tests for SCN-PROF-001-1 to SCN-PROF-001-3."
     },
     {
@@ -225,7 +225,7 @@
         "REQ-PROF-010"
       ],
       "status": "done",
-      "text": "generate `schema/profile.schema.json` in a build script and add a test that fixtures pass both validators. [req-prof-010] verify: `tests/profile/jsonschema.test.ts` passes on `tests/fixtures/profiles/*.yaml`.",
+      "text": "",
       "title": "Generate `schema/profile.schema.json` in a build script and add a test that fixtures pass both validators. [REQ-PROF-010] Verify: `tests/profile/jsonschema.test.ts` passes on `tests/fixtures/profiles/*.yaml`."
     },
     {
@@ -239,7 +239,7 @@
         "REQ-PROF-011"
       ],
       "status": "done",
-      "text": "implement `agentrc validate` output format and `--json`. [req-prof-011] verify: test for scn-prof-011-1.",
+      "text": "",
       "title": "Implement `agentrc validate` output format and `--json`. [REQ-PROF-011] Verify: test for SCN-PROF-011-1."
     },
     {
@@ -259,7 +259,7 @@
         "REQ-IC-008"
       ],
       "status": "done",
-      "text": "define `src/ic/types.ts` and zod schema for req-ic-002 to req-ic-008. [req-ic-002, req-ic-003, req-ic-004, req-ic-005, req-ic-006, req-ic-007, req-ic-008] verify: `tests/ic/schema.test.ts` rejects each invalid shape named in the scenarios.",
+      "text": "",
       "title": "Define `src/ic/types.ts` and zod schema for REQ-IC-002 to REQ-IC-008. [REQ-IC-002, REQ-IC-003, REQ-IC-004, REQ-IC-005, REQ-IC-006, REQ-IC-007, REQ-IC-008] Verify: `tests/ic/schema.test.ts` rejects each invalid shape named in the scenarios."
     },
     {
@@ -273,7 +273,7 @@
         "REQ-IC-009"
       ],
       "status": "done",
-      "text": "add prose blocks under `src/ic/blocks/` for verbosity, explanations, report_format, and a build step that embeds them. [req-ic-009] verify: blocks pass both linters and scn-ic-009-1 test passes.",
+      "text": "",
       "title": "Add prose blocks under `src/ic/blocks/` for verbosity, explanations, report_format, and a build step that embeds them. [REQ-IC-009] Verify: blocks pass both linters and SCN-IC-009-1 test passes."
     },
     {
@@ -290,7 +290,7 @@
         "REQ-IC-005"
       ],
       "status": "done",
-      "text": "implement `src/ic/compile.ts` from profile to ic with no catalog (empty arrays) and prove purity. [req-ic-001, req-ic-003, req-ic-004, req-ic-005] verify: golden files `tests/golden/ic/*.json` for five profiles, and scn-ic-001-1 test.",
+      "text": "",
       "title": "Implement `src/ic/compile.ts` from profile to IC with no catalog (empty arrays) and prove purity. [REQ-IC-001, REQ-IC-003, REQ-IC-004, REQ-IC-005] Verify: golden files `tests/golden/ic/*.json` for five profiles, and SCN-IC-001-1 test."
     },
     {
@@ -307,7 +307,7 @@
         "REQ-ADPT-005"
       ],
       "status": "done",
-      "text": "define `src/adapters/types.ts` with `agentadapter`, `artifact`, `capabilities`, and a `mockadapter` used by tests. [req-adpt-001, req-adpt-002, req-adpt-004, req-adpt-005] verify: `tests/adapters/contract.test.ts` runs the shared contract suite against mockadapter.",
+      "text": "",
       "title": "Define `src/adapters/types.ts` with `AgentAdapter`, `Artifact`, `Capabilities`, and a `MockAdapter` used by tests. [REQ-ADPT-001, REQ-ADPT-002, REQ-ADPT-004, REQ-ADPT-005] Verify: `tests/adapters/contract.test.ts` runs the shared contract suite against MockAdapter."
     },
     {
@@ -321,7 +321,7 @@
         "REQ-ADPT-003"
       ],
       "status": "done",
-      "text": "implement config dir resolution helper per req-adpt-003. [req-adpt-003] verify: tests for scn-adpt-003-1 and scn-adpt-003-2.",
+      "text": "",
       "title": "Implement config dir resolution helper per REQ-ADPT-003. [REQ-ADPT-003] Verify: tests for SCN-ADPT-003-1 and SCN-ADPT-003-2."
     },
     {
@@ -336,7 +336,7 @@
         "REQ-CTX-007"
       ],
       "status": "done",
-      "text": "tag every implemented req in code and tests, then run `ctx check --strict`. [req-gov-001, req-ctx-007] verify: exit 0.",
+      "text": "",
       "title": "Tag every implemented REQ in code and tests, then run `ctx check --strict`. [REQ-GOV-001, REQ-CTX-007] Verify: exit 0."
     },
     {
@@ -350,7 +350,7 @@
         "REQ-GOV-003"
       ],
       "status": "done",
-      "text": "run `openspec validate --all --strict` and both linters on all markdown. [req-gov-003] verify: exit 0.",
+      "text": "",
       "title": "Run `openspec validate --all --strict` and both linters on all markdown. [REQ-GOV-003] Verify: exit 0."
     },
     {
@@ -448,7 +448,7 @@
         "REQ-APPLY-001"
       ],
       "status": "done",
-      "text": "implement `src/apply/plan.ts`: compile, render, read, classify create/update/unchanged/skip. [req-apply-001] verify: `tests/apply/plan.test.ts` covers scn-apply-001-1 and asserts no filesystem writes with a temp home.",
+      "text": "",
       "title": "Implement `src/apply/plan.ts`: compile, render, read, classify create/update/unchanged/skip. [REQ-APPLY-001] Verify: `tests/apply/plan.test.ts` covers SCN-APPLY-001-1 and asserts no filesystem writes with a temp home."
     },
     {
@@ -462,7 +462,7 @@
         "REQ-APPLY-009"
       ],
       "status": "done",
-      "text": "implement the secrets path guard and the under-config-dir path check. [req-apply-009] verify: test for scn-apply-009-1 with a mock adapter returning `auth.json`.",
+      "text": "",
       "title": "Implement the secrets path guard and the under-config-dir path check. [REQ-APPLY-009] Verify: test for SCN-APPLY-009-1 with a mock adapter returning `auth.json`."
     },
     {
@@ -477,7 +477,7 @@
         "REQ-ADPT-005"
       ],
       "status": "done",
-      "text": "implement managed-block read and write for markdown and toml comment syntax. [req-apply-003, req-adpt-005] verify: tests for scn-apply-003-1 and scn-cld-002-1 on fixture files.",
+      "text": "",
       "title": "Implement managed-block read and write for markdown and TOML comment syntax. [REQ-APPLY-003, REQ-ADPT-005] Verify: tests for SCN-APPLY-003-1 and SCN-CLD-002-1 on fixture files."
     },
     {
@@ -493,7 +493,7 @@
         "REQ-CLD-006"
       ],
       "status": "done",
-      "text": "implement merge-json with owned-key list and `_agentrc` marker. [req-apply-003, req-cld-004, req-cld-006] verify: tests for scn-cld-004-1 and scn-cld-006-1.",
+      "text": "",
       "title": "Implement merge-json with owned-key list and `_agentrc` marker. [REQ-APPLY-003, REQ-CLD-004, REQ-CLD-006] Verify: tests for SCN-CLD-004-1 and SCN-CLD-006-1."
     },
     {
@@ -508,7 +508,7 @@
         "REQ-CDX-003"
       ],
       "status": "done",
-      "text": "implement merge-toml with `smol-toml` and owned-table list. [req-apply-003, req-cdx-003] verify: test for scn-cdx-003-1 with a `[profiles.work]` fixture.",
+      "text": "",
       "title": "Implement merge-toml with `smol-toml` and owned-table list. [REQ-APPLY-003, REQ-CDX-003] Verify: test for SCN-CDX-003-1 with a `[profiles.work]` fixture."
     },
     {
@@ -522,7 +522,7 @@
         "REQ-APPLY-002"
       ],
       "status": "done",
-      "text": "implement unified diff output per artifact. [req-apply-002] verify: test for scn-apply-002-1 compares against a golden diff.",
+      "text": "",
       "title": "Implement unified diff output per artifact. [REQ-APPLY-002] Verify: test for SCN-APPLY-002-1 compares against a golden diff."
     },
     {
@@ -536,7 +536,7 @@
         "REQ-APPLY-004"
       ],
       "status": "done",
-      "text": "implement confirmation, `--yes`, and tty detection. [req-apply-004] verify: test for scn-apply-004-1 with stdin not a tty exits 3.",
+      "text": "",
       "title": "Implement confirmation, `--yes`, and TTY detection. [REQ-APPLY-004] Verify: test for SCN-APPLY-004-1 with stdin not a TTY exits 3."
     },
     {
@@ -551,7 +551,7 @@
         "REQ-APPLY-008"
       ],
       "status": "done",
-      "text": "implement backups with 10-set retention and atomic temp-then-rename writes. [req-apply-006, req-apply-008] verify: tests for scn-apply-006-1 and scn-apply-008-1 (inject eacces on the third artifact).",
+      "text": "",
       "title": "Implement backups with 10-set retention and atomic temp-then-rename writes. [REQ-APPLY-006, REQ-APPLY-008] Verify: tests for SCN-APPLY-006-1 and SCN-APPLY-008-1 (inject EACCES on the third artifact)."
     },
     {
@@ -565,7 +565,7 @@
         "REQ-APPLY-005"
       ],
       "status": "done",
-      "text": "implement lockfile write and `status` drift comparison. [req-apply-005] verify: test for scn-apply-005-1.",
+      "text": "",
       "title": "Implement lockfile write and `status` drift comparison. [REQ-APPLY-005] Verify: test for SCN-APPLY-005-1."
     },
     {
@@ -579,7 +579,7 @@
         "REQ-APPLY-007"
       ],
       "status": "done",
-      "text": "implement `revert`. [req-apply-007] verify: test for scn-apply-007-1 leaves the temp home empty.",
+      "text": "",
       "title": "Implement `revert`. [REQ-APPLY-007] Verify: test for SCN-APPLY-007-1 leaves the temp home empty."
     },
     {
@@ -593,7 +593,7 @@
         "REQ-CLD-001"
       ],
       "status": "done",
-      "text": "implement `detect()` and config dir resolution. [req-cld-001] verify: test for scn-cld-001-1.",
+      "text": "",
       "title": "Implement `detect()` and config dir resolution. [REQ-CLD-001] Verify: test for SCN-CLD-001-1."
     },
     {
@@ -607,7 +607,7 @@
         "REQ-CLD-002"
       ],
       "status": "done",
-      "text": "render `claude.md` managed block with `@rules/` imports. [req-cld-002] verify: golden files for five profiles and scn-cld-002-2.",
+      "text": "",
       "title": "Render `CLAUDE.md` managed block with `@rules/` imports. [REQ-CLD-002] Verify: golden files for five profiles and SCN-CLD-002-2."
     },
     {
@@ -621,7 +621,7 @@
         "REQ-CLD-003"
       ],
       "status": "done",
-      "text": "render `rules/<id>.md` with `paths:` frontmatter. [req-cld-003] verify: test for scn-cld-003-1.",
+      "text": "",
       "title": "Render `rules/<id>.md` with `paths:` frontmatter. [REQ-CLD-003] Verify: test for SCN-CLD-003-1."
     },
     {
@@ -636,7 +636,7 @@
         "REQ-CLD-005"
       ],
       "status": "done",
-      "text": "render `settings.json` owned keys, hooks as `jq` matchers, sorted unique deny list. [req-cld-004, req-cld-005] verify: tests for scn-cld-004-2 and scn-cld-005-1, plus a shell test that the rendered hook exits 2 on `git push origin main`.",
+      "text": "",
       "title": "Render `settings.json` owned keys, hooks as `jq` matchers, sorted unique deny list. [REQ-CLD-004, REQ-CLD-005] Verify: tests for SCN-CLD-004-2 and SCN-CLD-005-1, plus a shell test that the rendered hook exits 2 on `git push origin main`."
     },
     {
@@ -650,7 +650,7 @@
         "REQ-CLD-007"
       ],
       "status": "done",
-      "text": "render skills directories from cache with digest-based replace. [req-cld-007] verify: test for scn-cld-007-1.",
+      "text": "",
       "title": "Render skills directories from cache with digest-based replace. [REQ-CLD-007] Verify: test for SCN-CLD-007-1."
     },
     {
@@ -665,7 +665,7 @@
         "REQ-ADPT-001"
       ],
       "status": "done",
-      "text": "declare the capability table and run the shared contract suite. [req-cld-008, req-adpt-001] verify: `tests/adapters/contract.test.ts` passes for claude-code and scn-cld-008-1 passes.",
+      "text": "",
       "title": "Declare the capability table and run the shared contract suite. [REQ-CLD-008, REQ-ADPT-001] Verify: `tests/adapters/contract.test.ts` passes for claude-code and SCN-CLD-008-1 passes."
     },
     {
@@ -679,7 +679,7 @@
         "REQ-CDX-001"
       ],
       "status": "done",
-      "text": "implement `detect()` with `codex_home`. [req-cdx-001] verify: test for scn-cdx-001-1.",
+      "text": "",
       "title": "Implement `detect()` with `CODEX_HOME`. [REQ-CDX-001] Verify: test for SCN-CDX-001-1."
     },
     {
@@ -693,7 +693,7 @@
         "REQ-CDX-002"
       ],
       "status": "done",
-      "text": "render `agents.md` managed block with inlined rules. [req-cdx-002] verify: golden files for five profiles and scn-cdx-002-1.",
+      "text": "",
       "title": "Render `AGENTS.md` managed block with inlined rules. [REQ-CDX-002] Verify: golden files for five profiles and SCN-CDX-002-1."
     },
     {
@@ -707,7 +707,7 @@
         "REQ-CDX-003"
       ],
       "status": "done",
-      "text": "render `config.toml` sandbox, approval, and `[mcp_servers.*]`. [req-cdx-003] verify: test for scn-cdx-003-2.",
+      "text": "",
       "title": "Render `config.toml` sandbox, approval, and `[mcp_servers.*]`. [REQ-CDX-003] Verify: test for SCN-CDX-003-2."
     },
     {
@@ -722,7 +722,7 @@
         "REQ-CDX-006"
       ],
       "status": "done",
-      "text": "render hook and permission fallbacks as rule text and record degradations. [req-cdx-004, req-cdx-006] verify: tests for scn-cdx-004-1 and scn-cdx-006-1.",
+      "text": "",
       "title": "Render hook and permission fallbacks as rule text and record degradations. [REQ-CDX-004, REQ-CDX-006] Verify: tests for SCN-CDX-004-1 and SCN-CDX-006-1."
     },
     {
@@ -736,7 +736,7 @@
         "REQ-CDX-005"
       ],
       "status": "done",
-      "text": "copy skills to `~/.agents/skills`. [req-cdx-005] verify: test for scn-cdx-005-1.",
+      "text": "",
       "title": "Copy skills to `~/.agents/skills`. [REQ-CDX-005] Verify: test for SCN-CDX-005-1."
     },
     {
@@ -750,7 +750,7 @@
         "REQ-ADPT-001"
       ],
       "status": "done",
-      "text": "run the shared contract suite for codex. [req-adpt-001] verify: passes.",
+      "text": "",
       "title": "Run the shared contract suite for codex. [REQ-ADPT-001] Verify: passes."
     },
     {
@@ -766,7 +766,7 @@
         "REQ-CLI-003"
       ],
       "status": "done",
-      "text": "wire commands, global flags, exit codes, and stubs for `import` and `audit`. [req-cli-001, req-cli-002, req-cli-003] verify: tests for scn-cli-001-1, scn-cli-002-1, scn-cli-003-1.",
+      "text": "",
       "title": "Wire commands, global flags, exit codes, and stubs for `import` and `audit`. [REQ-CLI-001, REQ-CLI-002, REQ-CLI-003] Verify: tests for SCN-CLI-001-1, SCN-CLI-002-1, SCN-CLI-003-1."
     },
     {
@@ -780,7 +780,7 @@
         "REQ-CLI-004"
       ],
       "status": "done",
-      "text": "implement output style and `--json` discipline. [req-cli-004] verify: test for scn-cli-004-1.",
+      "text": "",
       "title": "Implement output style and `--json` discipline. [REQ-CLI-004] Verify: test for SCN-CLI-004-1."
     },
     {
@@ -794,7 +794,7 @@
         "REQ-CLI-005"
       ],
       "status": "done",
-      "text": "write all help text in strict ste and lint it in ci. [req-cli-005] verify: ci step pipes `--help` of every command into `ste-lint.py` with exit 0.",
+      "text": "",
       "title": "Write all help text in Strict STE and lint it in CI. [REQ-CLI-005] Verify: CI step pipes `--help` of every command into `ste-lint.py` with exit 0."
     },
     {
@@ -810,7 +810,7 @@
         "REQ-APPLY-007"
       ],
       "status": "done",
-      "text": "add `tests/e2e/init.test.ts` that runs `agentrc init --yes` against a temp home with both agents detected, then `status`, then `revert`. [req-apply-001, req-apply-005, req-apply-007] verify: all three steps exit 0 and the home is empty after revert.",
+      "text": "",
       "title": "Add `tests/e2e/init.test.ts` that runs `agentrc init --yes` against a temp HOME with both agents detected, then `status`, then `revert`. [REQ-APPLY-001, REQ-APPLY-005, REQ-APPLY-007] Verify: all three steps exit 0 and the home is empty after revert."
     },
     {
@@ -824,7 +824,7 @@
         "REQ-GOV-001"
       ],
       "status": "done",
-      "text": "tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [req-gov-001] verify: all exit 0.",
+      "text": "",
       "title": "Tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: all exit 0."
     },
     {
@@ -911,7 +911,7 @@
         "REQ-ELIC-002"
       ],
       "status": "done",
-      "text": "implement the twelve-question flow with `@clack/prompts`, defaults, and preview lines sourced from the mapping table. [req-elic-001, req-elic-002] verify: `tests/elicit/flow.test.ts` drives the flow with an answers file and asserts twelve prompts and preview text for scn-elic-002-1.",
+      "text": "",
       "title": "Implement the twelve-question flow with `@clack/prompts`, defaults, and preview lines sourced from the mapping table. [REQ-ELIC-001, REQ-ELIC-002] Verify: `tests/elicit/flow.test.ts` drives the flow with an answers file and asserts twelve prompts and preview text for SCN-ELIC-002-1."
     },
     {
@@ -925,7 +925,7 @@
         "REQ-ELIC-004"
       ],
       "status": "done",
-      "text": "implement inline validation and prompt repeat. [req-elic-004] verify: test for scn-elic-004-1.",
+      "text": "",
       "title": "Implement inline validation and prompt repeat. [REQ-ELIC-004] Verify: test for SCN-ELIC-004-1."
     },
     {
@@ -939,7 +939,7 @@
         "REQ-ELIC-005"
       ],
       "status": "done",
-      "text": "implement `--answers` mode and golden profiles for three answer files. [req-elic-005] verify: scn-elic-005-1 golden test.",
+      "text": "",
       "title": "Implement `--answers` mode and golden profiles for three answer files. [REQ-ELIC-005] Verify: SCN-ELIC-005-1 golden test."
     },
     {
@@ -953,7 +953,7 @@
         "REQ-ELIC-003"
       ],
       "status": "done",
-      "text": "implement `(imported)` defaults and \"accept imported\". [req-elic-003] verify: test for scn-elic-003-1.",
+      "text": "",
       "title": "Implement `(imported)` defaults and \"accept imported\". [REQ-ELIC-003] Verify: test for SCN-ELIC-003-1."
     },
     {
@@ -967,7 +967,7 @@
         "REQ-ELIC-006"
       ],
       "status": "done",
-      "text": "implement `--assist` with provider interface, file list confirmation, and `(suggested)` defaults. [req-elic-006] verify: tests for scn-elic-006-1 and scn-elic-006-2 with a mocked provider.",
+      "text": "",
       "title": "Implement `--assist` with provider interface, file list confirmation, and `(suggested)` defaults. [REQ-ELIC-006] Verify: tests for SCN-ELIC-006-1 and SCN-ELIC-006-2 with a mocked provider."
     },
     {
@@ -981,7 +981,7 @@
         "REQ-IMP-001"
       ],
       "status": "done",
-      "text": "implement source reading with the secrets guard. [req-imp-001] verify: test for scn-imp-001-1.",
+      "text": "",
       "title": "Implement source reading with the secrets guard. [REQ-IMP-001] Verify: test for SCN-IMP-001-1."
     },
     {
@@ -995,7 +995,7 @@
         "REQ-IMP-002"
       ],
       "status": "done",
-      "text": "implement inference rules with source paths. [req-imp-002] verify: tests for scn-imp-002-1 and scn-imp-002-2.",
+      "text": "",
       "title": "Implement inference rules with source paths. [REQ-IMP-002] Verify: tests for SCN-IMP-002-1 and SCN-IMP-002-2."
     },
     {
@@ -1009,7 +1009,7 @@
         "REQ-IMP-003"
       ],
       "status": "done",
-      "text": "implement draft write and three-section report. [req-imp-003] verify: test for scn-imp-003-1.",
+      "text": "",
       "title": "Implement draft write and three-section report. [REQ-IMP-003] Verify: test for SCN-IMP-003-1."
     },
     {
@@ -1023,7 +1023,7 @@
         "REQ-IMP-004"
       ],
       "status": "done",
-      "text": "implement `imported-notes` rule for unmapped prose. [req-imp-004] verify: test for scn-imp-004-1.",
+      "text": "",
       "title": "Implement `imported-notes` rule for unmapped prose. [REQ-IMP-004] Verify: test for SCN-IMP-004-1."
     },
     {
@@ -1037,7 +1037,7 @@
         "REQ-IMP-005"
       ],
       "status": "done",
-      "text": "build five import fixtures from real setups (trailofbits template, claude-code-starter output, a bare `/init` claude.md, a codex-only setup, a mixed setup). add golden drafts and `expected.json`. [req-imp-005] verify: scn-imp-005-1 passes for all five.",
+      "text": "",
       "title": "Build five import fixtures from real setups (trailofbits template, claude-code-starter output, a bare `/init` CLAUDE.md, a Codex-only setup, a mixed setup). Add golden drafts and `expected.json`. [REQ-IMP-005] Verify: SCN-IMP-005-1 passes for all five."
     },
     {
@@ -1052,7 +1052,7 @@
         "REQ-APPLY-004"
       ],
       "status": "done",
-      "text": "wire `init` to import, elicit, `plan --diff`, confirm, apply, and keep `--no-elicit`. [req-cli-001, req-apply-004] verify: `tests/e2e/init-full.test.ts` with an answers file completes and leaves a lockfile.",
+      "text": "",
       "title": "Wire `init` to import, elicit, `plan --diff`, confirm, apply, and keep `--no-elicit`. [REQ-CLI-001, REQ-APPLY-004] Verify: `tests/e2e/init-full.test.ts` with an answers file completes and leaves a lockfile."
     },
     {
@@ -1066,7 +1066,7 @@
         "REQ-GOV-001"
       ],
       "status": "done",
-      "text": "tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [req-gov-001] verify: all exit 0.",
+      "text": "",
       "title": "Tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: all exit 0."
     },
     {
@@ -1140,7 +1140,7 @@
         "REQ-CAT-001"
       ],
       "status": "done",
-      "text": "implement reference parsing and source validation. [req-cat-001] verify: test for scn-cat-001-1 and a parse table test.",
+      "text": "",
       "title": "Implement reference parsing and source validation. [REQ-CAT-001] Verify: test for SCN-CAT-001-1 and a parse table test."
     },
     {
@@ -1154,7 +1154,7 @@
         "REQ-CAT-002"
       ],
       "status": "done",
-      "text": "implement the `cct` source adapter with sparse git fetch. [req-cat-002] verify: integration test against a pinned commit of davila7/claude-code-templates, skipped when offline.",
+      "text": "",
       "title": "Implement the `cct` source adapter with sparse git fetch. [REQ-CAT-002] Verify: integration test against a pinned commit of davila7/claude-code-templates, skipped when offline."
     },
     {
@@ -1168,7 +1168,7 @@
         "REQ-CAT-002"
       ],
       "status": "done",
-      "text": "implement the `skills` source adapter via `npx skills add` into a temp dir. [req-cat-002] verify: integration test with one known skill, skipped when offline. scn-cat-002-1 unit test with a mocked source.",
+      "text": "",
       "title": "Implement the `skills` source adapter via `npx skills add` into a temp dir. [REQ-CAT-002] Verify: integration test with one known skill, skipped when offline. SCN-CAT-002-1 unit test with a mocked source."
     },
     {
@@ -1182,7 +1182,7 @@
         "REQ-CAT-003"
       ],
       "status": "done",
-      "text": "implement canonical tar digest and cache layout. [req-cat-003] verify: test for scn-cat-003-1.",
+      "text": "",
       "title": "Implement canonical tar digest and cache layout. [REQ-CAT-003] Verify: test for SCN-CAT-003-1."
     },
     {
@@ -1196,7 +1196,7 @@
         "REQ-CAT-008"
       ],
       "status": "done",
-      "text": "implement content safety checks. [req-cat-008] verify: tests for symlink, path escape, oversized file, and a `.exe`.",
+      "text": "",
       "title": "Implement content safety checks. [REQ-CAT-008] Verify: tests for symlink, path escape, oversized file, and a `.exe`."
     },
     {
@@ -1210,7 +1210,7 @@
         "REQ-CAT-004"
       ],
       "status": "done",
-      "text": "write resolved refs and digests to the lockfile and make compile read the digest. [req-cat-004] verify: test for scn-cat-004-1 with two temp homes.",
+      "text": "",
       "title": "Write resolved refs and digests to the lockfile and make compile read the digest. [REQ-CAT-004] Verify: test for SCN-CAT-004-1 with two temp homes."
     },
     {
@@ -1224,7 +1224,7 @@
         "REQ-CAT-005"
       ],
       "status": "done",
-      "text": "implement digest mismatch detection. [req-cat-005] verify: test for scn-cat-005-1 with a mocked source that returns a different digest.",
+      "text": "",
       "title": "Implement digest mismatch detection. [REQ-CAT-005] Verify: test for SCN-CAT-005-1 with a mocked source that returns a different digest."
     },
     {
@@ -1238,7 +1238,7 @@
         "REQ-CAT-006"
       ],
       "status": "done",
-      "text": "verify offline apply and the missing-digest message. [req-cat-006] verify: test for scn-cat-006-1 with network disabled in the test environment.",
+      "text": "",
       "title": "Verify offline apply and the missing-digest message. [REQ-CAT-006] Verify: test for SCN-CAT-006-1 with network disabled in the test environment."
     },
     {
@@ -1252,7 +1252,7 @@
         "REQ-CAT-007"
       ],
       "status": "done",
-      "text": "implement `update`. [req-cat-007] verify: test for scn-cat-007-1.",
+      "text": "",
       "title": "Implement `update`. [REQ-CAT-007] Verify: test for SCN-CAT-007-1."
     },
     {
@@ -1267,7 +1267,7 @@
         "REQ-APPLY-007"
       ],
       "status": "done",
-      "text": "end-to-end: profile with two skills and one mcp, `resolve`, `plan`, `apply`, `revert` on a temp home. [req-cat-004, req-apply-007] verify: `tests/e2e/catalog.test.ts` passes.",
+      "text": "",
       "title": "End-to-end: profile with two skills and one MCP, `resolve`, `plan`, `apply`, `revert` on a temp home. [REQ-CAT-004, REQ-APPLY-007] Verify: `tests/e2e/catalog.test.ts` passes."
     },
     {
@@ -1281,7 +1281,7 @@
         "REQ-GOV-001"
       ],
       "status": "done",
-      "text": "tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [req-gov-001] verify: all exit 0.",
+      "text": "",
       "title": "Tag code and tests, run `ctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: all exit 0."
     },
     {
@@ -1348,7 +1348,7 @@
         "REQ-APPLY-002"
       ],
       "status": "done",
-      "text": "confirm the code matches the six modified requirements: req-elic-001 field sourcing, req-imp-004, req-cld-006, req-adpt-005, req-apply-001 `remove`, and the conditional sandbox prompt. add a test for each scenario that has none. [req-elic-001, req-imp-004, req-cld-006, req-adpt-005, req-apply-001, req-apply-002] verify: tests for scn-elic-001-2, scn-elic-001-3, scn-cld-006-2, scn-adpt-005-2, scn-apply-001-2, scn-apply-002-2 pass.",
+      "text": "",
       "title": "Confirm the code matches the six MODIFIED requirements: REQ-ELIC-001 field sourcing, REQ-IMP-004, REQ-CLD-006, REQ-ADPT-005, REQ-APPLY-001 `remove`, and the conditional sandbox prompt. Add a test for each scenario that has none. [REQ-ELIC-001, REQ-IMP-004, REQ-CLD-006, REQ-ADPT-005, REQ-APPLY-001, REQ-APPLY-002] Verify: tests for SCN-ELIC-001-2, SCN-ELIC-001-3, SCN-CLD-006-2, SCN-ADPT-005-2, SCN-APPLY-001-2, SCN-APPLY-002-2 pass."
     },
     {
@@ -1362,7 +1362,7 @@
         "REQ-IMP-004"
       ],
       "status": "done",
-      "text": "remove the `rules` entry from the import draft and the `imported-notes` handling in elicit. print `kept in place` in the report. [req-imp-004] verify: test for scn-imp-004-1 and the five import fixtures pass.",
+      "text": "",
       "title": "Remove the `rules` entry from the import draft and the `imported-notes` handling in elicit. Print `kept in place` in the report. [REQ-IMP-004] Verify: test for SCN-IMP-004-1 and the five import fixtures pass."
     },
     {
@@ -1376,7 +1376,7 @@
         "REQ-IC-010"
       ],
       "status": "done",
-      "text": "add the framework table to `src/ic/languages.ts` and use it in compile. [req-ic-010] verify: tests for scn-ic-010-1 and scn-ic-010-2. regenerate goldens and review the diff.",
+      "text": "",
       "title": "Add the framework table to `src/ic/languages.ts` and use it in compile. [REQ-IC-010] Verify: tests for SCN-IC-010-1 and SCN-IC-010-2. Regenerate goldens and review the diff."
     },
     {
@@ -1390,7 +1390,7 @@
         "REQ-PROF-012"
       ],
       "status": "done",
-      "text": "write the generated profile with enum comments and the extensions example. [req-prof-012] verify: tests for scn-prof-012-1 and scn-prof-012-2. reload test shows comments do not break parsing.",
+      "text": "",
       "title": "Write the generated profile with enum comments and the extensions example. [REQ-PROF-012] Verify: tests for SCN-PROF-012-1 and SCN-PROF-012-2. Reload test shows comments do not break parsing."
     },
     {
@@ -1404,7 +1404,7 @@
         "REQ-PROF-013"
       ],
       "status": "done",
-      "text": "add the example line to reference validation errors. [req-prof-013] verify: test for scn-prof-013-1.",
+      "text": "",
       "title": "Add the example line to reference validation errors. [REQ-PROF-013] Verify: test for SCN-PROF-013-1."
     },
     {
@@ -1418,7 +1418,7 @@
         "REQ-ELIC-002"
       ],
       "status": "done",
-      "text": "move preview text to the clack `hint` field. keep titles on one line. [req-elic-002] verify: tests for scn-elic-002-1 and scn-elic-002-2 through the scripted prompter.",
+      "text": "",
       "title": "Move preview text to the clack `hint` field. Keep titles on one line. [REQ-ELIC-002] Verify: tests for SCN-ELIC-002-1 and SCN-ELIC-002-2 through the scripted prompter."
     },
     {
@@ -1432,7 +1432,7 @@
         "REQ-ELIC-008"
       ],
       "status": "done",
-      "text": "default name from `git config user.name`. repeat on empty. remove the role default. error on missing name or role in `--answers` mode. [req-elic-008] verify: tests for scn-elic-008-1, scn-elic-008-2, scn-elic-008-3. the git call is mocked.",
+      "text": "",
       "title": "Default name from `git config user.name`. Repeat on empty. Remove the role default. Error on missing name or role in `--answers` mode. [REQ-ELIC-008] Verify: tests for SCN-ELIC-008-1, SCN-ELIC-008-2, SCN-ELIC-008-3. The git call is mocked."
     },
     {
@@ -1446,7 +1446,7 @@
         "REQ-ELIC-009"
       ],
       "status": "done",
-      "text": "add the extensions question with validation and the syntax hint. [req-elic-009] verify: tests for scn-elic-009-1 and scn-elic-009-2. update the three answers fixtures.",
+      "text": "",
       "title": "Add the extensions question with validation and the syntax hint. [REQ-ELIC-009] Verify: tests for SCN-ELIC-009-1 and SCN-ELIC-009-2. Update the three answers fixtures."
     },
     {
@@ -1460,7 +1460,7 @@
         "REQ-ELIC-010"
       ],
       "status": "done",
-      "text": "ask once about agents that are not installed. write `enabled: false` on \"disable\". print the notice once per run on stderr for enabled agents only. [req-elic-010] verify: tests for scn-elic-010-1 and scn-elic-010-2.",
+      "text": "",
       "title": "Ask once about agents that are not installed. Write `enabled: false` on \"disable\". Print the notice once per run on stderr for enabled agents only. [REQ-ELIC-010] Verify: tests for SCN-ELIC-010-1 and SCN-ELIC-010-2."
     },
     {
@@ -1474,7 +1474,7 @@
         "REQ-ELIC-007"
       ],
       "status": "done",
-      "text": "add intro and outro to `init`. [req-elic-007] verify: tests for scn-elic-007-1 and scn-elic-007-2 with the scripted prompter and captured stdout.",
+      "text": "",
       "title": "Add intro and outro to `init`. [REQ-ELIC-007] Verify: tests for SCN-ELIC-007-1 and SCN-ELIC-007-2 with the scripted prompter and captured stdout."
     },
     {
@@ -1490,7 +1490,7 @@
         "REQ-CLI-010"
       ],
       "status": "done",
-      "text": "group help into `commands` and `advanced`. remove `audit`. add `--version`. add the `terms` section. [req-cli-001, req-cli-006, req-cli-010] verify: tests for scn-cli-001-2, scn-cli-006-1, scn-cli-010-1. `ste-lint.py --baseline 0` on the help output.",
+      "text": "",
       "title": "Group help into `Commands` and `Advanced`. Remove `audit`. Add `--version`. Add the `Terms` section. [REQ-CLI-001, REQ-CLI-006, REQ-CLI-010] Verify: tests for SCN-CLI-001-2, SCN-CLI-006-1, SCN-CLI-010-1. `ste-lint.py --baseline 0` on the help output."
     },
     {
@@ -1504,7 +1504,7 @@
         "REQ-CLI-008"
       ],
       "status": "done",
-      "text": "summary table by default with `+n -m` for updates. full diff only with `--diff`. totals line. [req-cli-008] verify: tests for scn-cli-008-1 and scn-cli-008-2.",
+      "text": "",
       "title": "Summary table by default with `+N -M` for updates. Full diff only with `--diff`. Totals line. [REQ-CLI-008] Verify: tests for SCN-CLI-008-1 and SCN-CLI-008-2."
     },
     {
@@ -1518,7 +1518,7 @@
         "REQ-CLI-009"
       ],
       "status": "done",
-      "text": "filter `degraded:` lines to written agents. keep all in `--json`. [req-cli-009] verify: test for scn-cli-009-1.",
+      "text": "",
       "title": "Filter `degraded:` lines to written agents. Keep all in `--json`. [REQ-CLI-009] Verify: test for SCN-CLI-009-1."
     },
     {
@@ -1532,7 +1532,7 @@
         "REQ-CLI-007"
       ],
       "status": "done",
-      "text": "unify not-ready errors to end with `run: agentrc init`. [req-cli-007] verify: test for scn-cli-007-1 and the existing scn-prof-001-3 test.",
+      "text": "",
       "title": "Unify not-ready errors to end with `Run: agentrc init`. [REQ-CLI-007] Verify: test for SCN-CLI-007-1 and the existing SCN-PROF-001-3 test."
     },
     {
@@ -1546,7 +1546,7 @@
         "REQ-CLI-004"
       ],
       "status": "done",
-      "text": "route child process stderr to `--verbose` only. [req-cli-004] verify: test for scn-cli-004-2 with a failing fake fetch.",
+      "text": "",
       "title": "Route child process stderr to `--verbose` only. [REQ-CLI-004] Verify: test for SCN-CLI-004-2 with a failing fake fetch."
     },
     {
@@ -1560,7 +1560,7 @@
         "REQ-APPLY-010"
       ],
       "status": "done",
-      "text": "add the apply outro, in text and in `--json`. [req-apply-010] verify: test for scn-apply-010-1.",
+      "text": "",
       "title": "Add the apply outro, in text and in `--json`. [REQ-APPLY-010] Verify: test for SCN-APPLY-010-1."
     },
     {
@@ -1574,7 +1574,7 @@
         "REQ-APPLY-007"
       ],
       "status": "done",
-      "text": "add the revert follow-up line and `revert --list`. [req-apply-007] verify: tests for scn-apply-007-2 and scn-apply-007-3.",
+      "text": "",
       "title": "Add the revert follow-up line and `revert --list`. [REQ-APPLY-007] Verify: tests for SCN-APPLY-007-2 and SCN-APPLY-007-3."
     },
     {
@@ -1588,7 +1588,7 @@
         "REQ-IMP-006"
       ],
       "status": "done",
-      "text": "add `next: agentrc init` to the import report. [req-imp-006] verify: test for scn-imp-006-1.",
+      "text": "",
       "title": "Add `Next: agentrc init` to the import report. [REQ-IMP-006] Verify: test for SCN-IMP-006-1."
     },
     {
@@ -1602,7 +1602,7 @@
         "REQ-CAT-009"
       ],
       "status": "done",
-      "text": "build fetch errors from `{item, source, cause, fix}` and format them in one function. exit 1 on any failure. [req-cat-009] verify: tests for scn-cat-009-1 and scn-cat-009-2 with a fake source.",
+      "text": "",
       "title": "Build fetch errors from `{item, source, cause, fix}` and format them in one function. Exit 1 on any failure. [REQ-CAT-009] Verify: tests for SCN-CAT-009-1 and SCN-CAT-009-2 with a fake source."
     },
     {
@@ -1616,7 +1616,7 @@
         "REQ-ELIC-007"
       ],
       "status": "done",
-      "text": "run a manual first run in a temp home with `script` and paste the cleaned transcript into `docs/verification/005.md`. check each p0 item from the product review against it. [req-elic-007] verify: the transcript shows intro, hints, summary, confirm, outro, and no `degraded: codex` line.",
+      "text": "",
       "title": "Run a manual first run in a temp HOME with `script` and paste the cleaned transcript into `docs/verification/005.md`. Check each P0 item from the product review against it. [REQ-ELIC-007] Verify: the transcript shows intro, hints, summary, confirm, outro, and no `degraded: codex` line."
     },
     {
@@ -1630,7 +1630,7 @@
         "REQ-GOV-001"
       ],
       "status": "done",
-      "text": "update readme `use` section for the new flow. tag code and tests. run `ctx check --strict`, `openspec validate --all --strict`, both linters. [req-gov-001] verify: all exit 0.",
+      "text": "",
       "title": "Update README `Use` section for the new flow. Tag code and tests. Run `ctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: all exit 0."
     },
     {
@@ -1745,7 +1745,7 @@
         "REQ-CTX-002"
       ],
       "status": "done",
-      "text": "add `text`, `canonical`, and `scanned` to the index. skip `tests/fixtures/**` and `node_modules/**`. keep output deterministic. [req-ctx-001, req-ctx-002] verify: tests for scn-ctx-001-1, scn-ctx-002-1, scn-ctx-002-2 in `tests/ctx/test_build.py`.",
+      "text": "",
       "title": "Add `text`, `canonical`, and `scanned` to the index. Skip `tests/fixtures/**` and `node_modules/**`. Keep output deterministic. [REQ-CTX-001, REQ-CTX-002] Verify: tests for SCN-CTX-001-1, SCN-CTX-002-1, SCN-CTX-002-2 in `tests/ctx/test_build.py`."
     },
     {
@@ -1759,7 +1759,7 @@
         "REQ-CTX-009"
       ],
       "status": "done",
-      "text": "implement canonical selection and make `by_id` return the canonical entry. [req-ctx-009] verify: tests for scn-ctx-009-1, scn-ctx-009-2, scn-ctx-009-3.",
+      "text": "",
       "title": "Implement canonical selection and make `by_id` return the canonical entry. [REQ-CTX-009] Verify: tests for SCN-CTX-009-1, SCN-CTX-009-2, SCN-CTX-009-3."
     },
     {
@@ -1773,7 +1773,7 @@
         "REQ-CTX-011"
       ],
       "status": "done",
-      "text": "index design decisions as kind `decision`. [req-ctx-011] verify: test for scn-ctx-011-1 on a fixture change.",
+      "text": "",
       "title": "Index design decisions as kind `decision`. [REQ-CTX-011] Verify: test for SCN-CTX-011-1 on a fixture change."
     },
     {
@@ -1787,7 +1787,7 @@
         "REQ-CTX-003"
       ],
       "status": "done",
-      "text": "keep build under 1 s on the 2,000 file fixture. [req-ctx-003] verify: `tests/ctx/test_perf.py` passes.",
+      "text": "",
       "title": "Keep build under 1 s on the 2,000 file fixture. [REQ-CTX-003] Verify: `tests/ctx/test_perf.py` passes."
     },
     {
@@ -1801,7 +1801,7 @@
         "REQ-CTX-004"
       ],
       "status": "done",
-      "text": "token and over id, title, text. ranking. `--all`, `--limit`. no truncation. status column. [req-ctx-004] verify: tests for scn-ctx-004-1 to scn-ctx-004-4 in `tests/ctx/test_query.py`.",
+      "text": "",
       "title": "Token AND over id, title, text. Ranking. `--all`, `--limit`. No truncation. Status column. [REQ-CTX-004] Verify: tests for SCN-CTX-004-1 to SCN-CTX-004-4 in `tests/ctx/test_query.py`."
     },
     {
@@ -1815,7 +1815,7 @@
         "REQ-CTX-012"
       ],
       "status": "done",
-      "text": "provenance and reasons in `related`. canonical only by default. [req-ctx-012] verify: test for scn-ctx-012-1.",
+      "text": "",
       "title": "Provenance and reasons in `related`. Canonical only by default. [REQ-CTX-012] Verify: test for SCN-CTX-012-1."
     },
     {
@@ -1829,7 +1829,7 @@
         "REQ-CTX-006"
       ],
       "status": "done",
-      "text": "canonical text, provenance header per block, decisions section, named omitted ids in the trailer. [req-ctx-006] verify: tests for scn-ctx-006-1 to scn-ctx-006-5 in `tests/ctx/test_bundle.py`.",
+      "text": "",
       "title": "Canonical text, provenance header per block, decisions section, named omitted IDs in the trailer. [REQ-CTX-006] Verify: tests for SCN-CTX-006-1 to SCN-CTX-006-5 in `tests/ctx/test_bundle.py`."
     },
     {
@@ -1843,7 +1843,7 @@
         "REQ-CTX-010"
       ],
       "status": "done",
-      "text": "store `scanned` and compare on every command. rebuild on mismatch with `index rebuilt` on stderr. [req-ctx-010] verify: tests for scn-ctx-010-1 and scn-ctx-010-2.",
+      "text": "",
       "title": "Store `scanned` and compare on every command. Rebuild on mismatch with `index rebuilt` on stderr. [REQ-CTX-010] Verify: tests for SCN-CTX-010-1 and SCN-CTX-010-2."
     },
     {
@@ -1857,7 +1857,7 @@
         "REQ-CTX-008"
       ],
       "status": "done",
-      "text": "`status` with no active change: last archived, open questions from handoff. [req-ctx-008] verify: tests for scn-ctx-008-1 and scn-ctx-008-2 in `tests/ctx/test_status.py`.",
+      "text": "",
       "title": "`status` with no active change: last archived, open questions from handoff. [REQ-CTX-008] Verify: tests for SCN-CTX-008-1 and SCN-CTX-008-2 in `tests/ctx/test_status.py`."
     },
     {
@@ -1871,7 +1871,7 @@
         "REQ-CTX-007"
       ],
       "status": "done",
-      "text": "add `code-tag-no-canonical` and strict `scenario-untested`. keep every existing rule. [req-ctx-007] verify: tests for scn-ctx-007-4 and scn-ctx-007-5 in `tests/ctx/test_check.py`. scn-ctx-007-3 passes on this repo after any new findings are fixed by adding the missing scenario names to tests.",
+      "text": "",
       "title": "Add `code-tag-no-canonical` and strict `scenario-untested`. Keep every existing rule. [REQ-CTX-007] Verify: tests for SCN-CTX-007-4 and SCN-CTX-007-5 in `tests/ctx/test_check.py`. SCN-CTX-007-3 passes on this repo after any new findings are fixed by adding the missing scenario names to tests."
     },
     {
@@ -1885,7 +1885,7 @@
         "REQ-BOOT-002"
       ],
       "status": "done",
-      "text": "update `.claude/skills/bootstrap-context/skill.md` for the new `status` output and the open questions step. update the command table in `claude.md`. [req-boot-002] verify: scn-boot-002-2 described in the skill. both linters exit 0 on both files.",
+      "text": "",
       "title": "Update `.claude/skills/bootstrap-context/SKILL.md` for the new `status` output and the open questions step. Update the command table in `CLAUDE.md`. [REQ-BOOT-002] Verify: SCN-BOOT-002-2 described in the skill. Both linters exit 0 on both files."
     },
     {
@@ -1899,7 +1899,7 @@
         "REQ-GOV-001"
       ],
       "status": "done",
-      "text": "write `docs/verification/006.md`. run `ctx check --strict`, `openspec validate --all --strict`, both linters. [req-gov-001] verify: all exit 0.",
+      "text": "",
       "title": "Write `docs/verification/006.md`. Run `ctx check --strict`, `openspec validate --all --strict`, both linters. [REQ-GOV-001] Verify: all exit 0."
     },
     {
@@ -1991,7 +1991,7 @@
         "REQ-APPLY-005"
       ],
       "status": "done",
-      "text": "done task. [req-apply-005] verify: `true`",
+      "text": "",
       "title": "Done task. [REQ-APPLY-005] Verify: `true`"
     },
     {
@@ -2006,7 +2006,7 @@
         "REQ-ZZZ-001"
       ],
       "status": "open",
-      "text": "open task that cites two ids. [req-apply-001, req-zzz-001] verify: `true`",
+      "text": "",
       "title": "Open task that cites two IDs. [REQ-APPLY-001, REQ-ZZZ-001] Verify: `true`"
     },
     {
@@ -2018,7 +2018,7 @@
       "line": 7,
       "refs": [],
       "status": "open",
-      "text": "task without a requirement. verify: `true`",
+      "text": "",
       "title": "Task without a requirement. Verify: `true`"
     },
     {
@@ -2032,7 +2032,7 @@
         "REQ-APPLY-001"
       ],
       "status": "open",
-      "text": "task without a check. [req-apply-001]",
+      "text": "",
       "title": "Task without a check. [REQ-APPLY-001]"
     },
     {
@@ -2046,7 +2046,7 @@
         "REQ-GGG-001"
       ],
       "status": "open",
-      "text": "task that cites an unknown id. [req-ggg-001] verify: `true`",
+      "text": "",
       "title": "Task that cites an unknown ID. [REQ-GGG-001] Verify: `true`"
     },
     {
@@ -2089,7 +2089,7 @@
         "REQ-IMP-001"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision `profile.yaml` is the only hand-edited input. every file agentrc writes to an agent config directory is derived from it and carries a generated marker. ## why - the surveyed tools (ruler, syncode, dot-agents, agent-rules-sync) put files first. users still write every rule by hand and keep n copies in sync. - a profile answers the question \"who are you\" once. the compiler decides what each agent needs. ## consequences - a user who edits a generated file loses that edit on the next `apply`, unless the edit sits outside the managed block. - `import` must exist, so an existing config can become a profile instead of being thrown away. refs: req-prof-001, req-apply-003, req-imp-001",
+      "text": "",
       "title": "profile.yaml is the only source of truth"
     },
     {
@@ -2105,7 +2105,7 @@
         "ADR-001"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision `compile`, `render`, `plan`, `apply` are deterministic. same profile, same catalog digests, same output bytes. an llm may assist `elicit` through an explicit `--assist` flag. its output is a profile draft that goes through the same deterministic compile. ## why - golden-file tests need stable output. - users must trust what gets written into `~/.claude` and `~/.codex`. a diff they can read beats a model they cannot audit. ## consequences - the mapping from profile fields to artifacts is a table in code, not a prompt. - new behavior means a new mapping row and a new golden file. refs: req-ic-001, req-apply-001, adr-001",
+      "text": "",
       "title": "No LLM in the compile and apply path"
     },
     {
@@ -2120,7 +2120,7 @@
         "REQ-CLI-003"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision agentrc runs only when the user runs it. it never watches files and never writes without a `plan` the user can read first. ## why - agent-rules-sync uses a daemon with newest-wins. users reported they could not tell who changed what. - a daemon is hard to install on ci and on windows. ## consequences - drift between profile and disk is detected by `status`, not fixed automatically. - multi-machine sync is git on `~/.agentrc/`, not a service. refs: req-apply-002, req-cli-003",
+      "text": "",
       "title": "No daemon, no background sync"
     },
     {
@@ -2136,7 +2136,7 @@
         "REQ-APPLY-005"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision agentrc does not ship skills, commands, agents, or mcp definitions. it resolves them from external sources (claude-code-templates, skills.sh) by `source@ref`, computes a digest, and records the digest in the lockfile. ## why - claude-code-templates has 30k stars. a new catalog would not win. - a digest makes a rebuild reproducible even when upstream changes. ## consequences - offline `apply` works from the cache only when every digest is present. - a missing or changed digest is an error, not a silent update. refs: req-cat-001, req-cat-003, req-apply-005",
+      "text": "",
       "title": "Catalog content is external and pinned by digest"
     },
     {
@@ -2151,7 +2151,7 @@
         "REQ-CTX-001"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision every requirement, scenario, decision, and task has an id that never changes once published. | kind | pattern | example | lives in | | --- | --- | --- | --- | | requirement | `req-<cap>-<nnn>` | `req-prof-003` | `### requirement:` header | | scenario | `scn-<cap>-<nnn>-<n>` | `scn-prof-003-2` | `#### scenario:` header | | decision | `adr-<nnn>` | `adr-002` | `decisions/adr-nnn-*.md` title | | task | `<change>/<group>.<n>` | `002/3.2` | tasks.md checkbox | | code tag | comment `req-<cap>-<nnn>` | `// req-cld-002` | source file | | test tag | comment `covers: req-...` | `// covers: req-cld-002` | test file | capability codes: | code | capability path | | --- | --- | | prof | profile-schema | | ic | intermediate-config | | adpt | adapter-contract | | cld | adapter-claude-code | | cdx | adapter-codex | | apply | apply-pipeline | | cli | cli | | elic | elicit | | imp | import | | cat | catalog-resolver | | ctx | context-engine | | boot | session-bootstrap | | gov | spec-governance | links between ids are written as a line `refs: id, id` at the end of a requirement, decision, or paragraph. the context engine reads these lines and nothing else to build its graph. ## why - openspec identifies requirements by header text. header text changes when wording improves. an id does not. - the context engine needs a key that survives rewording to find code, tests, and tasks for a requirement. ## consequences - renaming a requirement keeps its id. removing one retires the id. ids are never reused. - `ctx check` fails when an id is duplicated or a refs target does not exist. refs: req-gov-001, req-ctx-001",
+      "text": "",
       "title": "Stable IDs on every spec artifact"
     },
     {
@@ -2165,7 +2165,7 @@
         "REQ-GOV-003"
       ],
       "status": "active",
-      "text": "status: accepted. date: 2026-10-23. ## decision every markdown file in this repo (specs, proposals, designs, adrs, readme, claude.md) is written or rewritten with the `ste-humanize` skill in human mode. tool descriptions and error strings in code use strict mode. ## why - specs are read by agents with no back-channel. a sentence with two readings costs a wrong implementation. - specs are also read by people. flat ste alone is hard to read for a page. ## consequences - no semicolons and no dashes in prose. one instruction per sentence. bullets for parallel parts. - technical terms stay as the field uses them, in any language. - `scripts/tells-lint.py` and `scripts/ste-lint.py` from the skill run in ci on `openspec/**/*.md` and `decisions/*.md` with `--baseline 0`. refs: req-gov-003",
+      "text": "",
       "title": "All markdown follows the ste-humanize skill"
     },
     {
