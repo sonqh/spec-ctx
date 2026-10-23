@@ -1,5 +1,10 @@
 # distribution
 
+## RENAMED Requirements
+
+- FROM: `### Requirement: REQ-DIST-002 Config file`
+- TO: `### Requirement: REQ-DIST-002 Config file and init`
+
 ## MODIFIED Requirements
 
 ### Requirement: REQ-DIST-002 Config file and init
