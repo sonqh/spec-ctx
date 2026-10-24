@@ -25,6 +25,7 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   "handoff write": {},
   "handoff ask": {},
   "handoff resolve": {},
+  adopt: { "dry-run": "bool" },
   init: { schema: "bool", skills: "bool", all: "bool", force: "bool" },
 };
 

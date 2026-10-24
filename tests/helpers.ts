@@ -1,5 +1,5 @@
 // Test helpers. Every test project lives in a fresh temp dir. Nothing writes outside it.
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +8,7 @@ import { main } from "../src/main.ts";
 export const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const BASE_FIXTURE = join(REPO, "tests/fixtures/ctx-repo");
 export const PARITY_FIXTURE = join(REPO, "tests/fixtures/parity-repo");
+export const NO_ID_FIXTURE = join(REPO, "tests/fixtures/no-id-repo");
 
 /** Tag text built at run time, so the index of this repo does not read test data as tags. */
 export const TAG = "// " + "REQ-";
@@ -60,6 +61,20 @@ export class Project {
     const r = await this.run("build");
     if (r.code !== 0) throw new Error(`build failed: ${r.err}`);
     return JSON.parse(this.read(".ctx/index.json"));
+  }
+  /** Every file under the root with its bytes, for a byte-for-byte tree compare. */
+  snapshot(): Map<string, string> {
+    const out = new Map<string, string>();
+    const walk = (abs: string, rel: string): void => {
+      for (const n of readdirSync(abs).sort()) {
+        const p = join(abs, n);
+        const r = rel ? `${rel}/${n}` : n;
+        if (statSync(p).isDirectory()) walk(p, r);
+        else out.set(r, readFileSync(p).toString("base64"));
+      }
+    };
+    walk(this.root, "");
+    return out;
   }
   cleanup(): void {
     rmSync(this.tmp, { recursive: true, force: true });

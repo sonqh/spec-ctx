@@ -6,7 +6,7 @@
 
 ## 2. Adopt
 
-- [ ] 2.1 Implement the scan and `adopt --dry-run` with the mapping output. [REQ-ADOPT-001] Verify: `bun test tests/adopt/dryrun.test.ts`
+- [x] 2.1 Implement the scan and `adopt --dry-run` with the mapping output. [REQ-ADOPT-001] Verify: `bun test tests/adopt/dryrun.test.ts`
 - [ ] 2.2 Implement CAP derivation with collision suffix and the config write. [REQ-ADOPT-004] Verify: `bun test tests/adopt/caps.test.ts`
 - [ ] 2.3 Implement the atomic write with RENAMED aware matching, post-write check, rollback, unmatched report, and `adopt-report.md`. [REQ-ADOPT-002, REQ-ADOPT-003] Verify: `bun test tests/adopt/write.test.ts tests/adopt/idempotent.test.ts`
 

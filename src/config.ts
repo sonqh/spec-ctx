@@ -12,7 +12,7 @@ export interface Config {
     tests: string[];
     ignore: string[];
   };
-  ids: { caps: string[]; task_pattern: string };
+  ids: { caps: string[]; task_pattern: string; paths: Record<string, string> };
   bundle: { budget: number; depth: number };
   verify: { timeout_s: number };
 }
@@ -29,7 +29,7 @@ export function defaults(): Config {
       tests: ["tests/**"],
       ignore: [],
     },
-    ids: { caps: [], task_pattern: "\\d+\\.\\d+" },
+    ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {} },
     bundle: { budget: 8000, depth: 1 },
     verify: { timeout_s: 600 },
   };
@@ -67,6 +67,13 @@ export function loadConfig(root: string): Config {
   if ("task_pattern" in ids) {
     if (typeof ids.task_pattern !== "string") throw new ConfigError(`${CONFIG_FILE}: ids.task_pattern must be a string.`);
     cfg.ids.task_pattern = ids.task_pattern;
+  }
+  if ("paths" in ids) {
+    const v = ids.paths;
+    if (v === null || typeof v !== "object" || Array.isArray(v) || !Object.values(v).every((x) => typeof x === "string")) {
+      throw new ConfigError(`${CONFIG_FILE}: ids.paths must be a table of code = "capability path".`);
+    }
+    cfg.ids.paths = { ...(v as Record<string, string>) };
   }
   const bundle = sec("bundle");
   for (const k of ["budget", "depth"] as const) {

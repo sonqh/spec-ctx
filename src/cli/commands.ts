@@ -29,6 +29,19 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     else io.out(`indexed ${data.entries.length} entries, ${data.problems.length} problem(s) -> ${INDEX_PATH}\n`);
     return 0;
   }
+  if (cmd === "adopt") {
+    if (p.positional.length) throw new UsageExit("adopt takes no arguments");
+    const { planAdopt, planLines } = await import("../adopt/plan.ts");
+    const plan = planAdopt(root, cfg);
+    if (!f["dry-run"]) {
+      const { applyAdopt } = await import("../adopt/write.ts");
+      return applyAdopt(root, cfg, plan, io, json);
+    }
+    if (json) print(plan);
+    else if (!plan.edits.length) io.out(plan.unmatched.length ? planLines(plan).join("\n") + "\nnothing to adopt\n" : "nothing to adopt\n");
+    else io.out(planLines(plan).join("\n") + `\n${plan.edits.length} header(s) to adopt. Run adopt to write them.\n`);
+    return plan.edits.length ? 1 : 0;
+  }
   if (cmd === "gate") {
     if (p.positional.length) throw new UsageExit("gate takes no arguments");
     const { runGate, DEFAULT_MARKDOWN } = await import("./gate.ts");
