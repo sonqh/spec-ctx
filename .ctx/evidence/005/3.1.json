@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-24T03:59:53.535Z",
+  "bundle_chars": 6159,
+  "files": {
+    "src/stats/stats.ts": "a7621b3708c7eaaab0c9c6f5b8c881ce786267b7f92a767d4cdc6fec3c1e0619",
+    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b",
+    "tests/stats/metrics.test.ts": "62e7e73152571b6ca7acd3818abe01a806ac74eb3ae1973a81a5413072e4d0dd"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-001",
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-10-24T03:57:33.970Z",
+  "task": "005/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js stats && test -n \"$(ls docs/metrics/)\" && bash scripts/ci-local.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "dcb52e87a41950b53a800dca8befce8d3ad8dee14278054c2ff4da0c4a035be2"
+  }
+}

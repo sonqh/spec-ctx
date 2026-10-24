@@ -12,7 +12,7 @@
 
 ## 3. Dogfood
 
-- [ ] 3.1 Backfill `bundle_chars` for this change's own tasks where `current.json` has it. Run `stats --write` and commit the first `docs/metrics/` file. Add `stats` to the `specctx-done` skill. Write `docs/verification/005.md`. [REQ-STAT-001, REQ-GOV-001] Verify: `node dist/cli.js stats && test -n "$(ls docs/metrics/)" && bash scripts/ci-local.sh`
+- [x] 3.1 Backfill `bundle_chars` for this change's own tasks where `current.json` has it. Run `stats --write` and commit the first `docs/metrics/` file. Add `stats` to the `specctx-done` skill. Write `docs/verification/005.md`. [REQ-STAT-001, REQ-GOV-001] Verify: `node dist/cli.js stats && test -n "$(ls docs/metrics/)" && bash scripts/ci-local.sh`
 
 ## Workflow follow-up
 
