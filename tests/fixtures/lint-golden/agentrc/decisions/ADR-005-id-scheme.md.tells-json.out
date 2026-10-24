@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-005-id-scheme.md",
+    "findings": []
+  }
+]
+exit: 0

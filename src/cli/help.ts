@@ -16,6 +16,8 @@ Read:
   \`task next\`                  Show the next open task.
   \`task verify <task>\`         Run the \`Verify:\` command of a task. Write nothing.
   \`stats\`                      Show five metrics for each change and the gate runs.
+  \`lint tells <file...>\`       Find the AI writing tells in markdown files.
+  \`lint ste <file...>\`         Find the breaks of the structural STE rules in markdown files.
 
 Write:
   \`build\`                      Write the index to .ctx/index.json.
@@ -61,6 +63,10 @@ Command flags:
   \`task backfill --change <name>\`
                                Look only in this change.
   \`task done --manual <note>\`  Record a manual note. A task with no \`Verify:\` command needs this flag.
+  \`lint --baseline <n>\`        Exit 0 when the hard findings are n or fewer. The default is 0.
+  \`lint --disable <rules>\`     Ignore these rules. Separate them with commas.
+  \`lint --json\`                Print the findings as JSON.
+  \`lint --selftest\`            Run the built in tests of the linter.
 
 Global flags:
   \`--root <path>\`              Use this project root.

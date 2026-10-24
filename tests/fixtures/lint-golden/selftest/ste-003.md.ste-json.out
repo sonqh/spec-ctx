@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-003.md",
+      "line": 1,
+      "col": 10,
+      "rule": "present-perfect",
+      "level": "advisory",
+      "match": "has run",
+      "message": "Compound tense. Use simple past/present unless current relevance is the point (then keep and flag)."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-003.md",
+      "line": 1,
+      "col": 27,
+      "rule": "present-perfect",
+      "level": "advisory",
+      "match": "has set",
+      "message": "Compound tense. Use simple past/present unless current relevance is the point (then keep and flag)."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-003.md",
+      "line": 1,
+      "col": 48,
+      "rule": "present-perfect",
+      "level": "advisory",
+      "match": "have begun",
+      "message": "Compound tense. Use simple past/present unless current relevance is the point (then keep and flag)."
+    }
+  ],
+  "count": 3,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 13,
+  "per_100_words": 23.1
+}
+exit: 0

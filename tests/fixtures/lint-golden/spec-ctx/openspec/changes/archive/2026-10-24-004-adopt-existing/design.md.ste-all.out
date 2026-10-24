@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/design.md:25:103 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/design.md:25:188 synonym-rotation: 'delete' and 'remove' name the same action. Pick one and use it every time. [deleted]
+
+2 violations (1 hard, baseline 0), 491 words, 0.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

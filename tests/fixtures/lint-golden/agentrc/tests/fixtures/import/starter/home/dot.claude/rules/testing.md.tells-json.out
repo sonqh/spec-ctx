@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/fixtures/import/starter/home/dot.claude/rules/testing.md",
+    "findings": []
+  }
+]
+exit: 0

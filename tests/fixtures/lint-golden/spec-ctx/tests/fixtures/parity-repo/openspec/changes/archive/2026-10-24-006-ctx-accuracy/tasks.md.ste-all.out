@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-006-ctx-accuracy/tasks.md:24:7 synonym-rotation: 'check' and 'verify' name the same action. Pick one and use it every time. [Check]
+
+1 violations (1 hard, baseline 0), 316 words, 0.3 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

@@ -1,0 +1,82 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 10,
+      "col": 164,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 17,
+      "col": 24,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 21,
+      "col": 46,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 25,
+      "col": 201,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 48,
+      "col": 23,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 51,
+      "col": 78,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is given",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 56,
+      "col": 50,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is required",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/task-workflow/spec.md",
+      "line": 72,
+      "col": 47,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is kept",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 8,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 518,
+  "per_100_words": 1.5
+}
+exit: 0

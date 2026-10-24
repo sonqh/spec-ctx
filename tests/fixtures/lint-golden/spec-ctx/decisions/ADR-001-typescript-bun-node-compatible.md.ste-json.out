@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-001-typescript-bun-node-compatible.md",
+      "line": 7,
+      "col": 12,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 187,
+  "per_100_words": 0.5
+}
+exit: 0

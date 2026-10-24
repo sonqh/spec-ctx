@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T04:20:47.004Z",
+  "bundle_chars": 1942,
+  "files": {
+    "tests/lint/parity.sh": "de903121dda663aece5d4132c0fcba5b1a48017ff79994a667318ed04a2300a8"
+  },
+  "kind": "command",
+  "reason": "stale-evidence 006/2.1 (help, main, and parity.sh changed in 2.4)",
+  "reqs": [
+    "REQ-LINT-001"
+  ],
+  "started_at": "2026-10-24T04:11:38.720Z",
+  "task": "006/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/lint/parity.sh --record && test -n \"$(ls tests/fixtures/lint-golden/)\"",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "6e177ea68fb45a4f78fea0265a2ff41c79a8c60190f0f31d21431796fdef213a"
+  }
+}

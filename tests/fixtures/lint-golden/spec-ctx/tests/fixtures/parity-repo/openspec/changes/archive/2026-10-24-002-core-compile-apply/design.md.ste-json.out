@@ -1,0 +1,46 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-002-core-compile-apply/design.md",
+      "line": 5,
+      "col": 234,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is guarded",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-002-core-compile-apply/design.md",
+      "line": 21,
+      "col": 134,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "gets",
+      "message": "'get' and 'fetch' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-002-core-compile-apply/design.md",
+      "line": 22,
+      "col": 164,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is copied",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-002-core-compile-apply/design.md",
+      "line": 24,
+      "col": 9,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are rendered",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 4,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 431,
+  "per_100_words": 0.9
+}
+exit: 1

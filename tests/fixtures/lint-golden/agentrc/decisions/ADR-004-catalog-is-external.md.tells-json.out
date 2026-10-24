@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-004-catalog-is-external.md",
+    "findings": []
+  }
+]
+exit: 0

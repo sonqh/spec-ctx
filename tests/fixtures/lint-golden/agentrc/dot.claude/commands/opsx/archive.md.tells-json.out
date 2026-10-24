@@ -1,0 +1,86 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/archive.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 18,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 20,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 50,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 51,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 130,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 131,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 132,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 133,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 144,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 157,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 160,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 163,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 258,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

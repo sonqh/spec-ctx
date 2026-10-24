@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/context-engine/spec.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 42,
+        "match": "Refs: REQ-CTX-009"
+      }
+    ]
+  }
+]
+exit: 0

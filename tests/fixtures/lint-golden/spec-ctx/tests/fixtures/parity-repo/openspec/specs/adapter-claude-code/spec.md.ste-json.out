@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md",
+      "line": 24,
+      "col": 26,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md",
+      "line": 46,
+      "col": 34,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md",
+      "line": 66,
+      "col": 35,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 3,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 549,
+  "per_100_words": 0.5
+}
+exit: 0

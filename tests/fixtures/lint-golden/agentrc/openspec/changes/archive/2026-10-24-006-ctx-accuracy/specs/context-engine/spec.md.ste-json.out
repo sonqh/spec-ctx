@@ -1,0 +1,91 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 36,
+      "col": 72,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 40,
+      "col": 71,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 40,
+      "col": 118,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 76,
+      "col": 126,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "verify",
+      "message": "'verify' and 'check' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 110,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 116,
+      "col": 386,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is passed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 138,
+      "col": 24,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is edited",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 145,
+      "col": 47,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are indexed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md",
+      "line": 155,
+      "col": 271,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is passed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 9,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 1226,
+  "per_100_words": 0.7
+}
+exit: 1

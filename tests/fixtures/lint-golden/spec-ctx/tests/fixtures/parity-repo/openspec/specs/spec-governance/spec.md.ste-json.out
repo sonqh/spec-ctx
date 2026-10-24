@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/spec-governance/spec.md",
+      "line": 21,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/spec-governance/spec.md",
+      "line": 45,
+      "col": 23,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is rejected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 2,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 286,
+  "per_100_words": 0.7
+}
+exit: 0

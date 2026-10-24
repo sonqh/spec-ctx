@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/golden/codex/valid-all-agents.AGENTS.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 40,
+        "match": "Applies to:"
+      }
+    ]
+  }
+]
+exit: 0

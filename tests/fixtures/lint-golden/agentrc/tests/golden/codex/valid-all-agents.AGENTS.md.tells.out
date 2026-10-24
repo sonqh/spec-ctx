@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/agentrc/tests/golden/codex/valid-all-agents.AGENTS.md:40: [advisory] repeated-closer: Applies to:
+0 hard finding(s), baseline 0
+exit: 0

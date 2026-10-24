@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/profile-schema/spec.md",
+      "line": 14,
+      "col": 60,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is given",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/profile-schema/spec.md",
+      "line": 99,
+      "col": 17,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are printed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 2,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 794,
+  "per_100_words": 0.3
+}
+exit: 0

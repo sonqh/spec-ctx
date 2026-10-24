@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-005-metrics/specs/cli/spec.md",
+    "findings": []
+  }
+]
+exit: 0

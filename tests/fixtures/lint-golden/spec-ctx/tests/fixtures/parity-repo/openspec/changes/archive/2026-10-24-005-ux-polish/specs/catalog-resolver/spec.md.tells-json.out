@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-005-ux-polish/specs/catalog-resolver/spec.md",
+    "findings": []
+  }
+]
+exit: 0

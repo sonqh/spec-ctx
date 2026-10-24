@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/docs/verification/004.md",
+    "findings": []
+  }
+]
+exit: 0

@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/ste-121.md",
+    "findings": [
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 1,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

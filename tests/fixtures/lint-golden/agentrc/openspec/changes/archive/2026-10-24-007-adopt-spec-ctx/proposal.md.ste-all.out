@@ -1,0 +1,10 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:5:44 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [were built]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:5:207 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is ported]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:5:253 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is extended]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:12:116 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is published]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:14:58 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are defined]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md:34:56 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is unchanged]
+
+6 violations (0 hard, baseline 0), 250 words, 2.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

@@ -1,0 +1,44 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/sync.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 20,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 22,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 50,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 62,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 69,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 100,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

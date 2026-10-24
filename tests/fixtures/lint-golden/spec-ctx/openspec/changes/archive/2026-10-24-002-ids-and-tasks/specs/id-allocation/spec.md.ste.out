@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md:10:274 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is required]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md:15:75 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is retired]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md:27:133 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+
+3 violations (0 hard, baseline 0), 275 words, 1.1 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

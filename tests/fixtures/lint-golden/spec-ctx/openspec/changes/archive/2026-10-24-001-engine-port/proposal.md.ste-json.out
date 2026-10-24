@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/proposal.md",
+      "line": 16,
+      "col": 42,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Verify",
+      "message": "'verify' and 'validate' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 294,
+  "per_100_words": 0.3
+}
+exit: 1

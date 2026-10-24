@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-propose/SKILL.md:36: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-propose/SKILL.md:38: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-propose/SKILL.md:121: [hard] bold-label: - **Inspect the relevant project before drafting**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-propose/SKILL.md:165: [hard] bold-label: - **IMPORTANT**:
+4 hard finding(s), baseline 0
+exit: 1

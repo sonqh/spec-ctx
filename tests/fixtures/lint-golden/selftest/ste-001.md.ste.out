@@ -1,0 +1,10 @@
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:11 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is removed]
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:21 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:23 phrasal-verb: Soft phrasal verb. Use the single plain verb (start, contact, read, begin). [spin up]
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:40 nominalization: Action frozen into a noun. Use the verb (analyze, not perform an analysis of). [Perform an analysis]
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:67 marketing-adjective: Marketing adjective. Delete, or replace with the measurement that earns the claim. [seamless]
+tests/fixtures/lint-corpus/selftest/ste-001.md:1:84 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [have received]
+
+6 violations (4 hard, baseline 0), 20 words, 30.0 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

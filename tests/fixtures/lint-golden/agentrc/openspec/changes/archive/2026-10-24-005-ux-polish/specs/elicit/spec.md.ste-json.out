@@ -1,0 +1,82 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 12,
+      "col": 64,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 26,
+      "col": 41,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is shown",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 30,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is shown",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 36,
+      "col": 144,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 36,
+      "col": 274,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'confirm' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 42,
+      "col": 79,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 49,
+      "col": 67,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is set",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md",
+      "line": 64,
+      "col": 210,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validated",
+      "message": "'validate' and 'confirm' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 8,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 731,
+  "per_100_words": 1.1
+}
+exit: 1

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-006-writing-style.md",
+    "findings": []
+  }
+]
+exit: 0

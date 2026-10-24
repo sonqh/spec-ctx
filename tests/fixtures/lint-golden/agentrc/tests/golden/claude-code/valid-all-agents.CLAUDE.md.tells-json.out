@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/golden/claude-code/valid-all-agents.CLAUDE.md",
+    "findings": []
+  }
+]
+exit: 0

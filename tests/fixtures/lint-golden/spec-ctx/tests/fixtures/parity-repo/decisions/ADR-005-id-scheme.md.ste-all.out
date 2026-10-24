@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/decisions/ADR-005-id-scheme.md:36:19 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are written]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/decisions/ADR-005-id-scheme.md:46:32 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is duplicated]
+
+2 violations (0 hard, baseline 0), 186 words, 1.1 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

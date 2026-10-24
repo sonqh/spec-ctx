@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/agentrc/openspec/specs/cli/spec.md:22: [advisory] repeated-closer: Refs: REQ-PROF-001
+0 hard finding(s), baseline 0
+exit: 0

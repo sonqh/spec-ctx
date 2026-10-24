@@ -1,0 +1,424 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 64,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "26 words",
+      "message": "Sentence has 26 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 234,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "31 words",
+      "message": "Sentence has 31 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 745,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "33 words",
+      "message": "Sentence has 33 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 990,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 1023,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "34 words",
+      "message": "Sentence has 34 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 15,
+      "col": 1191,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 19,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "43 words",
+      "message": "Sentence has 43 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 19,
+      "col": 776,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 21,
+      "col": 11,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'confirm' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 21,
+      "col": 77,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "34 words",
+      "message": "Sentence has 34 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 21,
+      "col": 285,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is selected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 21,
+      "col": 381,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is set",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 23,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "42 words",
+      "message": "Sentence has 42 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 23,
+      "col": 341,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is malformed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 25,
+      "col": 73,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was reached",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 30,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "32 words",
+      "message": "Sentence has 32 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 49,
+      "col": 195,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "verify",
+      "message": "'verify' and 'confirm' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 52,
+      "col": 183,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 53,
+      "col": 3,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "26 words",
+      "message": "Sentence has 26 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 56,
+      "col": 89,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 139,
+      "col": 225,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "35 words",
+      "message": "Sentence has 35 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 156,
+      "col": 220,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "33 words",
+      "message": "Sentence has 33 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 156,
+      "col": 435,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 156,
+      "col": 482,
+      "rule": "marketing-adjective",
+      "level": "advisory-free",
+      "match": "seamlessly",
+      "message": "Marketing adjective. Delete, or replace with the measurement that earns the claim."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 158,
+      "col": 177,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 159,
+      "col": 383,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "26 words",
+      "message": "Sentence has 26 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 159,
+      "col": 496,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 159,
+      "col": 566,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "32 words",
+      "message": "Sentence has 32 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 159,
+      "col": 590,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is blocked",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 160,
+      "col": 206,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "51 words",
+      "message": "Sentence has 51 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 160,
+      "col": 500,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 160,
+      "col": 593,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "30 words",
+      "message": "Sentence has 30 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 160,
+      "col": 726,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 161,
+      "col": 4,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "35 words",
+      "message": "Sentence has 35 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 161,
+      "col": 416,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "50 words",
+      "message": "Sentence has 50 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 161,
+      "col": 845,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "30 words",
+      "message": "Sentence has 30 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 161,
+      "col": 869,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is blocked",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 163,
+      "col": 182,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "26 words",
+      "message": "Sentence has 26 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 163,
+      "col": 209,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 178,
+      "col": 38,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are made",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 182,
+      "col": 58,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "28 words",
+      "message": "Sentence has 28 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 182,
+      "col": 188,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 352,
+      "col": 121,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "33 words",
+      "message": "Sentence has 33 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 352,
+      "col": 420,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 352,
+      "col": 609,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-explore/SKILL.md",
+      "line": 353,
+      "col": 238,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is created",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 46,
+  "hard_count": 37,
+  "baseline": 0,
+  "words": 2777,
+  "per_100_words": 1.7
+}
+exit: 1

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/src/ic/blocks/report-narrative.md",
+    "findings": []
+  }
+]
+exit: 0

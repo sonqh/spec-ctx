@@ -1,0 +1,86 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/dot.agents/skills/openspec-archive-change/SKILL.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 22,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 24,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 54,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 55,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 134,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 135,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 136,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 137,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 148,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 161,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 164,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 167,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 215,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

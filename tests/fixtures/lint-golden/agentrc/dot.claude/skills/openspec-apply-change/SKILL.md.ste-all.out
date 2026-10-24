@@ -1,0 +1,28 @@
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:15:1 long-sentence: Sentence has 43 words (cap 25). Split it. [43 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:15:776 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:17:77 long-sentence: Sentence has 34 words (cap 25). Split it. [34 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:17:192 synonym-rotation: 'confirm' and 'check' name the same action. Pick one and use it every time. [confirm]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:17:285 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is selected]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:17:381 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is set]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:19:1 long-sentence: Sentence has 42 words (cap 25). Split it. [42 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:19:341 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is malformed]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:21:73 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [was reached]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:26:1 long-sentence: Sentence has 32 words (cap 25). Split it. [32 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:34:14 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is provided]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:46:33 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:90:35 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:99:4 synonym-rotation: 'display' and 'show' name the same action. Pick one and use it every time. [Display]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:100:13 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:108:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being worked]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:111:6 long-sentence: Sentence has 27 words (cap 25). Split it. [27 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:111:117 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:119:6 long-sentence: Sentence has 40 words (cap 25). Split it. [40 words]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:119:72 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are tempted]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:119:199 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:196:33 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:197:32 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:205:52 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are done]
+
+24 violations (13 hard, baseline 0), 1480 words, 1.6 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

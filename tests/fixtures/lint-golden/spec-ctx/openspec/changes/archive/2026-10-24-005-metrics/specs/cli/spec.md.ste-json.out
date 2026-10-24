@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-005-metrics/specs/cli/spec.md",
+      "line": 17,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 166,
+  "per_100_words": 0.6
+}
+exit: 0

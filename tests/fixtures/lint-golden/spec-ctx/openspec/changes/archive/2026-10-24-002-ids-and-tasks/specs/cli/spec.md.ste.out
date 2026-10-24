@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/cli/spec.md:17:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is archived]
+
+1 violations (0 hard, baseline 0), 130 words, 0.8 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

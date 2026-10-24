@@ -1,0 +1,118 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 13,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 13,
+      "col": 227,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Confirm",
+      "message": "'confirm' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 19,
+      "col": 211,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "26 words",
+      "message": "Sentence has 26 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 19,
+      "col": 487,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Verify",
+      "message": "'verify' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 20,
+      "col": 3,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "31 words",
+      "message": "Sentence has 31 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 22,
+      "col": 74,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 23,
+      "col": 169,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "34 words",
+      "message": "Sentence has 34 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 24,
+      "col": 3,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "34 words",
+      "message": "Sentence has 34 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 25,
+      "col": 56,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was blocked",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 29,
+      "col": 166,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "27 words",
+      "message": "Sentence has 27 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 30,
+      "col": 191,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was committed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md",
+      "line": 30,
+      "col": 206,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "29 words",
+      "message": "Sentence has 29 words (cap 25). Split it."
+    }
+  ],
+  "count": 12,
+  "hard_count": 9,
+  "baseline": 0,
+  "words": 1195,
+  "per_100_words": 1.0
+}
+exit: 1

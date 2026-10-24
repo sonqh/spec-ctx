@@ -1,0 +1,73 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 8,
+      "col": 37,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is read",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 15,
+      "col": 27,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 15,
+      "col": 68,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 41,
+      "col": 22,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is appended",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 64,
+      "col": 23,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "modifying",
+      "message": "'modify' and 'change' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 71,
+      "col": 101,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "remove",
+      "message": "'remove' and 'delete' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/apply-pipeline/spec.md",
+      "line": 75,
+      "col": 57,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is removed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 7,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 823,
+  "per_100_words": 0.9
+}
+exit: 1

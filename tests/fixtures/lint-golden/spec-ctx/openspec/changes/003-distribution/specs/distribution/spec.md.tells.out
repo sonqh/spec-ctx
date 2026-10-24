@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/distribution/spec.md:15: [advisory] repeated-closer: Refs: ADR-001
+0 hard finding(s), baseline 0
+exit: 0

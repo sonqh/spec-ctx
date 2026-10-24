@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/proposal.md:16:42 synonym-rotation: 'verify' and 'validate' name the same action. Pick one and use it every time. [Verify]
+
+1 violations (1 hard, baseline 0), 294 words, 0.3 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

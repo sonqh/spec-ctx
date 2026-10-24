@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/schema-bundle/spec.md:14:30 synonym-rotation: 'validate' and 'verify' name the same action. Pick one and use it every time. [Validates]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/schema-bundle/spec.md:15:23 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is copied]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/schema-bundle/spec.md:26:31 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is archived]
+
+3 violations (1 hard, baseline 0), 208 words, 1.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

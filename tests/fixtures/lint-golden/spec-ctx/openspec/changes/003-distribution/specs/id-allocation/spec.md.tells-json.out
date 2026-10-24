@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/id-allocation/spec.md",
+    "findings": []
+  }
+]
+exit: 0

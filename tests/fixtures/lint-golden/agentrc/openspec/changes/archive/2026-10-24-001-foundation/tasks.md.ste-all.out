@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-001-foundation/tasks.md:8:181 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is rejected]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-001-foundation/tasks.md:12:230 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is indexed]
+
+2 violations (0 hard, baseline 0), 556 words, 0.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

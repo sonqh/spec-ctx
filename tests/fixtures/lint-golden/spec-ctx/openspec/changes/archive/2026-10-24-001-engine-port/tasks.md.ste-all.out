@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md:7:180 synonym-rotation: 'check' and 'verify' name the same action. Pick one and use it every time. [check]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md:32:107 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is fixed]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md:33:63 synonym-rotation: 'validate' and 'verify' name the same action. Pick one and use it every time. [validate]
+
+3 violations (2 hard, baseline 0), 342 words, 0.9 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

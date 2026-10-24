@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/design.md",
+      "line": 25,
+      "col": 103,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/design.md",
+      "line": 25,
+      "col": 188,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "deleted",
+      "message": "'delete' and 'remove' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 2,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 491,
+  "per_100_words": 0.4
+}
+exit: 1

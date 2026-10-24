@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/specs/linters/spec.md:24:44 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are compared]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/specs/linters/spec.md:37:21 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+
+2 violations (0 hard, baseline 0), 266 words, 0.8 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

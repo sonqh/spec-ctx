@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/cli/spec.md:26:33 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are listed]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/cli/spec.md:54:36 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is piped]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/cli/spec.md:92:18 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is enabled]
+
+3 violations (0 hard, baseline 0), 638 words, 0.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

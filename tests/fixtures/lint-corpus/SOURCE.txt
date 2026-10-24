@@ -1,0 +1,3 @@
+spec-ctx: git HEAD b1d05979cda45317d0204f6323765bfd3c0c8802
+agentrc: 79994d7b23dbc818a135d702790f1026258a7fc2
+selftest: inputs of tells-lint.py and ste-lint.py --selftest

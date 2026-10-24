@@ -1,0 +1,20 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/update.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 18,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 20,
+        "match": "- **Explicit OpenSpec request**:"
+      }
+    ]
+  }
+]
+exit: 1

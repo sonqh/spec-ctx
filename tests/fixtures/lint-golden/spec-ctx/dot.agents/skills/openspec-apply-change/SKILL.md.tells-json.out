@@ -1,0 +1,38 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.agents/skills/openspec-apply-change/SKILL.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 22,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 24,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 91,
+        "match": "- **spec-driven**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 204,
+        "match": "- **Can be invoked anytime**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 206,
+        "match": "- **Allows artifact updates**:"
+      }
+    ]
+  }
+]
+exit: 1

@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-001-profile-is-source-of-truth.md",
+      "line": 7,
+      "col": 102,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is derived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 126,
+  "per_100_words": 0.8
+}
+exit: 0

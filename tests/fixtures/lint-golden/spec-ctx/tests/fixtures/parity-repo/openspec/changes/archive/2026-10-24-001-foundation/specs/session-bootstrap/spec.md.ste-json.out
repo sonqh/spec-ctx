@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-001-foundation/specs/session-bootstrap/spec.md",
+      "line": 16,
+      "col": 48,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is read",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-001-foundation/specs/session-bootstrap/spec.md",
+      "line": 26,
+      "col": 111,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is truncated",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 2,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 350,
+  "per_100_words": 0.6
+}
+exit: 0

@@ -1,0 +1,13 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:15:64 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:29:41 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is shown]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:33:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is shown]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:43:43 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are asked]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:75:144 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:75:274 synonym-rotation: 'check' and 'confirm' name the same action. Pick one and use it every time. [check]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:81:79 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:88:67 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is set]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/elicit/spec.md:103:210 synonym-rotation: 'validate' and 'confirm' name the same action. Pick one and use it every time. [validated]
+
+9 violations (2 hard, baseline 0), 1015 words, 0.9 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

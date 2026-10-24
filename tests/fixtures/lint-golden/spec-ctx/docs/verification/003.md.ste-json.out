@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/docs/verification/003.md",
+      "line": 33,
+      "col": 47,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 381,
+  "per_100_words": 0.3
+}
+exit: 0

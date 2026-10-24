@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/agentrc/DELEGATION.md:13:91 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are referenced]
+tests/fixtures/lint-corpus/agentrc/DELEGATION.md:20:81 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is done]
+
+2 violations (0 hard, baseline 0), 546 words, 0.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

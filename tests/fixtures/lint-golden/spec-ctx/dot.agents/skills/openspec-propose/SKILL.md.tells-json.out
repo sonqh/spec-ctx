@@ -1,0 +1,32 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.agents/skills/openspec-propose/SKILL.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 36,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 38,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 121,
+        "match": "- **Inspect the relevant project before drafting**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 165,
+        "match": "- **IMPORTANT**:"
+      }
+    ]
+  }
+]
+exit: 1

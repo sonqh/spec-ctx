@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/ste-038.md:1:1 dangling-conjunction: List item ends with a coordinating conjunction. Complete the item or join it with the next item. [Do this and]
+
+1 violations (1 hard, baseline 0), 4 words, 25.0 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

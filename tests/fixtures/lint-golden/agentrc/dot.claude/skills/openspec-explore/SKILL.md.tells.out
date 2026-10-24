@@ -1,0 +1,17 @@
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:1: [advisory] repeated-closer: ---
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:15: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:26: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:28: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:69: [advisory] title-case-heading: ## What You Might Do
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:109: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:153: [hard] chat-residue: Want me to
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:156: [hard] stock-word: seamlessly
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:213: [advisory] title-case-heading: ## Handling Different Entry Points
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:320: [hard] bold-label: - **Flow into a proposal**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:322: [hard] bold-label: - **Result in artifact updates**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:323: [hard] bold-label: - **Just provide clarity**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:324: [hard] bold-label: - **Continue later**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:352: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-explore/SKILL.md:352: [hard] dash: —
+12 hard finding(s), baseline 0
+exit: 1

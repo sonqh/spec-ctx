@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/specs/cli/spec.md:17:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is archived]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/specs/cli/spec.md:33:24 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [were archived]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/specs/cli/spec.md:39:38 synonym-rotation: 'validate' and 'check' name the same action. Pick one and use it every time. [validate]
+
+3 violations (1 hard, baseline 0), 305 words, 1.0 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/tells-001.md",
+      "line": 1,
+      "col": 127,
+      "rule": "marketing-adjective",
+      "level": "advisory-free",
+      "match": "robust",
+      "message": "Marketing adjective. Delete, or replace with the measurement that earns the claim."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/tells-001.md",
+      "line": 1,
+      "col": 138,
+      "rule": "marketing-adjective",
+      "level": "advisory-free",
+      "match": "seamless",
+      "message": "Marketing adjective. Delete, or replace with the measurement that earns the claim."
+    }
+  ],
+  "count": 2,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 31,
+  "per_100_words": 6.5
+}
+exit: 1

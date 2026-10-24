@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/specs/adopt-existing/spec.md",
+      "line": 41,
+      "col": 24,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is unchanged",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-004-adopt-existing/specs/adopt-existing/spec.md",
+      "line": 77,
+      "col": 45,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is added",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 2,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 786,
+  "per_100_words": 0.3
+}
+exit: 0

@@ -1,0 +1,10 @@
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] chat-residue: Great question
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] dash: —
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] dash: —
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] deep-saying: At its core
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] not-x-its-y: It's not just a tool, it's
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] run-up: Let's dive in
+tests/fixtures/lint-corpus/selftest/tells-001.md:1: [hard] stock-word: seamless
+tests/fixtures/lint-corpus/selftest/tells-001.md:2: [hard] bold-label: - **Speed:**
+8 hard finding(s), baseline 0
+exit: 1

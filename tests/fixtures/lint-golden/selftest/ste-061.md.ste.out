@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/ste-061.md:1:1 long-sentence: Sentence has 28 words (cap 25). Split it. [28 words]
+
+1 violations (1 hard, baseline 0), 28 words, 3.6 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

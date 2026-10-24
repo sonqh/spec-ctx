@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/fixtures/import/codex-only/home/dot.codex/AGENTS.md",
+    "findings": []
+  }
+]
+exit: 0

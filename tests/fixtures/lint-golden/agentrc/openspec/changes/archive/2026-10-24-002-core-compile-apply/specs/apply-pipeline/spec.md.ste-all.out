@@ -1,0 +1,11 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:9:37 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is read]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:16:27 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:16:68 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is unchanged]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:34:22 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is appended]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:57:23 synonym-rotation: 'modify' and 'change' name the same action. Pick one and use it every time. [modifying]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:64:101 synonym-rotation: 'remove' and 'delete' name the same action. Pick one and use it every time. [remove]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/apply-pipeline/spec.md:68:57 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is removed]
+
+7 violations (2 hard, baseline 0), 618 words, 1.1 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

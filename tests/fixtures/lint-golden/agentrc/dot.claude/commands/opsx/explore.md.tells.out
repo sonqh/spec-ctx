@@ -1,0 +1,16 @@
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:1: [advisory] repeated-closer: ---
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:11: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:22: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:24: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:72: [advisory] title-case-heading: ## What You Might Do
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:112: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:158: [hard] chat-residue: Want me to
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:161: [hard] stock-word: seamlessly
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:221: [hard] bold-label: - **Flow into a proposal**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:223: [hard] bold-label: - **Result in artifact updates**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:224: [hard] bold-label: - **Just provide clarity**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:225: [hard] bold-label: - **Continue later**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:237: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/explore.md:237: [hard] dash: —
+12 hard finding(s), baseline 0
+exit: 1

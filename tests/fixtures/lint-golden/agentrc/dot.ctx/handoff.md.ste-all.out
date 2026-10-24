@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/agentrc/dot.ctx/handoff.md:14:16 synonym-rotation: 'verify' and 'check' name the same action. Pick one and use it every time. [Verify]
+tests/fixtures/lint-corpus/agentrc/dot.ctx/handoff.md:14:169 synonym-rotation: 'confirm' and 'check' name the same action. Pick one and use it every time. [Confirm]
+
+2 violations (2 hard, baseline 0), 309 words, 0.6 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

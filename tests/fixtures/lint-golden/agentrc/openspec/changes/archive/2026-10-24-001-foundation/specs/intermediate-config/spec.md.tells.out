@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-001-foundation/specs/intermediate-config/spec.md:41: [advisory] repeated-closer: Refs: REQ-PROF-006
+0 hard finding(s), baseline 0
+exit: 0

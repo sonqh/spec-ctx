@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/ste-059.md:1:21 phrasal-verb: Soft phrasal verb. Use the single plain verb (start, contact, read, begin). [spin up]
+
+1 violations (1 hard, baseline 0), 6 words, 16.7 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

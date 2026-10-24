@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/specs/id-allocation/spec.md",
+      "line": 6,
+      "col": 279,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 127,
+  "per_100_words": 0.8
+}
+exit: 0

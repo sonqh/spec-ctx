@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/schemas/spec-driven-ids/templates/spec.md",
+    "findings": []
+  }
+]
+exit: 0

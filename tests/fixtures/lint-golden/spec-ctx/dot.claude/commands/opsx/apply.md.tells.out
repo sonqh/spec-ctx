@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:18: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:20: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:87: [hard] bold-label: - **spec-driven**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:200: [hard] bold-label: - **Can be invoked anytime**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:202: [hard] bold-label: - **Allows artifact updates**:
+5 hard finding(s), baseline 0
+exit: 1

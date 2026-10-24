@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-059.md",
+      "line": 1,
+      "col": 21,
+      "rule": "phrasal-verb",
+      "level": "advisory-free",
+      "match": "spin up",
+      "message": "Soft phrasal verb. Use the single plain verb (start, contact, read, begin)."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 6,
+  "per_100_words": 16.7
+}
+exit: 1

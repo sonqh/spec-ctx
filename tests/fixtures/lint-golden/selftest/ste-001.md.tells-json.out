@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+    "findings": [
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "seamless"
+      }
+    ]
+  }
+]
+exit: 1

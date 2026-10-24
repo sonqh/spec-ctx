@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/ste-056.md:1:29 synonym-rotation: 'verify' and 'check' name the same action. Pick one and use it every time. [verify]
+
+1 violations (1 hard, baseline 0), 10 words, 10.0 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

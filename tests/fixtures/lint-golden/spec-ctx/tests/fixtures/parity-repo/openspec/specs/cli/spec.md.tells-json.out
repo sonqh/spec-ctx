@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/cli/spec.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 22,
+        "match": "Refs: REQ-PROF-001"
+      }
+    ]
+  }
+]
+exit: 0

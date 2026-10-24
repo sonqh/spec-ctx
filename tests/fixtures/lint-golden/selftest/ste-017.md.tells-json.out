@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/ste-017.md",
+    "findings": []
+  }
+]
+exit: 0

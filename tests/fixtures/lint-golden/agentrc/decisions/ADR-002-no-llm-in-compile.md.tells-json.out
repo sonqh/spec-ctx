@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-002-no-llm-in-compile.md",
+    "findings": []
+  }
+]
+exit: 0

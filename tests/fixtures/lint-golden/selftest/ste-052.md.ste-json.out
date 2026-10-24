@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-052.md",
+      "line": 1,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "30 words",
+      "message": "Sentence has 30 words (cap 25). Split it."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 30,
+  "per_100_words": 3.3
+}
+exit: 1

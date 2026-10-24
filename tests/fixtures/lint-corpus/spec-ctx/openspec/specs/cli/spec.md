@@ -1,0 +1,53 @@
+# cli Specification
+
+## Purpose
+One binary, `specctx`, with short help in Strict STE and stable exit codes.
+
+## Requirements
+
+### Requirement: REQ-CLI-001 Commands and flags
+`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `task backfill`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
+
+#### Scenario: SCN-CLI-001-1 Version
+- **WHEN** `specctx --version` runs
+- **THEN** stdout is the version and a newline, exit 0
+
+#### Scenario: SCN-CLI-001-2 Root discovery
+- **WHEN** `specctx status` runs from `src/deep/dir` of a project
+- **THEN** it uses the project root and prints the same as from the root
+
+#### Scenario: SCN-CLI-001-3 Nothing active
+- **WHEN** every change is archived
+- **THEN** `status` prints `no active change` and the last archived change by archive time
+
+#### Scenario: SCN-CLI-001-4 Help groups
+- **WHEN** `specctx --help` runs
+- **THEN** the output has the headers `Read`, `Write`, and `Setup`
+
+#### Scenario: SCN-CLI-001-5 Adopt commands in Setup
+- **WHEN** `specctx --help` runs
+- **THEN** `adopt`, `baseline write`, `baseline prune`, and `task backfill` appear under `Setup`
+
+#### Scenario: SCN-CLI-001-6 Stats under Read
+- **WHEN** `specctx --help` runs
+- **THEN** `stats` appears under `Read`
+
+### Requirement: REQ-CLI-002 Exit codes and output style
+Exit codes: 0 ok, 1 findings or drift, 2 usage or missing input, 3 internal error. Human output SHALL be one line per item, no color when stdout is not a TTY, no emoji. `--json` SHALL print one JSON document on stdout and nothing else. Help text SHALL pass `scripts/ste-lint.py --baseline 0`.
+
+#### Scenario: SCN-CLI-002-1 Unknown command
+- **WHEN** `specctx frobnicate` runs
+- **THEN** it exits 2 and prints the command list
+
+#### Scenario: SCN-CLI-002-2 JSON only
+- **WHEN** `specctx check --json` runs
+- **THEN** stdout parses as JSON and stderr is empty
+
+### Requirement: REQ-CLI-003 Fast startup
+`specctx --version` SHALL load no module from `src/index/`, `src/graph/`, or `src/check/`. Each command SHALL import its module inside its action.
+
+Refs: ADR-001
+
+#### Scenario: SCN-CLI-003-1 Module list
+- **WHEN** the startup test records modules loaded by `--version`
+- **THEN** none is under `src/index/`, `src/graph/`, or `src/check/`

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/skills/specctx-bootstrap/SKILL.md",
+    "findings": []
+  }
+]
+exit: 0

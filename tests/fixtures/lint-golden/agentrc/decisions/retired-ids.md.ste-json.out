@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/decisions/retired-ids.md",
+      "line": 3,
+      "col": 10,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "were removed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 117,
+  "per_100_words": 0.9
+}
+exit: 0

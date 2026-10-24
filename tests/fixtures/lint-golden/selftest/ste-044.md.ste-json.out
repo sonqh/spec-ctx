@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-044.md",
+      "line": 1,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Start the task and",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 7,
+  "per_100_words": 14.3
+}
+exit: 1

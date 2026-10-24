@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/selftest/ste-003.md:1:10 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [has run]
+tests/fixtures/lint-corpus/selftest/ste-003.md:1:27 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [has set]
+tests/fixtures/lint-corpus/selftest/ste-003.md:1:48 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [have begun]
+
+3 violations (0 hard, baseline 0), 13 words, 23.1 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md",
+      "line": 10,
+      "col": 274,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is required",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md",
+      "line": 15,
+      "col": 75,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is retired",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-002-ids-and-tasks/specs/id-allocation/spec.md",
+      "line": 27,
+      "col": 133,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 3,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 275,
+  "per_100_words": 1.1
+}
+exit: 0

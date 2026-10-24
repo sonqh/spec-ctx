@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/skills/specctx-next/SKILL.md",
+    "findings": []
+  }
+]
+exit: 0

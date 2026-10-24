@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/DELEGATION.md:20:13 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is done]
+tests/fixtures/lint-corpus/spec-ctx/DELEGATION.md:27:36 synonym-rotation: 'verify' and 'validate' name the same action. Pick one and use it every time. [Verify]
+
+2 violations (1 hard, baseline 0), 479 words, 0.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

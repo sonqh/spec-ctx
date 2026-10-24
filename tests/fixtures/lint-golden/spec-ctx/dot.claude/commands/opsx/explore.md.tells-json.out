@@ -1,0 +1,92 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/explore.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 1,
+        "match": "---"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 11,
+        "match": "—"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 22,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 24,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "title-case-heading",
+        "level": "advisory",
+        "line": 72,
+        "match": "## What You Might Do"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 112,
+        "match": "—"
+      },
+      {
+        "rule": "chat-residue",
+        "level": "hard",
+        "line": 158,
+        "match": "Want me to"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 161,
+        "match": "seamlessly"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 221,
+        "match": "- **Flow into a proposal**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 223,
+        "match": "- **Result in artifact updates**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 224,
+        "match": "- **Just provide clarity**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 225,
+        "match": "- **Continue later**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 237,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 237,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

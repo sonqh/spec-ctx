@@ -1,0 +1,8 @@
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/design.md:5:77 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is defined]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/design.md:22:24 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are sorted]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/design.md:22:61 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/design.md:31:106 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is fixed]
+
+4 violations (0 hard, baseline 0), 329 words, 1.2 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/decisions/ADR-005-id-scheme.md",
+    "findings": []
+  }
+]
+exit: 0

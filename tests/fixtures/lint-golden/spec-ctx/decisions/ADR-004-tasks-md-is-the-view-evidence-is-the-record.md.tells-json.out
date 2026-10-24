@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+    "findings": []
+  }
+]
+exit: 0

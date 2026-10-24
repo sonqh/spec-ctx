@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/no-id-repo/openspec/changes/add-mfa/specs/user-auth/spec.md",
+    "findings": []
+  }
+]
+exit: 0

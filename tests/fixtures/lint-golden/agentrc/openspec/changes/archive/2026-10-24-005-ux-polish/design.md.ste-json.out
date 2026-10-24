@@ -1,0 +1,46 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/design.md",
+      "line": 5,
+      "col": 266,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is reconciled",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/design.md",
+      "line": 26,
+      "col": 33,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are handled",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/design.md",
+      "line": 26,
+      "col": 83,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/design.md",
+      "line": 28,
+      "col": 18,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are built",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 4,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 427,
+  "per_100_words": 0.9
+}
+exit: 0

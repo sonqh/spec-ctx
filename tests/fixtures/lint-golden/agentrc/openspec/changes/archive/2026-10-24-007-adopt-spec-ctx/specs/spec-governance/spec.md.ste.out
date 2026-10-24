@@ -1,0 +1,11 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:18:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:22:29 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is read]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:41:23 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is rejected]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:45:21 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is rejected]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:48:28 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are searched]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:57:21 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md:61:21 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is searched]
+
+7 violations (0 hard, baseline 0), 466 words, 1.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

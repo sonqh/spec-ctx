@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/proposal.md",
+    "findings": []
+  }
+]
+exit: 0

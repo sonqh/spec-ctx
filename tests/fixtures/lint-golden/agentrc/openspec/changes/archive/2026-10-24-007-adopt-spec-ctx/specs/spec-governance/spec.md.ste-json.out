@@ -1,0 +1,73 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 18,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 22,
+      "col": 29,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is read",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 41,
+      "col": 23,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is rejected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 45,
+      "col": 21,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is rejected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 48,
+      "col": 28,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are searched",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 57,
+      "col": 21,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is listed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-007-adopt-spec-ctx/specs/spec-governance/spec.md",
+      "line": 61,
+      "col": 21,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is searched",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 7,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 466,
+  "per_100_words": 1.5
+}
+exit: 0

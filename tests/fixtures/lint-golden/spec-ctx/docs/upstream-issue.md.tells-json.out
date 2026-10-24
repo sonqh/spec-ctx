@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/docs/upstream-issue.md",
+    "findings": []
+  }
+]
+exit: 0

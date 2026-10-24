@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/schemas/spec-driven-ids/templates/proposal.md",
+      "line": 14,
+      "col": 19,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "being introduced",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 195,
+  "per_100_words": 0.5
+}
+exit: 0

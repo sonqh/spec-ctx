@@ -1,0 +1,226 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 11,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "43 words",
+      "message": "Sentence has 43 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 11,
+      "col": 776,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 13,
+      "col": 77,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "34 words",
+      "message": "Sentence has 34 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 13,
+      "col": 192,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "confirm",
+      "message": "'confirm' and 'check' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 13,
+      "col": 285,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is selected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 13,
+      "col": 381,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is set",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 15,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "42 words",
+      "message": "Sentence has 42 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 15,
+      "col": 341,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is malformed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 17,
+      "col": 73,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was reached",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 22,
+      "col": 1,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "32 words",
+      "message": "Sentence has 32 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 30,
+      "col": 14,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is provided",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 42,
+      "col": 33,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "being used",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 86,
+      "col": 35,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "being used",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 95,
+      "col": 4,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Display",
+      "message": "'display' and 'show' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 96,
+      "col": 13,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "being used",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 104,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "being worked",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 107,
+      "col": 6,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "27 words",
+      "message": "Sentence has 27 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 107,
+      "col": 117,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 115,
+      "col": 6,
+      "rule": "long-sentence",
+      "level": "advisory-free",
+      "match": "40 words",
+      "message": "Sentence has 40 words (cap 25). Split it."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 115,
+      "col": 72,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are tempted",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 115,
+      "col": 199,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 192,
+      "col": 33,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 193,
+      "col": 32,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+      "line": 201,
+      "col": 52,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 24,
+  "hard_count": 13,
+  "baseline": 0,
+  "words": 1448,
+  "per_100_words": 1.7
+}
+exit: 1

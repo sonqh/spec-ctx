@@ -1,0 +1,98 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.agents/skills/openspec-explore/SKILL.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 1,
+        "match": "---"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 15,
+        "match": "—"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 26,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 28,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "title-case-heading",
+        "level": "advisory",
+        "line": 69,
+        "match": "## What You Might Do"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 109,
+        "match": "—"
+      },
+      {
+        "rule": "chat-residue",
+        "level": "hard",
+        "line": 153,
+        "match": "Want me to"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 156,
+        "match": "seamlessly"
+      },
+      {
+        "rule": "title-case-heading",
+        "level": "advisory",
+        "line": 213,
+        "match": "## Handling Different Entry Points"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 320,
+        "match": "- **Flow into a proposal**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 322,
+        "match": "- **Result in artifact updates**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 323,
+        "match": "- **Just provide clarity**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 324,
+        "match": "- **Continue later**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 352,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 352,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

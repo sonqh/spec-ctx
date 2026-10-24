@@ -1,0 +1,46 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/proposal.md",
+      "line": 5,
+      "col": 182,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Verify",
+      "message": "'verify' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/proposal.md",
+      "line": 5,
+      "col": 303,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "were archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/proposal.md",
+      "line": 9,
+      "col": 10,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "checks",
+      "message": "'check' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/006-polish/proposal.md",
+      "line": 12,
+      "col": 19,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are ported",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 4,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 204,
+  "per_100_words": 2.0
+}
+exit: 1

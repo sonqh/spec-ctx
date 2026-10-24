@@ -9,6 +9,10 @@ reopened:
 - 005/2.1 stale-evidence 005/2.1 tests/stats/metrics.test.ts: type fix for the typecheck step (at 2026-10-24T03:55:28.665Z)
 - 005/1.1 stale-evidence 005/1.1 tests/stats/metrics.test.ts: type fix for the typecheck step (at 2026-10-24T03:55:35.601Z)
 - 003/3.6 stale-evidence 003/3.6 src/cli/gate.ts tests/cli/gate.test.ts (006/1.2 adds the spec-length step) (at 2026-10-24T04:09:19.881Z)
+- 006/1.3 stale-evidence 006/1.3 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:36:47.734Z)
+- 006/2.1 stale-evidence 006/2.1 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:36:48.115Z)
+- 006/2.2 stale-evidence 006/2.2 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:38:45.488Z)
+- 006/2.3 stale-evidence 006/2.3 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:38:45.815Z)
 open_questions:
 - 006 REQ-CLI-001 delta was written before the 005 archive. Strict validate refused it for dropping SCN-CLI-001-6. I added stats to its command list and copied SCN-CLI-001-6 from main into the 006 block, with no other change. Confirm. (task none, 2026-10-24)
 resolved:

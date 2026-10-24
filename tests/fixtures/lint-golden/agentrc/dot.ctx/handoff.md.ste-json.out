@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.ctx/handoff.md",
+      "line": 14,
+      "col": 16,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Verify",
+      "message": "'verify' and 'check' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/dot.ctx/handoff.md",
+      "line": 14,
+      "col": 169,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Confirm",
+      "message": "'confirm' and 'check' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 2,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 309,
+  "per_100_words": 0.6
+}
+exit: 1

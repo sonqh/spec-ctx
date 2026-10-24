@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-001-foundation/specs/intermediate-config/spec.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 41,
+        "match": "Refs: REQ-PROF-006"
+      }
+    ]
+  }
+]
+exit: 0

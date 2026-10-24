@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-003-elicit-import/specs/elicit/spec.md",
+    "findings": []
+  }
+]
+exit: 0

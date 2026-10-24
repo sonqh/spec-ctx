@@ -1,0 +1,55 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+      "line": 8,
+      "col": 16,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+      "line": 11,
+      "col": 11,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is committed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+      "line": 21,
+      "col": 59,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Verify",
+      "message": "'verify' and 'validate' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+      "line": 21,
+      "col": 66,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is allowed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md",
+      "line": 22,
+      "col": 37,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are sorted",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 5,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 227,
+  "per_100_words": 2.2
+}
+exit: 1

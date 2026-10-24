@@ -1,0 +1,20 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-update-change/SKILL.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 22,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 24,
+        "match": "- **Explicit OpenSpec request**:"
+      }
+    ]
+  }
+]
+exit: 1

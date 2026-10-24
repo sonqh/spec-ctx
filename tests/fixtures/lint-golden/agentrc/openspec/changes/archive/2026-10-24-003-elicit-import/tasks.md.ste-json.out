@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-003-elicit-import/tasks.md",
+      "line": 21,
+      "col": 57,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "confirm",
+      "message": "'confirm' and 'verify' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 260,
+  "per_100_words": 0.4
+}
+exit: 1

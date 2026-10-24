@@ -1,0 +1,16 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:13:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [was written]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:13:227 synonym-rotation: 'confirm' and 'validate' name the same action. Pick one and use it every time. [Confirm]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:19:211 long-sentence: Sentence has 26 words (cap 25). Split it. [26 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:19:487 synonym-rotation: 'verify' and 'validate' name the same action. Pick one and use it every time. [Verify]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:20:3 long-sentence: Sentence has 31 words (cap 25). Split it. [31 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:22:74 synonym-rotation: 'check' and 'validate' name the same action. Pick one and use it every time. [check]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:23:169 long-sentence: Sentence has 34 words (cap 25). Split it. [34 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:24:3 long-sentence: Sentence has 34 words (cap 25). Split it. [34 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:25:56 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [was blocked]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:29:166 long-sentence: Sentence has 27 words (cap 25). Split it. [27 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:30:191 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [was committed]
+tests/fixtures/lint-corpus/spec-ctx/dot.ctx/handoff.md:30:206 long-sentence: Sentence has 29 words (cap 25). Split it. [29 words]
+
+12 violations (9 hard, baseline 0), 1195 words, 1.0 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

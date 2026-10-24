@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/golden/codex/valid-junior-teach.AGENTS.md",
+    "findings": []
+  }
+]
+exit: 0

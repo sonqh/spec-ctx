@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/docs/metrics/2026-10-24.md",
+    "findings": []
+  }
+]
+exit: 0

@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/profile-schema/spec.md:74: [advisory] repeated-closer: Refs: REQ-CAT-001
+0 hard finding(s), baseline 0
+exit: 0

@@ -1,0 +1,8 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:20: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:22: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:50: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:62: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:69: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/sync.md:100: [hard] dash: —
+6 hard finding(s), baseline 0
+exit: 1

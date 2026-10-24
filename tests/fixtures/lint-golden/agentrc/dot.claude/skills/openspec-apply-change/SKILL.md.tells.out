@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:22: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:24: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:91: [hard] bold-label: - **spec-driven**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:204: [hard] bold-label: - **Can be invoked anytime**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-apply-change/SKILL.md:206: [hard] bold-label: - **Allows artifact updates**:
+5 hard finding(s), baseline 0
+exit: 1

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-003-deterministic-no-llm-no-daemon.md",
+    "findings": []
+  }
+]
+exit: 0

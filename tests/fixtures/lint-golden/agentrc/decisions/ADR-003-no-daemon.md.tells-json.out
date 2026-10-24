@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-003-no-daemon.md",
+    "findings": []
+  }
+]
+exit: 0

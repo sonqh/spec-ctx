@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/007-parity-plant/tasks.md",
+    "findings": []
+  }
+]
+exit: 0

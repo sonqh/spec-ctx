@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md",
+      "line": 7,
+      "col": 180,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md",
+      "line": 32,
+      "col": 107,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is fixed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/tasks.md",
+      "line": 33,
+      "col": 63,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validate",
+      "message": "'validate' and 'verify' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 3,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 342,
+  "per_100_words": 0.9
+}
+exit: 1

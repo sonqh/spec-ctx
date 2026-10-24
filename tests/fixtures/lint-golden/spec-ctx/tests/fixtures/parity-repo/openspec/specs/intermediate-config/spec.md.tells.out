@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/intermediate-config/spec.md:40: [advisory] repeated-closer: Refs: REQ-PROF-006
+0 hard finding(s), baseline 0
+exit: 0

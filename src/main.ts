@@ -9,6 +9,11 @@ export interface Io {
 }
 
 export async function main(argv: string[], io: Io): Promise<number> {
+  // REQ-LINT-001 the linters keep the argument rules of the Python scripts, so they skip this parser
+  if (argv[0] === "lint") {
+    const { runLint } = await import("./lint/cli.ts");
+    return runLint(argv.slice(1), io);
+  }
   let parsed;
   try {
     parsed = parseArgs(argv);

@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-001-foundation/proposal.md",
+      "line": 5,
+      "col": 48,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-001-foundation/proposal.md",
+      "line": 22,
+      "col": 69,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is validated",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-001-foundation/proposal.md",
+      "line": 22,
+      "col": 72,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validated",
+      "message": "'validate' and 'check' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 3,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 270,
+  "per_100_words": 1.1
+}
+exit: 1

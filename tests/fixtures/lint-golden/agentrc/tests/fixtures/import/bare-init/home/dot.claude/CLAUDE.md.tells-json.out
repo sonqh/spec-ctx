@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/fixtures/import/bare-init/home/dot.claude/CLAUDE.md",
+    "findings": []
+  }
+]
+exit: 0

@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/tasks.md",
+      "line": 6,
+      "col": 86,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/tasks.md",
+      "line": 29,
+      "col": 156,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "confirm",
+      "message": "'confirm' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/003-distribution/tasks.md",
+      "line": 35,
+      "col": 159,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is offered",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 3,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 369,
+  "per_100_words": 0.8
+}
+exit: 1

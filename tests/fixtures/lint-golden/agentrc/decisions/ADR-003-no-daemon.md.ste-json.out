@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/decisions/ADR-003-no-daemon.md",
+      "line": 16,
+      "col": 34,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is detected",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 93,
+  "per_100_words": 1.1
+}
+exit: 0

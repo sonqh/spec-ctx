@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/decisions/retired-ids.md",
+    "findings": []
+  }
+]
+exit: 0

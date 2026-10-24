@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-004-catalog-resolver/specs/catalog-resolver/spec.md",
+      "line": 31,
+      "col": 27,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are fetched",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-004-catalog-resolver/specs/catalog-resolver/spec.md",
+      "line": 40,
+      "col": 37,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are copied",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-004-catalog-resolver/specs/catalog-resolver/spec.md",
+      "line": 41,
+      "col": 22,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is populated",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 3,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 523,
+  "per_100_words": 0.6
+}
+exit: 0

@@ -1,0 +1,4 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-update-change/SKILL.md:22: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/skills/openspec-update-change/SKILL.md:24: [hard] bold-label: - **Explicit OpenSpec request**:
+2 hard finding(s), baseline 0
+exit: 1

@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md:24:26 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is unchanged]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md:46:34 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are unchanged]
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/adapter-claude-code/spec.md:66:35 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is unchanged]
+
+3 violations (0 hard, baseline 0), 549 words, 0.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

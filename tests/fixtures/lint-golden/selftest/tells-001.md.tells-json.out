@@ -1,0 +1,56 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/tells-001.md",
+    "findings": [
+      {
+        "rule": "chat-residue",
+        "level": "hard",
+        "line": 1,
+        "match": "Great question"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 1,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 1,
+        "match": "—"
+      },
+      {
+        "rule": "deep-saying",
+        "level": "hard",
+        "line": 1,
+        "match": "At its core"
+      },
+      {
+        "rule": "not-x-its-y",
+        "level": "hard",
+        "line": 1,
+        "match": "It's not just a tool, it's"
+      },
+      {
+        "rule": "run-up",
+        "level": "hard",
+        "line": 1,
+        "match": "Let's dive in"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "seamless"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 2,
+        "match": "- **Speed:**"
+      }
+    ]
+  }
+]
+exit: 1

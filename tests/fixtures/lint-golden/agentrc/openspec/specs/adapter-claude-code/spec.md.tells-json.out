@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/adapter-claude-code/spec.md",
+    "findings": []
+  }
+]
+exit: 0

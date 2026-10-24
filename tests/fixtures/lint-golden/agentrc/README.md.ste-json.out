@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/README.md",
+      "line": 33,
+      "col": 52,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'confirm' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/README.md",
+      "line": 59,
+      "col": 295,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "get",
+      "message": "'get' and 'fetch' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 2,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 549,
+  "per_100_words": 0.4
+}
+exit: 1

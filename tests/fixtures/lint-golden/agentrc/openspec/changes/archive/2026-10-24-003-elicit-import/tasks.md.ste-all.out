@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-003-elicit-import/tasks.md:21:57 synonym-rotation: 'confirm' and 'verify' name the same action. Pick one and use it every time. [confirm]
+
+1 violations (1 hard, baseline 0), 260 words, 0.4 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

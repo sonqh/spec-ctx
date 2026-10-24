@@ -1,14 +1,14 @@
 {
-  "at": "2026-10-24T04:10:24.735Z",
-  "bundle_chars": 4608,
+  "at": "2026-10-24T04:36:48.011Z",
+  "bundle_chars": 4796,
   "files": {
     "src/cli.ts": "57a9b47849e9fad3f4af9bb359827ce7055302df10b194e45c58ec505c733c53",
     "src/cli/args.ts": "3fd4aa670d92e135fab0497de9600a482ac646495cea7d62ac232a10bceea55d",
     "src/cli/commands.ts": "d5c0d89a69a21eadc5a199ea3651c52e4589dfb27ba88a519056026199784484",
-    "src/cli/help.ts": "c9bca9252e0c4802d5544cf52f251b24a5a9f1ae478f65a796ae95a25cb10a69",
+    "src/cli/help.ts": "6f507ac506d929f0ad6e4489fb413fb8299edba830d05c87c93de5c51a66f4ef",
     "src/cli/root.ts": "3757ffd35491a8b4e50a3ff9ad6ea905b085181b9a5047e463e48fb072e068ee",
     "src/cli/status.ts": "6ac03e2c3c1914486f1ce5c873575fa916247e878c064a44896a1917ef68b43c",
-    "src/main.ts": "8ae4d55b92e8901d70fde1b7f545f600569647be042fb7265d2eef0f5e180122",
+    "src/main.ts": "1dadadac14172a2c1f51b7f1ce9c5f84f0504c8cfcd0e954043e37fd7b6d3558",
     "src/version.ts": "2e8e00bfe3888b6376eeefcb43c418fd87983a24c80c922b37ac3111f03807b1",
     "tests/cli/cli.test.ts": "8146800969f3e2cae967985a27f489b351351322342080e04050143682a57e81",
     "tests/cli/help.test.ts": "82687241ee43fff2604ed69e85fca26a3cb17b02eace851fe95b5c405d97edd4",
@@ -19,13 +19,13 @@
   "reqs": [
     "REQ-CLI-001"
   ],
-  "started_at": "2026-10-24T04:09:42.075Z",
+  "started_at": "2026-10-24T04:36:47.857Z",
   "task": "006/1.3",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun test tests/cli/status-archived.test.ts",
     "exit": 0,
-    "stderr_tail": "\n 3 pass\n 0 fail\n 4 expect() calls\nRan 3 tests across 1 file. [43.00ms]",
+    "stderr_tail": "\n 3 pass\n 0 fail\n 4 expect() calls\nRan 3 tests across 1 file. [54.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }

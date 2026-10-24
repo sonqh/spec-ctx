@@ -1,0 +1,64 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 11,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is removed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 21,
+      "rule": "semicolon",
+      "level": "advisory-free",
+      "match": ";",
+      "message": "STE bans the semicolon (Rule 8.1). Split into separate sentences."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 23,
+      "rule": "phrasal-verb",
+      "level": "advisory-free",
+      "match": "spin up",
+      "message": "Soft phrasal verb. Use the single plain verb (start, contact, read, begin)."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 40,
+      "rule": "nominalization",
+      "level": "advisory-free",
+      "match": "Perform an analysis",
+      "message": "Action frozen into a noun. Use the verb (analyze, not perform an analysis of)."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 67,
+      "rule": "marketing-adjective",
+      "level": "advisory-free",
+      "match": "seamless",
+      "message": "Marketing adjective. Delete, or replace with the measurement that earns the claim."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-001.md",
+      "line": 1,
+      "col": 84,
+      "rule": "present-perfect",
+      "level": "advisory",
+      "match": "have received",
+      "message": "Compound tense. Use simple past/present unless current relevance is the point (then keep and flag)."
+    }
+  ],
+  "count": 6,
+  "hard_count": 4,
+  "baseline": 0,
+  "words": 20,
+  "per_100_words": 30.0
+}
+exit: 1

@@ -1,0 +1,10 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:12:64 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:26:41 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is shown]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:30:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is shown]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:36:144 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:42:79 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-005-ux-polish/specs/elicit/spec.md:49:67 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is set]
+
+6 violations (0 hard, baseline 0), 731 words, 0.8 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

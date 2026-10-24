@@ -1,0 +1,13 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:36:72 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:40:71 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:40:118 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is listed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:76:126 synonym-rotation: 'verify' and 'check' name the same action. Pick one and use it every time. [verify]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:110:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is archived]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:116:386 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is passed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:138:24 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is edited]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:145:47 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are indexed]
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:155:271 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is passed]
+
+9 violations (1 hard, baseline 0), 1226 words, 0.7 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

@@ -1,0 +1,44 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.agents/skills/openspec-sync-specs/SKILL.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 24,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 26,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 54,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 66,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 73,
+        "match": "—"
+      },
+      {
+        "rule": "dash",
+        "level": "hard",
+        "line": 104,
+        "match": "—"
+      }
+    ]
+  }
+]
+exit: 1

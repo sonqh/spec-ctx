@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/profile-schema/spec.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 74,
+        "match": "Refs: REQ-CAT-001"
+      }
+    ]
+  }
+]
+exit: 0

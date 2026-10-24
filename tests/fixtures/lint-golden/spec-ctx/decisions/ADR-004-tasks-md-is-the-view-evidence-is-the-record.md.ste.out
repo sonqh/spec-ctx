@@ -1,0 +1,8 @@
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:8:16 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:11:11 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is committed]
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:21:66 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is allowed]
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:22:37 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are sorted]
+
+4 violations (0 hard, baseline 0), 227 words, 1.8 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

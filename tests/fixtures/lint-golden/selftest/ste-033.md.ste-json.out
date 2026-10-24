@@ -1,0 +1,46 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-033.md",
+      "line": 1,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Confirm the target and",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-033.md",
+      "line": 2,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Record the result OR",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-033.md",
+      "line": 4,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Start the task and",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-033.md",
+      "line": 5,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Stop the task OR",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    }
+  ],
+  "count": 4,
+  "hard_count": 4,
+  "baseline": 0,
+  "words": 24,
+  "per_100_words": 16.7
+}
+exit: 1

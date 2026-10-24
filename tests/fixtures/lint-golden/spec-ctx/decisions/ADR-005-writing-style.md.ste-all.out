@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-005-writing-style.md:7:87 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]
+tests/fixtures/lint-corpus/spec-ctx/decisions/ADR-005-writing-style.md:11:9 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are read]
+
+2 violations (0 hard, baseline 0), 127 words, 1.6 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

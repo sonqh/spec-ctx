@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/fixtures/import/mixed/home/dot.claude/rules/lang-go.md",
+    "findings": []
+  }
+]
+exit: 0

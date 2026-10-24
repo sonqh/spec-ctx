@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-006-ctx-accuracy/specs/context-engine/spec.md:32: [advisory] repeated-closer: Refs: REQ-CTX-009
+0 hard finding(s), baseline 0
+exit: 0

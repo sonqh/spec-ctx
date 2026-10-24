@@ -1,0 +1,8 @@
+tests/fixtures/lint-corpus/selftest/ste-033.md:1:1 dangling-conjunction: List item ends with a coordinating conjunction. Complete the item or join it with the next item. [Confirm the target and]
+tests/fixtures/lint-corpus/selftest/ste-033.md:2:1 dangling-conjunction: List item ends with a coordinating conjunction. Complete the item or join it with the next item. [Record the result OR]
+tests/fixtures/lint-corpus/selftest/ste-033.md:4:1 dangling-conjunction: List item ends with a coordinating conjunction. Complete the item or join it with the next item. [Start the task and]
+tests/fixtures/lint-corpus/selftest/ste-033.md:5:1 dangling-conjunction: List item ends with a coordinating conjunction. Complete the item or join it with the next item. [Stop the task OR]
+
+4 violations (4 hard, baseline 0), 24 words, 16.7 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

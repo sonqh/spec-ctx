@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/changes/archive/2026-10-24-001-engine-port/specs/query/spec.md",
+    "findings": []
+  }
+]
+exit: 0

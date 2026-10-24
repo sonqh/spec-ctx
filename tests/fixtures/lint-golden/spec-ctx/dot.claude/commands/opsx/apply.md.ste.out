@@ -1,0 +1,26 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:11:1 long-sentence: Sentence has 43 words (cap 25). Split it. [43 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:11:776 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:13:77 long-sentence: Sentence has 34 words (cap 25). Split it. [34 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:13:285 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is selected]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:13:381 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is set]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:15:1 long-sentence: Sentence has 42 words (cap 25). Split it. [42 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:15:341 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is malformed]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:17:73 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [was reached]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:22:1 long-sentence: Sentence has 32 words (cap 25). Split it. [32 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:30:14 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is provided]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:42:33 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:86:35 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:96:13 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being used]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:104:25 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [being worked]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:107:6 long-sentence: Sentence has 27 words (cap 25). Split it. [27 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:107:117 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:115:6 long-sentence: Sentence has 40 words (cap 25). Split it. [40 words]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:115:72 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are tempted]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:115:199 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:192:33 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:193:32 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/apply.md:201:52 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are done]
+
+22 violations (11 hard, baseline 0), 1448 words, 1.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

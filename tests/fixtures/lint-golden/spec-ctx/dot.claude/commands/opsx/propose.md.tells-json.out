@@ -1,0 +1,32 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/propose.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 32,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 34,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 117,
+        "match": "- **Inspect the relevant project before drafting**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 161,
+        "match": "- **IMPORTANT**:"
+      }
+    ]
+  }
+]
+exit: 1

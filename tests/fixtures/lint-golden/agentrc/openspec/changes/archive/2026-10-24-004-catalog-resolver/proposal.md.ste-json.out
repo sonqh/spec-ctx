@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-004-catalog-resolver/proposal.md",
+      "line": 11,
+      "col": 35,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are unpinned",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 150,
+  "per_100_words": 0.7
+}
+exit: 0

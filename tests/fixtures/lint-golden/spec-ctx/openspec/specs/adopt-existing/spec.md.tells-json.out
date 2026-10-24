@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/openspec/specs/adopt-existing/spec.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 11,
+        "match": "Refs: ADR-002"
+      }
+    ]
+  }
+]
+exit: 0

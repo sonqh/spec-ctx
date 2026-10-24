@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/tests/golden/codex/valid-high-autonomy.AGENTS.md",
+    "findings": [
+      {
+        "rule": "repeated-closer",
+        "level": "advisory",
+        "line": 38,
+        "match": "Applies to:"
+      }
+    ]
+  }
+]
+exit: 0

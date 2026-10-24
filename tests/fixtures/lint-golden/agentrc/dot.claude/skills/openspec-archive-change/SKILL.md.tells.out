@@ -1,0 +1,15 @@
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:22: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:24: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:54: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:55: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:134: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:135: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:136: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:137: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:148: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:161: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:164: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:167: [hard] dash: —
+tests/fixtures/lint-corpus/agentrc/dot.claude/skills/openspec-archive-change/SKILL.md:215: [hard] dash: —
+13 hard finding(s), baseline 0
+exit: 1

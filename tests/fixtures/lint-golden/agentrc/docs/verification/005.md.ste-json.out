@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/docs/verification/005.md",
+      "line": 47,
+      "col": 144,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validate",
+      "message": "'validate' and 'check' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 502,
+  "per_100_words": 0.2
+}
+exit: 1

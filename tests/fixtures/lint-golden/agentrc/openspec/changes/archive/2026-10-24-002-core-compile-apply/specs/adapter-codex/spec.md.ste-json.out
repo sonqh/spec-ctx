@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-002-core-compile-apply/specs/adapter-codex/spec.md",
+      "line": 19,
+      "col": 242,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are inlined",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 366,
+  "per_100_words": 0.3
+}
+exit: 0

@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/docs/upstream-issue.md",
+      "line": 21,
+      "col": 104,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 1,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 786,
+  "per_100_words": 0.1
+}
+exit: 0

@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/docs/verification/007.md",
+      "line": 14,
+      "col": 194,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is archived",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/docs/verification/007.md",
+      "line": 29,
+      "col": 181,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "was left",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/docs/verification/007.md",
+      "line": 31,
+      "col": 41,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "REMOVED",
+      "message": "'remove' and 'delete' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 3,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 280,
+  "per_100_words": 1.1
+}
+exit: 1

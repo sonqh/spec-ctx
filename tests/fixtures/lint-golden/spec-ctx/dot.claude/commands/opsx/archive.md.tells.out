@@ -1,0 +1,15 @@
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:18: [hard] bold-label: - **Auto-selected**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:20: [hard] bold-label: - **Explicit OpenSpec request**:
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:50: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:51: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:130: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:131: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:132: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:133: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:144: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:157: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:160: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:163: [hard] dash: —
+tests/fixtures/lint-corpus/spec-ctx/dot.claude/commands/opsx/archive.md:258: [hard] dash: —
+13 hard finding(s), baseline 0
+exit: 1

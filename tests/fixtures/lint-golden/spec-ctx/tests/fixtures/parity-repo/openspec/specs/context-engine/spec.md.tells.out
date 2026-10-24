@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/specs/context-engine/spec.md:42: [advisory] repeated-closer: Refs: REQ-CTX-009
+0 hard finding(s), baseline 0
+exit: 0

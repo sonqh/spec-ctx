@@ -1,0 +1,91 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 15,
+      "col": 64,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 29,
+      "col": 41,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is shown",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 33,
+      "col": 25,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is shown",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 43,
+      "col": 43,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are asked",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 75,
+      "col": 144,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 75,
+      "col": 274,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "check",
+      "message": "'check' and 'confirm' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 81,
+      "col": 79,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is written",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 88,
+      "col": 67,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is set",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+      "line": 103,
+      "col": 210,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validated",
+      "message": "'validate' and 'confirm' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 9,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 1015,
+  "per_100_words": 0.9
+}
+exit: 1

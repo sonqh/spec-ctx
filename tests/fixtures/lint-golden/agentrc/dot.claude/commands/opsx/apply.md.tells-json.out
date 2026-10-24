@@ -1,0 +1,38 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/dot.claude/commands/opsx/apply.md",
+    "findings": [
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 18,
+        "match": "- **Auto-selected**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 20,
+        "match": "- **Explicit OpenSpec request**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 87,
+        "match": "- **spec-driven**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 200,
+        "match": "- **Can be invoked anytime**:"
+      },
+      {
+        "rule": "bold-label",
+        "level": "hard",
+        "line": 202,
+        "match": "- **Allows artifact updates**:"
+      }
+    ]
+  }
+]
+exit: 1

@@ -1,0 +1,19 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/parity-repo/openspec/changes/archive/2026-10-24-006-ctx-accuracy/tasks.md",
+      "line": 24,
+      "col": 7,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Check",
+      "message": "'check' and 'verify' name the same action. Pick one and use it every time."
+    }
+  ],
+  "count": 1,
+  "hard_count": 1,
+  "baseline": 0,
+  "words": 316,
+  "per_100_words": 0.3
+}
+exit: 1

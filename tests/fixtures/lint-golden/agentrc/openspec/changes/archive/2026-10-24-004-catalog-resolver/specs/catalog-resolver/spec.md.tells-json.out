@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/changes/archive/2026-10-24-004-catalog-resolver/specs/catalog-resolver/spec.md",
+    "findings": []
+  }
+]
+exit: 0

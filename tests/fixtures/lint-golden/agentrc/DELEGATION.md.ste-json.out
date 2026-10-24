@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/DELEGATION.md",
+      "line": 13,
+      "col": 91,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are referenced",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/agentrc/DELEGATION.md",
+      "line": 20,
+      "col": 81,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is done",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 2,
+  "hard_count": 0,
+  "baseline": 0,
+  "words": 546,
+  "per_100_words": 0.4
+}
+exit: 0

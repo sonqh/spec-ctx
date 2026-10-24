@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-047.md",
+      "line": 1,
+      "col": 1,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Parent item and",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    },
+    {
+      "file": "tests/fixtures/lint-corpus/selftest/ste-047.md",
+      "line": 2,
+      "col": 3,
+      "rule": "dangling-conjunction",
+      "level": "advisory-free",
+      "match": "Nested item or",
+      "message": "List item ends with a coordinating conjunction. Complete the item or join it with the next item."
+    }
+  ],
+  "count": 2,
+  "hard_count": 2,
+  "baseline": 0,
+  "words": 8,
+  "per_100_words": 25.0
+}
+exit: 1

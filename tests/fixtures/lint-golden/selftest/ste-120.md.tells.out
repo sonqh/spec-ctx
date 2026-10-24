@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/selftest/ste-120.md:1: [hard] dash: —
+1 hard finding(s), baseline 0
+exit: 1

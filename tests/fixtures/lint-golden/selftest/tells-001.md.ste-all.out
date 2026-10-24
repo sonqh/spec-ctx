@@ -1,0 +1,6 @@
+tests/fixtures/lint-corpus/selftest/tells-001.md:1:127 marketing-adjective: Marketing adjective. Delete, or replace with the measurement that earns the claim. [robust]
+tests/fixtures/lint-corpus/selftest/tells-001.md:1:138 marketing-adjective: Marketing adjective. Delete, or replace with the measurement that earns the claim. [seamless]
+
+2 violations (2 hard, baseline 0), 31 words, 6.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

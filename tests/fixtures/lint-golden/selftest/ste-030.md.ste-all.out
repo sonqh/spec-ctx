@@ -1,0 +1,7 @@
+tests/fixtures/lint-corpus/selftest/ste-030.md:1:10 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [has run]
+tests/fixtures/lint-corpus/selftest/ste-030.md:1:22 present-perfect: Compound tense. Use simple past/present unless current relevance is the point (then keep and flag). [have begun]
+tests/fixtures/lint-corpus/selftest/ste-030.md:1:43 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is set]
+
+3 violations (0 hard, baseline 0), 11 words, 27.3 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 0

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/spec-ctx/tests/fixtures/ctx-repo/openspec/changes/001-x/design.md",
+    "findings": []
+  }
+]
+exit: 0

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/agentrc/openspec/specs/elicit/spec.md",
+    "findings": []
+  }
+]
+exit: 0
