@@ -2,7 +2,7 @@
 
 ## 1. Fixtures
 
-- [ ] 1.1 Build `tests/fixtures/no-id-repo/`. It is an OpenSpec project with two capabilities and no IDs. It has one active change with a MODIFIED block, an ADDED block, a RENAMED in flight, and two ticked tasks without evidence. [REQ-ADOPT-001, REQ-ADOPT-002] Verify: `npx -y @fission-ai/openspec@latest validate --all --strict --no-interactive` run inside the fixture exits 0
+- [x] 1.1 Build `tests/fixtures/no-id-repo/`. It is an OpenSpec project with two capabilities and no IDs. It has one active change with a MODIFIED block, an ADDED block, a RENAMED in flight, and two ticked tasks without evidence. [REQ-ADOPT-001, REQ-ADOPT-002] Verify: `npx -y @fission-ai/openspec@latest validate --all --strict --no-interactive` run inside the fixture exits 0
 
 ## 2. Adopt
 

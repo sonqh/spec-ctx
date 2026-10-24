@@ -16,7 +16,8 @@ describe("spec governance", () => {
     cpSync(join(REPO, "tests"), p.path("tests"), { recursive: true, filter: (s) => !s.includes("/tests/fixtures") });
     await p.build();
     const r = await p.run("check", "--strict");
-    expect(r.out).toBe("0 finding(s)\n");
+    // warning lines for manual evidence are no findings (REQ-CHK-003)
+    expect(r.out.split("\n").filter((l) => l && !l.startsWith("warning: "))).toEqual(["0 finding(s)"]);
     expect(r.code).toBe(0);
   });
 

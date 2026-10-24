@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-24T02:47:02.772Z",
+  "files": {},
+  "kind": "manual",
+  "note": "the Verify command validates the repo root. Run inside tests/fixtures/no-id-repo by hand: openspec validate --all --strict, 3 passed, 0 failed",
+  "reqs": [
+    "REQ-ADOPT-001",
+    "REQ-ADOPT-002"
+  ],
+  "task": "004/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "npx -y @fission-ai/openspec@latest validate --all --strict --no-interactive",
+    "exit": null,
+    "stderr_tail": "",
+    "stdout_sha256": null
+  }
+}

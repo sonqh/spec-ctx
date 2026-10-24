@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-24T02:42:30.333Z",
+  "files": {
+    "tests/gov/governance.test.ts": "99f075cdea852948c4530c52ccdf24e57ed1e74ce1990d32ed4814b0bd05dcb0"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "task": "003/5.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "1fa2e6f6fa7bbb612737252cbba8e37dfd40cb17d2c8b8ce52a8c5588b770fc9"
+  }
+}

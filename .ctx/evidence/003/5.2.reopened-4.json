@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-24T02:42:30.454Z",
+  "files": {
+    "tests/gov/governance.test.ts": "99f075cdea852948c4530c52ccdf24e57ed1e74ce1990d32ed4814b0bd05dcb0"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "task": "003/5.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "python3 scripts/tells-lint.py --baseline 0 docs/upstream-issue.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "06cd7c521d7953c80789b93d17b7c44903f76b437097227cba72fd57566f39f2"
+  }
+}

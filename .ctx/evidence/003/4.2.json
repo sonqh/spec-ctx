@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-24T02:42:30.127Z",
+  "at": "2026-10-24T02:47:16.831Z",
   "files": {
-    "tests/gov/governance.test.ts": "99f075cdea852948c4530c52ccdf24e57ed1e74ce1990d32ed4814b0bd05dcb0"
+    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b"
   },
   "kind": "command",
   "reqs": [
