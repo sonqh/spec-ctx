@@ -1,0 +1,42 @@
+name: release
+# REQ-DIST-004 publish to npm and attach compiled binaries on a version tag.
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: tag matches package.json
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - run: bun run typecheck
+      - run: bun run build
+      - run: bun run test
+      - run: node dist/cli.js --version
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: compile binaries
+        run: |
+          set -e
+          mkdir -p build
+          for target in linux-x64 darwin-arm64 darwin-x64; do
+            bun build src/cli.ts --compile --target="bun-$target" --outfile "build/specctx-$target"
+          done
+          ./build/specctx-linux-x64 --version
+      - name: attach binaries to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "spec-ctx $GITHUB_REF_NAME"
+          gh release upload "$GITHUB_REF_NAME" build/specctx-linux-x64 build/specctx-darwin-arm64 build/specctx-darwin-x64 --clobber

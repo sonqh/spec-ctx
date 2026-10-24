@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-24T00:01:49.581Z",
+  "files": {},
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-004"
+  ],
+  "task": "003/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js --version && bun build --compile src/cli.ts --outfile /tmp/specctx && /tmp/specctx --version",
+    "exit": 0,
+    "stderr_tail": "$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "93411a25bd1d7da561457ca532899c4a9846d6fd24baec6625944c494735ab87"
+  }
+}

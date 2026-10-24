@@ -24,7 +24,8 @@
     "test:node": "vitest run",
     "lint": "bash scripts/lint-md.sh",
     "ctx": "node dist/cli.js",
-    "gen": "node scripts/gen-assets.mjs"
+    "gen": "node scripts/gen-assets.mjs",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "smol-toml": "^1.9.1"
@@ -33,5 +34,17 @@
     "@types/node": "^22.20.5",
     "typescript": "^5.9.3",
     "vitest": "^5.0.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonqh/spec-ctx.git"
+  },
+  "homepage": "https://github.com/sonqh/spec-ctx#readme",
+  "keywords": [
+    "openspec",
+    "spec-driven",
+    "ai-agents",
+    "context",
+    "cli"
+  ]
 }
