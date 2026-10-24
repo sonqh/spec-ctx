@@ -13,12 +13,12 @@
 ## 3. Publish
 
 - [x] 3.1 Add `.github/workflows/release.yml`: on tag, `bun run build`, `npm publish`, `bun build --compile` for three targets, upload to the release. [REQ-DIST-004] Verify: `bun run build && node dist/cli.js --version && bun build --compile src/cli.ts --outfile /tmp/specctx && /tmp/specctx --version`
-- [ ] 3.2 Add `action.yml` and a self-test workflow that uses it on this repo. [REQ-DIST-005] Verify: `bash tests/action/selftest.sh`
+- [x] 3.2 Add `action.yml` and a self-test workflow that uses it on this repo. [REQ-DIST-005] Verify: `bash tests/action/selftest.sh`
 - [ ] 3.3 Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir. [REQ-DIST-004] Verify: `cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version`
 
 ## 3b. Pre-publish adoption
 
-- [ ] 3.4 Add the `prepare` script (Node only, no Bun), make the action accept a `github:` version, document both install forms. [REQ-DIST-008] Verify: `cd $(mktemp -d) && npx -y github:sonqh/spec-ctx#main --version`
+- [x] 3.4 Add the `prepare` script (Node only, no Bun), make the action accept a `github:` version, document both install forms. [REQ-DIST-008] Verify: `cd $(mktemp -d) && npx -y github:sonqh/spec-ctx#main --version`
 - [ ] 3.5 Add the `manual-evidence` warning to `check --strict` and fix the SCN-CHK-002-1 example ID to `REQ-XX-003` in the test fixture. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/`
 
 ## 4. Dogfood

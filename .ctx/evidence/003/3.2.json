@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-24T01:39:15.425Z",
+  "files": {
+    "tests/action/selftest.sh": "7e2451b100126ed7eb462a5aee2322533bd8f75cb65407bc028faf52e090e290"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-005"
+  ],
+  "task": "003/3.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/action/selftest.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "7f6a55d50c97383fc4f84b4b5dc3c066aa45f0108e22eb106df27c72cdd5d24d"
+  }
+}
