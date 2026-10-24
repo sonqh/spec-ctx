@@ -26,7 +26,7 @@
 
 ## 4. Dogfood
 
-- [ ] 4.1 Migrate agentrc by implementing its change `007-adopt-spec-ctx` (in /home/claude/agentrc) with the git install from 3.4, archive it there, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
+- [x] 4.1 Migrate agentrc by implementing its change `007-adopt-spec-ctx` (in /home/claude/agentrc) with the git install from 3.4, archive it there, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
 - [ ] 4.2 Remove `tools/ctx/` and `tests/parity/` from this repo. Hook calls `specctx` only. [REQ-DIST-007] Verify: `! grep -rl ctx.py --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.git .`
 
 ## 5. Docs
