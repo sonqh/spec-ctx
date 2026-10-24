@@ -87,8 +87,9 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
 export function retire(root: string, entries: Entry[], id: string, reason: string): string {
   if (!/^(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})$/.test(id)) throw new UsageExit(`${id} is not a REQ, SCN, or ADR ID`);
   if (!reason.trim()) throw new UsageExit("id retire needs a reason");
+  // an archived copy is history. Only a copy in openspec/specs/ or an active change keeps the ID in use.
   const live = canon(entries).get(id);
-  if (live) throw new UsageExit(`${id} is still in use at ${live.file}:${live.line}`);
+  if (live && live.status !== "archived") throw new UsageExit(`${id} is still in use at ${live.file}:${live.line}`);
   if (retiredAll(root).has(id)) throw new UsageExit(`${id} is already retired`);
   const p = join(root, RETIRED_FILE);
   let text = existsSync(p) ? readFileSync(p, "utf8") : "";

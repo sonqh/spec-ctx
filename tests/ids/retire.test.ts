@@ -46,6 +46,16 @@ describe("id retire", () => {
     expect(p.read("decisions/retired-ids.md")).toBe(before);
   });
 
+  test("an ID that lives only in an archived change can be retired", async () => {
+    p = new Project();
+    p.write("openspec/changes/archive/2026-10-01-000-old/specs/old/spec.md",
+      "## ADDED Requirements\n\n### Requirement: REQ-OLD-001 Old\nText.\n\n#### Scenario: SCN-OLD-001-1 S\n- a\n");
+    const r = await p.run("id", "retire", "REQ-OLD-001", "moved to another project");
+    expect(r.code, r.err).toBe(0);
+    expect(p.read("decisions/retired-ids.md")).toContain("| REQ-OLD-001 |");
+    expect((await p.run("check")).out).not.toContain("reused-id");
+  });
+
   test("a second retire, a bad ID, and a missing reason exit 2", async () => {
     p = new Project();
     expect((await p.run("id", "retire", "REQ-QRY-012", "x")).code).toBe(0);
