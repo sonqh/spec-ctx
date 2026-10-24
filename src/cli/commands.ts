@@ -103,8 +103,18 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     case "check": {
       const { check } = await import("../check/check.ts");
       const findings = check(root, cfg, data, !!f.strict);
-      if (json) print({ count: findings.length, findings });
-      else io.out(findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("") + `${findings.length} finding(s)\n`);
+      let warnings: string[] = [];
+      if (f.strict) {
+        const { manualWarnings } = await import("../check/evidence.ts");
+        const { listEvidence } = await import("../tasks/evidence.ts");
+        warnings = manualWarnings(root, entries, listEvidence(root));
+      }
+      if (json) print({ count: findings.length, findings, warnings });
+      else {
+        io.out(findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join(""));
+        io.out(warnings.map((w) => `warning: ${w}\n`).join(""));
+        io.out(`${findings.length} finding(s)\n`);
+      }
       return findings.length ? 1 : 0;
     }
   }

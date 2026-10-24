@@ -8,8 +8,8 @@ import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
 import { evidenceFindings } from "./evidence.ts";
 
-const RETIRED_RE = /\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b/g;
-const REQ_CAP = /^REQ-([A-Z]+)-/;
+const RETIRED_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|ADR-\d{3})\b/g;
+const REQ_CAP = /^REQ-([A-Z]{2,6})-/;
 
 export function retiredIds(root: string): Set<string> {
   const p = join(root, "decisions", "retired-ids.md");

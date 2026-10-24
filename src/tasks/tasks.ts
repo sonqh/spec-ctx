@@ -31,7 +31,7 @@ export function taskText(title: string): string {
   let t = title;
   const v = t.indexOf("Verify:");
   if (v >= 0) t = t.slice(0, v);
-  return t.replace(/\[REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*\]/g, "").replace(/\s+/g, " ").trim();
+  return t.replace(/\[REQ-[A-Z]{2,6}-\d{3}(?:\s*,\s*REQ-[A-Z]{2,6}-\d{3})*\]/g, "").replace(/\s+/g, " ").trim();
 }
 
 export function toTask(root: string, e: Entry): Task {

@@ -111,7 +111,7 @@ describe("exit codes and output style", () => {
     await p.build();
     const r = await p.run("check", "--json");
     expect(r.err).toBe("");
-    expect(JSON.parse(r.out)).toEqual({ count: 0, findings: [] });
+    expect(JSON.parse(r.out)).toEqual({ count: 0, findings: [], warnings: [] });
     for (const cmd of [["build"], ["status"], ["query", "lockfile"], ["related", "REQ-AAA-001"], ["bundle", "REQ-AAA-001"]]) {
       const x = await p.run(...cmd, "--json");
       expect(() => JSON.parse(x.out), cmd.join(" ")).not.toThrow();

@@ -9,7 +9,7 @@ import type { Entry } from "../index/types.ts";
 import { today } from "../util/time.ts";
 
 export const RETIRED_FILE = "decisions/retired-ids.md";
-const ANY_ID = /\b(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})\b/g;
+const ANY_ID = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
 
 export function retiredAll(root: string): Set<string> {
   const p = join(root, RETIRED_FILE);
@@ -41,7 +41,7 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
   };
   const checkCap = (cap: string | undefined): string => {
     if (!cap) throw new UsageExit(`id new ${kind} needs a capability code`);
-    if (!/^[A-Z]+$/.test(cap)) throw new UsageExit(`the capability code ${cap} must be upper case letters`);
+    if (!/^[A-Z]{2,6}$/.test(cap)) throw new UsageExit(`the capability code ${cap} must be 2 to 6 upper case letters`);
     if (!cfg.ids.caps.includes(cap)) {
       throw new UsageExit(`unknown-cap ${cap}. Configured codes: ${cfg.ids.caps.join(", ") || "none"}`);
     }
@@ -59,7 +59,7 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
     case "SCN": {
       const cap = checkCap(o.cap);
       if (!o.forReq) throw new UsageExit("id new SCN needs --for <REQ-ID>");
-      const m = /^REQ-([A-Z]+)-(\d{3})$/.exec(o.forReq);
+      const m = /^REQ-([A-Z]{2,6})-(\d{3})$/.exec(o.forReq);
       if (!m || m[1] !== cap) throw new UsageExit(`--for ${o.forReq} is not a REQ ID of ${cap}`);
       const start = next(new RegExp(`^SCN-${cap}-${m[2]}-(\\d+)$`));
       return seq(start, (n) => `SCN-${cap}-${m[2]}-${n}`);
@@ -85,7 +85,7 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
 
 /** Append a row to decisions/retired-ids.md. A canonical ID is still in use and stays. */
 export function retire(root: string, entries: Entry[], id: string, reason: string): string {
-  if (!/^(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})$/.test(id)) throw new UsageExit(`${id} is not a REQ, SCN, or ADR ID`);
+  if (!/^(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})$/.test(id)) throw new UsageExit(`${id} is not a REQ, SCN, or ADR ID`);
   if (!reason.trim()) throw new UsageExit("id retire needs a reason");
   const live = canon(entries).get(id);
   if (live) throw new UsageExit(`${id} is still in use at ${live.file}:${live.line}`);

@@ -31,19 +31,19 @@ HANDOFF = ROOT / ".ctx" / "handoff.md"
 # Every pattern is ASCII only so that both engines give the same matches. Python str patterns
 # are Unicode aware by default and would match non-ASCII digits and word characters.
 A = re.ASCII
-ID_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})\b", A)
-SCN_RE = re.compile(r"\bSCN-[A-Z]+-\d{3}-\d+\b", A)
-REQ_HDR = re.compile(r"^### Requirement:\s*(REQ-[A-Z]+-\d{3})?\s*(.*)$", A | re.S)
-SCN_HDR = re.compile(r"^#### Scenario:\s*(SCN-[A-Z]+-\d{3}-\d+)?\s*(.*)$", A | re.S)
+ID_RE = re.compile(r"\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b", A)
+SCN_RE = re.compile(r"\bSCN-[A-Z]{2,6}-\d{3}-\d+\b", A)
+REQ_HDR = re.compile(r"^### Requirement:\s*(REQ-[A-Z]{2,6}-\d{3})?\s*(.*)$", A | re.S)
+SCN_HDR = re.compile(r"^#### Scenario:\s*(SCN-[A-Z]{2,6}-\d{3}-\d+)?\s*(.*)$", A | re.S)
 ADR_HDR = re.compile(r"^# (ADR-\d{3})\s+(.*)$", A | re.S)
 REFS_RE = re.compile(r"^Refs:\s*(.+)$", A | re.S)
-TASK_REQ = re.compile(r"\[(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)\]", A)
-CODE_TAG = re.compile(r"(?://|#|/\*|\*)\s*(REQ-[A-Z]+-\d{3})", A)
-COVER_TAG = re.compile(r"Covers:\s*(REQ-[A-Z]+-\d{3}(?:\s*,\s*REQ-[A-Z]+-\d{3})*)", A)
-RETIRED_RE = re.compile(r"\b(REQ-[A-Z]+-\d{3}|ADR-\d{3})\b", A)
+TASK_REQ = re.compile(r"\[(REQ-[A-Z]{2,6}-\d{3}(?:\s*,\s*REQ-[A-Z]{2,6}-\d{3})*)\]", A)
+CODE_TAG = re.compile(r"(?://|#|/\*|\*)\s*(REQ-[A-Z]{2,6}-\d{3})", A)
+COVER_TAG = re.compile(r"Covers:\s*(REQ-[A-Z]{2,6}-\d{3}(?:\s*,\s*REQ-[A-Z]{2,6}-\d{3})*)", A)
+RETIRED_RE = re.compile(r"\b(REQ-[A-Z]{2,6}-\d{3}|ADR-\d{3})\b", A)
 SENTENCE_END = re.compile(r"(?<=[.!?])\s", A)
 COMMA = re.compile(r"\s*,\s*", A)
-REQ_CAP = re.compile(r"^REQ-([A-Z]+)-", A)
+REQ_CAP = re.compile(r"^REQ-([A-Z]{2,6})-", A)
 
 SKIP_DIRS = {"node_modules", ".git"}
 
@@ -612,6 +612,30 @@ def evidence_findings(entries):
     return out
 
 
+def manual_warnings(entries):
+    """spec-ctx REQ-CHK-003 manual evidence for a task in an active change warns and does not fail."""
+    active = {e["id"] for e in entries if e["kind"] == "task" and "/archive/" not in e["file"] and e["change"] != "main"}
+    base = ROOT / ".ctx" / "evidence"
+    out = []
+    if base.is_dir():
+        for c in sorted(os.listdir(base)):
+            if not (base / c).is_dir():
+                continue
+            for n in sorted(os.listdir(base / c)):
+                if not n.endswith(".json") or ".reopened-" in n:
+                    continue
+                tid = f"{c}/{n[:-5]}"
+                if tid not in active:
+                    continue
+                try:
+                    kind = json.loads((base / c / n).read_bytes().decode("utf-8")).get("kind")
+                except ValueError:
+                    continue
+                if kind == "manual":
+                    out.append(f"manual-evidence {tid}")
+    return sorted(out)
+
+
 def check(data, strict, as_json=False):
     entries, problems = data["entries"], data["problems"]
     findings = list(problems)
@@ -659,12 +683,16 @@ def check(data, strict, as_json=False):
             if e["kind"] == "scn" and e["id"] not in named:
                 findings.append((e["file"], e["line"], "scenario-untested", e["id"]))
     findings = sorted(set(findings))
+    warnings = manual_warnings(entries) if strict else []
     if as_json:
         print(dumps({"count": len(findings),
-                     "findings": [{"file": f, "line": l, "rule": rule, "id": i} for f, l, rule, i in findings]}))
+                     "findings": [{"file": f, "line": l, "rule": rule, "id": i} for f, l, rule, i in findings],
+                     "warnings": warnings}))
         return 1 if findings else 0
     for f, l, rule, i in findings:
         print(f"{f}:{l}  {rule}  {i}")
+    for w in warnings:
+        print(f"warning: {w}")
     print(f"{len(findings)} finding(s)")
     return 1 if findings else 0
 

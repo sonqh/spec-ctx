@@ -19,7 +19,7 @@
 ## 3b. Pre-publish adoption
 
 - [x] 3.4 Add the `prepare` script (Node only, no Bun), make the action accept a `github:` version, document both install forms. [REQ-DIST-008] Verify: `cd $(mktemp -d) && npx -y github:sonqh/spec-ctx#main --version`
-- [ ] 3.5 Add the `manual-evidence` warning to `check --strict` and fix the SCN-CHK-002-1 example ID to `REQ-XX-003` in the test fixture. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/`
+- [x] 3.5 Add the `manual-evidence` warning to `check --strict` and fix the SCN-CHK-002-1 example ID to `REQ-XX-003` in the test fixture. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/`
 
 ## 4. Dogfood
 

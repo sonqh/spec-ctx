@@ -19,7 +19,26 @@ describe("check strict rules", () => {
     expect((await check("--strict")).code).toBe(0);
   });
 
-  test("SCN-CHK-002-1 a main REQ with no Covers test is uncovered", async () => {
+  test("SCN-CHK-002-1 REQ-XX-003 with no Covers test is uncovered", async () => {
+    p = new Project();
+    p.append(SPEC, "\n### Requirement: REQ-XX-003 Two letter code\nText.\n\n#### Scenario: SCN-XX-003-1 S\n- a\n");
+    p.write("tests/xx.cases.ts", "// SCN-XX-003-1\n");
+    const r = await check("--strict");
+    expect(r.code).toBe(1);
+    expect(r.out).toContain("uncovered  REQ-XX-003");
+    p.write("tests/xx.cases.ts", "// " + COVERS + "REQ-XX-003\n// SCN-XX-003-1\n");
+    expect((await check("--strict")).code).toBe(0);
+  });
+
+  test("a capability code has 2 to 6 letters", async () => {
+    p = new Project();
+    p.append(SPEC, "\n### Requirement: REQ-X-003 One letter\nText.\n\n### Requirement: REQ-ABCDEFG-001 Seven letters\nText.\n");
+    const r = await check();
+    expect(r.out).toContain("missing-id  REQ-X-003 One letter");
+    expect(r.out).toContain("missing-id  REQ-ABCDEFG-001 Seven letters");
+  });
+
+  test("a main REQ with no Covers test is uncovered", async () => {
     p = new Project();
     p.write("tests/a.cases.ts", "// " + COVERS + "REQ-AAA-001\n// SCN-AAA-001-1 SCN-AAA-002-1\n");
     expect((await check()).code).toBe(0);
@@ -61,7 +80,8 @@ describe("check strict rules", () => {
     // the base fixture holds evidence for the ticked task 001/1.1 with the digests of its tagged files
     expect(p.read(".ctx/evidence/001/1.1.json")).toContain('"task": "001/1.1"');
     const r = await check("--strict");
-    expect(r.out).toBe("0 finding(s)\n");
+    // the fixture evidence is manual, so strict prints a warning that does not count
+    expect(r.out).toBe("warning: manual-evidence 001/1.1\n0 finding(s)\n");
     expect(r.code).toBe(0);
   });
 });

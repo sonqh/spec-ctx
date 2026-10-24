@@ -271,4 +271,6 @@ openspec/specs/spec-governance/spec.md:40  uncovered  REQ-GOV-005
 openspec/specs/spec-governance/spec.md:43  scenario-untested  SCN-GOV-005-1
 src/plant.ts:2  code-tag-no-canonical  REQ-OLD-001
 src/plant.ts:6  dangling-ref  REQ-NOPE-002
+warning: manual-evidence 007/1.1
+warning: manual-evidence 007/1.2
 273 finding(s)

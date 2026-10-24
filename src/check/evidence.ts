@@ -46,3 +46,21 @@ export function evidenceFindings(root: string, entries: Entry[], evidence: strin
   }
   return out;
 }
+
+/** REQ-CHK-003 manual evidence for a task in an active change is a warning, not a finding. */
+export function manualWarnings(root: string, entries: Entry[], evidence: string[]): string[] {
+  const active = new Set(entries.filter((e) => e.kind === "task" && !e.file.includes("/archive/") && e.change !== "main").map((e) => e.id));
+  const out: string[] = [];
+  for (const rel of evidence) {
+    const parts = rel.split("/");
+    const id = `${parts[2]}/${parts[3]!.replace(/\.json$/, "")}`;
+    if (!active.has(id)) continue;
+    try {
+      const ev = JSON.parse(readFileSync(join(root, rel), "utf8")) as { kind?: string };
+      if (ev.kind === "manual") out.push(`manual-evidence ${id}`);
+    } catch {
+      // a damaged file is a stale-evidence finding already
+    }
+  }
+  return out.sort();
+}

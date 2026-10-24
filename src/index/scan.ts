@@ -8,16 +8,16 @@ import type { Entry, Problem, Scanned, Status } from "./types.ts";
 
 // Every pattern is ASCII only. `[ \t\n\r\f\v]` is the ASCII whitespace class of the Python oracle.
 const S = "[ \\t\\n\\r\\f\\v]";
-export const ID_RE = /\b(REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})\b/g;
-const ID_FULL = /^(?:REQ-[A-Z]+-\d{3}|SCN-[A-Z]+-\d{3}-\d+|ADR-\d{3})$/;
-const SCN_RE = /\bSCN-[A-Z]+-\d{3}-\d+\b/g;
-const REQ_HDR = new RegExp(`^### Requirement:${S}*(REQ-[A-Z]+-\\d{3})?${S}*(.*)$`, "s");
-const SCN_HDR = new RegExp(`^#### Scenario:${S}*(SCN-[A-Z]+-\\d{3}-\\d+)?${S}*(.*)$`, "s");
+export const ID_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
+const ID_FULL = /^(?:REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})$/;
+const SCN_RE = /\bSCN-[A-Z]{2,6}-\d{3}-\d+\b/g;
+const REQ_HDR = new RegExp(`^### Requirement:${S}*(REQ-[A-Z]{2,6}-\\d{3})?${S}*(.*)$`, "s");
+const SCN_HDR = new RegExp(`^#### Scenario:${S}*(SCN-[A-Z]{2,6}-\\d{3}-\\d+)?${S}*(.*)$`, "s");
 const ADR_HDR = new RegExp(`^# (ADR-\\d{3})${S}+(.*)$`, "s");
 const REFS_RE = new RegExp(`^Refs:${S}*(.+)$`, "s");
-const TASK_REQ = new RegExp(`\\[(REQ-[A-Z]+-\\d{3}(?:${S}*,${S}*REQ-[A-Z]+-\\d{3})*)\\]`, "g");
-const CODE_TAG = new RegExp(`(?://|#|/\\*|\\*)${S}*(REQ-[A-Z]+-\\d{3})`);
-const COVER_TAG = new RegExp(`Covers:${S}*(REQ-[A-Z]+-\\d{3}(?:${S}*,${S}*REQ-[A-Z]+-\\d{3})*)`);
+const TASK_REQ = new RegExp(`\\[(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)\\]`, "g");
+const CODE_TAG = new RegExp(`(?://|#|/\\*|\\*)${S}*(REQ-[A-Z]{2,6}-\\d{3})`);
+const COVER_TAG = new RegExp(`Covers:${S}*(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)`);
 const SENTENCE_END = new RegExp(`(?<=[.!?])${S}`);
 const COMMA = new RegExp(`${S}*,${S}*`);
 const SKIP_DIRS = new Set(["node_modules", ".git"]);
