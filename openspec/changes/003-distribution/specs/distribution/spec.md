@@ -40,9 +40,9 @@ Refs: ADR-001
 - **THEN** it prints the version
 
 ### Requirement: REQ-DIST-005 GitHub Action
-`action.yml` at the repo root SHALL run `specctx check --strict`, both linters on the configured markdown paths, and `openspec validate --all --strict`. Inputs: `version` (default latest), `strict` (default true).
+`action.yml` at the repo root SHALL run `specctx gate`, which covers `check`, both linters on the configured markdown paths, and `openspec validate --all`. Inputs: `version` (default latest), `strict` (default true), `markdown`, `specctx`. The action SHALL hold no gate logic of its own beyond choosing the `specctx` command.
 
-Refs: REQ-GOV-003
+Refs: REQ-GOV-003, REQ-CLI-004
 
 #### Scenario: SCN-DIST-005-1 Action on agentrc
 - **WHEN** agentrc CI uses `sonqh/spec-ctx@v0`
