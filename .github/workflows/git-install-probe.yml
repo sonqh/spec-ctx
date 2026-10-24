@@ -1,0 +1,17 @@
+name: git-install-probe
+# Temporary. Finds which git spec form npx installs on a GitHub runner.
+on: [push]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: |
+          short=${GITHUB_SHA::12}
+          for spec in "github:sonqh/spec-ctx#$short" "git+https://github.com/sonqh/spec-ctx.git#$short" "github:sonqh/spec-ctx#main"; do
+            d=$(mktemp -d); cd "$d"
+            out=$(npm_config_cache="$d/c" npx -y "$spec" --version 2>&1); code=$?
+            echo "::warning::spec $spec exit $code: $(echo "$out" | grep -v notice | tail -c 600 | tr '\n' ' ')"
+            cd /
+          done
