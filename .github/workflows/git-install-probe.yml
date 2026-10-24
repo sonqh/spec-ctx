@@ -8,6 +8,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: |
+          git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+          git config --global --add url."https://github.com/".insteadOf "git@github.com:"
           d=$(mktemp -d); cd "$d"
           code=0; npm_config_cache="$d/c" npx -y --loglevel silly "github:sonqh/spec-ctx#main" --version > out.txt 2>&1 || code=$?
           echo "::warning::probe exit $code"
