@@ -1,9 +1,10 @@
 {
-  "at": "2026-10-24T02:47:36.387Z",
+  "at": "2026-10-24T04:45:24.803Z",
+  "bundle_chars": 8218,
   "files": {
     "src/check/check.ts": "ce4cd989f578c0609423d950fd9873505a2237891cc8427504c4038eb217a021",
     "tests/check/base.test.ts": "1bd46642fba2ff0786f4e3f440674ec31e6430f4849e0be9b6483d35fa4f4e65",
-    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b",
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a",
     "tests/ids/retire.test.ts": "5d01dae6bdb2a6d2598ee44692f24399aa4a9dbd61919aa0fb19d6155addfefd"
   },
   "kind": "command",
@@ -12,12 +13,13 @@
     "REQ-IDS-003",
     "REQ-CHK-001"
   ],
+  "started_at": "2026-10-24T04:45:11.654Z",
   "task": "003/5.3",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict",
     "exit": 0,
-    "stderr_tail": "\n 167 pass\n 0 fail\n 876 expect() calls\nRan 167 tests across 31 files. [6.38s]",
-    "stdout_sha256": "e2cbf8fcb14f582b18bceabc89b31aefb2ee30c16ca6d7052298cdcb067255a7"
+    "stderr_tail": "\n 258 pass\n 0 fail\n 1259 expect() calls\nRan 258 tests across 47 files. [11.57s]",
+    "stdout_sha256": "e73fc9fa7cbbd5da507afc3249e6bd2a4a9bd98b9be8df5432d9359dacda6814"
   }
 }

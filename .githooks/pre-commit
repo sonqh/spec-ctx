@@ -10,8 +10,8 @@ spec_changed=0
 for f in $staged_md; do
   # lint markdown under openspec/, decisions/, docs/, skills/, and the repository root
   if [[ "$f" == openspec/* || "$f" == decisions/* || "$f" == docs/* || "$f" == skills/* || "$f" != */* ]]; then
-    python3 scripts/tells-lint.py --baseline 0 "$f" >/dev/null || { python3 scripts/tells-lint.py --baseline 0 "$f"; exit 1; }
-    python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f" >/dev/null || { python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f"; exit 1; }
+    $CTX lint tells --baseline 0 "$f" >/dev/null || { $CTX lint tells --baseline 0 "$f"; exit 1; }
+    $CTX lint ste --baseline 0 --disable synonym-rotation "$f" >/dev/null || { $CTX lint ste --baseline 0 --disable synonym-rotation "$f"; exit 1; }
   fi
   if [[ "$f" == openspec/* ]]; then spec_changed=1; fi
 done

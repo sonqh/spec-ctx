@@ -1,7 +1,7 @@
-// Covers: REQ-CLI-004
+// Covers: REQ-CLI-004, REQ-LINT-003
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { cpSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Project, REPO } from "../helpers.ts";
 
@@ -51,20 +51,33 @@ describe("gate", () => {
     expect(v.out).toContain("validate: fail");
   });
 
-  test("SCN-CLI-004-3 no python3 skips the linters and still runs validate", () => {
+  // REQ-LINT-003 removes the skip of SCN-CLI-004-3: with no python3 the linters still run
+  test("SCN-CLI-004-3 SCN-LINT-003-1 no python3: the linters run and validate runs", () => {
     p = new Project();
     expect(existsSync(CLI)).toBe(true);
     const r = spawnSync(process.execPath, [CLI, "gate", "--root", p.root], {
       encoding: "utf8",
       env: { PATH: "/nonexistent", SPECCTX_OPENSPEC: "/bin/true", HOME: p.root },
     });
-    expect(r.stdout).toBe("check: ok\nlinters: skipped, python3 not found\nvalidate: ok\nspec-length: ok\n");
+    expect(r.stdout).toMatch(/^check: ok\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok\nspec-length: ok\n$/);
+    expect(r.stdout).not.toContain("skipped");
     expect(r.status).toBe(0);
   });
 
-  test("the package ships both linters", async () => {
-    const pkg = JSON.parse((await import("node:fs")).readFileSync(join(REPO, "package.json"), "utf8"));
-    expect(pkg.files).toContain("scripts/tells-lint.py");
-    expect(pkg.files).toContain("scripts/ste-lint.py");
-  });
+  test("SCN-LINT-003-2 the Python scripts are gone from the tree and the package", () => {
+    expect(existsSync(join(REPO, "scripts/tells-lint.py"))).toBe(false);
+    expect(existsSync(join(REPO, "scripts/ste-lint.py"))).toBe(false);
+    // npm pack runs prepare, which writes into src/. A temp copy without lifecycle scripts keeps the repo clean.
+    p = new Project(null);
+    const pkg = JSON.parse(readFileSync(join(REPO, "package.json"), "utf8"));
+    delete pkg.scripts;
+    p.write("package.json", JSON.stringify(pkg, null, 2) + "\n");
+    for (const f of [...pkg.files, "README.md", "LICENSE"]) if (existsSync(join(REPO, f))) cpSync(join(REPO, f), p.path(f), { recursive: true });
+    p.write("scripts/tells-lint.py", "# outside the files list\n");
+    const r = spawnSync("npm", ["pack", "--dry-run", "--json"], { cwd: p.root, encoding: "utf8" });
+    expect(r.status, r.stderr).toBe(0);
+    const files: string[] = JSON.parse(r.stdout)[0].files.map((f: { path: string }) => f.path);
+    expect(files.length).toBeGreaterThan(0);
+    expect(files.filter((f) => f.endsWith(".py"))).toEqual([]);
+  }, 60000);
 });

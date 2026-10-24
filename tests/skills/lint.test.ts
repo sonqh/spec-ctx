@@ -5,6 +5,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { REPO } from "../helpers.ts";
 
+const CLI = join(REPO, "dist/cli.js");
 const SKILLS = ["specctx-bootstrap", "specctx-next", "specctx-done"];
 const file = (s: string): string => join(REPO, "skills", s, "SKILL.md");
 
@@ -26,9 +27,9 @@ describe("skills", () => {
 
   test("SCN-SKL-001-2 both linters pass with baseline 0", () => {
     for (const s of SKILLS) {
-      const t = spawnSync("python3", [join(REPO, "scripts/tells-lint.py"), "--baseline", "0", file(s)], { encoding: "utf8" });
+      const t = spawnSync(process.execPath, [CLI, "lint", "tells", "--baseline", "0", file(s)], { encoding: "utf8" });
       expect(t.status, t.stdout).toBe(0);
-      const ste = spawnSync("python3", [join(REPO, "scripts/ste-lint.py"), "--baseline", "0", "--disable", "synonym-rotation", file(s)], { encoding: "utf8" });
+      const ste = spawnSync(process.execPath, [CLI, "lint", "ste", "--baseline", "0", "--disable", "synonym-rotation", file(s)], { encoding: "utf8" });
       expect(ste.status, ste.stdout).toBe(0);
     }
   });

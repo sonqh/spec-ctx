@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-24T04:36:32.112Z",
-  "bundle_chars": 2746,
+  "at": "2026-10-24T04:43:39.658Z",
+  "bundle_chars": 2832,
   "files": {
     "src/lint/cli.ts": "fdb6fe2bf8857da2b481f8ee4153b62631aac8dd01c088010ddb02f43c0df5ee",
     "src/lint/py.ts": "0a7e7be2160248d946f7051069672e6810afc0d1c8f5294c46d1d4687527dfc5",
@@ -10,7 +10,7 @@
     "src/main.ts": "1dadadac14172a2c1f51b7f1ce9c5f84f0504c8cfcd0e954043e37fd7b6d3558",
     "tests/lint/cli.test.ts": "9f842b6716089c9cff7b5c66ca4d652238b7cde450cfcf8cd3987efb5bd3a595",
     "tests/lint/parity.mjs": "239160bb3d4e363ea551891e59053b664f8d9ed1562be14e5859e383c3d6c12d",
-    "tests/lint/parity.sh": "fa6c5520b88b683abf12a0cb0cebf974013ef41a96ac4bb68dc9c56201b54b94",
+    "tests/lint/parity.sh": "27a09ae73d0143b195c30ee60adda87286fd2ff287ed5b76493721325a74b945",
     "tests/lint/ste.test.ts": "a77b9a3da255fe30517a216e9858fdf05e3783aa4818f895435958a9d4d03ae0",
     "tests/lint/tells.test.ts": "41736527887c1be67cf9e980eea694e55627ccafb53422a7a0af3aa15d949256"
   },
@@ -18,7 +18,7 @@
   "reqs": [
     "REQ-LINT-001"
   ],
-  "started_at": "2026-10-24T04:35:49.409Z",
+  "started_at": "2026-10-24T04:43:30.394Z",
   "task": "006/2.4",
   "tool_version": "0.1.0",
   "verify": {

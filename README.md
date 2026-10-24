@@ -106,6 +106,7 @@ Tag code with a comment `// REQ-IDX-003`. Tag tests with `// Covers: REQ-IDX-003
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
 | `task backfill` | Manual evidence for ticked tasks without it. |
 | `gate` | `check`, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
+| `lint tells`, `lint ste` | The two markdown linters. Flags: `--baseline`, `--disable`, `--json`, `--selftest`. |
 
 Every command takes `--root <path>` and `--json`. Exit codes: 0 for success, 1 for findings or a failed Verify command, 2 for a usage error, 3 for an internal error.
 
@@ -137,6 +138,19 @@ depth = 1
 timeout_s = 600
 ```
 
+## Markdown linters
+
+`specctx lint tells` and `specctx lint ste` replace `scripts/tells-lint.py` and `scripts/ste-lint.py` from the ste-humanize skill. They take the same flags and give the same output and exit codes. They need Node only.
+
+```bash
+# before
+python3 scripts/tells-lint.py --baseline 0 README.md
+python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md
+# after
+npx spec-ctx lint tells --baseline 0 README.md
+npx spec-ctx lint ste --baseline 0 --disable synonym-rotation README.md
+```
+
 ## GitHub Action
 
 ```yaml
@@ -146,7 +160,7 @@ timeout_s = 600
     strict: true
 ```
 
-The action runs `specctx check --strict`, both markdown linters, and `openspec validate --all --strict`.
+The action runs `specctx gate`: `check --strict`, both markdown linters, `openspec validate --all --strict`, and the length check.
 
 ## Develop
 

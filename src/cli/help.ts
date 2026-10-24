@@ -1,4 +1,4 @@
-// REQ-CLI-001 REQ-CLI-002 help text in three groups. It passes scripts/ste-lint.py --baseline 0.
+// REQ-CLI-001 REQ-CLI-002 help text in three groups. It passes `specctx lint ste --baseline 0`.
 // Command names and the Verify keyword stay in backticks, so the lint reads them as code.
 import { COMMANDS } from "./args.ts";
 

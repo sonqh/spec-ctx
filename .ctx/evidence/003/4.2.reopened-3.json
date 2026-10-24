@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T02:47:16.831Z",
+  "files": {
+    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b"
+  },
+  "kind": "command",
+  "reason": "stale-evidence 003/4.2 (006/2.5 switches to specctx lint)",
+  "reqs": [
+    "REQ-DIST-007",
+    "REQ-DIST-003"
+  ],
+  "task": "003/4.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/parity/run.sh && ! grep -rl ctx.py src tests/parity/run.sh scripts skills schemas .githooks .github CLAUDE.md README.md DELEGATION.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e769464b81e62fe4af67c5ea6b1e64e32d919671f03f4d9aadaaeb9da78a4eb7"
+  }
+}

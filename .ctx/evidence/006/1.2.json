@@ -1,21 +1,21 @@
 {
-  "at": "2026-10-24T04:09:15.431Z",
-  "bundle_chars": 2157,
+  "at": "2026-10-24T04:41:25.522Z",
+  "bundle_chars": 2333,
   "files": {
-    "src/cli/gate.ts": "b34dc77f502743393b7d24108f875975c8b274f31ff6941a554496b865aaf7e8",
+    "src/cli/gate.ts": "96785e81b86077c78a4ab8c574f09b675cdc9cbeb4c77ccd7ea0549156a80b9f",
     "tests/cli/gate-length.test.ts": "d80c279b078cf85e5a149bb5923b2c25078eb576ec27c6c25e90e26c965601c7"
   },
   "kind": "command",
   "reqs": [
     "REQ-CLI-005"
   ],
-  "started_at": "2026-10-24T04:05:27.745Z",
+  "started_at": "2026-10-24T04:41:25.316Z",
   "task": "006/1.2",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun test tests/cli/gate-length.test.ts",
     "exit": 0,
-    "stderr_tail": "\n 4 pass\n 0 fail\n 9 expect() calls\nRan 4 tests across 1 file. [590.00ms]",
+    "stderr_tail": "\n 4 pass\n 0 fail\n 9 expect() calls\nRan 4 tests across 1 file. [114.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }

@@ -11,9 +11,7 @@
     "dist",
     "schemas",
     "skills",
-    "action.yml",
-    "scripts/tells-lint.py",
-    "scripts/ste-lint.py"
+    "action.yml"
   ],
   "engines": {
     "node": ">=22"

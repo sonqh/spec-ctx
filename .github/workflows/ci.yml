@@ -49,7 +49,7 @@ jobs:
         if: matrix.runtime == 'bun'
       - run: bun run test:node
         if: matrix.runtime == 'node'
-      - run: node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0
+      - run: node dist/cli.js --help | node dist/cli.js lint ste --baseline 0
       - run: bash tests/parity/run.sh
       - run: bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh
         if: matrix.runtime == 'bun'

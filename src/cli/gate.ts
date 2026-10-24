@@ -2,18 +2,12 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { Io } from "../main.ts";
 import { anyMatch, globRe } from "../util/glob.ts";
 import { cmpStr } from "../util/pystr.ts";
 
 export const DEFAULT_MARKDOWN = "openspec/**/*.md decisions/*.md docs/**/*.md *.md";
 const SKIP = new Set(["node_modules", ".git", ".ctx", "dist", "build"]);
-
-/** The scripts/ folder of the package. It holds the two linters. */
-export function lintDir(): string {
-  return fileURLToPath(new URL("../../scripts/", import.meta.url));
-}
 
 export function markdownFiles(root: string, globs: string): string[] {
   const res = globs.split(/\s+/).filter(Boolean).map(globRe);
@@ -58,30 +52,28 @@ export async function runGate(root: string, o: GateOpts, io: Io): Promise<number
   }
   io.out(`check: ok${o.strict ? " (strict)" : ""}\n`);
 
-  // gate 2: the linters of the package on the markdown globs
-  const py = spawnSync("python3", ["--version"], { encoding: "utf8" });
-  const dir = lintDir();
-  const tells = join(dir, "tells-lint.py");
-  const ste = join(dir, "ste-lint.py");
-  if (py.error || py.status !== 0) {
-    io.out("linters: skipped, python3 not found\n");
-  } else if (!existsSync(tells) || !existsSync(ste)) {
-    io.out("linters: skipped, the linter scripts are not in this install\n");
-  } else {
-    const files = markdownFiles(root, o.markdown);
-    const bad: string[] = [];
-    for (const f of files) {
-      for (const args of [[tells, "--baseline", "0", f], [ste, "--baseline", "0", "--disable", "synonym-rotation", f]]) {
-        const r = spawnSync("python3", args, { cwd: root, encoding: "utf8" });
-        if (r.status !== 0) bad.push(`${f}\n${r.stdout}${r.stderr}`);
-      }
-    }
-    if (bad.length) {
-      io.out("linters: fail\n" + bad.join(""));
-      return 1;
-    }
-    io.out(`linters: ok (${files.length} file(s))\n`);
+  // gate 2: REQ-LINT-003 both linters of this package on the markdown globs. No python3.
+  const { lintSte } = await import("../lint/ste.ts");
+  const { lintTells } = await import("../lint/tells.ts");
+  const { steReport } = await import("../lint/cli.ts");
+  const files = markdownFiles(root, o.markdown);
+  const bad: string[] = [];
+  const noRotation = new Set(["synonym-rotation"]);
+  for (const f of files) {
+    const text = readFileSync(join(root, f), "utf8").replace(/\r\n?/g, "\n");
+    const tells = lintTells(text);
+    const hard = tells.filter((x) => x.level === "hard");
+    if (hard.length) bad.push(`${f}\n` + tells.map((x) => `${f}:${x.line}: [${x.level}] ${x.rule}: ${x.match}\n`).join("") + `${hard.length} hard finding(s), baseline 0\n`);
+    const r = lintSte(text, f);
+    const ste = r.findings.filter((x) => !noRotation.has(x.rule));
+    const steHard = ste.filter((x) => x.level === "advisory-free").length;
+    if (steHard) bad.push(`${f}\n` + steReport(ste, r.words, false, steHard, 0));
   }
+  if (bad.length) {
+    io.out("linters: fail\n" + bad.join(""));
+    return 1;
+  }
+  io.out(`linters: ok (${files.length} file(s))\n`);
 
   // gate 3: openspec validate. SPECCTX_OPENSPEC replaces the command, for tests and offline use.
   const cmd = process.env.SPECCTX_OPENSPEC ?? "npx -y @fission-ai/openspec@latest";

@@ -2,7 +2,9 @@
 # Covers: REQ-LINT-001
 # SCN-LINT-001-1 lint parity. The goldens are the output of the Python linters on the corpus.
 #   bash tests/lint/parity.sh            compare `specctx lint` with the goldens
-#   bash tests/lint/parity.sh --record   write the goldens from scripts/*-lint.py
+#   bash tests/lint/parity.sh --record   write the goldens from the Python scripts
+# The Python scripts left this repository in 006/2.5. A new record needs SPECCTX_LINT_ORACLE,
+# a folder that holds tells-lint.py and ste-lint.py, for example the scripts/ folder of ste-humanize-skill.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CORPUS=tests/fixtures/lint-corpus
@@ -13,6 +15,11 @@ if [ "${1:-}" != "--record" ]; then
   [ -f dist/cli.js ] || bun run build >/dev/null
   exec node tests/lint/parity.mjs "$CORPUS" "$GOLD"
 fi
+
+ORACLE=${SPECCTX_LINT_ORACLE:-scripts}
+for l in tells ste; do
+  [ -f "$ORACLE/$l-lint.py" ] || { echo "parity.sh: no $ORACLE/$l-lint.py. Set SPECCTX_LINT_ORACLE." >&2; exit 2; }
+done
 
 # Hidden folders such as .claude get a "dot" prefix, so no tool loads the copied skills.
 undot() { printf '%s' "$1" | sed -E 's#(^|/)\.#\1dot.#g'; }
@@ -34,7 +41,7 @@ if [ ! -d "$CORPUS" ] || [ "${SPECCTX_LINT_CORPUS:-}" = rebuild ]; then
     git -C "$AGENTRC" show "$AGENTRC_SHA:$f" > "$t"
   done
   # the inputs of both selftests, one file per input
-  python3 -I - "$CORPUS/selftest" scripts <<'PY'
+  python3 -I - "$CORPUS/selftest" "$ORACLE" <<'PY'
 import importlib.util, io, contextlib, os, sys
 out, scripts = sys.argv[1], sys.argv[2]
 for name in ("tells", "ste"):
@@ -73,13 +80,13 @@ while IFS= read -r -d '' f; do
   for m in "${MODES[@]}"; do
     IFS='|' read -r mode lint flags <<< "$m"
     # shellcheck disable=SC2086
-    set +e; python3 "scripts/$lint-lint.py" $flags "$f" > "$GOLD/$rel.$mode.out" 2>/dev/null; code=$?; set -e
+    set +e; python3 "$ORACLE/$lint-lint.py" $flags "$f" > "$GOLD/$rel.$mode.out" 2>/dev/null; code=$?; set -e
     echo "exit: $code" >> "$GOLD/$rel.$mode.out"
   done
   n=$((n + 1))
 done < <(find "$CORPUS" -name '*.md' -type f -print0 | LC_ALL=C sort -z)
 for lint in tells ste; do
-  set +e; python3 "scripts/$lint-lint.py" --selftest > "$GOLD/selftest.$lint.out" 2>&1; code=$?; set -e
+  set +e; python3 "$ORACLE/$lint-lint.py" --selftest > "$GOLD/selftest.$lint.out" 2>&1; code=$?; set -e
   echo "exit: $code" >> "$GOLD/selftest.$lint.out"
 done
 echo "lint parity: recorded $n files"

@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-24T04:38:45.712Z",
+  "at": "2026-10-24T04:43:29.794Z",
   "bundle_chars": 3344,
   "files": {
     "src/lint/cli.ts": "fdb6fe2bf8857da2b481f8ee4153b62631aac8dd01c088010ddb02f43c0df5ee",
@@ -10,7 +10,7 @@
     "src/main.ts": "1dadadac14172a2c1f51b7f1ce9c5f84f0504c8cfcd0e954043e37fd7b6d3558",
     "tests/lint/cli.test.ts": "9f842b6716089c9cff7b5c66ca4d652238b7cde450cfcf8cd3987efb5bd3a595",
     "tests/lint/parity.mjs": "239160bb3d4e363ea551891e59053b664f8d9ed1562be14e5859e383c3d6c12d",
-    "tests/lint/parity.sh": "fa6c5520b88b683abf12a0cb0cebf974013ef41a96ac4bb68dc9c56201b54b94",
+    "tests/lint/parity.sh": "27a09ae73d0143b195c30ee60adda87286fd2ff287ed5b76493721325a74b945",
     "tests/lint/ste.test.ts": "a77b9a3da255fe30517a216e9858fdf05e3783aa4818f895435958a9d4d03ae0",
     "tests/lint/tells.test.ts": "41736527887c1be67cf9e980eea694e55627ccafb53422a7a0af3aa15d949256"
   },
@@ -19,13 +19,13 @@
     "REQ-LINT-001",
     "REQ-LINT-002"
   ],
-  "started_at": "2026-10-24T04:38:45.603Z",
+  "started_at": "2026-10-24T04:43:29.686Z",
   "task": "006/2.2",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun test tests/lint/tells.test.ts",
     "exit": 0,
-    "stderr_tail": "\n 18 pass\n 0 fail\n 49 expect() calls\nRan 18 tests across 1 file. [18.00ms]",
+    "stderr_tail": "\n 18 pass\n 0 fail\n 49 expect() calls\nRan 18 tests across 1 file. [16.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }

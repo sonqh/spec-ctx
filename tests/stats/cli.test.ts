@@ -44,8 +44,8 @@ describe("stats command", () => {
     expect(readdirSync(p.path("docs/metrics"))).toEqual(["2026-10-24.md"]);
     const file = p.path("docs/metrics/2026-10-24.md");
     expect(p.read("docs/metrics/2026-10-24.md")).toContain("| total |");
-    for (const args of [["scripts/tells-lint.py", "--baseline", "0", file], ["scripts/ste-lint.py", "--baseline", "0", "--disable", "synonym-rotation", file]]) {
-      const r = spawnSync("python3", [join(REPO, args[0]!), ...args.slice(1)], { encoding: "utf8" });
+    for (const args of [["tells", "--baseline", "0", file], ["ste", "--baseline", "0", "--disable", "synonym-rotation", file]]) {
+      const r = spawnSync(process.execPath, [join(REPO, "dist/cli.js"), "lint", ...args], { encoding: "utf8" });
       expect(r.status, r.stdout).toBe(0);
     }
   });

@@ -24,7 +24,7 @@ describe("spec governance", () => {
   test("SCN-GOV-003-1 a markdown file with a semicolon fails the lint that CI runs", () => {
     p = new Project(null);
     p.write("openspec/bad.md", "# Bad\n\nThe tool reads the file; it writes the index.\n");
-    const r = spawnSync("python3", [join(REPO, "scripts/ste-lint.py"), "--baseline", "0", "--disable", "synonym-rotation", p.path("openspec/bad.md")]);
+    const r = spawnSync(process.execPath, [join(REPO, "dist/cli.js"), "lint", "ste", "--baseline", "0", "--disable", "synonym-rotation", p.path("openspec/bad.md")]);
     expect(r.status).toBe(1);
     const ci = readFileSync(join(REPO, ".github/workflows/ci.yml"), "utf8");
     const specs = ci.slice(ci.indexOf("\n  specs:\n"), ci.indexOf("\n  code:\n"));
@@ -32,8 +32,9 @@ describe("spec governance", () => {
     expect(specs).toContain("node dist/cli.js gate --strict --markdown");
     for (const g of ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "skills/**/*.md", "schemas/**/*.md", "*.md"]) expect(specs).toContain(g);
     const hook = readFileSync(join(REPO, ".githooks/pre-commit"), "utf8");
-    for (const s of ["check --strict", "validate --all --strict", "tells-lint.py", "ste-lint.py"]) expect(hook).toContain(s);
-    expect(readFileSync(join(REPO, "src/cli/gate.ts"), "utf8")).toContain("tells-lint.py");
+    for (const s of ["check --strict", "validate --all --strict", "lint tells --baseline 0", "lint ste --baseline 0 --disable synonym-rotation"]) expect(hook).toContain(s);
+    expect(hook).not.toContain("python3");
+    expect(readFileSync(join(REPO, "src/cli/gate.ts"), "utf8")).toContain("lintTells");
   });
 
   test("SCN-DIST-003-1 the parity harness is green", () => {

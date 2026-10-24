@@ -13,6 +13,17 @@ reopened:
 - 006/2.1 stale-evidence 006/2.1 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:36:48.115Z)
 - 006/2.2 stale-evidence 006/2.2 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:38:45.488Z)
 - 006/2.3 stale-evidence 006/2.3 (help, main, and parity.sh changed in 2.4) (at 2026-10-24T04:38:45.815Z)
+- 006/1.2 stale-evidence 006/1.2 (006/2.5 switches to specctx lint) (at 2026-10-24T04:41:25.208Z)
+- 006/1.3 stale-evidence 006/1.3 (006/2.5 switches to specctx lint) (at 2026-10-24T04:41:25.634Z)
+- 006/2.1 stale-evidence 006/2.1 (006/2.5 switches to specctx lint) (at 2026-10-24T04:41:26.066Z)
+- 006/2.2 stale-evidence 006/2.2 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:29.552Z)
+- 006/2.3 stale-evidence 006/2.3 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:29.918Z)
+- 006/2.4 stale-evidence 006/2.4 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:30.285Z)
+- 003/2.1 stale-evidence 003/2.1 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:39.771Z)
+- 003/4.2 stale-evidence 003/4.2 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:40.371Z)
+- 003/5.1 stale-evidence 003/5.1 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:41.341Z)
+- 003/5.2 stale-evidence 003/5.2 (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:41.746Z)
+- 003/5.3 stale-evidence 003/5.3 tests/gov/governance.test.ts (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:47.898Z)
 open_questions:
 - 006 REQ-CLI-001 delta was written before the 005 archive. Strict validate refused it for dropping SCN-CLI-001-6. I added stats to its command list and copied SCN-CLI-001-6 from main into the 006 block, with no other change. Confirm. (task none, 2026-10-24)
 resolved:

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T02:47:17.084Z",
+  "files": {
+    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b"
+  },
+  "kind": "command",
+  "reason": "stale-evidence 003/5.1 (006/2.5 switches to specctx lint)",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "task": "003/5.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "1fa2e6f6fa7bbb612737252cbba8e37dfd40cb17d2c8b8ce52a8c5588b770fc9"
+  }
+}

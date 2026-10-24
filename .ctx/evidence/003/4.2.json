@@ -1,13 +1,15 @@
 {
-  "at": "2026-10-24T02:47:16.831Z",
+  "at": "2026-10-24T04:43:41.234Z",
+  "bundle_chars": 4230,
   "files": {
-    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b"
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a"
   },
   "kind": "command",
   "reqs": [
     "REQ-DIST-007",
     "REQ-DIST-003"
   ],
+  "started_at": "2026-10-24T04:43:40.481Z",
   "task": "003/4.2",
   "tool_version": "0.1.0",
   "verify": {

@@ -11,7 +11,7 @@ steps=(
   'node dist/cli.js gate --strict --markdown "*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md"'
   'bun run test'
   'bun run test:node'
-  'node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0'
+  'node dist/cli.js --help | node dist/cli.js lint ste --baseline 0'
   'bash tests/parity/run.sh'
   'bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh'
   'bash tests/action/selftest.sh'
