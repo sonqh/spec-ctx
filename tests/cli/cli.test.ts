@@ -103,7 +103,11 @@ describe("exit codes and output style", () => {
     p = new Project();
     const r = await p.run("frobnicate");
     expect(r.code).toBe(2);
-    expect(r.err).toContain("commands: build, status, query, related, bundle, check, gate, id new, id retire, task next, task start, task verify, task done, task reopen, handoff write, handoff ask, handoff resolve, init");
+    const list = r.err.split("
+").find((l) => l.startsWith("commands: "))!;
+    for (const c of ["build", "status", "query", "related", "bundle", "check", "gate", "id new", "id retire", "task next", "task start", "task verify", "task done", "task reopen", "handoff write", "handoff ask", "handoff resolve", "init", "adopt"]) {
+      expect(list.slice("commands: ".length).split(", ")).toContain(c);
+    }
   });
 
   test("SCN-CLI-002-2 check --json prints JSON only", async () => {
