@@ -84,6 +84,20 @@ describe("check base rules", () => {
     finding(await check(), "reused-id", "REQ-QRY-009");
   });
 
+  test("a replacement ID named in a retire reason stays live", async () => {
+    p = new Project();
+    p.append("decisions/retired-ids.md", "\n| ID | Date | Reason |\n| --- | --- | --- |\n| REQ-OLD-001 | 2026-10-24 | moved to REQ-AAA-001 |\n");
+    const r = await check();
+    expect(r.out).not.toContain("reused-id");
+    expect(r.code).toBe(0);
+  });
+
+  test("an archived REMOVED block without scenarios is no finding", async () => {
+    p = new Project();
+    p.write("openspec/changes/archive/2026-10-01-000-old/specs/alpha/spec.md", "## REMOVED Requirements\n\n### Requirement: REQ-OLD-002 Gone\n**Reason**: moved.\n");
+    expect((await check()).out).not.toContain("req-without-scn");
+  });
+
   test("code-tag-no-canonical for a tag whose REQ lives only in an archive", async () => {
     p = new Project();
     p.write("openspec/changes/archive/2026-10-23-000-old/specs/old/spec.md",

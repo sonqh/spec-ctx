@@ -387,7 +387,13 @@ def retired_ids():
     p = ROOT / "decisions" / "retired-ids.md"
     if not p.exists():
         return set()
-    return set(RETIRED_RE.findall(read(p)))
+    # spec-ctx REQ-GOV-002 the first ID of a line is the retired one. A reason may name a live replacement.
+    out = set()
+    for line in split_lines(read(p)):
+        m = RETIRED_RE.search(line)
+        if m:
+            out.add(m.group(1))
+    return out
 
 
 def build(files=None):
@@ -664,7 +670,7 @@ def check(data, strict, as_json=False):
             elif e["kind"] == "code" and (r not in ids or ids[r]["status"] == "archived"):
                 # agentrc:CTX-007 the tag points at a requirement that lives only in an archived change
                 findings.append((e["file"], e["line"], "code-tag-no-canonical", r))
-        if e["kind"] == "req" and e["status"] != "removed" and not e.get("scenarios"):
+        if e["kind"] == "req" and e["status"] not in ("removed", "archived") and not e.get("scenarios"):
             findings.append((e["file"], e["line"], "req-without-scn", e["id"]))
         if caps and e["kind"] == "req" and e["status"] != "archived":
             # spec-ctx REQ-CHK-001 a capability code that the config does not list

@@ -14,7 +14,13 @@ const ANY_ID = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
 export function retiredAll(root: string): Set<string> {
   const p = join(root, RETIRED_FILE);
   if (!existsSync(p)) return new Set();
-  return new Set([...readFileSync(p, "utf8").matchAll(ANY_ID)].map((m) => m[1]!));
+  // the retired ID is the first ID of a line. A reason may name a live replacement ID.
+  const out = new Set<string>();
+  for (const line of readFileSync(p, "utf8").split("\n")) {
+    const m = new RegExp(ANY_ID.source).exec(line);
+    if (m) out.add(m[1]!);
+  }
+  return out;
 }
 
 const pad = (n: number, w = 3): string => String(n).padStart(w, "0");

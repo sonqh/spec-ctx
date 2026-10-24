@@ -14,7 +14,13 @@ const REQ_CAP = /^REQ-([A-Z]{2,6})-/;
 export function retiredIds(root: string): Set<string> {
   const p = join(root, "decisions", "retired-ids.md");
   if (!existsSync(p)) return new Set();
-  return new Set([...readFileSync(p, "utf8").matchAll(RETIRED_RE)].map((m) => m[1]!));
+  // REQ-GOV-002 the retired ID is the first ID of a line. A reason may name the replacement ID, which stays live.
+  const out = new Set<string>();
+  for (const line of readFileSync(p, "utf8").split("\n")) {
+    const m = new RegExp(RETIRED_RE.source).exec(line);
+    if (m) out.add(m[1]!);
+  }
+  return out;
 }
 
 export interface Finding {
@@ -53,7 +59,8 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
         findings.push([e.file, e.line, "code-tag-no-canonical", r]);
       }
     }
-    if (e.kind === "req" && e.status !== "removed" && !(e.scenarios ?? []).length) {
+    // an archived block is history. An archived REMOVED block has no scenario by design.
+    if (e.kind === "req" && e.status !== "removed" && e.status !== "archived" && !(e.scenarios ?? []).length) {
       findings.push([e.file, e.line, "req-without-scn", e.id]);
     }
     if (caps.size && e.kind === "req" && e.status !== "archived") {
