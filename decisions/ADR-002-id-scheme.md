@@ -33,6 +33,7 @@ Capability codes for spec-ctx:
 | SCH | schema-bundle |
 | SKL | skills |
 | DIST | distribution |
+| ADOPT | adopt-existing |
 | GOV | spec-governance |
 
 ## Why
