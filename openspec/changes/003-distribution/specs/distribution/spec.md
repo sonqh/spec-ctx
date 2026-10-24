@@ -1,6 +1,8 @@
 # distribution
 
 ## RENAMED Requirements
+- FROM: `### Requirement: REQ-DIST-003 Parity harness`
+- TO: `### Requirement: REQ-DIST-003 Golden harness`
 
 - FROM: `### Requirement: REQ-DIST-002 Config file`
 - TO: `### Requirement: REQ-DIST-002 Config file and init`
