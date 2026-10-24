@@ -27,7 +27,7 @@ describe("spec governance", () => {
     expect(r.status).toBe(1);
     const ci = readFileSync(join(REPO, ".github/workflows/ci.yml"), "utf8");
     const specs = ci.slice(ci.indexOf("  specs:"), ci.indexOf("  code:"));
-    expect(specs).toContain("find openspec docs skills -name '*.md'");
+    expect(specs).toContain("find openspec docs skills schemas -name '*.md'");
     expect(specs).toContain("scripts/ste-lint.py --baseline 0 --disable synonym-rotation");
     expect(specs).toContain("scripts/tells-lint.py --baseline 0");
     expect(specs).toContain("check --strict");
