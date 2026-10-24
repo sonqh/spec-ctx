@@ -17,7 +17,7 @@ function evidence(pr: Project, n: number, fields: (i: number) => Record<string, 
   }
 }
 const json = async (pr: Project, ...a: string[]) => JSON.parse((await pr.run("stats", "--json", ...a)).out);
-const row = (s: { rows: { change: string }[] }, c: string) => s.rows.find((r) => r.change === c) as Record<string, { text: string; value: number | null; tasks?: string[] }>;
+const row = (s: { rows: { change: string }[] }, c: string) => s.rows.find((r) => r.change === c) as unknown as Record<"context_ratio" | "evidence_ratio" | "stale_catches" | "cycle_time_median_s" | "debt", { text: string; value: number | null; tasks?: string[] }>;
 
 describe("stats metrics", () => {
   test("SCN-STAT-001-1 one row per change with evidence, a total row, five metric columns", async () => {

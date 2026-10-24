@@ -1,10 +1,10 @@
 {
-  "at": "2026-10-24T03:53:17.155Z",
-  "bundle_chars": 6315,
+  "at": "2026-10-24T03:55:36.590Z",
+  "bundle_chars": 6669,
   "files": {
     "src/stats/stats.ts": "a7621b3708c7eaaab0c9c6f5b8c881ce786267b7f92a767d4cdc6fec3c1e0619",
     "src/tasks/evidence.ts": "7db8892ba8fe80ec5de3b9a5278ae496922a6c090570c546e9b403f4e464c71f",
-    "tests/stats/metrics.test.ts": "87b3cd5e51b7a6b1382ba1ecf1ae21ca9e20cfbbdebca044d27e27dc9f0471e7"
+    "tests/stats/metrics.test.ts": "62e7e73152571b6ca7acd3818abe01a806ac74eb3ae1973a81a5413072e4d0dd"
   },
   "kind": "command",
   "reqs": [
@@ -12,13 +12,13 @@
     "REQ-STAT-003",
     "REQ-STAT-004"
   ],
-  "started_at": "2026-10-24T03:51:02.569Z",
+  "started_at": "2026-10-24T03:55:36.226Z",
   "task": "005/2.1",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun test tests/stats/metrics.test.ts",
     "exit": 0,
-    "stderr_tail": "\n 8 pass\n 0 fail\n 30 expect() calls\nRan 8 tests across 1 file. [188.00ms]",
+    "stderr_tail": "\n 8 pass\n 0 fail\n 30 expect() calls\nRan 8 tests across 1 file. [258.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }
