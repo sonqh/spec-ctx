@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-24T03:10:57.404Z",
+  "files": {
+    "src/cli.ts": "57a9b47849e9fad3f4af9bb359827ce7055302df10b194e45c58ec505c733c53",
+    "src/cli/args.ts": "7d0c4a689ff2b6875781e49df5747ff71a3ffa654b12320d62474082bf26b752",
+    "src/cli/commands.ts": "4a9df4c1e79d7d17c4a1036252e7bbc80b24651fd335eb1e998bc30cd3230e20",
+    "src/cli/help.ts": "7523f86c0f406a691f3f994b226411a9a6ae2e3d90966186d46938c3df166c70",
+    "src/cli/root.ts": "3757ffd35491a8b4e50a3ff9ad6ea905b085181b9a5047e463e48fb072e068ee",
+    "src/cli/status.ts": "fe47913292ef3b7a26cb0d7f7ab60b444c29efec44e70dbf68560f699c4d9894",
+    "src/main.ts": "8ae4d55b92e8901d70fde1b7f545f600569647be042fb7265d2eef0f5e180122",
+    "src/version.ts": "2e8e00bfe3888b6376eeefcb43c418fd87983a24c80c922b37ac3111f03807b1",
+    "tests/cli/cli.test.ts": "8146800969f3e2cae967985a27f489b351351322342080e04050143682a57e81",
+    "tests/cli/help.test.ts": "82687241ee43fff2604ed69e85fca26a3cb17b02eace851fe95b5c405d97edd4"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-001"
+  ],
+  "task": "004/3.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/help.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0",
+    "exit": 0,
+    "stderr_tail": "\n 2 pass\n 0 fail\n 10 expect() calls\nRan 2 tests across 1 file. [15.00ms]",
+    "stdout_sha256": "24e6b77fd083eab9c378e9640e172c7cde15cb109f0ea0d9d8b533c81d8d442e"
+  }
+}

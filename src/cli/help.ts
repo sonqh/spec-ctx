@@ -34,6 +34,12 @@ Setup:
   \`init --skills\`              Also install the three skills in .claude/skills and .agents/skills.
   \`init --all\`                 Do all three.
   \`init --force\`               Install over files that exist. An existing spec-ctx.toml stays.
+  \`adopt --dry-run\`            Show the ID that each header without an ID gets. Write nothing.
+  \`adopt\`                      Write those IDs into the main specs and the active deltas. Undo on a new finding.
+  \`task backfill --manual <note>\`
+                               Write manual evidence for every ticked task that has none.
+  \`baseline write\`             Record the current debt in .ctx/baseline.json. \`check\` then hides it.
+  \`baseline prune\`             Remove the entries that no longer apply.
 
 Command flags:
   \`query --kind <kind>\`        Show only entries of this kind.
@@ -49,6 +55,8 @@ Command flags:
   \`id new --for <REQ-ID>\`      Give the requirement of a new scenario.
   \`id new --count <n>\`         Print n IDs in sequence.
   \`task next --change <name>\`  Look only in this change.
+  \`task backfill --change <name>\`
+                               Look only in this change.
   \`task done --manual <note>\`  Record a manual note. A task with no \`Verify:\` command needs this flag.
 
 Global flags:
