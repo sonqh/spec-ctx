@@ -205,9 +205,8 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 ## Status
 
-- Archived: 001 engine port, 002 IDs and tasks, 004 adopt existing, 005 metrics, 006 polish.
+- Archived: 001 engine port, 002 IDs and tasks, 004 adopt existing, 005 metrics, 006 polish, 007 README and demo.
 - Open: 003 distribution. Only the npm publish of `0.1.0` waits.
-- In progress: 007, this README and the demo.
 - Until the publish, install from git with `npx -y github:sonqh/spec-ctx#<sha>`. The npm forms `npx spec-ctx` and `npm install -g spec-ctx` work after it.
 
 ## Develop
