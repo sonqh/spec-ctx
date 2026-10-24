@@ -1,22 +1,11 @@
 # Handoff
 change: 003-distribution
 current: none
-base: 2026-10-24T02:56:23.552Z
-as_of: 2026-10-24T03:15:21.845Z
+base: 2026-10-24T03:15:21.845Z
+as_of: 2026-10-24T02:51:21.004Z
 done:
-- 004/2.1
-- 004/2.2
-- 004/2.3
-- 004/3.1
-- 004/3.3
-- 004/4.1
-- 004/4.2
-- 004/4.3
 reopened:
-- 004/2.1 src/adopt/plan.ts changed for the letter-only CAP rule (2.2) (at 2026-10-24T03:03:48.642Z)
-- 004/4.2 src/adopt/plan.ts changed for the letter-only CAP rule (2.2) (at 2026-10-24T03:03:48.870Z)
 open_questions:
-- 004 archive held: after archive, openspec validate --all --strict fails on the main check spec because REQ-CHK-002 text is 535 characters (limit 500). I undid the archive locally, nothing was committed. Proposed text, 489 characters, same meaning: replace the last two sentences with: An ID named by a `## REMOVED` block of an active change SHALL be exempt from `uncovered` and `scenario-untested` until archive. A finding in `.ctx/baseline.json` SHALL be dropped in strict and non-strict mode and counted in a final line `baselined: <n>`. Or split the baseline rule into its own requirement. (task none, 2026-10-24)
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)
 - 003/4.2 and 5.3 wait for 4.1. Python removal follows agentrc running on the npm package. (task none, 2026-10-24) answer: order set: 3.4, 3.5, agentrc 007, then 4.1, 4.2, 5.3
@@ -33,5 +22,6 @@ resolved:
 - 004 REQ-ADOPT-002 rolls back on any check finding not in the baseline, and the baseline holds strict rules only. A plain OpenSpec project has tasks with no [REQ-...] and often no Verify:, so check reports task-without-req and task-without-verify before and after adopt. adopt would always roll back, and the existing path cannot end with gate --strict 0. Roll back only on findings that adopt adds (diff against the pre-write check)? And how should the existing path clear task-without-req? 2.3 and 4.1 wait on this. (task none, 2026-10-24) answer: check before and after, only new findings roll back, baseline covers legacy task rules (fac3905)
 - 004 REQ-CHK-002 delta copies the 002 text: REQ-X-003 (now invalid, codes have 2 to 6 letters), no pending REMOVED exemption, no SCN-CHK-002-3, both engines. 003 also MODIFIES REQ-CHK-002. Whichever archives last overwrites the other. Rebase the 004 block on the 003 text and add SCN-CHK-002-4? The baseline filter also lives only in a scenario, not in the requirement text. 3.1 waits on this. (task none, 2026-10-24) answer: 004 REQ-CHK-002 rebased on the 003 text with the baseline sentence (fac3905)
 - Archive order: 004 is ready (10 of 10 done, strict 0 findings, validate 12 passed). 003 stays active for 3.3, and it still holds a MODIFIED block for REQ-CHK-002. If 004 archives now, its REQ-CHK-002 text goes to main, but the 003 block stays canonical while 003 is active and overwrites main when 003 archives later. The baseline sentence and SCN-CHK-002-4 would then be lost. A) archive 004 now and drop the REQ-CHK-002 block from the 003 check delta, B) hold 004 until 003 archives. (task none, 2026-10-24) answer: Option A. 576607c drops the REQ-CHK-002 block from 003
+- 004 archive held: after archive, openspec validate --all --strict fails on the main check spec because REQ-CHK-002 text is 535 characters (limit 500). I undid the archive locally, nothing was committed. Proposed text, 489 characters, same meaning: replace the last two sentences with: An ID named by a `## REMOVED` block of an active change SHALL be exempt from `uncovered` and `scenario-untested` until archive. A finding in `.ctx/baseline.json` SHALL be dropped in strict and non-strict mode and counted in a final line `baselined: <n>`. Or split the baseline rule into its own requirement. (task none, 2026-10-24) answer: Option A in 7c2a339, REQ-CHK-002 is 422 characters. 004 archived.
 next: 003/3.3  Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir.
-evidence: 25 task(s), 24 command, 1 manual
+evidence: 15 task(s), 15 command, 0 manual
