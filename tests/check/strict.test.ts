@@ -30,7 +30,20 @@ describe("check strict rules", () => {
     expect((await check("--strict")).code).toBe(0);
   });
 
-  test("a capability code has 2 to 6 letters", async () => {
+  test("SCN-CHK-002-3 a pending removal needs no test", async () => {
+    p = new Project();
+    p.append(SPEC, "\n### Requirement: REQ-OLD-001 Old\nText.\n\n#### Scenario: SCN-OLD-001-1 S\n- a\n");
+    let r = await check("--strict");
+    expect(r.out).toContain("uncovered  REQ-OLD-001");
+    expect(r.out).toContain("scenario-untested  SCN-OLD-001-1");
+    p.write("openspec/changes/009-drop/specs/alpha/spec.md", "## REMOVED Requirements\n\n### Requirement: REQ-OLD-001 Old\n**Reason**: gone.\n");
+    r = await check("--strict");
+    expect(r.out).not.toContain("REQ-OLD-001");
+    expect(r.out).not.toContain("SCN-OLD-001-1");
+    expect(r.code).toBe(0);
+  });
+
+    test("a capability code has 2 to 6 letters", async () => {
     p = new Project();
     p.append(SPEC, "\n### Requirement: REQ-X-003 One letter\nText.\n\n### Requirement: REQ-ABCDEFG-001 Seven letters\nText.\n");
     const r = await check();

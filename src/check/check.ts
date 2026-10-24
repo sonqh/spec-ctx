@@ -64,8 +64,17 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
   if (strict) {
     const covered = new Set(entries.filter((e) => e.kind === "test").flatMap((e) => e.refs));
     const named = new Set(data.scn_named ?? []);
+    // an ID that a REMOVED block of an active change names waits for archive, so it needs no test
+    const pending = new Set<string>();
+    for (const e of entries) {
+      if (e.status !== "removed") continue;
+      pending.add(e.id);
+      for (const s of e.scenarios ?? []) pending.add(s);
+    }
+    const scnOf = new Map(entries.filter((e) => e.kind === "req").flatMap((e) => (e.scenarios ?? []).map((s) => [s, e.id] as const)));
     for (const e of entries) {
       if (e.change !== "main" || e.status !== "active") continue;
+      if (pending.has(e.id) || (e.kind === "scn" && pending.has(scnOf.get(e.id) ?? ""))) continue;
       if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
       if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
     }

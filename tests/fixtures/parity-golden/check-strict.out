@@ -64,9 +64,6 @@ openspec/specs/apply-pipeline/spec.md:47  uncovered  REQ-APPLY-004
 openspec/specs/apply-pipeline/spec.md:50  scenario-untested  SCN-APPLY-004-1
 openspec/specs/apply-pipeline/spec.md:63  uncovered  REQ-APPLY-006
 openspec/specs/apply-pipeline/spec.md:66  scenario-untested  SCN-APPLY-006-1
-openspec/specs/apply-pipeline/spec.md:73  scenario-untested  SCN-APPLY-007-1
-openspec/specs/apply-pipeline/spec.md:77  scenario-untested  SCN-APPLY-007-2
-openspec/specs/apply-pipeline/spec.md:81  scenario-untested  SCN-APPLY-007-3
 openspec/specs/apply-pipeline/spec.md:85  uncovered  REQ-APPLY-008
 openspec/specs/apply-pipeline/spec.md:88  scenario-untested  SCN-APPLY-008-1
 openspec/specs/apply-pipeline/spec.md:92  uncovered  REQ-APPLY-009
@@ -273,4 +270,4 @@ src/plant.ts:2  code-tag-no-canonical  REQ-OLD-001
 src/plant.ts:6  dangling-ref  REQ-NOPE-002
 warning: manual-evidence 007/1.1
 warning: manual-evidence 007/1.2
-273 finding(s)
+270 finding(s)

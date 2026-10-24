@@ -675,8 +675,14 @@ def check(data, strict, as_json=False):
         findings += evidence_findings(entries)
         covered = {r for e in entries if e["kind"] == "test" for r in e["refs"]}
         named = set(data.get("scn_named", []))
+        # spec-ctx REQ-CHK-002 an ID that a REMOVED block of an active change names waits for archive
+        pending = {e["id"] for e in entries if e["status"] == "removed"}
+        pending |= {s for e in entries if e["status"] == "removed" for s in e.get("scenarios", [])}
+        scn_of = {s: e["id"] for e in entries if e["kind"] == "req" for s in e.get("scenarios", [])}
         for e in entries:
             if e["change"] != "main" or e["status"] != "active":
+                continue
+            if e["id"] in pending or (e["kind"] == "scn" and scn_of.get(e["id"]) in pending):
                 continue
             if e["kind"] == "req" and e["id"] not in covered:
                 findings.append((e["file"], e["line"], "uncovered", e["id"]))
