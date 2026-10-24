@@ -42,5 +42,8 @@ jobs:
         if: matrix.runtime == 'bun'
       - run: bash tests/action/selftest.sh
         if: matrix.runtime == 'bun'
+      # REQ-DIST-008 install from git with Node only
+      - run: bash tests/install/git.sh ${{ github.sha }}
+        if: matrix.runtime == 'node'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'

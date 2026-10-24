@@ -15,6 +15,7 @@ done:
 reopened:
 - 003/5.1 tests/gov/governance.test.ts changed for the schemas/ lint path (at 2026-10-24T00:12:39.567Z)
 - 003/5.2 tests/gov/governance.test.ts changed for the schemas/ lint path (at 2026-10-24T00:12:39.657Z)
+- 003/3.2 tests/action/selftest.sh gained the github: version case of REQ-DIST-008 (at 2026-10-24T01:37:32.166Z)
 open_questions:
 - 003/3.3 publish: approve npm publish of spec-ctx 0.1.0? Needs the NPM_TOKEN secret, tag v0.1.0, and a moving tag v0 for the action. (task none, 2026-10-24)
 - 003/4.1 agentrc: removing tools/ctx and tests/ctx leaves 12 REQ-CTX, 5 REQ-BOOT, 3 REQ-GOV main requirements uncovered and 40 scenarios untested. Remove and retire them in an agentrc change, or port the Python tests to run against spec-ctx? (task none, 2026-10-24)

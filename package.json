@@ -17,7 +17,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "build": "npm run prepare --silent",
     "build:bin": "bun build src/cli.ts --compile --outfile build/specctx",
     "typecheck": "tsc -p tsconfig.json",
     "test": "bun test",
@@ -25,7 +25,8 @@
     "lint": "bash scripts/lint-md.sh",
     "ctx": "node dist/cli.js",
     "gen": "node scripts/gen-assets.mjs",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "prepare": "node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs"
   },
   "dependencies": {
     "smol-toml": "^1.9.1"

@@ -3,7 +3,14 @@
 set -euo pipefail
 action_path=${SPECCTX_ACTION_PATH:-$(cd "$(dirname "$0")/.." && pwd)}
 specctx=${INPUT_SPECCTX:-}
-[ -n "$specctx" ] || specctx="npx -y spec-ctx@${INPUT_VERSION:-latest}"
+if [ -z "$specctx" ]; then
+  version=${INPUT_VERSION:-latest}
+  # REQ-DIST-008 a git spec such as github:sonqh/spec-ctx#<ref> goes to npx unchanged
+  case "$version" in
+    *:*|*/*) specctx="npx -y $version" ;;
+    *) specctx="npx -y spec-ctx@$version" ;;
+  esac
+fi
 strict=""
 [ "${INPUT_STRICT:-true}" = "true" ] && strict="--strict"
 

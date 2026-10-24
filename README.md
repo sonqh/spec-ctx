@@ -17,8 +17,11 @@ No LLM call. No daemon. The same files give the same bytes.
 spec-ctx needs Node 22.
 
 ```bash
-npx spec-ctx init --all
+npx spec-ctx init --all                          # from npm
+npx -y github:sonqh/spec-ctx#main init --all     # from git, before the npm release
 ```
+
+Until 1.0 both forms work. The git form builds the package on install with Node only. Pin a commit in place of `main` for a stable build.
 
 The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`. Run it in a project after `openspec init`.
 
@@ -102,7 +105,7 @@ timeout_s = 600
 ```yaml
 - uses: sonqh/spec-ctx@v0
   with:
-    version: latest   # npm version of spec-ctx
+    version: latest   # npm version, or a git spec such as github:sonqh/spec-ctx#main
     strict: true
 ```
 

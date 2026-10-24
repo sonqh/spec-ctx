@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Covers: REQ-DIST-008
+# SCN-DIST-008-1 npx installs spec-ctx from git and builds it with Node only. Bun stays off the PATH.
+set -euo pipefail
+ref=${1:-main}
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+path=""
+IFS=: read -ra parts <<< "$PATH"
+for d in "${parts[@]}"; do [ -x "$d/bun" ] || path="${path:+$path:}$d"; done
+cd "$work"
+out=$(PATH="$path" npm_config_cache="$work/cache" npx -y "github:sonqh/spec-ctx#$ref" --version)
+echo "$out" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "unexpected output: $out"; exit 1; }
+echo "git install: spec-ctx $out from github:sonqh/spec-ctx#$ref without bun"

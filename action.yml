@@ -5,7 +5,7 @@ branding:
   color: blue
 inputs:
   version:
-    description: Version of the spec-ctx npm package.
+    description: Version of the spec-ctx npm package, or a git spec such as github:sonqh/spec-ctx#main.
     default: latest
   strict:
     description: Run check and validate in strict mode.
