@@ -1,6 +1,6 @@
-// REQ-CLI-004 specctx gate: check, both linters, openspec validate. Stops at the first failure.
+// REQ-CLI-004 specctx gate: check, both linters, openspec validate, spec length. Stops at the first failure.
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Io } from "../main.ts";
@@ -91,5 +91,79 @@ export async function runGate(root: string, o: GateOpts, io: Io): Promise<number
     return 1;
   }
   io.out(`validate: ok${o.strict ? " (strict)" : ""}\n`);
+
+  // gate 4: the length of every requirement in the deltas of active changes
+  const long = longRequirements(root);
+  if (long.length) {
+    io.out(long.map((l) => `spec-length: fail ${l.id} ${l.chars} chars\n`).join(""));
+    return 1;
+  }
+  io.out("spec-length: ok\n");
   return 0;
+}
+
+// REQ-CLI-005 the limit strict validate applies to a requirement after archive
+export const MAX_REQUIREMENT_CHARS = 500;
+
+/** Lines inside a fenced code block, fence lines included. Same rule as OpenSpec. */
+function fenceMask(lines: string[]): boolean[] {
+  const mask = new Array<boolean>(lines.length).fill(false);
+  let open: { ch: string; len: number } | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!;
+    if (!open) {
+      const m = /^\s*(`{3,}|~{3,})/.exec(line);
+      if (m) {
+        open = { ch: m[1]![0]!, len: m[1]!.length };
+        mask[i] = true;
+      }
+      continue;
+    }
+    mask[i] = true;
+    const c = /^\s*(`{3,}|~{3,})\s*$/.exec(line);
+    if (c && c[1]![0] === open.ch && c[1]!.length >= open.len) open = null;
+  }
+  return mask;
+}
+
+/**
+ * The requirement text as OpenSpec counts it: the trimmed, non-blank lines after the header,
+ * up to the first header line, joined with a newline. Metadata lines count only when nothing else is there.
+ */
+export function requirementText(body: string[]): string {
+  const mask = fenceMask(body);
+  const text: string[] = [];
+  const meta: string[] = [];
+  for (let i = 0; i < body.length; i++) {
+    if (mask[i]) continue;
+    if (/^#{1,6}\s/.test(body[i]!)) break;
+    const t = body[i]!.trim();
+    if (!t) continue;
+    if (/^\*\*[^*]+\*\*:/.test(t)) meta.push(t);
+    else text.push(t);
+  }
+  return (text.length ? text : meta).join("\n");
+}
+
+/** Every requirement over the limit in openspec/changes/<active>/specs/** /spec.md. */
+export function longRequirements(root: string): { id: string; chars: number; file: string }[] {
+  const out: { id: string; chars: number; file: string }[] = [];
+  const changes = join(root, "openspec", "changes");
+  if (!existsSync(changes)) return out;
+  for (const c of readdirSync(changes).sort(cmpStr)) {
+    if (c === "archive" || !statSync(join(changes, c)).isDirectory()) continue;
+    for (const rel of markdownFiles(join(changes, c), "specs/**/spec.md")) {
+      const lines = readFileSync(join(changes, c, rel), "utf8").split(/\r?\n/);
+      const mask = fenceMask(lines);
+      for (let i = 0; i < lines.length; i++) {
+        const h = mask[i] ? null : /^###\s+Requirement:\s*(.*)$/.exec(lines[i]!);
+        if (!h) continue;
+        let end = i + 1;
+        while (end < lines.length && (mask[end] || !/^#{1,3}\s/.test(lines[end]!))) end++;
+        const chars = requirementText(lines.slice(i + 1, end)).length; // UTF-16 units, as OpenSpec counts
+        if (chars > MAX_REQUIREMENT_CHARS) out.push({ id: h[1]!.trim().split(/\s+/)[0]!, chars, file: `openspec/changes/${c}/${rel}` });
+      }
+    }
+  }
+  return out;
 }

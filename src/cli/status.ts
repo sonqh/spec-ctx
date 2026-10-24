@@ -1,4 +1,4 @@
-// REQ-CLI-001 status reads only the index and the handoff file.
+// REQ-CLI-001 status reads the index, the handoff file, and the .openspec.yaml of each archive folder.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { changeOf } from "../index/scan.ts";
@@ -45,6 +45,19 @@ function handoffCurrent(root: string): string | null {
   return null;
 }
 
+/**
+ * The `archived` value of an archive folder. OpenSpec does not write it today,
+ * so the date at the start of the folder name is the fallback.
+ */
+export function archivedAt(root: string, folder: string): string {
+  const p = join(root, "openspec", "changes", "archive", folder, ".openspec.yaml");
+  if (existsSync(p)) {
+    const m = /^archived:[ \t]*["']?([^"'\s#]+)/m.exec(readFileSync(p, "utf8"));
+    if (m) return m[1]!;
+  }
+  return /^\d{4}-\d{2}-\d{2}/.exec(folder)?.[0] ?? "";
+}
+
 export function statusReport(root: string, entries: Entry[]): StatusReport {
   const changes = new Map<string, { done: number; open: number }>();
   const archived = new Set<string>();
@@ -62,8 +75,8 @@ export function statusReport(root: string, entries: Entry[]): StatusReport {
   }
   const covered = new Set(entries.filter((e) => e.kind === "test").flatMap((e) => e.refs));
   const uncovered = entries.filter((e) => e.kind === "req" && e.change === "main" && e.status === "active" && !covered.has(e.id));
-  // archive folders start with a date, so the greatest name is the last archived change
-  const last = [...archived].sort(cmpStr).pop();
+  // REQ-CLI-001 order by the archived time in .openspec.yaml, then by folder name
+  const last = [...archived].map((n) => ({ n, at: archivedAt(root, n) })).sort((a, b) => cmpStr(a.at, b.at) || cmpStr(a.n, b.n)).pop()?.n;
   const handoff = existsSync(join(root, HANDOFF_PATH));
   return {
     changes: [...changes.keys()].sort(cmpStr).map((c) => ({ change: c, ...changes.get(c)! })),

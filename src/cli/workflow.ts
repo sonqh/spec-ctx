@@ -114,7 +114,17 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         throw new UsageExit(`task ${t.id} has no Verify command. ${dry ? "Nothing to run" : 'A --manual "<note>" is required'}`);
       }
       const { runVerify, tail } = await import("../verify/run.ts");
-      const r = await runVerify(t.verify.command, c.root, c.cfg.verify.timeout_s);
+      const { resolve: resolvePath, relative, isAbsolute } = await import("node:path");
+      let dir = c.root;
+      if (t.verify.cwd !== undefined) {
+        // REQ-VER-004 the cwd prefix must stay inside the project root
+        dir = resolvePath(c.root, t.verify.cwd);
+        const rel = relative(c.root, dir);
+        if (rel.startsWith("..") || isAbsolute(rel)) throw new UsageExit(`the Verify cwd ${t.verify.cwd} is outside the project root`);
+        const { existsSync: exists } = await import("node:fs");
+        if (!exists(dir)) throw new UsageExit(`the Verify cwd ${t.verify.cwd} does not exist`);
+      }
+      const r = await runVerify(t.verify.command, dir, c.cfg.verify.timeout_s);
       const outTail = tail(r.output);
       if (dry) {
         if (c.json) print(c, { command: t.verify.command, exit: r.exit, tail: outTail, timed_out: r.timedOut });
@@ -135,7 +145,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const after = loadIndex(c.root, c.cfg).data.entries;
       const rel = writeEvidence(c.root, t, after, {
         command: t.verify.command, exit: 0, stdout_sha256: sha256(r.stdout), stderr_tail: tail(r.stderr.toString("utf8")),
-      }, "command");
+      }, "command", undefined, t.verify.cwd);
       setBox(c.root, t, true);
       clearCurrent(c.root, t.id);
       if (c.json) print(c, { evidence: rel, kind: "command", task: t.id });

@@ -105,7 +105,7 @@ Tag code with a comment `// REQ-IDX-003`. Tag tests with `// Covers: REQ-IDX-003
 | `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
 | `task backfill` | Manual evidence for ticked tasks without it. |
-| `gate` | `check`, both markdown linters, and `openspec validate`. |
+| `gate` | `check`, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
 
 Every command takes `--root <path>` and `--json`. Exit codes: 0 for success, 1 for findings or a failed Verify command, 2 for a usage error, 3 for an internal error.
 

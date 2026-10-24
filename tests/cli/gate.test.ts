@@ -14,11 +14,11 @@ afterEach(() => {
 const CLI = join(REPO, "dist/cli.js");
 
 describe("gate", () => {
-  test("SCN-CLI-004-1 a clean tree prints three ok lines", async () => {
+  test("SCN-CLI-004-1 a clean tree prints an ok line per gate", async () => {
     p = new Project();
     process.env.SPECCTX_OPENSPEC = "/bin/true";
     const r = await p.run("gate", "--strict", "--markdown", "openspec/**/*.md decisions/*.md");
-    expect(r.out).toMatch(/^check: ok \(strict\)\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok \(strict\)\n$/);
+    expect(r.out).toMatch(/^check: ok \(strict\)\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok \(strict\)\nspec-length: ok\n$/);
     expect(r.code).toBe(0);
   });
 
@@ -58,7 +58,7 @@ describe("gate", () => {
       encoding: "utf8",
       env: { PATH: "/nonexistent", SPECCTX_OPENSPEC: "/bin/true", HOME: p.root },
     });
-    expect(r.stdout).toBe("check: ok\nlinters: skipped, python3 not found\nvalidate: ok\n");
+    expect(r.stdout).toBe("check: ok\nlinters: skipped, python3 not found\nvalidate: ok\nspec-length: ok\n");
     expect(r.status).toBe(0);
   });
 

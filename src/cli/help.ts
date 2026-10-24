@@ -12,7 +12,7 @@ Read:
   \`related <ID>\`               Show the entries that link to an ID.
   \`bundle <ID...>\`             Print the spec text for the IDs and their links.
   \`check\`                      Find ID and link errors.
-  \`gate\`                       Run \`check\`, the markdown linters, and \`openspec validate\`. Stop at the first failure.
+  \`gate\`                       Run \`check\`, the markdown linters, \`openspec validate\`, and the length check. Stop at the first failure.
   \`task next\`                  Show the next open task.
   \`task verify <task>\`         Run the \`Verify:\` command of a task. Write nothing.
   \`stats\`                      Show five metrics for each change and the gate runs.

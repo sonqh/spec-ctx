@@ -2,9 +2,9 @@
 
 ## 1. Small fixes
 
-- [ ] 1.1 Add the `cwd=` prefix to the Verify runner and evidence. [REQ-VER-004] Verify: `bun test tests/verify/cwd.test.ts`
-- [ ] 1.2 Add the 500 character length check to `gate`. [REQ-CLI-005] Verify: `bun test tests/cli/gate-length.test.ts`
-- [ ] 1.3 Order archived changes by `archived` time in `status`. [REQ-CLI-001] Verify: `bun test tests/cli/status-archived.test.ts`
+- [x] 1.1 Add the `cwd=` prefix to the Verify runner and evidence. [REQ-VER-004] Verify: `bun test tests/verify/cwd.test.ts`
+- [x] 1.2 Add the 500 character length check to `gate`. [REQ-CLI-005] Verify: `bun test tests/cli/gate-length.test.ts`
+- [x] 1.3 Order archived changes by `archived` time in `status`. [REQ-CLI-001] Verify: `bun test tests/cli/status-archived.test.ts`
 
 ## 2. Linter port
 

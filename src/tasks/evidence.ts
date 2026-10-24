@@ -19,6 +19,7 @@ export interface Evidence {
   note?: string;
   bundle_chars?: number;
   started_at?: string;
+  cwd?: string;
 }
 
 /** Digests of every code and test file tagged with one of the REQs. */
@@ -36,7 +37,7 @@ export function taggedFiles(root: string, entries: Entry[], reqs: string[]): Rec
   return out;
 }
 
-export function writeEvidence(root: string, t: Task, entries: Entry[], verify: Evidence["verify"], kind: Evidence["kind"], note?: string): string {
+export function writeEvidence(root: string, t: Task, entries: Entry[], verify: Evidence["verify"], kind: Evidence["kind"], note?: string, cwd?: string): string {
   const ev: Evidence = {
     task: t.id,
     reqs: [...t.reqs],
@@ -47,6 +48,7 @@ export function writeEvidence(root: string, t: Task, entries: Entry[], verify: E
     tool_version: VERSION,
   };
   if (note !== undefined) ev.note = note;
+  if (cwd !== undefined) ev.cwd = cwd;
   // REQ-STAT-002 copy the bundle size and the start time that task start wrote for this task
   try {
     const cur = JSON.parse(readFileSync(join(root, ".ctx/current.json"), "utf8")) as { task?: string; bundle_chars?: unknown; started_at?: unknown };

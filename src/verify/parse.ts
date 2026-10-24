@@ -3,6 +3,8 @@
 export interface VerifySpec {
   kind: "command" | "manual";
   command: string | null;
+  /** REQ-VER-004 working directory from a cwd=<path> prefix, relative to the project root */
+  cwd?: string;
 }
 
 /** Code spans in a text, as CommonMark reads them: a run of N backticks closes at the next run of N. */
@@ -49,5 +51,11 @@ export function parseVerify(taskLine: string): VerifySpec {
   if (at < 0) return { kind: "manual", command: null };
   const spans = codeSpans(taskLine.slice(at + "Verify:".length));
   if (spans.length === 0) return { kind: "manual", command: null };
+  // REQ-VER-004 the first code span may start with cwd=<path> and a space
+  const m = /^cwd=(\S+) +(.+)$/s.exec(spans[0]!);
+  if (m) {
+    spans[0] = m[2]!;
+    return { kind: "command", command: spans.join(" && "), cwd: m[1]! };
+  }
   return { kind: "command", command: spans.join(" && ") };
 }

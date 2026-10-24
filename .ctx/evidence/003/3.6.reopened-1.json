@@ -6,6 +6,7 @@
     "tests/cli/gate.test.ts": "e85a492b3e56b2813c0459844e5c4a906f621d893350c4d6bbb3b370427fc39f"
   },
   "kind": "command",
+  "reason": "stale-evidence 003/3.6 src/cli/gate.ts tests/cli/gate.test.ts (006/1.2 adds the spec-length step)",
   "reqs": [
     "REQ-CLI-004",
     "REQ-DIST-005"
