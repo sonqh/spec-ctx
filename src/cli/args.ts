@@ -24,7 +24,7 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   "handoff write": {},
   "handoff ask": {},
   "handoff resolve": {},
-  init: {},
+  init: { schema: "bool", skills: "bool", all: "bool", force: "bool" },
 };
 
 export const GROUPS = ["id", "task", "handoff"];

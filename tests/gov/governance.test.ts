@@ -12,6 +12,7 @@ describe("spec governance", () => {
   test("SCN-GOV-001-1 a copy of this repository passes check --strict", async () => {
     p = new Project(null);
     for (const d of ["openspec", "decisions", "src", "spec-ctx.toml"]) cpSync(join(REPO, d), p.path(d), { recursive: true });
+    if (existsSync(join(REPO, ".ctx/evidence"))) cpSync(join(REPO, ".ctx/evidence"), p.path(".ctx/evidence"), { recursive: true });
     cpSync(join(REPO, "tests"), p.path("tests"), { recursive: true, filter: (s) => !s.includes("/tests/fixtures") });
     await p.build();
     const r = await p.run("check", "--strict");

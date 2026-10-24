@@ -29,6 +29,10 @@ Write:
 
 Setup:
   \`init\`                       Write a default spec-ctx.toml file.
+  \`init --schema\`              Also install the spec-driven-ids schema and add its rules to openspec/config.yaml.
+  \`init --skills\`              Also install the three skills in .claude/skills and .agents/skills.
+  \`init --all\`                 Do all three.
+  \`init --force\`               Install over files that exist. An existing spec-ctx.toml stays.
 
 Command flags:
   \`query --kind <kind>\`        Show only entries of this kind.

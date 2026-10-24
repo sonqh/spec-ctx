@@ -8,7 +8,7 @@
 ## 2. Skills
 
 - [x] 2.1 Write the three skills under `skills/`. Lint. Count lines. [REQ-SKL-001] Verify: `bun test tests/skills/lint.test.ts`
-- [ ] 2.2 Implement `init --schema`, `init --skills`, `init --all`, `--force`, and the drift test for skill copies. [REQ-DIST-002, REQ-SKL-002] Verify: `bun test tests/init/*.test.ts`
+- [x] 2.2 Implement `init --schema`, `init --skills`, `init --all`, `--force`, and the drift test for skill copies. [REQ-DIST-002, REQ-SKL-002] Verify: `bun test tests/init/*.test.ts`
 
 ## 3. Publish
 

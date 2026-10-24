@@ -8,19 +8,23 @@
     "specctx": "dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "schemas",
+    "skills",
+    "action.yml"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "build": "node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
     "build:bin": "bun build src/cli.ts --compile --outfile build/specctx",
     "typecheck": "tsc -p tsconfig.json",
     "test": "bun test",
     "test:node": "vitest run",
     "lint": "bash scripts/lint-md.sh",
-    "ctx": "node dist/cli.js"
+    "ctx": "node dist/cli.js",
+    "gen": "node scripts/gen-assets.mjs"
   },
   "dependencies": {
     "smol-toml": "^1.9.1"

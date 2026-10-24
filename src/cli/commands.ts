@@ -1,6 +1,5 @@
 // REQ-CLI-001 REQ-CLI-002 command actions.
-import { existsSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
 import type { Io } from "../main.ts";
 import type { Parsed } from "./args.ts";
 import { UsageExit } from "./errors.ts";
@@ -113,15 +112,15 @@ export async function run(p: Parsed, io: Io): Promise<number> {
 }
 
 async function init(p: Parsed, io: Io): Promise<number> {
-  const { CONFIG_FILE, INIT_TEXT } = await import("../config.ts");
+  const { runInit } = await import("../init/init.ts");
+  if (p.positional.length) throw new UsageExit("init takes no arguments");
   const root = resolve(io.cwd, (p.flags.root as string | undefined) ?? ".");
-  const target = join(root, CONFIG_FILE);
-  if (existsSync(target)) {
-    io.err(`specctx: ${CONFIG_FILE} exists. Remove it first to write a new one.\n`);
-    return 2;
+  const all = !!p.flags.all;
+  const r = runInit(root, { schema: all || !!p.flags.schema, skills: all || !!p.flags.skills, force: !!p.flags.force });
+  if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
+  else {
+    io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
+    io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
   }
-  writeFileSync(target, INIT_TEXT);
-  if (p.flags.json) io.out(JSON.stringify({ written: CONFIG_FILE }, null, 2) + "\n");
-  else io.out(`wrote ${CONFIG_FILE}\n`);
   return 0;
 }
