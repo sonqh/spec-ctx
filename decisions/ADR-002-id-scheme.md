@@ -34,6 +34,8 @@ Capability codes for spec-ctx:
 | SKL | skills |
 | DIST | distribution |
 | ADOPT | adopt-existing |
+| STAT | metrics |
+| LINT | linters |
 | GOV | spec-governance |
 
 ## Why
