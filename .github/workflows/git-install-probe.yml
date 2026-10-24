@@ -1,5 +1,5 @@
 name: git-install-probe
-# Temporary. Finds which git spec form npx installs on a GitHub runner.
+# Temporary. Finds why npx fails to install spec-ctx from git on a GitHub runner.
 on: [push]
 jobs:
   probe:
@@ -8,10 +8,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: |
-          short=${GITHUB_SHA::12}
-          for spec in "github:sonqh/spec-ctx#$short" "git+https://github.com/sonqh/spec-ctx.git#$short" "github:sonqh/spec-ctx#main"; do
-            d=$(mktemp -d); cd "$d"
-            code=0; out=$(npm_config_cache="$d/c" npx -y "$spec" --version 2>&1) || code=$?
-            echo "::warning::spec $spec exit $code: $(echo "$out" | grep -v notice | tail -c 600 | tr '\n' ' ')"
-            cd /
-          done
+          d=$(mktemp -d); cd "$d"
+          code=0; npm_config_cache="$d/c" npx -y --loglevel silly "github:sonqh/spec-ctx#main" --version > out.txt 2>&1 || code=$?
+          echo "::warning::probe exit $code"
+          grep -iE "error|fatal|128|spawn|git " out.txt | tail -25 | while IFS= read -r l; do echo "::warning::$(echo "$l" | cut -c1-300)"; done
+          ls "$d/c/_logs" && tail -15 "$d"/c/_logs/*debug*.log | while IFS= read -r l; do echo "::warning::LOG $(echo "$l" | cut -c1-300)"; done
+          git config --global --list | while IFS= read -r l; do echo "::warning::GITCFG $l"; done
