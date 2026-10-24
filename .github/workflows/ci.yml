@@ -42,7 +42,6 @@ jobs:
         if: matrix.runtime == 'bun'
       - run: bash tests/action/selftest.sh
         if: matrix.runtime == 'bun'
-      # REQ-DIST-008 install from git with Node only
       # REQ-DIST-008 install from git with Node only. The repository is private, so git reads it
       # with the job token. npx 10 fails on a 40 character SHA, so the test takes a short one.
       - run: |
