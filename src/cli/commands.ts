@@ -172,6 +172,22 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       else io.out(b.text);
       return 0;
     }
+    case "stats": {
+      if (p.positional.length) throw new UsageExit("stats takes no arguments");
+      const { check } = await import("../check/check.ts");
+      const { manualWarnings } = await import("../check/evidence.ts");
+      const { listEvidence } = await import("../tasks/evidence.ts");
+      const { computeStats, statsTable } = await import("../stats/stats.ts");
+      const s = computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), f.change as string | undefined);
+      if (f.write) {
+        const { writeStats } = await import("../stats/write.ts");
+        const rel = writeStats(root, s);
+        if (!json) io.out(`wrote ${rel}\n`);
+      }
+      if (json) print(s);
+      else io.out(statsTable(s).map((l) => l + "\n").join(""));
+      return 0;
+    }
     case "check": {
       const r = await runCheck(root, cfg, data, !!f.strict);
       if (json) print({ baselined: r.baselined, count: r.findings.length, findings: r.findings, warnings: r.warnings });

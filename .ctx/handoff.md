@@ -5,6 +5,7 @@ base: 2026-10-24T03:15:21.845Z
 as_of: 2026-10-24T02:51:21.004Z
 done:
 reopened:
+- 005/1.1 stale-evidence 005/1.1 src/tasks/evidence.ts src/cli/workflow.ts: reopen keeps its reason (2.1) (at 2026-10-24T03:53:32.801Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

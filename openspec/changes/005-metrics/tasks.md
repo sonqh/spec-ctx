@@ -7,7 +7,7 @@
 
 ## 2. Stats
 
-- [ ] 2.1 Implement the five metrics with input counts and `n/a`. [REQ-STAT-001, REQ-STAT-003, REQ-STAT-004] Verify: `bun test tests/stats/metrics.test.ts`
+- [x] 2.1 Implement the five metrics with input counts and `n/a`. [REQ-STAT-001, REQ-STAT-003, REQ-STAT-004] Verify: `bun test tests/stats/metrics.test.ts`
 - [ ] 2.2 Implement the gate metrics, `--json`, `--write`, and the `Read` help entry. [REQ-STAT-005, REQ-CLI-001] Verify: `bun test tests/stats/cli.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
 
 ## 3. Dogfood

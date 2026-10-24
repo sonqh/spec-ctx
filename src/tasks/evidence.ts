@@ -64,7 +64,7 @@ export function writeEvidence(root: string, t: Task, entries: Entry[], verify: E
 }
 
 /** Move the evidence of a reopened task to <task>.reopened-<n>.json. */
-export function retireEvidence(root: string, t: Task): string | null {
+export function retireEvidence(root: string, t: Task, reason?: string): string | null {
   const rel = evidenceRel(t);
   const abs = join(root, rel);
   if (!existsSync(abs)) return null;
@@ -73,6 +73,16 @@ export function retireEvidence(root: string, t: Task): string | null {
   while (existsSync(join(root, `${base}.reopened-${n}.json`))) n++;
   const target = `${base}.reopened-${n}.json`;
   renameSync(abs, join(root, target));
+  if (reason !== undefined) {
+    // REQ-STAT-003 the reopen reason stays with the old evidence, so stats can count stale catches
+    try {
+      const ev = JSON.parse(readFileSync(join(root, target), "utf8")) as Record<string, unknown>;
+      ev.reason = reason;
+      writeFileSync(join(root, target), dumps(ev) + "\n");
+    } catch {
+      // a damaged file moves as it is
+    }
+  }
   return target;
 }
 

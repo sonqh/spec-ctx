@@ -177,7 +177,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { retireEvidence } = await import("../tasks/evidence.ts");
       const { addReopened } = await import("../handoff/handoff.ts");
       setBox(c.root, t, false);
-      const moved = retireEvidence(c.root, t);
+      const moved = retireEvidence(c.root, t, reason);
       addReopened(c.root, entries, t.id, reason);
       if (c.json) print(c, { evidence: moved, task: t.id });
       else c.io.out(`reopened ${t.id}.${moved ? ` Old evidence: ${moved}` : ""}\n`);

@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-24T03:48:23.001Z",
+  "bundle_chars": 2837,
+  "files": {
+    "src/cli/workflow.ts": "b144c5b4c6a7be0d13da3fcf054d2d7b46ff5427e7fdb87c1a9207a9d489ab98",
+    "src/tasks/evidence.ts": "de50bfce3a9f3062af3987b5fd84ea968afe6abb90996f881c79da053fd8720b",
+    "tests/tasks/done.test.ts": "f9db8e2c4215c7a657ea664be31e73c5ab85533f02d3905ce3ba60dedb0de89c",
+    "tests/tasks/start.test.ts": "fb6dfdc74e6ed8d413c2e3f4a4e58d2472bb44313a11b42d5e58cbbc9c45ff93"
+  },
+  "kind": "command",
+  "reason": "stale-evidence 005/1.1 src/tasks/evidence.ts src/cli/workflow.ts: reopen keeps its reason (2.1)",
+  "reqs": [
+    "REQ-STAT-002"
+  ],
+  "started_at": "2026-10-24T03:48:22.720Z",
+  "task": "005/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/tasks/start.test.ts tests/tasks/done.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 13 pass\n 0 fail\n 46 expect() calls\nRan 13 tests across 2 files. [181.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}
