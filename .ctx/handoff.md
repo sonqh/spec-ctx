@@ -1,9 +1,22 @@
 # Handoff
 change: 003-distribution
 current: none
-base: 2026-10-24T03:15:21.845Z
-as_of: 2026-10-24T02:51:21.004Z
+base: 2026-10-24T02:51:21.004Z
+as_of: 2026-10-24T04:45:25.743Z
 done:
+- 003/2.1
+- 003/4.2
+- 003/5.1
+- 003/5.2
+- 003/5.3
+- 006/1.1
+- 006/1.2
+- 006/1.3
+- 006/2.1
+- 006/2.2
+- 006/2.3
+- 006/2.4
+- 006/2.5
 reopened:
 - 005/1.1 stale-evidence 005/1.1 src/tasks/evidence.ts src/cli/workflow.ts: reopen keeps its reason (2.1) (at 2026-10-24T03:53:32.801Z)
 - 005/2.1 stale-evidence 005/2.1 tests/stats/metrics.test.ts: type fix for the typecheck step (at 2026-10-24T03:55:28.665Z)
@@ -26,6 +39,13 @@ reopened:
 - 003/5.3 stale-evidence 003/5.3 tests/gov/governance.test.ts (006/2.5 switches to specctx lint) (at 2026-10-24T04:43:47.898Z)
 open_questions:
 - 006 REQ-CLI-001 delta was written before the 005 archive. Strict validate refused it for dropping SCN-CLI-001-6. I added stats to its command list and copied SCN-CLI-001-6 from main into the 006 block, with no other change. Confirm. (task none, 2026-10-24)
+- BLOCKER 006/1.2: gate step 4 fails on this repo: spec-length: fail REQ-CHK-003 504 chars. REQ-CHK-003 is a MODIFIED block in the 003 check delta. Strict validate skips MODIFIED text, but the main spec check after the 003 archive would fail. Proposed edit, 499 chars, same meaning: 'a warning line' becomes 'a warning'. A trial with that edit passed all 13 ci-local steps. I reverted it. No 006 commit is pushed. 003/3.6 reopened on stale evidence and stays open until the fix. 006/3.1 waits too. (task none, 2026-10-24)
+- Scenario conflict: the 003 delta of REQ-CLI-004 says a missing python3 skips the linters (SCN-CLI-004-3), and says 'three gates' and 'linters ship under scripts/'. REQ-LINT-003 removes the skip, and gate now has four steps. The SCN-CLI-004-3 test now checks the new behavior and names SCN-LINT-003-1. Update the 003 delta before 003 archives? (task none, 2026-10-24)
+- The Python scripts are gone. CLAUDE.md (lint line, stack line), DELEGATION.md, ADR-005, and REQ-GOV-003 in the main spec still name scripts/*-lint.py. I did not edit CLAUDE.md or the ADR. Who edits them, and in which change? (task none, 2026-10-24)
+- 003/5.1 and 003/5.2 Verify commands call python3 scripts/*-lint.py. I redid both before the scripts left. A later reopen cannot pass. Change both to specctx lint? (task none, 2026-10-24)
+- REQ-LINT-002 asks for test lines from the Python selftest. The tells selftest has no line for 8 rules (not-x-but-y, emoji-heading, sales-word, title-case-heading, stacked-qualifier, serves-as, closer, repeated-closer). Those tests use my lines, which the Python script flagged and passed. Confirm. (task none, 2026-10-24)
+- Python bugs kept, per the rules: tells reports repeated-closer at the first substring match, so the line can be wrong. tells blanks every token with a slash (and/or) as a URL. tells rejects 'a.md --json b.md' with exit 2. tells accepts a negative --baseline. Stderr text of usage errors names specctx lint and is not byte identical to argparse. Stdout and exit codes match. (task none, 2026-10-24)
+- OpenSpec does not write archived: into .openspec.yaml (the 005 archive has schema and created only). The 006 design says it does. status reads archived when present, else the folder date, then the folder name. Confirm. (task none, 2026-10-24)
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)
 - 003/4.2 and 5.3 wait for 4.1. Python removal follows agentrc running on the npm package. (task none, 2026-10-24) answer: order set: 3.4, 3.5, agentrc 007, then 4.1, 4.2, 5.3
@@ -44,4 +64,4 @@ resolved:
 - Archive order: 004 is ready (10 of 10 done, strict 0 findings, validate 12 passed). 003 stays active for 3.3, and it still holds a MODIFIED block for REQ-CHK-002. If 004 archives now, its REQ-CHK-002 text goes to main, but the 003 block stays canonical while 003 is active and overwrites main when 003 archives later. The baseline sentence and SCN-CHK-002-4 would then be lost. A) archive 004 now and drop the REQ-CHK-002 block from the 003 check delta, B) hold 004 until 003 archives. (task none, 2026-10-24) answer: Option A. 576607c drops the REQ-CHK-002 block from 003
 - 004 archive held: after archive, openspec validate --all --strict fails on the main check spec because REQ-CHK-002 text is 535 characters (limit 500). I undid the archive locally, nothing was committed. Proposed text, 489 characters, same meaning: replace the last two sentences with: An ID named by a `## REMOVED` block of an active change SHALL be exempt from `uncovered` and `scenario-untested` until archive. A finding in `.ctx/baseline.json` SHALL be dropped in strict and non-strict mode and counted in a final line `baselined: <n>`. Or split the baseline rule into its own requirement. (task none, 2026-10-24) answer: Option A in 7c2a339, REQ-CHK-002 is 422 characters. 004 archived.
 next: 003/3.3  Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir.
-evidence: 15 task(s), 15 command, 0 manual
+evidence: 22 task(s), 22 command, 0 manual
