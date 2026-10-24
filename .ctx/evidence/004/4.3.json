@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T03:15:21.845Z",
+  "files": {
+    "tests/gov/governance.test.ts": "fbf77ec7a5029025e4f3f95c36047bfabfefe6bac74163b9b70f749f5bcc2e8b",
+    "tests/paths/existing.sh": "454ef2ba164fd486759081fca2204bd8b716441ac85ec473e8acb745fadfa401",
+    "tests/paths/fresh.sh": "651fcba65f7635075d43cb9bfd17a6aab4f07743d2fdd5622826786dcdbbb976"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-006",
+    "REQ-GOV-001"
+  ],
+  "task": "004/4.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash scripts/ci-local.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "dfd4752fe8b7d82b038ac6ddfda440780238af223aa6f423c92618220218b528"
+  }
+}

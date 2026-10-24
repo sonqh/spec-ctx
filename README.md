@@ -29,6 +29,36 @@ To keep the CLI on your path, run `npm install -g spec-ctx`. The examples below 
 
 Each GitHub release also carries a single binary for Linux and macOS.
 
+## Two paths
+
+### Fresh project
+
+```bash
+npx -y @fission-ai/openspec@latest init
+npx spec-ctx init --all
+specctx gate --strict
+```
+
+### Existing OpenSpec project
+
+```bash
+npx spec-ctx init --all
+specctx adopt --dry-run                 # the ID that each header gets. Writes nothing.
+specctx adopt                           # writes the IDs into main specs and active deltas
+specctx task backfill --manual "adopted"
+specctx baseline write
+specctx gate --strict
+```
+
+- `adopt` gives an ID to every requirement and scenario header without one, in `openspec/specs/` and in the deltas of active changes. A delta header gets the main ID by its text or through its RENAMED line. A delta header that matches neither keeps its text and goes into `adopt-report.md`.
+- `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
+- `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
+- `task backfill` writes manual evidence for every ticked task that has none.
+- `baseline write` records the debt of the day in `.ctx/baseline.json`: untested requirements and scenarios, tasks without evidence, and legacy tasks without a citation or a Verify code span. `check` hides that debt and prints `baselined: <n>`. New debt still shows.
+- Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
+
+Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/existing.sh`.
+
 ## The loop
 
 ```bash
@@ -72,6 +102,10 @@ Tag code with a comment `// REQ-IDX-003`. Tag tests with `// Covers: REQ-IDX-003
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
 | `handoff write`, `ask`, `resolve` | The session handoff and its open questions. |
 | `init` | Config file, schema bundle, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
+| `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
+| `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
+| `task backfill` | Manual evidence for ticked tasks without it. |
+| `gate` | `check`, both markdown linters, and `openspec validate`. |
 
 Every command takes `--root <path>` and `--json`. Exit codes: 0 for success, 1 for findings or a failed Verify command, 2 for a usage error, 3 for an internal error.
 
@@ -91,6 +125,9 @@ ignore = []                             # globs that the scan skips
 [ids]
 caps = []                               # capability codes. check reports a REQ with another code.
 task_pattern = '\d+\.\d+'               # the task number in a tasks.md checkbox
+
+[ids.paths]
+UA = "user-auth"                        # capability path of each code. adopt writes the derived ones.
 
 [bundle]
 budget = 8000                           # characters

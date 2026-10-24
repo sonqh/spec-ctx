@@ -20,7 +20,7 @@
 
 - [x] 4.1 Write `tests/paths/fresh.sh` and `tests/paths/existing.sh`, add both to `ci-local.sh` and CI. [REQ-ADOPT-006] Verify: `bash tests/paths/fresh.sh && bash tests/paths/existing.sh`
 - [x] 4.2 Run `adopt --dry-run` on a clone of a real public OpenSpec project (the OpenSpec repository itself under `openspec/`) and record the numbers in `docs/verification/004.md`. Do not commit the clone. [REQ-ADOPT-001] Verify: `test -s docs/verification/004.md`
-- [ ] 4.3 README: the two paths. Write `docs/verification/004.md`. Full gate. [REQ-ADOPT-006, REQ-GOV-001] Verify: `bash scripts/ci-local.sh`
+- [x] 4.3 README: the two paths. Write `docs/verification/004.md`. Full gate. [REQ-ADOPT-006, REQ-GOV-001] Verify: `bash scripts/ci-local.sh`
 
 ## Workflow follow-up
 
