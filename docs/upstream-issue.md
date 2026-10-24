@@ -16,7 +16,12 @@ Header text is not stable. People improve wording, and agents rewrite headers wh
 - Two changes in flight that touch the same requirement have no shared key. A merge can keep one scenario list and drop the other without a warning.
 - Code, tests, and task lists cannot point at a requirement in a way that survives a rename.
 
-The parallel merge plan in this repository, `openspec-parallel-merge-plan.md`, describes lost scenarios when changes run in parallel and a missing base fingerprint as the cause. Link: https://github.com/Fission-AI/OpenSpec/blob/main/openspec-parallel-merge-plan.md. Check that this summary matches the current text of the plan before you open the issue.
+The parallel merge plan in this repository, [`openspec-parallel-merge-plan.md`](https://github.com/Fission-AI/OpenSpec/blob/main/openspec-parallel-merge-plan.md), names the same gap:
+
+- Root cause 2, "Missing base fingerprint": a change does not record which version of a requirement it was written against. Archive cannot see that the live spec moved.
+- Phase 2, "Increase Delta Granularity": scenario level operations "backed by stable scenario identifiers (explicit IDs or generated hashes) stored in `meta.json`".
+
+This proposal is the "explicit IDs" branch of Phase 2, and it fits beside the Phase 0 content hash. The two answer different questions. The ID says which requirement a block is about. The hash says which version of it the author saw. An ID in the header also lets Phase 1 rebase find the matching block after a rename, which a hash alone cannot do.
 
 ## Proposal
 
@@ -48,6 +53,15 @@ During the work on spec-ctx itself, archive refused one MODIFIED block with new 
 - A schema bundle, `spec-driven-ids`, a fork of `spec-driven` with ID placeholders in its templates. It validates with `openspec schema validate` and archives with `openspec archive` unchanged.
 - An engine under the MIT license that indexes the IDs, finds dangling links, and allocates the next free number.
 - Help with a design for ID matching in archive, if the maintainers want it. A pull request follows only on an invitation.
+
+## How this fits the plan
+
+| Plan item | What IDs add |
+| --- | --- |
+| Phase 0 fingerprint in `meta.json` | Key the fingerprint by ID, not by header text. A rename no longer looks like a new requirement. |
+| Phase 1 rebase | Match blocks by ID first, header text second. |
+| Phase 2 scenario identifiers | Use `SCN-<CAP>-<NNN>-<n>` as the explicit ID the plan already names. |
+| Phase 3 spec graph | The `Refs:` lines are edges that need no new syntax. |
 
 ## Questions for the maintainers
 
