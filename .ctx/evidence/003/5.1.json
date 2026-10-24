@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-24T00:12:39.854Z",
+  "at": "2026-10-24T02:15:51.596Z",
   "files": {
-    "tests/gov/governance.test.ts": "f8824db70016e6c6418c36823a03ff6506aa85683fb0e37488a65f00832dd96e"
+    "tests/gov/governance.test.ts": "d4eb65ae47b6001cdd50ae1b68443d41be3e6d09d93b3935512aff05eece7a8e"
   },
   "kind": "command",
   "reqs": [
@@ -13,6 +13,6 @@
     "command": "python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md",
     "exit": 0,
     "stderr_tail": "",
-    "stdout_sha256": "f055dc335c82d6fe04f77a051ab0e2894e90d7dadd7bf993f5c56dd9213eb4e8"
+    "stdout_sha256": "1fa2e6f6fa7bbb612737252cbba8e37dfd40cb17d2c8b8ce52a8c5588b770fc9"
   }
 }

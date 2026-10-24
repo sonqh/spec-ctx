@@ -1,6 +1,25 @@
 name: ci
-on: [push, pull_request]
+# REQ-GOV-005 one run per push to main or pull request. A newer push cancels the older run.
+# Every run line of the specs and code jobs is also a line of scripts/ci-local.sh (REQ-GOV-004).
+on:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: bash scripts/ci-changes.sh "$BASE" >> "$GITHUB_OUTPUT"
   specs:
     runs-on: ubuntu-latest
     steps:
@@ -10,17 +29,10 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
-      # REQ-GOV-003 spec gates
-      - run: npx -y @fission-ai/openspec@latest validate --all --strict
-      - run: node dist/cli.js build && node dist/cli.js check --strict
-      - name: markdown linters
-        run: |
-          set -e
-          for f in *.md decisions/*.md $(find openspec docs skills schemas -name '*.md' 2>/dev/null); do
-            python3 scripts/tells-lint.py --baseline 0 "$f"
-            python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f"
-          done
+      - run: node dist/cli.js gate --strict --markdown "*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md"
   code:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,24 +45,19 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun run build
-      # REQ-DIST-001 the suite runs on Bun and on Node 22
-      - run: if [ "${{ matrix.runtime }}" = bun ]; then bun run test; else bun run test:node; fi
+      - run: bun run test
+        if: matrix.runtime == 'bun'
+      - run: bun run test:node
+        if: matrix.runtime == 'node'
       - run: node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0
       - run: bash tests/parity/run.sh
-      # REQ-SCH-001 REQ-SCH-002 the schema bundle against the pinned OpenSpec version
       - run: bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh
         if: matrix.runtime == 'bun'
       - run: bash tests/action/selftest.sh
         if: matrix.runtime == 'bun'
-      # REQ-DIST-008 install from git with Node only. The repository is private, so git reads it
-      # with the job token. npx 10 fails on a 40 character SHA, so the test takes a short one.
-      - run: |
-          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
-          git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
-          git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "git@github.com:"
-          bash tests/install/git.sh "${GITHUB_SHA::12}"
+      - run: bash tests/install/ci.sh
+        if: matrix.runtime == 'node'
         env:
           GH_TOKEN: ${{ github.token }}
-        if: matrix.runtime == 'node'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'

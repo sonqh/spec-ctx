@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T02:11:48.423Z",
+  "files": {
+    "tests/action/selftest.sh": "d05929af0c9f66113a2f65fdf4db3922dbb51477b8f3196c0c3b834a8d7e475b",
+    "tests/install/git.sh": "735ad9f86bcb4bb5bdf2d3230c641d6c1e43db7c7467fa2aa58a6d338441f7d1"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-008"
+  ],
+  "task": "003/3.4",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "cd $(mktemp -d) && npx -y github:sonqh/spec-ctx#main --version",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+  }
+}

@@ -26,14 +26,13 @@ describe("spec governance", () => {
     const r = spawnSync("python3", [join(REPO, "scripts/ste-lint.py"), "--baseline", "0", "--disable", "synonym-rotation", p.path("openspec/bad.md")]);
     expect(r.status).toBe(1);
     const ci = readFileSync(join(REPO, ".github/workflows/ci.yml"), "utf8");
-    const specs = ci.slice(ci.indexOf("  specs:"), ci.indexOf("  code:"));
-    expect(specs).toContain("find openspec docs skills schemas -name '*.md'");
-    expect(specs).toContain("scripts/ste-lint.py --baseline 0 --disable synonym-rotation");
-    expect(specs).toContain("scripts/tells-lint.py --baseline 0");
-    expect(specs).toContain("check --strict");
-    expect(specs).toContain("validate --all --strict");
+    const specs = ci.slice(ci.indexOf("\n  specs:\n"), ci.indexOf("\n  code:\n"));
+    // specctx gate runs check, both linters, and openspec validate (REQ-CLI-004)
+    expect(specs).toContain("node dist/cli.js gate --strict --markdown");
+    for (const g of ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "skills/**/*.md", "schemas/**/*.md", "*.md"]) expect(specs).toContain(g);
     const hook = readFileSync(join(REPO, ".githooks/pre-commit"), "utf8");
     for (const s of ["check --strict", "validate --all --strict", "tells-lint.py", "ste-lint.py"]) expect(hook).toContain(s);
+    expect(readFileSync(join(REPO, "src/cli/gate.ts"), "utf8")).toContain("tells-lint.py");
   });
 
   test("SCN-DIST-003-1 the parity harness is green", () => {

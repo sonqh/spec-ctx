@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# REQ-GOV-004 local gate before push. Enable with: git config core.hooksPath .githooks
+set -euo pipefail
+if [ "${SPECCTX_SKIP_PUSH_GATE:-}" = "1" ]; then
+  echo "push gate skipped"
+  exit 0
+fi
+bash "$(git rev-parse --show-toplevel)/scripts/ci-local.sh"

@@ -22,7 +22,7 @@
 - [x] 3.5 Add the `manual-evidence` warning to `check --strict` and fix the SCN-CHK-002-1 example ID to `REQ-XX-003` in the test fixture. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/`
 
 - [x] 3.6 Implement `specctx gate`. Ship `scripts/*-lint.py` in the package. Make `action/run.sh` call `gate`. [REQ-CLI-004, REQ-DIST-005] Verify: `bun test tests/cli/gate.test.ts && node dist/cli.js gate --strict`
-- [ ] 3.7 Add `scripts/ci-local.sh`, `.githooks/pre-push`, the `ci:local` script, the `CLAUDE.md` rule, CI `concurrency` and path filter. [REQ-GOV-004, REQ-GOV-005] Verify: `bash scripts/ci-local.sh && bun test tests/gov/ci-parity.test.ts`
+- [x] 3.7 Add `scripts/ci-local.sh`, `.githooks/pre-push`, the `ci:local` script, the `CLAUDE.md` rule, CI `concurrency` and path filter. [REQ-GOV-004, REQ-GOV-005] Verify: `bash scripts/ci-local.sh && bun test tests/gov/ci-parity.test.ts`
 
 ## 4. Dogfood
 

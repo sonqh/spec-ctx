@@ -1,8 +1,9 @@
 {
-  "at": "2026-10-24T02:11:48.423Z",
+  "at": "2026-10-24T02:15:51.419Z",
   "files": {
     "tests/action/selftest.sh": "d05929af0c9f66113a2f65fdf4db3922dbb51477b8f3196c0c3b834a8d7e475b",
-    "tests/install/git.sh": "735ad9f86bcb4bb5bdf2d3230c641d6c1e43db7c7467fa2aa58a6d338441f7d1"
+    "tests/install/ci.sh": "66a52bed249fac0795df55398b81a3c59c6934df3010e8c7ae169faddfac8a9b",
+    "tests/install/git.sh": "a841c7f7bb415343f0f512adcc552d6dc8982a26c2e9d681bdcf4fb1525c35bd"
   },
   "kind": "command",
   "reqs": [

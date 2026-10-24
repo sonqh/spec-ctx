@@ -25,6 +25,7 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 - Tag code with its REQ: `// REQ-IDX-001`. Tag tests: `// Covers: REQ-IDX-001`.
 - A task closes when `task done` ran its `Verify:` command with exit 0 and wrote the evidence under `.ctx/evidence/`.
 - Before archive: `check --strict` and `npx -y @fission-ai/openspec@latest validate --all --strict` must both exit 0. Run validate again after archive, before push.
+- Run `bun run ci:local` before every push. It runs the same steps as CI on this machine and saves GitHub Actions minutes. The `pre-push` hook runs it too. `SPECCTX_SKIP_PUSH_GATE=1` skips the hook and says so.
 - Run `node dist/cli.js handoff write` before you stop. Commit `.ctx/` with the work. Only `.ctx/index.json` stays out of git.
 
 ## Writing rules

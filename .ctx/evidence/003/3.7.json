@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T02:15:41.154Z",
+  "files": {
+    "tests/gov/ci-parity.test.ts": "8125f18ca404058d19af09ac6b957413d7aac5774083fe86bc246b644cfe7c0c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-004",
+    "REQ-GOV-005"
+  ],
+  "task": "003/3.7",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash scripts/ci-local.sh && bun test tests/gov/ci-parity.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 27 expect() calls\nRan 5 tests across 1 file. [470.00ms]",
+    "stdout_sha256": "73e200ed3e56a8c9e5a31780f480dacf74d71b9e8c2a9eddf955a0d90c988d41"
+  }
+}

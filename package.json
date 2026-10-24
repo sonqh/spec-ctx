@@ -28,7 +28,8 @@
     "ctx": "node dist/cli.js",
     "gen": "node scripts/gen-assets.mjs",
     "prepublishOnly": "bun run build",
-    "prepare": "node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs"
+    "prepare": "node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "ci:local": "bash scripts/ci-local.sh"
   },
   "dependencies": {
     "smol-toml": "^1.9.1"
