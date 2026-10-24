@@ -55,6 +55,9 @@ jobs:
         if: matrix.runtime == 'bun'
       - run: bash tests/action/selftest.sh
         if: matrix.runtime == 'bun'
+      # REQ-ADOPT-006 the fresh and the existing path end to end
+      - run: bash tests/paths/fresh.sh && bash tests/paths/existing.sh
+        if: matrix.runtime == 'bun'
       - run: bash tests/install/ci.sh
         if: matrix.runtime == 'node'
         env:

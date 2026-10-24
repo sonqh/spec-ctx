@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T03:12:43.326Z",
+  "files": {
+    "tests/paths/existing.sh": "454ef2ba164fd486759081fca2204bd8b716441ac85ec473e8acb745fadfa401",
+    "tests/paths/fresh.sh": "651fcba65f7635075d43cb9bfd17a6aab4f07743d2fdd5622826786dcdbbb976"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-006"
+  ],
+  "task": "004/4.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/paths/fresh.sh && bash tests/paths/existing.sh",
+    "exit": 0,
+    "stderr_tail": "index rebuilt",
+    "stdout_sha256": "d0b5134df71af8779f3f76f7468d4b8eb42aeb9d57c3edb435a553df2373a7b2"
+  }
+}

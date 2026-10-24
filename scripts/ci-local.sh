@@ -15,6 +15,7 @@ steps=(
   'bash tests/parity/run.sh'
   'bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh'
   'bash tests/action/selftest.sh'
+  'bash tests/paths/fresh.sh && bash tests/paths/existing.sh'
   'bash tests/install/ci.sh'
   'bun run build:bin && ./build/specctx --version'
 )
