@@ -22,7 +22,7 @@ A removed ID SHALL be added to `decisions/retired-ids.md` with date and reason. 
 - **THEN** `check` exits 1 with `reused-id REQ-QRY-009`
 
 ### Requirement: REQ-GOV-003 Writing style and gates
-Every markdown file SHALL pass `scripts/tells-lint.py --baseline 0` and `scripts/ste-lint.py --baseline 0 --disable synonym-rotation`. The pre-commit hook and CI SHALL run both linters, `specctx check --strict`, and `openspec validate --all --strict`.
+Every markdown file SHALL pass `specctx lint tells --baseline 0` and `specctx lint ste --baseline 0 --disable synonym-rotation`. The pre-commit hook and CI SHALL run both through `specctx gate`, `specctx check --strict`, and `openspec validate --all --strict`.
 
 Refs: ADR-005
 

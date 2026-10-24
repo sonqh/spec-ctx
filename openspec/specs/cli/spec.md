@@ -18,7 +18,7 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 
 #### Scenario: SCN-CLI-001-3 Nothing active
 - **WHEN** every change is archived
-- **THEN** `status` prints `no active change` and the last archived change by archive time
+- **THEN** `status` prints `no active change` and the last archived change, ordered by the `archived` time in each `.openspec.yaml` and then by folder name
 
 #### Scenario: SCN-CLI-001-4 Help groups
 - **WHEN** `specctx --help` runs
@@ -31,6 +31,10 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 #### Scenario: SCN-CLI-001-6 Stats under Read
 - **WHEN** `specctx --help` runs
 - **THEN** `stats` appears under `Read`
+
+#### Scenario: SCN-CLI-001-7 Same day archives
+- **WHEN** 005 and 006 were archived on one day and 005 later than 006
+- **THEN** `status` prints `last archived: 005-metrics`
 
 ### Requirement: REQ-CLI-002 Exit codes and output style
 Exit codes: 0 ok, 1 findings or drift, 2 usage or missing input, 3 internal error. Human output SHALL be one line per item, no color when stdout is not a TTY, no emoji. `--json` SHALL print one JSON document on stdout and nothing else. Help text SHALL pass `scripts/ste-lint.py --baseline 0`.
@@ -51,3 +55,16 @@ Refs: ADR-001
 #### Scenario: SCN-CLI-003-1 Module list
 - **WHEN** the startup test records modules loaded by `--version`
 - **THEN** none is under `src/index/`, `src/graph/`, or `src/check/`
+
+### Requirement: REQ-CLI-005 Spec length check in gate
+`gate` SHALL add a fourth step after validate. It SHALL read every requirement in the deltas of active changes and report `spec-length: fail <ID> <n> chars` when the text after the header is longer than 500 characters. This is the limit strict validate applies to main specs after archive. The step SHALL exit 1 on any failure.
+
+Refs: REQ-CLI-004
+
+#### Scenario: SCN-CLI-005-1 Long requirement caught
+- **WHEN** an active delta has a requirement of 535 characters
+- **THEN** `gate --strict` prints `spec-length: fail <ID> 535 chars` and exits 1
+
+#### Scenario: SCN-CLI-005-2 Short requirements pass
+- **WHEN** every active delta requirement is at most 500 characters
+- **THEN** `gate` prints `spec-length: ok`
