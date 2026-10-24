@@ -11,7 +11,7 @@ You are implementing `spec-ctx`, a TypeScript CLI (`specctx`) that is a determin
 - Root: this directory. An OpenSpec project with three changes under `openspec/changes/`: `001-engine-port`, `002-ids-and-tasks`, `003-distribution`. Implement them in that order.
 - Specs: `openspec/changes/<change>/specs/*/spec.md`. Every requirement has an ID like `REQ-IDX-003`. Every scenario has an ID like `SCN-IDX-003-1`.
 - Decisions: `decisions/ADR-001` to `ADR-005`. Read ADR-001 and ADR-002 first.
-- Bootstrap engine: `tools/ctx/ctx.py`, the Python engine from agentrc. Use it to load specs until change 001 lands. It is also the parity oracle for the port.
+- Engine: `node dist/cli.js`, the `specctx` CLI. Run `bun run build` once if `dist/` is missing.
 - Session skill: `.claude/skills/bootstrap-context/SKILL.md`. Run it first.
 - Writing: every markdown you write follows `ste-humanize` (CLAUDE.md, Writing rules).
 
@@ -25,7 +25,7 @@ Each change is done when every task in its `tasks.md` is `[x]`, every `Verify:` 
 - Tag code `// REQ-XXX-NNN` and tests `// Covers: REQ-XXX-NNN`.
 - Every scenario in a task's cited requirements becomes a test.
 - Mark a task `[x]` only after its Verify command passed. After change 002 lands, use `specctx task done` and never tick by hand.
-- Parity: a difference between the Python engine and the TypeScript engine is a bug in one of them. Decide which from the spec. Fix it in both. Note it in `docs/verification/001.md`.
+- Goldens: `tests/parity/run.sh` diffs the engine against `tests/fixtures/parity-golden/`. A difference is a bug or a spec change. Decide which from the spec. Record a golden change in the verification record of the change.
 - Write `.ctx/handoff.md` before you stop.
 
 ## Constraints

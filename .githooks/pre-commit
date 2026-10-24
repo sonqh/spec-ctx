@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # REQ-GOV-003 pre-commit gate. Enable with: git config core.hooksPath .githooks
 set -euo pipefail
-if [ -f dist/cli.js ]; then CTX="node dist/cli.js"; else CTX="python3 tools/ctx/ctx.py"; fi
+[ -f dist/cli.js ] || bun run build >/dev/null
+CTX="node dist/cli.js"
 $CTX build >/dev/null
 $CTX check --strict
 staged_md=$(git diff --cached --name-only --diff-filter=ACM -- '*.md' || true)

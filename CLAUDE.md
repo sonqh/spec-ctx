@@ -40,8 +40,8 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 - Only Node 22 APIs. No `Bun.` global outside `scripts/`. See ADR-001.
 - Runtime dependencies: `smol-toml` only. A new one needs an ADR.
 - Tests write only under a temp dir or `tests/fixtures/`. Never the real home or another repo.
-- The Python engine under `tools/ctx/` is the parity oracle. Fix a bug in both engines or in neither.
+- `tests/parity/run.sh` diffs the engine against the goldens in `tests/fixtures/parity-golden/`. A golden changes only with `run.sh --record` and a note in the verification record of the change.
 
 ## Stack
 
-TypeScript, Bun for dev and build, Node 22 at run time, `bun test` or vitest, `smol-toml`. Python 3 only for `scripts/*-lint.py` and the parity oracle.
+TypeScript, Bun for dev and build, Node 22 at run time, `bun test` or vitest, `smol-toml`. Python 3 only for `scripts/*-lint.py`.

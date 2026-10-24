@@ -50,9 +50,20 @@ describe("record shape", () => {
     expect((by.get("001/1.2") as any).status).toBe("open");
   });
 
-  test("SCN-IDX-002-3 parity: tests/parity/run.sh compares both index files byte for byte", () => {
-    // the harness itself runs in task 6.1. This test pins that it diffs index.json.
-    const sh = readFileSync(new URL("../parity/run.sh", import.meta.url), "utf8");
-    expect(sh).toContain('cmp -s "$work/py/index.json" "$work/ts/index.json"');
+  test("SCN-IDX-002-3 parity: the index equals the golden recorded from the Python engine", async () => {
+    const { Project: P, PARITY_FIXTURE } = await import("../helpers.ts");
+    const pr = new P(PARITY_FIXTURE);
+    try {
+      const { execFileSync } = await import("node:child_process");
+      // the golden harness pins every mtime, so the scanned record matches too
+      execFileSync("find", [pr.root, "-exec", "env", "TZ=UTC", "touch", "-h", "-t", "202601010000", "{}", "+"]);
+      const { rmSync } = await import("node:fs");
+      rmSync(pr.path(".ctx/index.json"), { force: true });
+      await pr.build();
+      const golden = readFileSync(new URL("../fixtures/parity-golden/index.json", import.meta.url));
+      expect(readFileSync(pr.path(".ctx/index.json")).equals(golden)).toBe(true);
+    } finally {
+      pr.cleanup();
+    }
   });
 });

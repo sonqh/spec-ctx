@@ -27,7 +27,7 @@
 ## 4. Dogfood
 
 - [x] 4.1 Migrate agentrc by implementing its change `007-adopt-spec-ctx` (in /home/claude/agentrc) with the git install from 3.4, archive it there, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
-- [ ] 4.2 Remove `tools/ctx/` and the Python run from `tests/parity/run.sh`. Keep the goldens and `--record`. Hooks call `specctx` only. Scrub `ctx.py` from CLAUDE.md and DELEGATION.md. [REQ-DIST-007, REQ-DIST-003] Verify: `bash tests/parity/run.sh && ! grep -rl ctx.py src tests/parity/run.sh scripts skills schemas .githooks .github CLAUDE.md README.md DELEGATION.md`
+- [x] 4.2 Remove `tools/ctx/` and the Python run from `tests/parity/run.sh`. Keep the goldens and `--record`. Hooks call `specctx` only. Scrub `ctx.py` from CLAUDE.md and DELEGATION.md. [REQ-DIST-007, REQ-DIST-003] Verify: `bash tests/parity/run.sh && ! grep -rl ctx.py src tests/parity/run.sh scripts skills schemas .githooks .github CLAUDE.md README.md DELEGATION.md`
 
 ## 5. Docs
 

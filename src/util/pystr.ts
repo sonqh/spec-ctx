@@ -1,4 +1,4 @@
-// REQ-IDX-002 string helpers that give the same result as the Python oracle.
+// REQ-IDX-002 string helpers with Python semantics. The goldens under tests/fixtures/parity-golden/ came from a Python engine.
 
 /** Characters that Python `str.isspace()` accepts. JavaScript `\s` and `trim()` use a different set. */
 const PY_WS = "\\t\\n\\v\\f\\r\\x1c-\\x1f \\x85\\xa0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000";

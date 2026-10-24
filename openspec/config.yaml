@@ -6,8 +6,7 @@ context: |
   returns a budgeted bundle for one task, allocates IDs, runs Verify commands, records
   evidence, and writes the session handoff. No LLM call and no daemon anywhere (ADR-003).
   Runtime: TypeScript, Bun for development, Node 22 compatible at run time (ADR-001).
-  The Python engine under tools/ctx/ is the bootstrap tool for this repo until change 001
-  lands. Its tests under tests/parity/ define the port.
+  tests/parity/run.sh diffs the engine against recorded goldens.
   Every requirement, scenario, decision, and task carries a stable ID (decisions/ADR-002-id-scheme.md).
 
 rules:
@@ -29,7 +28,7 @@ rules:
 operations:
   apply:
     guidance:
-      - Before reading specs, run `python3 tools/ctx/ctx.py bundle <IDs from the task> --budget 6000` and read that output first. After change 001 lands, use `bun run ctx bundle` instead.
+      - Before reading specs, run `node dist/cli.js task start <task>` and read the bundle it prints first.
       - Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.
       - Run `ctx check` after each task group.
   archive:
