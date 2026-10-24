@@ -5,6 +5,27 @@ import type { Parsed } from "./args.ts";
 import { UsageExit } from "./errors.ts";
 import { findRoot } from "./root.ts";
 
+/** check with warnings and the baseline filter. Strict mode adds the strict rules and the warnings. */
+async function runCheck(root: string, cfg: import("../config.ts").Config, data: import("../index/types.ts").Index, strict: boolean) {
+  const { check } = await import("../check/check.ts");
+  const { applyBaseline } = await import("../baseline/baseline.ts");
+  const findings = check(root, cfg, data, strict);
+  let warnings: string[] = [];
+  if (strict) {
+    const { manualWarnings } = await import("../check/evidence.ts");
+    const { listEvidence } = await import("../tasks/evidence.ts");
+    warnings = manualWarnings(root, data.entries, listEvidence(root));
+  }
+  return applyBaseline(root, findings, warnings);
+}
+
+function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }): string {
+  return r.findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("")
+    + r.warnings.map((w) => `warning: ${w}\n`).join("")
+    + `${r.findings.length} finding(s)\n`
+    + (r.baselined ? `baselined: ${r.baselined}\n` : "");
+}
+
 export async function run(p: Parsed, io: Io): Promise<number> {
   const f = p.flags;
   const json = !!f.json;
@@ -42,6 +63,27 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     else io.out(planLines(plan).join("\n") + `\n${plan.edits.length} header(s) to adopt. Run adopt to write them.\n`);
     return plan.edits.length ? 1 : 0;
   }
+  if (cmd === "baseline write" || cmd === "baseline prune") {
+    if (p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
+    const { buildIndex } = await import("../index/build.ts");
+    const { check } = await import("../check/check.ts");
+    const { manualWarnings } = await import("../check/evidence.ts");
+    const { listEvidence } = await import("../tasks/evidence.ts");
+    const { writeBaseline, pruneBaseline, BASELINE_PATH } = await import("../baseline/baseline.ts");
+    const data = buildIndex(root, cfg);
+    const findings = check(root, cfg, data, true);
+    const warnings = manualWarnings(root, data.entries, listEvidence(root));
+    if (cmd === "baseline write") {
+      const list = writeBaseline(root, findings, warnings);
+      if (json) print({ baseline: BASELINE_PATH, entries: list.length });
+      else io.out(`wrote ${BASELINE_PATH} with ${list.length} entr${list.length === 1 ? "y" : "ies"}\n`);
+    } else {
+      const n = pruneBaseline(root, findings, warnings);
+      if (json) print({ pruned: n });
+      else io.out(`pruned ${n}\n`);
+    }
+    return 0;
+  }
   if (cmd === "gate") {
     if (p.positional.length) throw new UsageExit("gate takes no arguments");
     const { runGate, DEFAULT_MARKDOWN } = await import("./gate.ts");
@@ -52,9 +94,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       check: async () => {
         const { buildIndex } = await import("../index/build.ts");
         const { check } = await import("../check/check.ts");
+        void check;
         const data = buildIndex(root, cfg);
-        const findings = check(root, cfg, data, strict);
-        return { code: findings.length ? 1 : 0, out: findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("") + `${findings.length} finding(s)\n` };
+        const r = await runCheck(root, cfg, data, strict);
+        return { code: r.findings.length ? 1 : 0, out: checkText(r) };
       },
     }, io);
   }
@@ -130,21 +173,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       return 0;
     }
     case "check": {
-      const { check } = await import("../check/check.ts");
-      const findings = check(root, cfg, data, !!f.strict);
-      let warnings: string[] = [];
-      if (f.strict) {
-        const { manualWarnings } = await import("../check/evidence.ts");
-        const { listEvidence } = await import("../tasks/evidence.ts");
-        warnings = manualWarnings(root, entries, listEvidence(root));
-      }
-      if (json) print({ count: findings.length, findings, warnings });
-      else {
-        io.out(findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join(""));
-        io.out(warnings.map((w) => `warning: ${w}\n`).join(""));
-        io.out(`${findings.length} finding(s)\n`);
-      }
-      return findings.length ? 1 : 0;
+      const r = await runCheck(root, cfg, data, !!f.strict);
+      if (json) print({ baselined: r.baselined, count: r.findings.length, findings: r.findings, warnings: r.warnings });
+      else io.out(checkText(r));
+      return r.findings.length ? 1 : 0;
     }
   }
   throw new UsageExit(`unknown command: ${cmd}`);

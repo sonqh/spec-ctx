@@ -27,10 +27,12 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   "handoff ask": {},
   "handoff resolve": {},
   adopt: { "dry-run": "bool" },
+  "baseline write": {},
+  "baseline prune": {},
   init: { schema: "bool", skills: "bool", all: "bool", force: "bool" },
 };
 
-export const GROUPS = ["id", "task", "handoff"];
+export const GROUPS = ["id", "task", "handoff", "baseline"];
 export const COMMANDS = Object.keys(COMMAND_FLAGS);
 
 export class UsageError extends Error {}
