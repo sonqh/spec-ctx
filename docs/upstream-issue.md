@@ -1,0 +1,56 @@
+# Draft issue for OpenSpec: stable IDs as the base fingerprint for requirements
+
+This is a draft. The issue is not open yet. Open it only after a review, and send no pull request until a maintainer asks for one.
+
+## Title
+
+Stable requirement IDs as the base fingerprint for archive and parallel changes
+
+## Problem
+
+OpenSpec finds a requirement by its header text. A MODIFIED, REMOVED, or RENAMED block in a change points at the main spec through the text after `### Requirement:`.
+
+Header text is not stable. People improve wording, and agents rewrite headers when they edit a block. Each rewrite breaks the link between a delta and its main requirement:
+
+- A MODIFIED block whose header changed no longer matches. `openspec archive` refuses it, or the author must add a RENAMED block by hand.
+- Two changes in flight that touch the same requirement have no shared key. A merge can keep one scenario list and drop the other without a warning.
+- Code, tests, and task lists cannot point at a requirement in a way that survives a rename.
+
+The parallel merge plan in this repository, `openspec-parallel-merge-plan.md`, describes lost scenarios when changes run in parallel and a missing base fingerprint as the cause. Link: https://github.com/Fission-AI/OpenSpec/blob/main/openspec-parallel-merge-plan.md. Check that this summary matches the current text of the plan before you open the issue.
+
+## Proposal
+
+Give each requirement and scenario an ID that never changes once published:
+
+- Requirement header: `### Requirement: REQ-<CAP>-<NNN> <name>`, for example `REQ-IDX-003 Index sources`.
+- Scenario header: `#### Scenario: SCN-<CAP>-<NNN>-<n> <name>`.
+- `<CAP>` is a short capability code from the project config. `<NNN>` comes from a tool and is never reused. A removed ID goes to a retired list.
+- A line `Refs: REQ-ABC-001, ADR-002` links a requirement to other IDs.
+
+With an ID in the header, archive can match a delta block to its main block by ID first and by header text second. A rename keeps the ID, so it needs no RENAMED block. Two parallel changes that touch `REQ-IDX-003` share the key that the merge plan asks for.
+
+The scheme needs no change to the delta format. The ID is the first word of the header text, so current parsers read it today.
+
+## Evidence from a real project
+
+spec-ctx implements the scheme beside OpenSpec as a separate CLI. Its engine started inside agentrc, an OpenSpec project with six archived changes:
+
+- 110 canonical requirements and 160 canonical scenarios, all with IDs.
+- 1,149 index entries, with code tags and test tags on the requirements.
+- 185 kB of spec markdown. A task loads one requirement and its links as a bundle of about 4.7 kB.
+- `specctx check --strict` gates every commit on ID integrity, test coverage of each main requirement, and a named test for each scenario.
+
+During the work on spec-ctx itself, archive refused two MODIFIED blocks with new header text. The IDs stayed the same. Each fix was a RENAMED block that the ID could have made unnecessary.
+
+## What we offer
+
+- The ID scheme and its rules: `decisions/ADR-002-id-scheme.md` in https://github.com/sonqh/spec-ctx.
+- A schema bundle, `spec-driven-ids`, a fork of `spec-driven` with ID placeholders in its templates. It validates with `openspec schema validate` and archives with `openspec archive` unchanged.
+- An engine under the MIT license that indexes the IDs, finds dangling links, and allocates the next free number.
+- Help with a design for ID matching in archive, if the maintainers want it. A pull request follows only on an invitation.
+
+## Questions for the maintainers
+
+- Is ID matching in archive a direction you want, or should IDs stay a convention outside the core?
+- Would you accept the ID as an optional prefix, with header text as the fallback when no ID is present?
+- Does the parallel merge plan already have a fingerprint design that IDs should follow?

@@ -24,7 +24,7 @@
 ## 5. Docs
 
 - [x] 5.1 README: what it is, install, the loop in six commands, config reference, a 60 second asciinema or GIF of `init --all` then `task next` then `task done`. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md`
-- [ ] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, the numbers from agentrc, what is offered. Do not open the issue. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 docs/upstream-issue.md`
+- [x] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, the numbers from agentrc, what is offered. Do not open the issue. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 docs/upstream-issue.md`
 - [ ] 5.3 Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001] Verify: `node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up
