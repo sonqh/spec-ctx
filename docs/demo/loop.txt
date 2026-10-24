@@ -1,0 +1,33 @@
+$ specctx status
+index rebuilt
+add-mfa  done 2  open 1
+uncovered active REQs in main: 5
+$ specctx task next
+add/1.3  Add the TOTP prompt to the login form.
+reqs: REQ-UA-004
+verify: grep -q totp src/login.ts
+$ specctx task start add/1.3 | head -12
+-- REQ-UA-004 | openspec/changes/add-mfa/specs/user-auth/spec.md:5 | active | requested
+### Requirement: REQ-UA-004 Second factor
+The system SHALL ask for a TOTP code after a valid password.
+
+#### Scenario: SCN-UA-004-1 Valid code
+- **WHEN** the user enters the current TOTP code
+- **THEN** the system opens a session
+
+#### Scenario: SCN-UA-004-2 Expired code
+- **WHEN** the user enters a code older than 30 seconds
+- **THEN** the system rejects it
+
+$ printf '// REQ-UA-004\nexport const prompt = "totp";\n' > src/login.ts
+$ specctx task done add/1.3
+index rebuilt
+done add/1.3. Evidence: .ctx/evidence/add/1.3.json
+$ specctx stats --change add
+index rebuilt
+change   context_ratio  evidence_ratio  stale_catches  cycle_time_median_s  debt
+add-mfa  0.2931 (n=1)   1.00 (1/1)      n/a            6 (n=1)              2
+total    0.2931 (n=1)   1.00 (1/1)      n/a            6 (n=1)              13 (0 baselined + 13 new)
+gate_runs n/a
+gate_pass_rate n/a
+gate_failures_caught n/a

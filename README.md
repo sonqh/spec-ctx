@@ -1,5 +1,50 @@
 # spec-ctx
 
+![One task loop: status, task next, task start, an edit, task done, stats](docs/demo/loop.svg)
+
+<details>
+<summary>Transcript of the demo</summary>
+
+```text
+$ specctx status
+index rebuilt
+add-mfa  done 2  open 1
+uncovered active REQs in main: 5
+$ specctx task next
+add/1.3  Add the TOTP prompt to the login form.
+reqs: REQ-UA-004
+verify: grep -q totp src/login.ts
+$ specctx task start add/1.3 | head -12
+-- REQ-UA-004 | openspec/changes/add-mfa/specs/user-auth/spec.md:5 | active | requested
+### Requirement: REQ-UA-004 Second factor
+The system SHALL ask for a TOTP code after a valid password.
+
+#### Scenario: SCN-UA-004-1 Valid code
+- **WHEN** the user enters the current TOTP code
+- **THEN** the system opens a session
+
+#### Scenario: SCN-UA-004-2 Expired code
+- **WHEN** the user enters a code older than 30 seconds
+- **THEN** the system rejects it
+
+$ printf '// REQ-UA-004\nexport const prompt = "totp";\n' > src/login.ts
+$ specctx task done add/1.3
+index rebuilt
+done add/1.3. Evidence: .ctx/evidence/add/1.3.json
+$ specctx stats --change add
+index rebuilt
+change   context_ratio  evidence_ratio  stale_catches  cycle_time_median_s  debt
+add-mfa  0.2931 (n=1)   1.00 (1/1)      n/a            6 (n=1)              2
+total    0.2931 (n=1)   1.00 (1/1)      n/a            6 (n=1)              13 (0 baselined + 13 new)
+gate_runs n/a
+gate_pass_rate n/a
+gate_failures_caught n/a
+```
+
+</details>
+
+The demo runs on a copy of `tests/fixtures/no-id-repo` after `specctx adopt`. `bash docs/demo/record.sh` records it again.
+
 A deterministic context engine and task workflow for [OpenSpec](https://github.com/Fission-AI/OpenSpec) projects. The CLI is `specctx`.
 
 OpenSpec gives you a proposal, specs, a design, and tasks. spec-ctx adds what an AI agent needs to work on them without reading the whole tree:
@@ -18,10 +63,10 @@ spec-ctx needs Node 22.
 
 ```bash
 npx spec-ctx init --all                          # from npm
-npx -y github:sonqh/spec-ctx#main init --all     # from git, before the npm release
+npx -y github:sonqh/spec-ctx#<sha> init --all    # from git, before the npm release
 ```
 
-Until 1.0 both forms work. The git form builds the package on install with Node only. Pin a commit in place of `main` for a stable build.
+Until the npm release, use the git form with a commit SHA, for example `npx -y github:sonqh/spec-ctx#bb33084f41c6`. The git form builds the package on install with Node only. A branch name such as `main` also works, but it moves.
 
 The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`. Run it in a project after `openspec init`.
 
@@ -71,10 +116,6 @@ specctx handoff write          # .ctx/handoff.md for the next session
 ```
 
 The skills `specctx-bootstrap`, `specctx-next`, and `specctx-done` teach an agent this loop. Install them alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
-
-## Demo
-
-`docs/demo.cast` is a recording of `init --all`, `task next`, `task start`, `task done`, `id new`, and `handoff write` in a fresh project. It runs for about 20 seconds. Play it with `asciinema play docs/demo.cast`. `node scripts/record-demo.mjs` records it again.
 
 ## IDs
 
@@ -161,6 +202,13 @@ npx spec-ctx lint ste --baseline 0 --disable synonym-rotation README.md
 ```
 
 The action runs `specctx gate`: `check --strict`, both markdown linters, `openspec validate --all --strict`, and the length check.
+
+## Status
+
+- Archived: 001 engine port, 002 IDs and tasks, 004 adopt existing, 005 metrics, 006 polish.
+- Open: 003 distribution. Only the npm publish of `0.1.0` waits.
+- In progress: 007, this README and the demo.
+- Until the publish, install from git with `npx -y github:sonqh/spec-ctx#<sha>`. The npm forms `npx spec-ctx` and `npm install -g spec-ctx` work after it.
 
 ## Develop
 

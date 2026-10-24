@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T05:06:07.270Z",
+  "bundle_chars": 7171,
+  "files": {
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "started_at": "2026-10-24T05:05:59.003Z",
+  "task": "007/1.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "ff7775e1781026234fdf5b77e78e644c6802927088b6792cc17d312eb7ed9d99"
+  }
+}
