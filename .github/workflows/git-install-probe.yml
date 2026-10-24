@@ -11,6 +11,4 @@ jobs:
           d=$(mktemp -d); cd "$d"
           code=0; npm_config_cache="$d/c" npx -y --loglevel silly "github:sonqh/spec-ctx#main" --version > out.txt 2>&1 || code=$?
           echo "::warning::probe exit $code"
-          grep -iE "error|fatal|128|spawn|git " out.txt | tail -25 | while IFS= read -r l; do echo "::warning::$(echo "$l" | cut -c1-300)"; done
-          ls "$d/c/_logs" && tail -15 "$d"/c/_logs/*debug*.log | while IFS= read -r l; do echo "::warning::LOG $(echo "$l" | cut -c1-300)"; done
-          git config --global --list | while IFS= read -r l; do echo "::warning::GITCFG $l"; done
+          echo "::warning::TAIL $(tail -45 out.txt | cut -c1-220 | tr '\n' '|')"
