@@ -27,13 +27,13 @@
 ## 4. Dogfood
 
 - [x] 4.1 Migrate agentrc by implementing its change `007-adopt-spec-ctx` (in /home/claude/agentrc) with the git install from 3.4, archive it there, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
-- [ ] 4.2 Remove `tools/ctx/` and `tests/parity/` from this repo. Hook calls `specctx` only. [REQ-DIST-007] Verify: `! grep -rl ctx.py --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.git .`
+- [ ] 4.2 Remove `tools/ctx/` and the Python run from `tests/parity/run.sh`. Keep the goldens and `--record`. Hooks call `specctx` only. Scrub `ctx.py` from CLAUDE.md and DELEGATION.md. [REQ-DIST-007, REQ-DIST-003] Verify: `bash tests/parity/run.sh && ! grep -rl ctx.py src tests/parity/run.sh scripts skills schemas .githooks .github CLAUDE.md README.md DELEGATION.md`
 
 ## 5. Docs
 
 - [x] 5.1 README: what it is, install, the loop in six commands, config reference, a 60 second asciinema or GIF of `init --all` then `task next` then `task done`. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md`
 - [x] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, the numbers from agentrc, what is offered. Do not open the issue. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 docs/upstream-issue.md`
-- [ ] 5.3 Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001] Verify: `node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
+- [ ] 5.3 Encode the engine fixes already made: SCN-IDS-003-3, SCN-CHK-001-4, SCN-CHK-001-5, SCN-DIST-003-2 as tests. Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001, REQ-IDS-003, REQ-CHK-001] Verify: `bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up
 

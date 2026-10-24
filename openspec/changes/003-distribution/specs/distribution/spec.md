@@ -24,6 +24,17 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 - **WHEN** `specctx init --all` runs on a fresh `openspec init` project
 - **THEN** the config, the schema, and the skills exist and `specctx status` exits 0
 
+### Requirement: REQ-DIST-003 Golden harness
+`tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.
+
+#### Scenario: SCN-DIST-003-1 Green parity
+- **WHEN** `tests/parity/run.sh` runs
+- **THEN** it prints `parity: 7 commands identical` and exits 0
+
+#### Scenario: SCN-DIST-003-2 Drift is caught
+- **WHEN** the bundle order changes in the engine
+- **THEN** `tests/parity/run.sh` exits 1 and names `bundle`
+
 ## ADDED Requirements
 
 ### Requirement: REQ-DIST-004 Publish and binaries
@@ -56,13 +67,13 @@ agentrc SHALL run on the published package: `spec-ctx.toml` present, `tools/ctx/
 - **THEN** the `specs` job passes with `specctx`
 
 ### Requirement: REQ-DIST-007 Python engine removed
-After REQ-DIST-006 holds, `tools/ctx/` and `tests/parity/` SHALL be removed from this repo. The pre-commit hook SHALL call `specctx` only.
+After REQ-DIST-006 holds, `tools/ctx/` and the Python oracle run in `tests/parity/run.sh` SHALL be removed from this repo. The goldens stay. The hooks SHALL call `specctx` only. `CLAUDE.md` and `DELEGATION.md` SHALL no longer name the Python engine.
 
 Refs: ADR-001
 
 #### Scenario: SCN-DIST-007-1 No python left
-- **WHEN** the tree is searched for `ctx.py`
-- **THEN** there are no matches outside `docs/`
+- **WHEN** `src/`, `tests/`, `scripts/`, `skills/`, `schemas/`, `.githooks/`, `.github/`, `CLAUDE.md`, `README.md`, and `DELEGATION.md` are searched for `ctx.py`
+- **THEN** there are no matches
 
 ### Requirement: REQ-DIST-008 Install from git before publish
 `package.json` SHALL have a `prepare` script that builds `dist/` with Node only, so `npx -y github:sonqh/spec-ctx#<ref> --version` works without npm publish and without Bun. The action input `version` SHALL accept `github:sonqh/spec-ctx#<ref>` and pass it to `npx` unchanged. The README SHALL show both install forms until 1.0.
@@ -75,5 +86,5 @@ Refs: ADR-001, REQ-DIST-004
 
 #### Scenario: SCN-DIST-008-2 Action from git
 - **WHEN** the action runs with `version: github:sonqh/spec-ctx#main`
-- **THEN** it calls `npx -y github:sonqh/spec-ctx#main check --strict`
+- **THEN** it calls `npx -y github:sonqh/spec-ctx#main gate --strict`
 
