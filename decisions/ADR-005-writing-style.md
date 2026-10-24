@@ -15,6 +15,6 @@ Every markdown file in this repo (specs, proposals, designs, ADRs, README, CLAUD
 
 - No semicolons and no dashes in prose. One instruction per sentence. Bullets for parallel parts.
 - Technical terms stay as the field uses them, in any language.
-- `scripts/tells-lint.py` and `scripts/ste-lint.py` from the skill run in CI on `openspec/**/*.md` and `decisions/*.md` with `--baseline 0`.
+- `specctx lint tells` and `specctx lint ste`, the TypeScript port of the skill linters, run in CI on `openspec/**/*.md` and `decisions/*.md` with `--baseline 0`.
 
 Refs: REQ-GOV-003

@@ -28,7 +28,7 @@ Refs: ADR-002
 - **THEN** `check` reports no `req-without-scn` for it
 
 ### Requirement: REQ-CHK-003 Evidence rules
-`check --strict` SHALL report three evidence rules. `done-without-evidence`: a `[x]` task in an active change with no evidence file. `stale-evidence`: an evidence file whose `files` digests differ from the tree. `evidence-without-done`: an evidence file whose task is `[ ]`. Archived changes SHALL be exempt from `stale-evidence`. Evidence with `kind: manual` for a task in an active change SHALL print a warning line `manual-evidence <task>` that does not count as a finding.
+`check --strict` SHALL report three evidence rules. `done-without-evidence`: a `[x]` task in an active change with no evidence file. `stale-evidence`: an evidence file whose `files` digests differ from the tree. `evidence-without-done`: an evidence file whose task is `[ ]`. Archived changes SHALL be exempt from `stale-evidence`. Evidence with `kind: manual` for a task in an active change SHALL print a warning `manual-evidence <task>` that does not count as a finding.
 
 Refs: ADR-004, REQ-TASK-004
 

@@ -32,7 +32,7 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 
 - Every markdown file follows the `ste-humanize` skill, Human mode. Short sentences. Active voice. No semicolons. No dashes. Bullets for parallel parts. Technical terms stay as the field uses them.
 - Help text and error strings in code follow Strict mode.
-- Lint: `python3 scripts/tells-lint.py --baseline 0 <file>` and `python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation <file>`. Help text must pass `ste-lint.py --baseline 0` with no disable.
+- Lint: `node dist/cli.js lint tells --baseline 0 <file>` and `node dist/cli.js lint ste --baseline 0 --disable synonym-rotation <file>`. Help text must pass `lint ste --baseline 0` with no disable.
 
 ## Hard rules
 
@@ -44,4 +44,4 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 
 ## Stack
 
-TypeScript, Bun for dev and build, Node 22 at run time, `bun test` or vitest, `smol-toml`. Python 3 only for `scripts/*-lint.py`.
+TypeScript, Bun for dev and build, Node 22 at run time, `bun test` or vitest, `smol-toml`. No Python.

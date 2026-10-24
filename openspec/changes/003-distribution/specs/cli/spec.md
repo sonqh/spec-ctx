@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: REQ-CLI-004 gate command
-`specctx gate [--strict] [--markdown <globs>]` SHALL run three gates in order: `check` (after `build`), both linters on the markdown globs, then `openspec validate --all`. Default globs: `openspec/**/*.md decisions/*.md docs/**/*.md *.md`. It SHALL print one `ok` or `fail` line per gate, stop at the first failure, and exit 1. The linters ship in the package under `scripts/`. A missing `python3` SHALL skip them with a warning.
+`specctx gate [--strict] [--markdown <globs>]` SHALL run these gates in order: `check` (after `build`), `specctx lint tells` and `specctx lint ste` on the markdown globs, then `openspec validate --all`. Default globs: `openspec/**/*.md decisions/*.md docs/**/*.md *.md`. It SHALL print one `ok` or `fail` line per gate, stop at the first failure, and exit 1. `gate` SHALL need no `python3`.
 
 Refs: REQ-CHK-001, REQ-GOV-003
 
@@ -17,4 +17,4 @@ Refs: REQ-CHK-001, REQ-GOV-003
 
 #### Scenario: SCN-CLI-004-3 No python
 - **WHEN** `python3` is not on PATH
-- **THEN** `gate` prints `linters: skipped, python3 not found` and still runs validate
+- **THEN** `gate --strict` runs both linters and the output has no `skipped` line

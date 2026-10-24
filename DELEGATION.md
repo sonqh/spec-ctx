@@ -40,7 +40,7 @@ Each change is done when every task in its `tasks.md` is `[x]`, every `Verify:` 
 
 - Module layout under `src/`.
 - Test helpers and fixture content, as long as fixtures cover every scenario a task cites.
-- Help text wording that passes `ste-lint.py --baseline 0`.
+- Help text wording that passes `specctx lint ste --baseline 0`.
 
 ## Decisions you must stop and ask about
 

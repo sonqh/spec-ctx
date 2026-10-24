@@ -12,7 +12,7 @@
 - [x] 2.2 Port `tells-lint` as a rule table with one unit test per rule. [REQ-LINT-001, REQ-LINT-002] Verify: `bun test tests/lint/tells.test.ts`
 - [x] 2.3 Port `ste-lint` as a rule table with one unit test per rule. [REQ-LINT-001, REQ-LINT-002] Verify: `bun test tests/lint/ste.test.ts`
 - [x] 2.4 Wire `specctx lint tells|ste` with all flags and `--selftest`. Make parity green. [REQ-LINT-001] Verify: `bash tests/lint/parity.sh`
-- [x] 2.5 Switch `gate`, `ci-local.sh`, the hooks, and the action to `specctx lint`. Remove the Python scripts from the package, the repo, and the README. [REQ-LINT-003] Verify: `bun test tests/cli/gate.test.ts && ! ls scripts/*.py 2>/dev/null`
+- [x] 2.5 Switch `gate`, `ci-local.sh`, the hooks, and the action to `specctx lint`. Remove the Python scripts from the package, the repo, and the README. Update CLAUDE.md, DELEGATION.md, ADR-005, and the 003 Verify lines of 5.1 and 5.2 to `specctx lint`. [REQ-LINT-003, REQ-GOV-003] Verify: `bun test tests/cli/gate.test.ts && ! ls scripts/*.py 2>/dev/null`
 
 ## 3. Close
 
