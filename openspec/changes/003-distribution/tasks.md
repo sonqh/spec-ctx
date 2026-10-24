@@ -16,9 +16,14 @@
 - [x] 3.2 Add `action.yml` and a self-test workflow that uses it on this repo. [REQ-DIST-005] Verify: `bash tests/action/selftest.sh`
 - [ ] 3.3 Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir. [REQ-DIST-004] Verify: `cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version`
 
+## 3b. Pre-publish adoption
+
+- [ ] 3.4 Add the `prepare` script (Node only, no Bun), make the action accept a `github:` version, document both install forms. [REQ-DIST-008] Verify: `cd $(mktemp -d) && npx -y github:sonqh/spec-ctx#main --version`
+- [ ] 3.5 Add the `manual-evidence` warning to `check --strict` and fix the SCN-CHK-002-1 example ID to `REQ-XX-003` in the test fixture. [REQ-CHK-002, REQ-CHK-003] Verify: `bun test tests/check/`
+
 ## 4. Dogfood
 
-- [ ] 4.1 Migrate agentrc: add `spec-ctx.toml`, remove `tools/ctx/`, switch hook and CI to `specctx` and the action, backfill evidence, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
+- [ ] 4.1 Migrate agentrc by implementing its change `007-adopt-spec-ctx` (in /home/claude/agentrc) with the git install from 3.4, archive it there, push, confirm CI. [REQ-DIST-006] Verify: `gh run list --repo sonqh/agentrc --limit 1 --json conclusion --jq '.[0].conclusion' | grep success`
 - [ ] 4.2 Remove `tools/ctx/` and `tests/parity/` from this repo. Hook calls `specctx` only. [REQ-DIST-007] Verify: `! grep -rl ctx.py --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.git .`
 
 ## 5. Docs

@@ -63,3 +63,17 @@ Refs: ADR-001
 #### Scenario: SCN-DIST-007-1 No python left
 - **WHEN** the tree is searched for `ctx.py`
 - **THEN** there are no matches outside `docs/`
+
+### Requirement: REQ-DIST-008 Install from git before publish
+`package.json` SHALL have a `prepare` script that builds `dist/` with Node only, so `npx -y github:sonqh/spec-ctx#<ref> --version` works without npm publish and without Bun. The action input `version` SHALL accept `github:sonqh/spec-ctx#<ref>` and pass it to `npx` unchanged. The README SHALL show both install forms until 1.0.
+
+Refs: ADR-001, REQ-DIST-004
+
+#### Scenario: SCN-DIST-008-1 npx from git
+- **WHEN** `npx -y github:sonqh/spec-ctx#main --version` runs in a clean temp dir with Node 22 and no Bun
+- **THEN** it prints the version and exits 0
+
+#### Scenario: SCN-DIST-008-2 Action from git
+- **WHEN** the action runs with `version: github:sonqh/spec-ctx#main`
+- **THEN** it calls `npx -y github:sonqh/spec-ctx#main check --strict`
+
