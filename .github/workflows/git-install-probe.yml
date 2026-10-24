@@ -11,7 +11,7 @@ jobs:
           short=${GITHUB_SHA::12}
           for spec in "github:sonqh/spec-ctx#$short" "git+https://github.com/sonqh/spec-ctx.git#$short" "github:sonqh/spec-ctx#main"; do
             d=$(mktemp -d); cd "$d"
-            out=$(npm_config_cache="$d/c" npx -y "$spec" --version 2>&1); code=$?
+            code=0; out=$(npm_config_cache="$d/c" npx -y "$spec" --version 2>&1) || code=$?
             echo "::warning::spec $spec exit $code: $(echo "$out" | grep -v notice | tail -c 600 | tr '\n' ' ')"
             cd /
           done
