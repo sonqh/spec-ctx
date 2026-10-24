@@ -20,7 +20,7 @@ Refs: ADR-002
 - **THEN** it prints `nothing to adopt` and exits 0
 
 ### Requirement: REQ-ADOPT-002 Atomic assignment
-`specctx adopt` SHALL write the IDs from the dry run into the main spec headers and into every matching header of active change deltas in one operation. Matching SHALL use exact header text, or the `RENAMED` mapping of the delta when present. After writing it SHALL run `check`. On a finding not in the baseline it SHALL restore every file and exit 1 with the findings. It SHALL add derived CAP codes to `spec-ctx.toml` and write `adopt-report.md`.
+`specctx adopt` SHALL write the dry run IDs into main spec headers and into every matching active delta header in one operation. Matching uses exact header text, or the delta `RENAMED` mapping. It SHALL run `check` before and after. A finding the write introduced SHALL restore every file and exit 1. Findings that existed before SHALL not block. It SHALL add derived CAP codes to `spec-ctx.toml` and write `adopt-report.md`.
 
 Refs: REQ-ADOPT-001, REQ-CHK-001
 
@@ -31,6 +31,10 @@ Refs: REQ-ADOPT-001, REQ-CHK-001
 #### Scenario: SCN-ADOPT-002-2 Rollback
 - **WHEN** a planted duplicate header makes `check` fail after the write
 - **THEN** every file equals its content before `adopt` and the exit code is 1
+
+#### Scenario: SCN-ADOPT-002-4 Legacy tasks do not block
+- **WHEN** the fixture tasks cite no REQ and `check` reports `task-without-req` before the write
+- **THEN** `adopt` still writes the IDs and exits 0
 
 #### Scenario: SCN-ADOPT-002-3 Unmatched delta reported
 - **WHEN** a delta header matches no main header and no RENAMED mapping
@@ -44,7 +48,7 @@ A second `specctx adopt` on a tree that the first one processed SHALL change no 
 - **THEN** the tree after the second run is byte-identical to the tree after the first
 
 ### Requirement: REQ-ADOPT-004 CAP derivation
-A capability folder with no code in `[ids] caps` SHALL get a code from the upper case first letters of its kebab segments, at most 6 letters. On a collision a digit SHALL be appended. The code and its path SHALL be written to `spec-ctx.toml` under `[ids] caps` and `[ids] paths`, so later `id new` calls accept it.
+A capability folder with no code in `[ids] caps` SHALL get a code from the upper case first letters of its kebab segments, at most 6 letters. A one segment name SHALL take its first three letters. On a collision the code SHALL take two letters from the first segment, then three, then a suffix letter from `B` to `Z`. Codes SHALL match `[A-Z]{2,6}`. The code and its path SHALL be written to `spec-ctx.toml` under `[ids] caps` and `[ids] paths`, so later `id new` calls accept it.
 
 Refs: ADR-002
 
@@ -54,16 +58,20 @@ Refs: ADR-002
 
 #### Scenario: SCN-ADOPT-004-2 Collision
 - **WHEN** the fixture has `user-auth` and `upload-api`
-- **THEN** the codes are `UA` and `UA2`
+- **THEN** the codes are `UA` and `UPA`
+
+#### Scenario: SCN-ADOPT-004-3 One segment
+- **WHEN** the fixture has a capability `telemetry`
+- **THEN** the code is `TEL`
 
 ### Requirement: REQ-ADOPT-005 Baseline ratchet
-`specctx baseline write` SHALL record every current strict finding of the rules `uncovered`, `scenario-untested`, `done-without-evidence`, and `manual-evidence` as sorted `rule id` pairs in `.ctx/baseline.json`. `check --strict` SHALL not report a finding that is in the baseline. `baseline prune` SHALL drop entries that no longer fire and print the count. There SHALL be no command that adds a single entry.
+`specctx baseline write` SHALL record every current finding of the rules `uncovered`, `scenario-untested`, `done-without-evidence`, `manual-evidence`, `task-without-req`, and `task-without-verify` as sorted `rule id` pairs in `.ctx/baseline.json`. `check` and `check --strict` SHALL not report a finding that is in the baseline. `baseline prune` SHALL drop entries that no longer fire and print the count. There SHALL be no command that adds a single entry.
 
 Refs: REQ-CHK-002
 
 #### Scenario: SCN-ADOPT-005-1 Day one strict
 - **WHEN** `baseline write` runs on the no-ID fixture after `adopt`
-- **THEN** `check --strict` exits 0 and `.ctx/baseline.json` lists the pre-existing uncovered requirements
+- **THEN** `check --strict` exits 0 and `.ctx/baseline.json` lists the pre-existing uncovered requirements and the legacy tasks without a REQ citation
 
 #### Scenario: SCN-ADOPT-005-2 New debt is visible
 - **WHEN** a new requirement without a test is added after the baseline
@@ -74,7 +82,7 @@ Refs: REQ-CHK-002
 - **THEN** that entry is gone and the command prints `pruned 1`
 
 ### Requirement: REQ-ADOPT-006 Two documented paths
-The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`specctx init --all`, `adopt --dry-run`, `adopt`, `task backfill`, `baseline write`). Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.
+The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`specctx init --all`, `adopt --dry-run`, `adopt`, `task backfill`, `baseline write`). The existing path section SHALL say that legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a Verify code span. `baseline prune` then drops them. Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.
 
 #### Scenario: SCN-ADOPT-006-1 Existing path end to end
 - **WHEN** `tests/paths/existing.sh` runs on the no-ID fixture
