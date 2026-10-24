@@ -1,0 +1,14 @@
+name: action-selftest
+# REQ-DIST-005 the action runs on this repository with the local build.
+on: [push, pull_request]
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile && bun run build
+      - uses: ./
+        with:
+          specctx: node dist/cli.js
+          markdown: "openspec/**/*.md decisions/*.md docs/**/*.md skills/**/*.md *.md"

@@ -1,0 +1,33 @@
+name: spec-ctx check
+description: Run specctx check, the markdown linters, and openspec validate on an OpenSpec project.
+branding:
+  icon: check-square
+  color: blue
+inputs:
+  version:
+    description: Version of the spec-ctx npm package.
+    default: latest
+  strict:
+    description: Run check and validate in strict mode.
+    default: "true"
+  markdown:
+    description: Globs of the markdown files that the linters read, separated by spaces.
+    default: "openspec/**/*.md decisions/*.md *.md"
+  specctx:
+    description: Command that runs specctx. Empty means npx with the version input.
+    default: ""
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: spec-ctx gates
+      shell: bash
+      run: bash "$GITHUB_ACTION_PATH/action/run.sh"
+      env:
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_STRICT: ${{ inputs.strict }}
+        INPUT_MARKDOWN: ${{ inputs.markdown }}
+        INPUT_SPECCTX: ${{ inputs.specctx }}
+        SPECCTX_ACTION_PATH: ${{ github.action_path }}
