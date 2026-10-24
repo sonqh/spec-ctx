@@ -11,13 +11,15 @@
     "dist",
     "schemas",
     "skills",
-    "action.yml"
+    "action.yml",
+    "scripts/tells-lint.py",
+    "scripts/ste-lint.py"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "build": "npm run prepare --silent",
+    "build": "npm run prepare",
     "build:bin": "bun build src/cli.ts --compile --outfile build/specctx",
     "typecheck": "tsc -p tsconfig.json",
     "test": "bun test",

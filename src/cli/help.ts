@@ -12,6 +12,7 @@ Read:
   \`related <ID>\`               Show the entries that link to an ID.
   \`bundle <ID...>\`             Print the spec text for the IDs and their links.
   \`check\`                      Find ID and link errors.
+  \`gate\`                       Run \`check\`, the markdown linters, and \`openspec validate\`. Stop at the first failure.
   \`task next\`                  Show the next open task.
   \`task verify <task>\`         Run the \`Verify:\` command of a task. Write nothing.
 
@@ -43,6 +44,8 @@ Command flags:
   \`bundle --depth <n>\`         Follow links n steps. The default is 1.
   \`--all\`                      Show all copies of an ID in query, related, and bundle.
   \`check --strict\`             Also find gaps in tests and evidence.
+  \`gate --strict\`              Run \`check\` and \`openspec validate\` in strict mode.
+  \`gate --markdown <globs>\`    Lint these markdown globs. Separate them with spaces.
   \`id new --for <REQ-ID>\`      Give the requirement of a new scenario.
   \`id new --count <n>\`         Print n IDs in sequence.
   \`task next --change <name>\`  Look only in this change.

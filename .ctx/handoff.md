@@ -8,6 +8,8 @@ done:
 reopened:
 - 003/3.4 tests/install/git.sh reports its error and CI passes a short SHA (at 2026-10-24T01:57:19.043Z)
 - 003/3.5 REQ-CHK-002 gained the pending REMOVED exemption, SCN-CHK-002-3 (at 2026-10-24T02:08:44.666Z)
+- 003/3.2 the action now calls specctx gate (REQ-DIST-005 modified) (at 2026-10-24T02:11:07.339Z)
+- 003/3.4 the action self-test checks the gate command line (at 2026-10-24T02:11:07.427Z)
 open_questions:
 - docs/upstream-issue.md: the parallel merge plan page was blocked. Check its summary against the real file before opening the issue. (task none, 2026-10-24)
 - 003/4.1 blocked by a spec gap: a main requirement that an active REMOVED block names stays canonical and active, so check --strict reports it uncovered and scenario-untested, and a retired row makes it reused-id. agentrc 007 cannot pass strict before archive. See the agentrc handoff for options A, B, C. (task none, 2026-10-24)

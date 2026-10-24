@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-24T01:39:15.425Z",
+  "at": "2026-10-24T02:11:32.681Z",
   "files": {
-    "tests/action/selftest.sh": "7e2451b100126ed7eb462a5aee2322533bd8f75cb65407bc028faf52e090e290"
+    "tests/action/selftest.sh": "d05929af0c9f66113a2f65fdf4db3922dbb51477b8f3196c0c3b834a8d7e475b"
   },
   "kind": "command",
   "reqs": [

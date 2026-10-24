@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T02:11:26.530Z",
+  "files": {
+    "src/cli/gate.ts": "c37c01e76de7a57340b0798759672d62a442ac593352b2a2922fc9dc71b85d83",
+    "tests/action/selftest.sh": "d05929af0c9f66113a2f65fdf4db3922dbb51477b8f3196c0c3b834a8d7e475b",
+    "tests/cli/gate.test.ts": "e85a492b3e56b2813c0459844e5c4a906f621d893350c4d6bbb3b370427fc39f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-004",
+    "REQ-DIST-005"
+  ],
+  "task": "003/3.6",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/gate.test.ts && node dist/cli.js gate --strict",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 18 expect() calls\nRan 5 tests across 1 file. [907.00ms]",
+    "stdout_sha256": "64c66bf8920265767cae8355bf86f39e795d414ce6c28263c1f001d93463a9a7"
+  }
+}

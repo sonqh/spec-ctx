@@ -29,6 +29,22 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     else io.out(`indexed ${data.entries.length} entries, ${data.problems.length} problem(s) -> ${INDEX_PATH}\n`);
     return 0;
   }
+  if (cmd === "gate") {
+    if (p.positional.length) throw new UsageExit("gate takes no arguments");
+    const { runGate, DEFAULT_MARKDOWN } = await import("./gate.ts");
+    const strict = !!f.strict;
+    return runGate(root, {
+      strict,
+      markdown: (f.markdown as string | undefined) ?? DEFAULT_MARKDOWN,
+      check: async () => {
+        const { buildIndex } = await import("../index/build.ts");
+        const { check } = await import("../check/check.ts");
+        const data = buildIndex(root, cfg);
+        const findings = check(root, cfg, data, strict);
+        return { code: findings.length ? 1 : 0, out: findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("") + `${findings.length} finding(s)\n` };
+      },
+    }, io);
+  }
   const { loadIndex } = await import("../index/build.ts");
   const need = (n: number, what: string): void => {
     if (p.positional.length < n) throw new UsageExit(`${cmd} needs ${what}`);
