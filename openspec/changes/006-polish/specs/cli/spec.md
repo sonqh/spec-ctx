@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: REQ-CLI-001 Commands and flags
-`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `task backfill`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
+`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `task backfill`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
 
 #### Scenario: SCN-CLI-001-1 Version
 - **WHEN** `specctx --version` runs
@@ -24,6 +24,10 @@
 #### Scenario: SCN-CLI-001-5 Adopt commands in Setup
 - **WHEN** `specctx --help` runs
 - **THEN** `adopt`, `baseline write`, `baseline prune`, and `task backfill` appear under `Setup`
+
+#### Scenario: SCN-CLI-001-6 Stats under Read
+- **WHEN** `specctx --help` runs
+- **THEN** `stats` appears under `Read`
 
 #### Scenario: SCN-CLI-001-7 Same day archives
 - **WHEN** 005 and 006 were archived on one day and 005 later than 006

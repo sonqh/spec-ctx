@@ -9,6 +9,7 @@ reopened:
 - 005/2.1 stale-evidence 005/2.1 tests/stats/metrics.test.ts: type fix for the typecheck step (at 2026-10-24T03:55:28.665Z)
 - 005/1.1 stale-evidence 005/1.1 tests/stats/metrics.test.ts: type fix for the typecheck step (at 2026-10-24T03:55:35.601Z)
 open_questions:
+- 006 REQ-CLI-001 delta was written before the 005 archive. Strict validate refused it for dropping SCN-CLI-001-6. I added stats to its command list and copied SCN-CLI-001-6 from main into the 006 block, with no other change. Confirm. (task none, 2026-10-24)
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)
 - 003/4.2 and 5.3 wait for 4.1. Python removal follows agentrc running on the npm package. (task none, 2026-10-24) answer: order set: 3.4, 3.5, agentrc 007, then 4.1, 4.2, 5.3
