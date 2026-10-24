@@ -9,6 +9,16 @@ path=""
 IFS=: read -ra parts <<< "$PATH"
 for d in "${parts[@]}"; do [ -x "$d/bun" ] || path="${path:+$path:}$d"; done
 cd "$work"
-out=$(PATH="$path" npm_config_cache="$work/cache" npx -y "github:sonqh/spec-ctx#$ref" --version)
+set +e
+out=$(PATH="$path" npm_config_cache="$work/cache" npx -y "github:sonqh/spec-ctx#$ref" --version 2>"$work/err")
+code=$?
+set -e
+if [ "$code" != 0 ]; then
+  echo "npx exited $code"
+  tail -20 "$work/err"
+  # CI shows annotations without a login, so the cause goes there too
+  [ -n "${GITHUB_ACTIONS:-}" ] && echo "::error::git install failed: $(tail -5 "$work/err" | tr '\n' ' ')"
+  exit 1
+fi
 echo "$out" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "unexpected output: $out"; exit 1; }
 echo "git install: spec-ctx $out from github:sonqh/spec-ctx#$ref without bun"
