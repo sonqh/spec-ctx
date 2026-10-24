@@ -16,7 +16,7 @@ jobs:
       - name: markdown linters
         run: |
           set -e
-          for f in *.md decisions/*.md $(find openspec docs skills -name '*.md' 2>/dev/null); do
+          for f in *.md decisions/*.md $(find openspec docs skills schemas -name '*.md' 2>/dev/null); do
             python3 scripts/tells-lint.py --baseline 0 "$f"
             python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation "$f"
           done
@@ -37,5 +37,10 @@ jobs:
       - run: if [ "${{ matrix.runtime }}" = bun ]; then bun run test; else bun run test:node; fi
       - run: node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0
       - run: bash tests/parity/run.sh
+      # REQ-SCH-001 REQ-SCH-002 the schema bundle against the pinned OpenSpec version
+      - run: bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh
+        if: matrix.runtime == 'bun'
+      - run: bash tests/action/selftest.sh
+        if: matrix.runtime == 'bun'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'
