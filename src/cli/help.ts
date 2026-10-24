@@ -15,6 +15,7 @@ Read:
   \`gate\`                       Run \`check\`, the markdown linters, and \`openspec validate\`. Stop at the first failure.
   \`task next\`                  Show the next open task.
   \`task verify <task>\`         Run the \`Verify:\` command of a task. Write nothing.
+  \`stats\`                      Show five metrics for each change and the gate runs.
 
 Write:
   \`build\`                      Write the index to .ctx/index.json.
@@ -55,6 +56,8 @@ Command flags:
   \`id new --for <REQ-ID>\`      Give the requirement of a new scenario.
   \`id new --count <n>\`         Print n IDs in sequence.
   \`task next --change <name>\`  Look only in this change.
+  \`stats --change <name>\`      Show only this change.
+  \`stats --write\`              Also write docs/metrics/<date>.md.
   \`task backfill --change <name>\`
                                Look only in this change.
   \`task done --manual <note>\`  Record a manual note. A task with no \`Verify:\` command needs this flag.
