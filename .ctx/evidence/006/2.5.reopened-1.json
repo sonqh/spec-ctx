@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T04:45:25.743Z",
+  "bundle_chars": 2438,
+  "files": {
+    "tests/cli/gate.test.ts": "cac57b7ebfe1b0b1c8a47cd132e360710bcb3373bc81efe784493ba866e8acaa"
+  },
+  "kind": "command",
+  "reason": "Verify or task text changed in 29623bc: specctx lint in place of the Python scripts",
+  "reqs": [
+    "REQ-LINT-003"
+  ],
+  "started_at": "2026-10-24T04:45:24.915Z",
+  "task": "006/2.5",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/gate.test.ts && ! ls scripts/*.py 2>/dev/null",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 22 expect() calls\nRan 5 tests across 1 file. [730.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

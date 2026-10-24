@@ -16,7 +16,7 @@
 
 ## 3. Close
 
-- [ ] 3.1 Write `docs/verification/006.md`. Full gate. [REQ-GOV-001] Verify: `bash scripts/ci-local.sh`
+- [x] 3.1 Write `docs/verification/006.md`. Full gate. [REQ-GOV-001] Verify: `bash scripts/ci-local.sh`
 
 ## Workflow follow-up
 

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T04:43:41.633Z",
+  "bundle_chars": 5550,
+  "files": {
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a"
+  },
+  "kind": "command",
+  "reason": "Verify or task text changed in 29623bc: specctx lint in place of the Python scripts",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "started_at": "2026-10-24T04:43:41.455Z",
+  "task": "003/5.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "f55ba0097c114dc30c8f0e4d22f744ad9ebf00ff52e676d03b9a160e3b4b8e11"
+  }
+}
