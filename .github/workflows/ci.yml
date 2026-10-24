@@ -44,7 +44,13 @@ jobs:
         if: matrix.runtime == 'bun'
       # REQ-DIST-008 install from git with Node only
       # npx 10 fails on a 40 character SHA in a git spec, so the test takes a short one
-      - run: bash tests/install/git.sh "${GITHUB_SHA::12}"
+      - run: |
+          if ! bash tests/install/git.sh "${GITHUB_SHA::12}" > /tmp/git-install.log 2>&1; then
+            echo "::error::git install log: $(tail -c 1500 /tmp/git-install.log | tr '\n' ' ')"
+            echo "::error::tools: node $(node --version) npm $(npm --version) git $(command -v git) bun $(command -v bun)"
+            exit 1
+          fi
+          cat /tmp/git-install.log
         if: matrix.runtime == 'node'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'
