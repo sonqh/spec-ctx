@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T03:48:59.458Z",
+  "bundle_chars": 3092,
+  "files": {
+    "tests/gov/gate-log.test.ts": "f6189cb98be2ed211cf5e0b3018c3ced79ca8b56edf59cb0df6dadc4ffff033a"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-005"
+  ],
+  "started_at": "2026-10-24T03:48:32.728Z",
+  "task": "005/1.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/gov/gate-log.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 2 pass\n 0 fail\n 11 expect() calls\nRan 2 tests across 1 file. [239.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

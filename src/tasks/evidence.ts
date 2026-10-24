@@ -1,5 +1,5 @@
 // REQ-TASK-004 evidence files under .ctx/evidence/<change number>/<task>.json.
-import { existsSync, mkdirSync, readdirSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Entry } from "../index/types.ts";
 import { fileSha256 } from "../util/hash.ts";
@@ -17,6 +17,8 @@ export interface Evidence {
   at: string;
   tool_version: string;
   note?: string;
+  bundle_chars?: number;
+  started_at?: string;
 }
 
 /** Digests of every code and test file tagged with one of the REQs. */
@@ -45,6 +47,16 @@ export function writeEvidence(root: string, t: Task, entries: Entry[], verify: E
     tool_version: VERSION,
   };
   if (note !== undefined) ev.note = note;
+  // REQ-STAT-002 copy the bundle size and the start time that task start wrote for this task
+  try {
+    const cur = JSON.parse(readFileSync(join(root, ".ctx/current.json"), "utf8")) as { task?: string; bundle_chars?: unknown; started_at?: unknown };
+    if (cur.task === t.id) {
+      if (typeof cur.bundle_chars === "number") ev.bundle_chars = cur.bundle_chars;
+      if (typeof cur.started_at === "string") ev.started_at = cur.started_at;
+    }
+  } catch {
+    // no current task
+  }
   const rel = evidenceRel(t);
   mkdirSync(dirname(join(root, rel)), { recursive: true });
   writeFileSync(join(root, rel), dumps(ev) + "\n");

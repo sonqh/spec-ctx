@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-003
+// Covers: REQ-TASK-003, REQ-STAT-002
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { Project } from "../helpers.ts";
@@ -77,6 +77,28 @@ describe("task done", () => {
     expect(r.code, r.err).toBe(0);
     expect(JSON.parse(p.read(".ctx/evidence/002/2.2.json")).kind).toBe("manual");
     expect((await p.run("task", "done", "002/2.2", "--manual", "again")).code).toBe(2);
+  });
+
+  test("SCN-STAT-002-2 done copies bundle_chars and started_at into the evidence", async () => {
+    p = setup();
+    process.env.SPECCTX_NOW = "2026-10-24T09:00:00.000Z";
+    try {
+      await p.run("task", "start", "002/2.1");
+      const cur = JSON.parse(p.read(".ctx/current.json"));
+      process.env.SPECCTX_NOW = "2026-10-24T09:05:00.000Z";
+      await p.run("task", "done", "002/2.1");
+      const ev = JSON.parse(p.read(".ctx/evidence/002/2.1.json"));
+      expect(ev.bundle_chars).toBe(cur.bundle_chars);
+      expect(ev.started_at).toBe("2026-10-24T09:00:00.000Z");
+      expect(ev.at).toBe("2026-10-24T09:05:00.000Z");
+      // a task done without task start has neither field
+      await p.run("task", "done", "002/2.3", "--manual", "seen");
+      const ev3 = JSON.parse(p.read(".ctx/evidence/002/2.3.json"));
+      expect(ev3.bundle_chars).toBeUndefined();
+      expect(ev3.started_at).toBeUndefined();
+    } finally {
+      delete process.env.SPECCTX_NOW;
+    }
   });
 
   test("done clears current.json when it names the task", async () => {

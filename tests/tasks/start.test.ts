@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-002
+// Covers: REQ-TASK-002, REQ-STAT-002
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync } from "node:fs";
 import { Project } from "../helpers.ts";
@@ -24,11 +24,19 @@ describe("task start", () => {
       expect(r.code, r.err).toBe(0);
       expect(r.out.startsWith("-- REQ-TASK-001 |")).toBe(true);
       expect(r.out).toContain("#### Scenario: SCN-TASK-001-1 Pick");
-      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1" });
-      expect(p.read(".ctx/current.json")).toBe('{\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1"\n}\n');
+      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: [...r.out].length, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1" });
+      expect(p.read(".ctx/current.json")).toBe(`{\n  "bundle_chars": ${[...r.out].length},\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1"\n}\n`);
     } finally {
       delete process.env.SPECCTX_NOW;
     }
+  });
+
+  test("SCN-STAT-002-1 start records the size of the bundle it printed", async () => {
+    p = setup();
+    const r = await p.run("task", "start", "002/2.1");
+    const cur = JSON.parse(p.read(".ctx/current.json"));
+    expect(cur.bundle_chars).toBe([...r.out].length);
+    expect(cur.bundle_chars).toBeGreaterThan(50);
   });
 
   test("the bundle uses the configured budget", async () => {

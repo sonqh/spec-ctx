@@ -2,8 +2,8 @@
 
 ## 1. Inputs
 
-- [ ] 1.1 Record `bundle_chars` and `started_at` in `task start`, copy both into evidence in `task done`. [REQ-STAT-002] Verify: `bun test tests/tasks/start.test.ts tests/tasks/done.test.ts`
-- [ ] 1.2 Append the gate log line in `scripts/ci-local.sh`, including on failure. [REQ-STAT-005] Verify: `bun test tests/gov/gate-log.test.ts`
+- [x] 1.1 Record `bundle_chars` and `started_at` in `task start`, copy both into evidence in `task done`. [REQ-STAT-002] Verify: `bun test tests/tasks/start.test.ts tests/tasks/done.test.ts`
+- [x] 1.2 Append the gate log line in `scripts/ci-local.sh`, including on failure. [REQ-STAT-005] Verify: `bun test tests/gov/gate-log.test.ts`
 
 ## 2. Stats
 

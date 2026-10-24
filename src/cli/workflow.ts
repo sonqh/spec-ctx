@@ -83,7 +83,9 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { isoNow } = await import("../util/time.ts");
       const { CURRENT_PATH } = await import("../handoff/handoff.ts");
       mkdirSync(join(c.root, ".ctx"), { recursive: true });
-      writeFileSync(join(c.root, CURRENT_PATH), dumps({ started_at: isoNow(), task: t.id }) + "\n");
+      const { cpLen } = await import("../util/pystr.ts");
+      // REQ-STAT-002 the bundle size goes next to the current task, so stats can compute the context ratio
+      writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id }) + "\n");
       if (c.json) print(c, { bundle: b, task: t.id });
       else c.io.out(b.text);
       return 0;
