@@ -1,7 +1,7 @@
-// Covers: REQ-GOV-001, REQ-GOV-003, REQ-DIST-003
+// Covers: REQ-GOV-001, REQ-GOV-003, REQ-DIST-003, REQ-DIST-007
 import { afterEach, describe, expect, test } from "vitest";
 import { execFileSync, spawnSync } from "node:child_process";
-import { cpSync, existsSync, readFileSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { Project, REPO } from "../helpers.ts";
 
@@ -41,4 +41,23 @@ describe("spec governance", () => {
     expect(r.stdout).toContain("parity: 7 commands identical");
     expect(r.status).toBe(0);
   }, 60000);
+
+  test("SCN-DIST-003-2 the harness catches drift and names the command", () => {
+    if (!existsSync(join(REPO, "dist/cli.js"))) execFileSync("bun", ["run", "build"], { cwd: REPO });
+    p = new Project(null);
+    cpSync(join(REPO, "tests/fixtures/parity-golden"), p.path("golden"), { recursive: true });
+    // a bundle in another order is what a changed engine would print
+    const lines = readFileSync(p.path("golden/bundle.out"), "utf8").split("\n");
+    writeFileSync(p.path("golden/bundle.out"), [...lines.slice(1), lines[0]].join("\n"));
+    const r = spawnSync("bash", [join(REPO, "tests/parity/run.sh")], { encoding: "utf8", env: { ...process.env, SPECCTX_GOLDEN: p.path("golden") } });
+    expect(r.status).toBe(1);
+    expect(r.stdout).toContain("(bundle)");
+    expect(r.stdout).not.toContain("(status)");
+  }, 60000);
+
+  test("SCN-DIST-007-1 no ctx.py left in the listed paths", () => {
+    const r = spawnSync("grep", ["-rl", "ctx" + ".py", "src", "tests/parity/run.sh", "scripts", "skills", "schemas", ".githooks", ".github", "CLAUDE.md", "README.md", "DELEGATION.md"], { cwd: REPO, encoding: "utf8" });
+    expect(r.stdout).toBe("");
+    expect(existsSync(join(REPO, "tools/ctx"))).toBe(false);
+  });
 });

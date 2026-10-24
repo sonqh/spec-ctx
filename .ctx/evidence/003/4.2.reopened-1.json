@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T02:41:44.882Z",
+  "files": {
+    "tests/gov/governance.test.ts": "d4eb65ae47b6001cdd50ae1b68443d41be3e6d09d93b3935512aff05eece7a8e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-007",
+    "REQ-DIST-003"
+  ],
+  "task": "003/4.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/parity/run.sh && ! grep -rl ctx.py src tests/parity/run.sh scripts skills schemas .githooks .github CLAUDE.md README.md DELEGATION.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e769464b81e62fe4af67c5ea6b1e64e32d919671f03f4d9aadaaeb9da78a4eb7"
+  }
+}

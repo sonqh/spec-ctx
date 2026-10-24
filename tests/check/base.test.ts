@@ -84,18 +84,28 @@ describe("check base rules", () => {
     finding(await check(), "reused-id", "REQ-QRY-009");
   });
 
-  test("a replacement ID named in a retire reason stays live", async () => {
+  test("SCN-CHK-001-4 a replacement ID named in a retire reason stays live", async () => {
     p = new Project();
-    p.append("decisions/retired-ids.md", "\n| ID | Date | Reason |\n| --- | --- | --- |\n| REQ-OLD-001 | 2026-10-24 | moved to REQ-AAA-001 |\n");
+    p.append("openspec/specs/alpha/spec.md", "\n### Requirement: REQ-CLI-001 Commands\nText.\n\n#### Scenario: SCN-CLI-001-1 S\n- a\n");
+    p.append("decisions/retired-ids.md", "\n| ID | Date | Reason |\n| --- | --- | --- |\n| REQ-CTX-008 | 2026-10-24 | moved to spec-ctx REQ-CLI-001 |\n| REQ-OLD-001 | 2026-10-24 | moved to REQ-AAA-001 |\n");
     const r = await check();
     expect(r.out).not.toContain("reused-id");
     expect(r.code).toBe(0);
   });
 
-  test("an archived REMOVED block without scenarios is no finding", async () => {
+  test("SCN-CHK-001-5 an archived REMOVED block without scenarios is no finding", async () => {
     p = new Project();
     p.write("openspec/changes/archive/2026-10-01-000-old/specs/alpha/spec.md", "## REMOVED Requirements\n\n### Requirement: REQ-OLD-002 Gone\n**Reason**: moved.\n");
     expect((await check()).out).not.toContain("req-without-scn");
+  });
+
+  test("reused-id fires for a non-archived copy and not for an archived one", async () => {
+    p = new Project();
+    p.append("decisions/retired-ids.md", "\n| REQ-OLD-003 | 2026-10-24 | gone |\n");
+    p.write("openspec/changes/archive/2026-10-01-000-old/specs/old/spec.md", "## ADDED Requirements\n\n### Requirement: REQ-OLD-003 Old\nText.\n\n#### Scenario: SCN-OLD-003-1 S\n- a\n");
+    expect((await check()).out).not.toContain("reused-id");
+    p.write("openspec/changes/005-ux/specs/old/spec.md", "## MODIFIED Requirements\n\n### Requirement: REQ-OLD-003 Old\nNew.\n\n#### Scenario: SCN-OLD-003-1 S\n- a\n");
+    finding(await check(), "reused-id", "REQ-OLD-003");
   });
 
   test("code-tag-no-canonical for a tag whose REQ lives only in an archive", async () => {

@@ -47,7 +47,7 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
   const retired = retiredIds(root);
   const caps = new Set(cfg.ids.caps);
   for (const e of entries) {
-    if ((e.kind === "req" || e.kind === "adr") && retired.has(e.id) && e.status === "active") {
+    if ((e.kind === "req" || e.kind === "adr") && retired.has(e.id) && e.status !== "archived") {
       findings.push([e.file, e.line, "reused-id", e.id]);
     }
     for (const r of e.refs) {

@@ -33,7 +33,7 @@
 
 - [x] 5.1 README: what it is, install, the loop in six commands, config reference, a 60 second asciinema or GIF of `init --all` then `task next` then `task done`. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 README.md && python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md`
 - [x] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, the numbers from agentrc, what is offered. Do not open the issue. [REQ-GOV-003] Verify: `python3 scripts/tells-lint.py --baseline 0 docs/upstream-issue.md`
-- [ ] 5.3 Encode the engine fixes already made: SCN-IDS-003-3, SCN-CHK-001-4, SCN-CHK-001-5, SCN-DIST-003-2 as tests. Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001, REQ-IDS-003, REQ-CHK-001] Verify: `bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
+- [x] 5.3 Encode the engine fixes already made: SCN-IDS-003-3, SCN-CHK-001-4, SCN-CHK-001-5, SCN-DIST-003-2 as tests. Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001, REQ-IDS-003, REQ-CHK-001] Verify: `bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up
 

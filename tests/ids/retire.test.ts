@@ -46,7 +46,7 @@ describe("id retire", () => {
     expect(p.read("decisions/retired-ids.md")).toBe(before);
   });
 
-  test("an ID that lives only in an archived change can be retired", async () => {
+  test("SCN-IDS-003-3 an ID that lives only in an archived change can be retired", async () => {
     p = new Project();
     p.write("openspec/changes/archive/2026-10-01-000-old/specs/old/spec.md",
       "## ADDED Requirements\n\n### Requirement: REQ-OLD-001 Old\nText.\n\n#### Scenario: SCN-OLD-001-1 S\n- a\n");
