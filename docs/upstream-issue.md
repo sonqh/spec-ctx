@@ -40,7 +40,7 @@ spec-ctx implements the scheme beside OpenSpec as a separate CLI. Its engine sta
 - 185 kB of spec markdown. A task loads one requirement and its links as a bundle of about 4.7 kB.
 - `specctx check --strict` gates every commit on ID integrity, test coverage of each main requirement, and a named test for each scenario.
 
-During the work on spec-ctx itself, archive refused two MODIFIED blocks with new header text. The IDs stayed the same. Each fix was a RENAMED block that the ID could have made unnecessary.
+During the work on spec-ctx itself, archive refused one MODIFIED block with new header text, and `openspec validate` predicted the same refusal for a second one. The IDs stayed the same. Each fix was a RENAMED block that the ID could have made unnecessary.
 
 ## What we offer
 
