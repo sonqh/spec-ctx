@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-24T01:39:07.720Z",
+  "at": "2026-10-24T01:57:34.898Z",
   "files": {
     "tests/action/selftest.sh": "7e2451b100126ed7eb462a5aee2322533bd8f75cb65407bc028faf52e090e290",
-    "tests/install/git.sh": "37d7b4d7231c3546efa8c7ba5eb12dd561396bbf7a81ff7c355cfde30517693b"
+    "tests/install/git.sh": "735ad9f86bcb4bb5bdf2d3230c641d6c1e43db7c7467fa2aa58a6d338441f7d1"
   },
   "kind": "command",
   "reqs": [

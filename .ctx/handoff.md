@@ -9,6 +9,7 @@ done:
 - 003/3.5
 reopened:
 - 003/3.2 tests/action/selftest.sh gained the github: version case of REQ-DIST-008 (at 2026-10-24T01:37:32.166Z)
+- 003/3.4 tests/install/git.sh reports its error and CI passes a short SHA (at 2026-10-24T01:57:19.043Z)
 open_questions:
 - docs/upstream-issue.md: the parallel merge plan page was blocked. Check its summary against the real file before opening the issue. (task none, 2026-10-24)
 - 003/4.1 blocked by a spec gap: a main requirement that an active REMOVED block names stays canonical and active, so check --strict reports it uncovered and scenario-untested, and a retired row makes it reused-id. agentrc 007 cannot pass strict before archive. See the agentrc handoff for options A, B, C. (task none, 2026-10-24)
