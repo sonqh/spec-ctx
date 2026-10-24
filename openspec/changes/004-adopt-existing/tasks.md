@@ -13,7 +13,7 @@
 ## 3. Baseline and backfill
 
 - [ ] 3.1 Implement `baseline write`, `baseline prune`, and the filter in `check --strict` with the `baselined:` line. [REQ-ADOPT-005, REQ-CHK-002] Verify: `bun test tests/baseline/*.test.ts`
-- [ ] 3.2 Implement `task backfill`. [REQ-TASK-006] Verify: `bun test tests/tasks/backfill.test.ts`
+- [x] 3.2 Implement `task backfill`. [REQ-TASK-006] Verify: `bun test tests/tasks/backfill.test.ts`
 - [ ] 3.3 Add the commands to the CLI under `Setup`. Lint help. [REQ-CLI-001] Verify: `bun test tests/cli/help.test.ts && node dist/cli.js --help | python3 scripts/ste-lint.py --baseline 0`
 
 ## 4. Paths and docs

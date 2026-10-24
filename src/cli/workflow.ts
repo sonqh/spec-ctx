@@ -140,6 +140,31 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       else c.io.out(`done ${t.id}. Evidence: ${rel}\n`);
       return 0;
     }
+    case "task backfill": {
+      // REQ-TASK-006 manual evidence for every ticked task that has none, through the task done --manual path
+      noMore(c, 0);
+      const note = (f.manual as string | undefined)?.trim();
+      if (!note) throw new UsageExit('task backfill needs --manual "<note>"');
+      const { tasksOf, toTask, hasEvidence } = await import("../tasks/tasks.ts");
+      const { changeNum } = await import("../index/scan.ts");
+      const { writeEvidence } = await import("../tasks/evidence.ts");
+      const want = f.change as string | undefined;
+      const counts = new Map<string, number>();
+      for (const e of tasksOf(entries)) {
+        if (e.status !== "done") continue;
+        if (want && e.change !== want && changeNum(e.change) !== want) continue;
+        if (hasEvidence(c.root, e)) continue;
+        const t = toTask(c.root, e);
+        writeEvidence(c.root, t, entries, { command: t.verify.command, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", note);
+        counts.set(e.change, (counts.get(e.change) ?? 0) + 1);
+      }
+      const { cmpStr } = await import("../util/pystr.ts");
+      const rows = [...counts.keys()].sort(cmpStr).map((k) => ({ change: k, count: counts.get(k)! }));
+      const total = rows.reduce((n, r) => n + r.count, 0);
+      if (c.json) print(c, { changes: rows, total });
+      else c.io.out(rows.map((r) => `${r.change}: ${r.count}\n`).join("") + `backfilled ${total} task(s)\n`);
+      return 0;
+    }
     case "task reopen": {
       const { findTask, setBox } = await import("../tasks/tasks.ts");
       const t = findTask(c.root, entries, arg(c, 0, "a task ID"));
