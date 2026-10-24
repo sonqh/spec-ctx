@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T02:54:39.561Z",
+  "files": {
+    "src/adopt/plan.ts": "9aaf9b39880f7d450e0825258537b7f0dd4775b9c44017e243c10a054ffff07c",
+    "tests/adopt/dryrun.test.ts": "a4e9be27e43964cce37c4ab02723cb97185dfc4540e56b83110209d69b79bae3"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-001"
+  ],
+  "task": "004/4.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "test -s docs/verification/004.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

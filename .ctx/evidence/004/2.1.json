@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-24T02:50:59.731Z",
+  "at": "2026-10-24T03:03:48.794Z",
   "files": {
-    "src/adopt/plan.ts": "9aaf9b39880f7d450e0825258537b7f0dd4775b9c44017e243c10a054ffff07c",
+    "src/adopt/plan.ts": "69f0a304b7ffa541b26996a6eb3b8a2a8ecff51a0483810e0f5a192c41d6add2",
     "tests/adopt/dryrun.test.ts": "a4e9be27e43964cce37c4ab02723cb97185dfc4540e56b83110209d69b79bae3"
   },
   "kind": "command",
@@ -13,7 +13,7 @@
   "verify": {
     "command": "bun test tests/adopt/dryrun.test.ts",
     "exit": 0,
-    "stderr_tail": "\n 4 pass\n 0 fail\n 32 expect() calls\nRan 4 tests across 1 file. [48.00ms]",
+    "stderr_tail": "\n 4 pass\n 0 fail\n 32 expect() calls\nRan 4 tests across 1 file. [44.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }

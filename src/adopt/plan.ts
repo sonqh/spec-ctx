@@ -109,15 +109,20 @@ function parse(root: string, rel: string, cap: string): SpecFile {
   return { rel, cap, lines, blocks, renames };
 }
 
-/** REQ-ADOPT-004 upper case first letters of the kebab segments, 2 to 6 letters. */
-export function deriveCode(path: string): string {
-  const segs = path.split(/[/-]/).filter(Boolean);
-  let code = segs.map((s) => s[0]!.toUpperCase()).join("").replace(/[^A-Z]/g, "").slice(0, 6);
-  if (code.length < 2) {
-    // a one word capability such as cli gives one letter. The next letters of the word fill it up.
-    const word = (segs[segs.length - 1] ?? "").toUpperCase().replace(/[^A-Z]/g, "");
-    code = (code + word.slice(1)).slice(0, 2);
-  }
+/** REQ-ADOPT-004 candidate codes in order: the base code, then two and three letters of the first segment, then a suffix letter. */
+export function codeCandidates(path: string): string[] {
+  const segs = path.split(/[/-]/).map((x) => x.toUpperCase().replace(/[^A-Z]/g, "")).filter(Boolean);
+  if (!segs.length) return [];
+  const rest = segs.slice(1).map((x) => x[0]!).join("");
+  const base = segs.length === 1 ? segs[0]!.slice(0, 3) : segs.map((x) => x[0]!).join("").slice(0, 6);
+  const out = [base, (segs[0]!.slice(0, 2) + rest).slice(0, 6), (segs[0]!.slice(0, 3) + rest).slice(0, 6)];
+  for (let c = 66; c <= 90; c++) out.push((base.slice(0, 5) + String.fromCharCode(c)));
+  return [...new Set(out.filter((x) => /^[A-Z]{2,6}$/.test(x)))];
+}
+
+export function deriveCode(path: string, taken: Set<string> = new Set()): string {
+  const code = codeCandidates(path).find((c) => !taken.has(c));
+  if (!code) throw new UsageExit(`no free capability code for ${path}. Add one under [ids.paths] in spec-ctx.toml`);
   return code;
 }
 
@@ -140,7 +145,8 @@ export function planAdopt(root: string, cfg: Config): Plan {
   const paths = cfg.ids.paths ?? {};
   const codeOfPath = new Map<string, string>();
   for (const [code, p] of Object.entries(paths)) codeOfPath.set(p, code);
-  const capList = [...new Set(files.map((f) => f.cap))].sort(cmpStr);
+  // on a collision the shorter path keeps the base code: user-auth keeps UA, upload-api takes UPA
+  const capList = [...new Set(files.map((f) => f.cap))].sort((a, b) => a.length - b.length || cmpStr(a, b));
   const taken = new Set<string>([...cfg.ids.caps, ...codeOfPath.values()]);
   const caps: Plan["caps"] = [];
   for (const cap of capList) {
@@ -151,16 +157,13 @@ export function planAdopt(root: string, cfg: Config): Plan {
       if (existing) code = HAS_REQ.exec(existing.id!)![1]!;
     }
     if (!code) {
-      const base = deriveCode(cap);
-      code = base;
-      // REQ-ADOPT-004 on a collision the code gets a suffix. The ID pattern allows letters only, see the handoff.
-      let n = 2;
-      while (taken.has(code)) code = `${base}${n++}`;
+      code = deriveCode(cap, taken);
       derived = true;
       taken.add(code);
     }
     caps.push({ code, path: cap, derived });
   }
+  caps.sort((a, b) => cmpStr(a.path, b.path));
   const codeFor = new Map(caps.map((c) => [c.path, c.code]));
 
   // next free number per code: every ID in the tree, the archive, and the retired list

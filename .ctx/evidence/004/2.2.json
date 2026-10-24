@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T03:03:30.328Z",
+  "files": {
+    "src/adopt/config-write.ts": "16670593ca2a9e6ed258fe22351e2aac948774c864951db8427db684a2d1b168",
+    "src/adopt/plan.ts": "69f0a304b7ffa541b26996a6eb3b8a2a8ecff51a0483810e0f5a192c41d6add2",
+    "tests/adopt/caps.test.ts": "74afcf90acc2f0b94f41d10e786515dea4fd567cb47cc22886f624b0d8a9c6bb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-004"
+  ],
+  "task": "004/2.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/adopt/caps.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 7 pass\n 0 fail\n 51 expect() calls\nRan 7 tests across 1 file. [35.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

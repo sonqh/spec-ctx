@@ -6,6 +6,8 @@ as_of: 2026-10-24T02:56:23.552Z
 done:
 - 004/3.2
 reopened:
+- 004/2.1 src/adopt/plan.ts changed for the letter-only CAP rule (2.2) (at 2026-10-24T03:03:48.642Z)
+- 004/4.2 src/adopt/plan.ts changed for the letter-only CAP rule (2.2) (at 2026-10-24T03:03:48.870Z)
 open_questions:
 - 004 REQ-CHK-002 delta copies the 002 text: REQ-X-003 (now invalid, codes have 2 to 6 letters), no pending REMOVED exemption, no SCN-CHK-002-3, both engines. 003 also MODIFIES REQ-CHK-002. Whichever archives last overwrites the other. Rebase the 004 block on the 003 text and add SCN-CHK-002-4? The baseline filter also lives only in a scenario, not in the requirement text. 3.1 waits on this. (task none, 2026-10-24)
 - 004 REQ-ADOPT-002 rolls back on any check finding not in the baseline, and the baseline holds strict rules only. A plain OpenSpec project has tasks with no [REQ-...] and often no Verify:, so check reports task-without-req and task-without-verify before and after adopt. adopt would always roll back, and the existing path cannot end with gate --strict 0. Roll back only on findings that adopt adds (diff against the pre-write check)? And how should the existing path clear task-without-req? 2.3 and 4.1 wait on this. (task none, 2026-10-24)
