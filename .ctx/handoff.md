@@ -1,11 +1,9 @@
 # Handoff
 change: 003-distribution
 current: none
-base: 2026-10-25T01:59:10.497Z
-as_of: 2026-10-25T02:03:26.158Z
+base: 2026-10-25T02:03:26.158Z
+as_of: 2026-10-25T01:59:10.497Z
 done:
-- 008/4.1
-- 008/4.2
 reopened:
 open_questions:
 resolved:
@@ -35,4 +33,4 @@ resolved:
 - OpenSpec does not write archived: into .openspec.yaml (the 005 archive has schema and created only). The 006 design says it does. status reads archived when present, else the folder date, then the folder name. Confirm. (task none, 2026-10-24) answer: fallback to the folder date stays. Noted in docs/verification/006.md
 - BLOCKER 008/3.2 and 008/3.4: the parity goldens cannot stay unchanged. tests/fixtures/parity-golden/check.out and check-strict.out end with 'N finding(s)'. REQ-CHK-004 (008/D6) replaces that line with '<n> findings in <m> files (<h> hard, <a> advisory)' and per rule hint lines. status.out ends with 'uncovered active REQs in main: 104'. 008/D7 adds a 'next: ...' line to status. So bash tests/parity/run.sh fails on check, check --strict, and status, while the brief says goldens must not change and the proposal says the parity goldens do not change. Options: A) allow one re-record of those three goldens with run.sh --record and a note in docs/verification/008.md, B) keep the old check and status output when stdout is not a TTY or under a flag (adds a mode the design does not name), C) drop the summary and the status next line from 008. 3.2, 3.3, 3.4, 4.1, 4.2 and the archive wait on this. Also open: does 'advisory' in the summary count the manual-evidence warnings? (task none, 2026-10-25) answer: Option A. Re-record check.out, check-strict.out, and status.out once with tests/parity/run.sh --record. The parity rule protects the index and bundle output. D6 and D7 change check and status output on purpose. index.json and the bundle goldens stay. Advisory counts every warning-level finding, manual-evidence included. Hard counts only the rules that set exit 1.
 next: 003/3.3  Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir.
-evidence: 27 task(s), 27 command, 0 manual
+evidence: 15 task(s), 15 command, 0 manual

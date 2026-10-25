@@ -56,13 +56,13 @@ Refs: REQ-ADOPT-005
 - **THEN** `debt` is 21
 
 ### Requirement: REQ-STAT-005 Gate log and series
-`scripts/ci-local.sh` SHALL append one JSON line to `.ctx/gate-log.jsonl` per run: `at`, `ok`, `failed_step` (or null), `duration_s`, `steps`. `stats` SHALL print `gate_runs`, `gate_pass_rate`, and `gate_failures_caught` from the last 100 lines. `stats --write` SHALL save the table as `docs/metrics/<YYYY-MM-DD>.md` and overwrite a file of the same day.
+`specctx gate` SHALL append one JSON line to `.ctx/gate-log.jsonl` per run: `at`, `ok`, `failed_step` (or null), `duration_s`, `steps`. `scripts/ci-local.sh` SHALL not append a second line. `stats` SHALL print `gate_runs`, `gate_pass_rate`, and `gate_failures_caught` from the last 100 lines, and a footer that defines `context_ratio`. `stats --write` SHALL save the table as `docs/metrics/<YYYY-MM-DD>.md` and overwrite a file of the same day.
 
 Refs: REQ-CHK-003
 
 #### Scenario: SCN-STAT-005-1 Log line
-- **WHEN** `ci-local.sh` fails at `bun run test`
-- **THEN** the last log line has `ok: false` and `failed_step: "bun run test"`
+- **WHEN** `specctx gate` fails at the `lint tells` step
+- **THEN** the last log line has `ok: false` and `failed_step: "lint tells"`
 
 #### Scenario: SCN-STAT-005-2 Pass rate
 - **WHEN** the log has 8 passing and 2 failing runs
@@ -71,3 +71,11 @@ Refs: REQ-CHK-003
 #### Scenario: SCN-STAT-005-3 Write
 - **WHEN** `stats --write` runs twice on one day
 - **THEN** exactly one file for that date exists under `docs/metrics/` and both linters pass on it
+
+#### Scenario: SCN-STAT-005-4 One line per run
+- **WHEN** `bash scripts/ci-local.sh` runs once and passes
+- **THEN** `.ctx/gate-log.jsonl` grows by exactly one line
+
+#### Scenario: SCN-STAT-005-5 Footer
+- **WHEN** `stats` runs
+- **THEN** the last line is `context_ratio = bundle chars / chars of all specs. Lower is better.`
