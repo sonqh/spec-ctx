@@ -1,0 +1,4 @@
+tests/fixtures/lint-corpus/selftest/tells-005.md:1: [hard] dash: —
+tests/fixtures/lint-corpus/selftest/tells-005.md:1: [hard] not-x-its-y: It's not just a linter — it's
+2 hard finding(s), baseline 0
+exit: 1

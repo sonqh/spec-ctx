@@ -1,0 +1,26 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/tells-008.md",
+    "findings": [
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "deep dives"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "tapestry"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "testaments"
+      }
+    ]
+  }
+]
+exit: 1

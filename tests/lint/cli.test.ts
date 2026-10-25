@@ -1,4 +1,8 @@
 // Covers: REQ-LINT-001
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -45,5 +49,23 @@ describe("specctx lint", () => {
     const read = help.slice(help.indexOf("Read:"), help.indexOf("Write:"));
     expect(read).toContain("`lint tells <file...>`");
     expect(read).toContain("`lint ste <file...>`");
+  });
+
+  test("SCN-LINT-001-3 a record against an oracle at another commit exits 2 with both SHAs", () => {
+    const dir = mkdtempSync(join(tmpdir(), "oracle-"));
+    try {
+      const git = (...a: string[]) => spawnSync("git", ["-C", dir, "-c", "user.name=t", "-c", "user.email=t@t", ...a], { encoding: "utf8" });
+      git("init", "-q");
+      for (const n of ["tells", "ste"]) writeFileSync(join(dir, `${n}-lint.py`), "");
+      git("add", ".");
+      git("commit", "-q", "-m", "x");
+      const head = git("rev-parse", "HEAD").stdout.trim();
+      const r = spawnSync("bash", ["tests/lint/parity.sh", "--record"], { encoding: "utf8", env: { ...process.env, SPECCTX_LINT_ORACLE: dir } });
+      expect(r.status).toBe(2);
+      expect(r.stderr).toContain(head);
+      expect(r.stderr).toContain("60bc25ad7b5bd35f7fa14d5586d5b0e79a08e722");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

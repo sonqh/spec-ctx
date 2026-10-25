@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/tells-008.md:1: [hard] stock-word: deep dives
+tests/fixtures/lint-corpus/selftest/tells-008.md:1: [hard] stock-word: tapestry
+tests/fixtures/lint-corpus/selftest/tells-008.md:1: [hard] stock-word: testaments
+3 hard finding(s), baseline 0
+exit: 1

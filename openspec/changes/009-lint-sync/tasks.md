@@ -4,7 +4,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root. T
 
 ## 1. Lint sync
 
-- [ ] 1.1 Add `ORACLE_SHA` and the HEAD check to `tests/lint/parity.sh` per 009/D1. Port the two rule fixes into the tells rule table per 009/D2. Add the oracle's new selftest cases. Add a unit test for SCN-LINT-001-4. Re-record with `SPECCTX_LINT_ORACLE=/home/claude/ste-humanize-skill/scripts bash tests/lint/parity.sh --record`. Review the golden diff: only files with a dash contrast or an inflected stock word may change. [REQ-LINT-001] Verify: `SPECCTX_LINT_ORACLE=/home/claude/ste-humanize-skill/scripts bash tests/lint/parity.sh && bun test tests/lint`
+- [x] 1.1 Add `ORACLE_SHA` and the HEAD check to `tests/lint/parity.sh` per 009/D1. Port the two rule fixes into the tells rule table per 009/D2. Add the oracle's new selftest cases. Add a unit test for SCN-LINT-001-4. Re-record with `SPECCTX_LINT_ORACLE=/home/claude/ste-humanize-skill/scripts bash tests/lint/parity.sh --record`. Review the golden diff: only files with a dash contrast or an inflected stock word may change. [REQ-LINT-001] Verify: `SPECCTX_LINT_ORACLE=/home/claude/ste-humanize-skill/scripts bash tests/lint/parity.sh && bun test tests/lint`
 
 ## 2. Wording
 

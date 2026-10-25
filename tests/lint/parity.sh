@@ -10,6 +10,8 @@ cd "$(dirname "$0")/../.."
 CORPUS=tests/fixtures/lint-corpus
 GOLD=tests/fixtures/lint-golden
 AGENTRC_SHA=79994d7b23dbc818a135d702790f1026258a7fc2
+# REQ-LINT-001 the commit of ste-humanize-skill that made the goldens.
+ORACLE_SHA=60bc25ad7b5bd35f7fa14d5586d5b0e79a08e722
 
 if [ "${1:-}" != "--record" ]; then
   [ -f dist/cli.js ] || bun run build >/dev/null
@@ -20,6 +22,15 @@ ORACLE=${SPECCTX_LINT_ORACLE:-scripts}
 for l in tells ste; do
   [ -f "$ORACLE/$l-lint.py" ] || { echo "parity.sh: no $ORACLE/$l-lint.py. Set SPECCTX_LINT_ORACLE." >&2; exit 2; }
 done
+
+# SCN-LINT-001-3 an oracle checkout at another commit makes no record.
+if git -C "$ORACLE" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  HEAD_SHA=$(git -C "$ORACLE" rev-parse HEAD)
+  if [ "$HEAD_SHA" != "$ORACLE_SHA" ]; then
+    echo "parity.sh: oracle HEAD $HEAD_SHA is not ORACLE_SHA $ORACLE_SHA." >&2
+    exit 2
+  fi
+fi
 
 # Hidden folders such as .claude get a "dot" prefix, so no tool loads the copied skills.
 undot() { printf '%s' "$1" | sed -E 's#(^|/)\.#\1dot.#g'; }

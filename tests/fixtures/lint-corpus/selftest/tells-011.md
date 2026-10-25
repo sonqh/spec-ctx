@@ -1,0 +1,1 @@
+Use a lever to lift the load.

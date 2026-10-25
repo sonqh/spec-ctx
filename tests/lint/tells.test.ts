@@ -32,6 +32,18 @@ describe("tells rules", () => {
     });
   }
 
+  test("SCN-LINT-001-4 ported fixes", () => {
+    const f = lintTells("It's not just a linter \u2014 it's a gate. The team leverages it.");
+    expect(f.filter((x) => x.rule === "not-x-its-y")).toHaveLength(1);
+    const stock = f.filter((x) => x.rule === "stock-word");
+    expect(stock).toHaveLength(1);
+    expect(stock[0]!.match).toBe("leverages");
+    for (const sep of [":", ";", " -", " \u2013", ".", ","]) expect(rules(`It's not a tool${sep} it is a mirror.`)).toContain("not-x-its-y");
+    expect(rules("It's not a well-known fact, so we check.")).not.toContain("not-x-its-y");
+    expect(rules("Use a lever to lift the load.")).not.toContain("stock-word");
+    for (const w of ["delving", "enhanced", "showcases", "underscored", "deep dives", "testaments"]) expect(rules(`We saw ${w} here.`)).toContain("stock-word");
+  });
+
   test("SCN-LINT-002-1 every rule ID has a test", () => {
     expect(Object.keys(CASES).sort()).toEqual([...TELLS_IDS].sort());
     for (const r of TELLS_RULES) expect(Object.keys(r).sort()).toEqual(["id", "level", "message", "pattern"]);

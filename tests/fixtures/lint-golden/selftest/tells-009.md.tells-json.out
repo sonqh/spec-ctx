@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/tells-009.md",
+    "findings": []
+  }
+]
+exit: 0

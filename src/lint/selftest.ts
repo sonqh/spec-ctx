@@ -45,6 +45,22 @@ export function selftestTells(io: Io): Promise<number> | number {
     const missing = want.filter((w) => !fBad.has(w));
     ok(!missing.length, `selftest: missing ${missing.join(", ")}`);
     ok(!fGood.length, fGood);
+    // REQ-LINT-001 the cases the oracle added for the dash contrast and the inflected stock words
+    const hits: [string, string][] = [
+      ["It's not a tool: it's a mirror.", "not-x-its-y"],
+      ["It's not a tool; it is a mirror.", "not-x-its-y"],
+      ["It's not just a linter \u2014 it's a gate.", "not-x-its-y"],
+      ["It's not just a linter - it's a gate.", "not-x-its-y"],
+      ["The team leverages the cache and leveraged it, leveraging more.", "stock-word"],
+      ["Two deep dives and a tapestry of testaments.", "stock-word"],
+    ];
+    for (const [text, rule] of hits) ok(lintTells(text).some((x) => x.rule === rule), `selftest: ${rule} missed ${JSON.stringify(text)}`);
+    const misses: [string, string][] = [
+      ["It's not here. The tool works.", "not-x-its-y"],
+      ["It's not a well-known fact, so we check.", "not-x-its-y"],
+      ["Use a lever to lift the load.", "stock-word"],
+    ];
+    for (const [text, rule] of misses) ok(!lintTells(text).some((x) => x.rule === rule), `selftest: ${rule} false positive on ${JSON.stringify(text)}`);
   }, "selftest ok");
 }
 

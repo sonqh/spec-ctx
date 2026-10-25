@@ -1,0 +1,26 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/tells-007.md",
+    "findings": [
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "leverages"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "leveraged"
+      },
+      {
+        "rule": "stock-word",
+        "level": "hard",
+        "line": 1,
+        "match": "leveraging"
+      }
+    ]
+  }
+]
+exit: 1

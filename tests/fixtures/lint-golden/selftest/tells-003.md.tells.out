@@ -1,0 +1,3 @@
+tests/fixtures/lint-corpus/selftest/tells-003.md:1: [hard] not-x-its-y: It's not a tool: it's
+1 hard finding(s), baseline 0
+exit: 1

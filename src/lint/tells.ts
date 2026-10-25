@@ -24,6 +24,23 @@ const STOCK_WORDS = [
   "game-changer", "game changer", "cutting-edge", "cutting edge",
 ];
 
+// REQ-LINT-001 stock words that take verb or noun inflections, as in the oracle.
+const STOCK_VERBS = new Set(["align with", "bolster", "delve", "enhance", "garner", "leverage", "showcase", "underscore"]);
+const STOCK_NOUNS = new Set(["deep dive", "game-changer", "game changer", "interplay", "tapestry", "testament"]);
+
+/** The pattern for one stock word with its inflections. */
+function stockPattern(word: string): string {
+  if (STOCK_VERBS.has(word)) {
+    const i = word.indexOf(" ");
+    const head = i < 0 ? word : word.slice(0, i);
+    const tail = i < 0 ? "" : word.slice(i + 1);
+    const core = head.endsWith("e") ? `${esc(head.slice(0, -1))}(?:e|es|ed|ing)` : `${esc(head)}(?:s|es|ed|ing)?`;
+    return core + (i < 0 ? "" : `${S}+${esc(tail)}`);
+  }
+  if (STOCK_NOUNS.has(word)) return `${esc(word)}(?:s|es)?`;
+  return esc(word);
+}
+
 const SALES_WORDS = ["nestled", "breathtaking", "renowned", "must-visit", "stunning", "diverse array", "in the heart of", "profound"];
 
 const CHAT_RESIDUE = [
@@ -54,11 +71,12 @@ export const TELLS_RULES: Rule[] = [
     pattern: re(`${B}(?:not|isn'?t|aren'?t|wasn'?t|it'?s not)${S}+(?:just|only|merely|simply|about)?${S}*[^.?!;:]{1,60}?[,;]?${S}+but${S}+(?:rather${S}+)?(?:also${S}+)?`, "gi"),
     message: "A not X but Y contrast.",
   },
-  { id: "not-x-its-y", level: "hard", pattern: re(`${B}(?:it'?s|this is|that'?s) not [^.?!]{1,60}?[,.] (?:it'?s|this is|that'?s)${B}`, "gi"), message: "A not X, it is Y contrast." },
+  // REQ-LINT-001 the oracle accepts , . : ; an em or en dash, or a spaced hyphen before "it's" or "it is".
+  { id: "not-x-its-y", level: "hard", pattern: re(`${B}(?:it'?s|this is|that'?s) not [^.?!]{1,60}?(?:[,.:;]|${S}-(?=${S})|${S}*[—–])${S}*(?:it'?s|it is|this is|that'?s)${B}`, "gi"), message: "A not X, it is Y contrast." },
   { id: "chat-residue", level: "hard", pattern: re(CHAT_RESIDUE.join("|"), "gi"), message: "Chat text left in the document." },
   { id: "run-up", level: "hard", pattern: re(RUN_UP.join("|"), "gi"), message: "A run up before the point." },
   { id: "deep-saying", level: "hard", pattern: re(DEEP_SAYINGS.join("|"), "gi"), message: "A deep saying." },
-  { id: "stock-word", level: "hard", pattern: re(words(STOCK_WORDS), "gi"), message: "A stock AI word." },
+  { id: "stock-word", level: "hard", pattern: re(`${B}(?:${STOCK_WORDS.map(stockPattern).join("|")})${B}`, "gi"), message: "A stock AI word." },
   { id: "bold-label", level: "hard", pattern: re(`^${S}*(?:[-*+]|${D}+[.)])${S}+\\*\\*[^*\\n]+?(?::\\*\\*|\\*\\*${S}*:)`, "gm"), message: "A list item that starts with a bold label." },
   { id: "emoji-heading", level: "hard", pattern: re(`^#{1,6}${S}*[\\u{1F300}-\\u{1FAFF}\\u2600-\\u27BF]`, "gm"), message: "A heading that starts with an emoji." },
   // advisory rules

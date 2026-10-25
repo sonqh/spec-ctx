@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-25T02:16:20.993Z",
+  "bundle_chars": 4151,
+  "files": {
+    "src/lint/cli.ts": "035d9c203a8983e9788c4a033db1a8f7624f26d8624ca9fc74dd0b3ba2c62bc7",
+    "src/lint/py.ts": "0a7e7be2160248d946f7051069672e6810afc0d1c8f5294c46d1d4687527dfc5",
+    "src/lint/selftest.ts": "4ef5438b009e7157162532c14b4406e913d10331fe5d37b3cb509aa584e6acfd",
+    "src/lint/ste.ts": "69af59c6b47c171f7113da5dcb173f84cf9e559674ed3eeb7a9372eddfbb37a4",
+    "src/lint/tells.ts": "3ca6508941809e7801bd4b020a2d49a5233d932581dcc7639342b861bfbd5ac6",
+    "src/main.ts": "f42b834c83f3db2adc845e5742c59e24025c1a9871ac54886a50df0b0572ea07",
+    "tests/lint/cli.test.ts": "01bdb42579280cb16aa084df2507ec5b89ce001d29362c9f509bfc1911dc6232",
+    "tests/lint/parity.mjs": "239160bb3d4e363ea551891e59053b664f8d9ed1562be14e5859e383c3d6c12d",
+    "tests/lint/parity.sh": "bc7805c78e7e41eb67a7d3c900396b2ed224b717b627d8b4f0ae6e4fefd0d9e7",
+    "tests/lint/ste.test.ts": "a77b9a3da255fe30517a216e9858fdf05e3783aa4818f895435958a9d4d03ae0",
+    "tests/lint/tells.test.ts": "1541ed5a7f0f476b4b23decb48f6c61b80bdbd8ad702a43af363e836dc1c7aa5"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LINT-001"
+  ],
+  "started_at": "2026-10-25T02:12:11.890Z",
+  "task": "009/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "SPECCTX_LINT_ORACLE=/home/claude/ste-humanize-skill/scripts bash tests/lint/parity.sh && bun test tests/lint",
+    "exit": 0,
+    "stderr_tail": "\n 36 pass\n 0 fail\n 120 expect() calls\nRan 36 tests across 3 files. [501.00ms]",
+    "stdout_sha256": "0656e0b3cc363a600b278b8456918d2eac310a6dd25a112d445c55bfe5929d04"
+  }
+}

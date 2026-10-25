@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/tells-004.md:1:16 semicolon: STE bans the semicolon (Rule 8.1). Split into separate sentences. [;]
+
+1 violations (1 hard, baseline 0), 8 words, 12.5 per 100 words
+Hedges/modality (may, might, could) are never flagged: confidence is content.
+exit: 1

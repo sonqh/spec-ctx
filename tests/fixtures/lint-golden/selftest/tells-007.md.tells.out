@@ -1,0 +1,5 @@
+tests/fixtures/lint-corpus/selftest/tells-007.md:1: [hard] stock-word: leverages
+tests/fixtures/lint-corpus/selftest/tells-007.md:1: [hard] stock-word: leveraged
+tests/fixtures/lint-corpus/selftest/tells-007.md:1: [hard] stock-word: leveraging
+3 hard finding(s), baseline 0
+exit: 1

@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tests/fixtures/lint-corpus/selftest/tells-004.md",
+    "findings": [
+      {
+        "rule": "not-x-its-y",
+        "level": "hard",
+        "line": 1,
+        "match": "It's not a tool; it is"
+      }
+    ]
+  }
+]
+exit: 1
