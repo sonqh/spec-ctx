@@ -1,6 +1,6 @@
 # spec-ctx
 
-spec-ctx ticks an [OpenSpec](https://github.com/Fission-AI/OpenSpec) task only after its Verify command passes and hands the agent one task of spec text, a context ratio of 0.0532 (`docs/metrics/2026-10-25.md`).
+spec-ctx ticks an [OpenSpec](https://github.com/Fission-AI/OpenSpec) task only after its Verify command passes and hands the agent one task of spec text, a context ratio of 0.0518 (`docs/metrics/2026-10-25.md`).
 
 ```bash
 npx -y github:sonqh/spec-ctx#4490d188ad48 init --all
@@ -25,8 +25,8 @@ The system SHALL ask for a TOTP code after a valid password.
 
 ## Why
 
-- Checkboxes lie. `task done` runs Verify and writes evidence, and 66 of 82 tasks hold it (evidence ratio 0.80).
-- Context overflows. A bundle holds 0.0532 of the spec text on average (24 tasks).
+- Checkboxes lie. `task done` runs Verify and writes evidence, and 70 of 86 tasks hold it (evidence ratio 0.81).
+- Context overflows. A bundle holds 0.0518 of the spec text on average (27 tasks).
 - Evidence goes stale. The check caught 36 stale results in 59 reopens.
 
 ## Demo

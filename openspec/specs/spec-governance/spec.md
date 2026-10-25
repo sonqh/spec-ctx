@@ -12,7 +12,7 @@ Refs: ADR-002
 
 #### Scenario: SCN-GOV-001-1 Check passes
 - **WHEN** `specctx check --strict` runs on this repository before archive
-- **THEN** it prints `0 finding(s)`
+- **THEN** it prints `0 findings`
 
 ### Requirement: REQ-GOV-002 IDs never reused
 A removed ID SHALL be added to `decisions/retired-ids.md` with date and reason. `check` SHALL report `reused-id` when a retired ID appears as a canonical entry.
@@ -31,7 +31,7 @@ Refs: ADR-005
 - **THEN** the `specs` CI job fails
 
 ### Requirement: REQ-GOV-006 README order
-`README.md` SHALL open with the title and one sentence that says what the tool does, with the measured context ratio from `docs/metrics/`. A quickstart of three commands SHALL follow, with the install form that works today first. Then one real `task start` excerpt of at most 12 lines. The demo and the rest follow. Maintainer content (`Develop`, `Layout`, `IDs`, the gate steps) SHALL live in `docs/CONTRIBUTING.md`. The config reference SHALL list `SPECCTX_OPENSPEC`.
+`README.md` SHALL open with the title and one sentence that names the evidence gate first and the context ratio second. Both SHALL come from the newest `docs/metrics/*.md`. A quickstart of three commands SHALL follow, with the install form that works today first. Then one `task start` excerpt of at most 12 lines and a `## Why` list of three lines that each cite a metric. Maintainer content SHALL live in `docs/CONTRIBUTING.md`. The config reference SHALL list `SPECCTX_OPENSPEC`.
 
 Refs: REQ-GOV-003
 
@@ -42,3 +42,7 @@ Refs: REQ-GOV-003
 #### Scenario: SCN-GOV-006-2 Maintainer content moved
 - **WHEN** `grep -c "^## Develop" README.md` runs
 - **THEN** it prints 0 and `docs/CONTRIBUTING.md` has that section
+
+#### Scenario: SCN-GOV-006-3 Current ratio
+- **WHEN** the test reads the value sentence and lists `docs/metrics/`
+- **THEN** the sentence names `Verify` before `context ratio` and cites the newest metrics file by name
