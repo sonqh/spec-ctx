@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: REQ-CHK-001 Base rules
-`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id` (two canonical entries), `reused-id` (the first ID of a row in `decisions/retired-ids.md` that has a non-archived entry), `dangling-ref`, `req-without-scn` (non-archived entries only), `code-tag-no-canonical`, `unknown-cap` (a code not in config). Each finding SHALL print `file:line  rule  id`. Exit 1 on any finding, else print `0 finding(s)`.
+`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id` (two canonical entries), `reused-id` (the first ID of a row in `decisions/retired-ids.md` that has a non-archived entry), `dangling-ref`, `req-without-scn` (non-archived entries only), `code-tag-no-canonical`, `unknown-cap` (a code not in config). Each finding SHALL print `file:line  rule  id`. Exit 1 on any finding, else print `0 findings`.
 
 Refs: ADR-002
 
@@ -34,7 +34,7 @@ Refs: ADR-004, REQ-TASK-004
 
 #### Scenario: SCN-CHK-003-1 Evidence present
 - **WHEN** `.ctx/evidence/001/1.1.json` exists and task 001/1.1 is `[x]` with matching digests
-- **THEN** `check --strict` prints `0 finding(s)` for a tree that is otherwise clean
+- **THEN** `check --strict` prints `0 findings` for a tree that is otherwise clean
 
 #### Scenario: SCN-CHK-003-2 Hand ticked
 - **WHEN** a task is `[x]` and no evidence file exists

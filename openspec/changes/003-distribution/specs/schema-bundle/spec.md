@@ -24,7 +24,7 @@ A change written with the bundle SHALL archive with `openspec archive` and the I
 
 #### Scenario: SCN-SCH-002-1 Round trip
 - **WHEN** the fixture change is archived
-- **THEN** every REQ ID from the change exists once in `openspec/specs/` and `check --strict` prints `0 finding(s)`
+- **THEN** every REQ ID from the change exists once in `openspec/specs/` and `check --strict` prints `0 findings`
 
 ### Requirement: REQ-SCH-003 Project rules
 The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` text this repo uses, so `init --schema` can merge it into the project's config without overwriting other keys.

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-25T02:16:29.425Z",
+  "bundle_chars": 6424,
+  "files": {
+    "tests/gov/governance.test.ts": "0d173f6b0b8202b2411286ee4b4096f7860b06d8458674d12922a792f82addb6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-10-25T02:16:25.138Z",
+  "task": "009/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "test $(grep -rc \"0 finding(s)\" openspec/changes/003-distribution | awk -F: '{s+=$2} END {print s}') -eq 0 && npx -y @fission-ai/openspec@latest validate 003-distribution --strict",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "218d0fd14343a2c08a733703d406ec74212f78619d42191f747f98a262bc1401"
+  }
+}

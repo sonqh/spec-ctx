@@ -8,7 +8,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root. T
 
 ## 2. Wording
 
-- [ ] 2.1 Replace `0 finding(s)` with `0 findings` in `openspec/changes/003-distribution/specs/check/spec.md` (REQ-CHK-001 text and SCN-CHK-003-1) and `openspec/changes/003-distribution/specs/schema-bundle/spec.md` (SCN-SCH-002-1). Wording only. [REQ-GOV-001] Verify: `test $(grep -rc "0 finding(s)" openspec/changes/003-distribution | awk -F: '{s+=$2} END {print s}') -eq 0 && npx -y @fission-ai/openspec@latest validate 003-distribution --strict`
+- [x] 2.1 Replace `0 finding(s)` with `0 findings` in `openspec/changes/003-distribution/specs/check/spec.md` (REQ-CHK-001 text and SCN-CHK-003-1) and `openspec/changes/003-distribution/specs/schema-bundle/spec.md` (SCN-SCH-002-1). Wording only. [REQ-GOV-001] Verify: `test $(grep -rc "0 finding(s)" openspec/changes/003-distribution | awk -F: '{s+=$2} END {print s}') -eq 0 && npx -y @fission-ai/openspec@latest validate 003-distribution --strict`
 
 ## 3. README
 
