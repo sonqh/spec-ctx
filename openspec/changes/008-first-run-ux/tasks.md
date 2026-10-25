@@ -23,8 +23,8 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 4. README and docs
 
-- [ ] 4.1 Create `docs/CONTRIBUTING.md` from the README sections `Develop`, `Layout`, `IDs`, and the gate steps. Rewrite `README.md` in the order of 008/D9. The value sentence uses the ratio from the newest `docs/metrics/*.md`. The quickstart puts the git install form first with a real 12 character SHA. The `task start` excerpt has at most 12 lines. The config reference lists `SPECCTX_OPENSPEC`. Lint both files. [REQ-GOV-006] Verify: `test $(grep -c "^## Develop" README.md) -eq 0 && grep -q "^## Develop" docs/CONTRIBUTING.md && head -25 README.md | grep -q "npx -y github:sonqh/spec-ctx#" && ! head -25 README.md | grep -q "\.svg" && node dist/cli.js lint tells --baseline 0 README.md docs/CONTRIBUTING.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md docs/CONTRIBUTING.md`
-- [ ] 4.2 Write `docs/verification/008.md`. List the re-recorded help golden. Run the full gate. [REQ-GOV-001] Verify: `bun run ci:local`
+- [x] 4.1 Create `docs/CONTRIBUTING.md` from the README sections `Develop`, `Layout`, `IDs`, and the gate steps. Rewrite `README.md` in the order of 008/D9. The value sentence uses the ratio from the newest `docs/metrics/*.md`. The quickstart puts the git install form first with a real 12 character SHA. The `task start` excerpt has at most 12 lines. The config reference lists `SPECCTX_OPENSPEC`. Lint both files. [REQ-GOV-006] Verify: `test $(grep -c "^## Develop" README.md) -eq 0 && grep -q "^## Develop" docs/CONTRIBUTING.md && head -25 README.md | grep -q "npx -y github:sonqh/spec-ctx#" && ! head -25 README.md | grep -q "\.svg" && node dist/cli.js lint tells --baseline 0 README.md docs/CONTRIBUTING.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md docs/CONTRIBUTING.md`
+- [x] 4.2 Write `docs/verification/008.md`. List the re-recorded help golden. Run the full gate. [REQ-GOV-001] Verify: `bun run ci:local`
 
 ## Workflow follow-up
 

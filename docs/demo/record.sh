@@ -30,10 +30,10 @@ show() {
 }
 show "specctx status"
 show "specctx task next"
-show "specctx task start add/1.3 | head -12"
+show "specctx task start add-mfa/1.3 | head -12"
 show "printf '// REQ-UA-004\nexport const prompt = \"totp\";\n' > src/login.ts"
-show "specctx task done add/1.3"
-show "specctx stats --change add"
+show "specctx task done add-mfa/1.3"
+show "specctx stats --change add-mfa"
 SESSION
 mkdir -p src
 
