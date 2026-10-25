@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-25T01:45:43.659Z",
+  "files": {
+    "src/cli/gate.ts": "ccbf44ca0f86efe6acc3d83ee7db6cba929f179bf5e6fb8217fe6ec63704f8a9",
+    "src/stats/stats.ts": "6f05cb1d6570d89f4b781ac588524a51ca6bd82561f0934b7eb3f298f27414aa",
+    "src/stats/write.ts": "6d849db11a56b54c5a2f2519b90ab40d2fadcdd1362ababbd4e55f76376ee43c",
+    "tests/cli/gate.test.ts": "84175d8bed5e64bf8b1fa4622c5ee79af65094ddfea8c9bc5bbb828c2d0dd35a",
+    "tests/gov/gate-log.test.ts": "dfb1ccd748fe1ea20052838f55d34b8fde1d92fb568cb105dcdc51a9a4b43817",
+    "tests/stats/cli.test.ts": "914f55184df473f3488488066f09ba13e3b77a47787078061a9efefc0ecf92f3"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-005"
+  ],
+  "task": "008/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/gate.test.ts tests/stats",
+    "exit": 0,
+    "stderr_tail": "\n 23 pass\n 0 fail\n 84 expect() calls\nRan 23 tests across 3 files. [1477.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

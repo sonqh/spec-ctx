@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: REQ-IDS-001 Next ID
-`specctx id new <REQ|SCN|ADR|DEC> <CAP> [--for <REQ-ID>]` SHALL print the next unused ID for that kind and code. Next SHALL be one more than the highest number among canonical entries, archived entries, and `retired-ids.md` for that code. For `SCN`, `--for` is required and the suffix `-<n>` is the next scenario number under it. With a non-empty `caps` list, `CAP` SHALL be in it or the command exits 2 with `unknown-cap` and a hint. With an empty list, any `[A-Z]{2,6}` code is accepted.
+`specctx id new <REQ|SCN|ADR|DEC> <CAP> [--for <REQ-ID>]` SHALL print the next unused ID for that kind and code. Next SHALL be one more than the highest number among canonical entries, archived entries, and `retired-ids.md` for that code. For `SCN`, `--for` is required and the suffix `-<n>` is the next scenario number under it. With a non-empty `caps` list, `CAP` SHALL be in it or the command exits 2 with `unknown-cap` and a hint. An empty list accepts any `[A-Z]{2,6}` code.
 
 Refs: ADR-002
 

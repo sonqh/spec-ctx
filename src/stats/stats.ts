@@ -169,6 +169,8 @@ export function computeStats(root: string, entries: Entry[], strictFindings: Fin
 
 export const COLUMNS = ["context_ratio", "evidence_ratio", "stale_catches", "cycle_time_median_s", "debt"] as const;
 
+export const STATS_FOOTER = "context_ratio = bundle chars / chars of all specs. Lower is better.";
+
 export function statsTable(s: Stats): string[] {
   const head = ["change", ...COLUMNS];
   const body = [...s.rows, s.total].map((r) => [r.change, ...COLUMNS.map((c) => r[c].text)]);
@@ -176,5 +178,7 @@ export function statsTable(s: Stats): string[] {
   const line = (cells: string[]): string => cells.map((c, i) => (i === cells.length - 1 ? c : c + " ".repeat(width[i]! - cpLen(c)))).join("  ");
   const out = [line(head), ...body.map(line)];
   out.push(`gate_runs ${s.gate.gate_runs.text}`, `gate_pass_rate ${s.gate.gate_pass_rate.text}`, `gate_failures_caught ${s.gate.gate_failures_caught.text}`);
+  // REQ-STAT-005 the footer defines the context ratio
+  out.push(STATS_FOOTER);
   return out;
 }

@@ -48,8 +48,9 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
   const checkCap = (cap: string | undefined): string => {
     if (!cap) throw new UsageExit(`id new ${kind} needs a capability code`);
     if (!/^[A-Z]{2,6}$/.test(cap)) throw new UsageExit(`the capability code ${cap} must be 2 to 6 upper case letters`);
-    if (!cfg.ids.caps.includes(cap)) {
-      throw new UsageExit(`unknown-cap ${cap}. Configured codes: ${cfg.ids.caps.join(", ") || "none"}`);
+    // REQ-IDS-001 an empty caps list accepts any code. A non-empty list must hold the code.
+    if (cfg.ids.caps.length && !cfg.ids.caps.includes(cap)) {
+      throw new UsageExit(`unknown-cap ${cap}. Configured codes: ${cfg.ids.caps.join(", ")}. Add "${cap}" to caps under [ids] in spec-ctx.toml.`);
     }
     return cap;
   };

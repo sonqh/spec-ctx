@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-25T01:40:45.674Z",
+  "files": {
+    "src/graph/query.ts": "e6d282affd1b22e97b961818a33a62a021142c6d1a32c759945a69294f6dbc11",
+    "src/handoff/handoff.ts": "b5746eb99aa4e1c1fb8630602139a91f91e7f1ae3864f4ac6093113cdf4f0ad4",
+    "src/ids/ids.ts": "2eb615717ab011877f4486c189ad9224a4802ef1bb1120803000513ce0a92b97",
+    "src/index/scan.ts": "65e624a0741c27cce7b64227e67df3fc92f7d970fa3c95330f877757986a57c0",
+    "src/stats/stats.ts": "21cfb9f74f36fbcdabc739cd42a71375b212d3d4a8110a42757a44dd523ca2d4",
+    "src/tasks/tasks.ts": "169e3f3ea4bd0b720a597e0694c496ef7207b35321fcbfb2b50521ebbc06d5fb",
+    "tests/index/changekey.test.ts": "cb54dc598bfdd81eaba1e18e3b70b1d4dd39097209db01abe592829444b69929",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 2: gate log, empty caps, stats footer",
+  "reqs": [
+    "REQ-IDX-005"
+  ],
+  "task": "008/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/index tests/tasks && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "\n 58 pass\n 0 fail\n 386 expect() calls\nRan 58 tests across 13 files. [1.53s]",
+    "stdout_sha256": "9322b1b307f6510bf50f51921b0d4fff8c1904be412f7e967d31bce386735086"
+  }
+}

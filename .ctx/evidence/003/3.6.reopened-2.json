@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-24T04:53:41.754Z",
+  "bundle_chars": 7408,
+  "files": {
+    "src/cli/gate.ts": "96785e81b86077c78a4ab8c574f09b675cdc9cbeb4c77ccd7ea0549156a80b9f",
+    "tests/action/selftest.sh": "d05929af0c9f66113a2f65fdf4db3922dbb51477b8f3196c0c3b834a8d7e475b",
+    "tests/cli/gate.test.ts": "cac57b7ebfe1b0b1c8a47cd132e360710bcb3373bc81efe784493ba866e8acaa"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 2: gate log, empty caps, stats footer",
+  "reqs": [
+    "REQ-CLI-004",
+    "REQ-DIST-005"
+  ],
+  "started_at": "2026-10-24T04:53:39.035Z",
+  "task": "003/3.6",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/gate.test.ts && node dist/cli.js gate --strict",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 22 expect() calls\nRan 5 tests across 1 file. [570.00ms]",
+    "stdout_sha256": "0e733b5e9011a1db8930d30a4f45e13ebb33163f91510c26ffd64e1d3e780b8e"
+  }
+}

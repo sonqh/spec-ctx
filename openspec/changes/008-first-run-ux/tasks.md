@@ -10,9 +10,9 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 2. Gate log and IDs
 
-- [ ] 2.1 `gate` appends the log line to `.ctx/gate-log.jsonl` with `at`, `ok`, `failed_step`, `duration_s`, `steps`. Remove the append from `scripts/ci-local.sh`. Add a test that runs `gate` on a fixture twice and counts two lines. [REQ-STAT-005] Verify: `bun test tests/cli/gate.test.ts tests/stats`
-- [ ] 2.2 Empty `caps` accepts any `[A-Z]{2,6}` code. The `unknown-cap` message ends with the `Add "<code>" to caps under [ids] in spec-ctx.toml.` hint. Update the comment in the generated `spec-ctx.toml`. [REQ-IDS-001] Verify: `bun test tests/ids`
-- [ ] 2.3 `stats` prints the `context_ratio` footer. [REQ-STAT-005] Verify: `bun test tests/stats && node dist/cli.js stats | tail -1 | grep -q "context_ratio = bundle chars"`
+- [x] 2.1 `gate` appends the log line to `.ctx/gate-log.jsonl` with `at`, `ok`, `failed_step`, `duration_s`, `steps`. Remove the append from `scripts/ci-local.sh`. Add a test that runs `gate` on a fixture twice and counts two lines. [REQ-STAT-005] Verify: `bun test tests/cli/gate.test.ts tests/stats`
+- [x] 2.2 Empty `caps` accepts any `[A-Z]{2,6}` code. The `unknown-cap` message ends with the `Add "<code>" to caps under [ids] in spec-ctx.toml.` hint. Update the comment in the generated `spec-ctx.toml`. [REQ-IDS-001] Verify: `bun test tests/ids`
+- [x] 2.3 `stats` prints the `context_ratio` footer. [REQ-STAT-005] Verify: `bun test tests/stats && node dist/cli.js stats | tail -1 | grep -q "context_ratio = bundle chars"`
 
 ## 3. Help and messages
 

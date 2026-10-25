@@ -81,3 +81,40 @@ describe("gate", () => {
     expect(files.filter((f) => f.endsWith(".py"))).toEqual([]);
   }, 60000);
 });
+
+describe("gate log", () => {
+  const log = (): Record<string, unknown>[] => readFileSync(p.path(".ctx/gate-log.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+
+  // Covers: REQ-STAT-005
+  test("SCN-STAT-005-4 two gate runs append two lines", async () => {
+    p = new Project();
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(0);
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(0);
+    const lines = log();
+    expect(lines).toHaveLength(2);
+    expect(Object.keys(lines[0]!).sort()).toEqual(["at", "duration_s", "failed_step", "ok", "steps"]);
+    expect(lines[0]).toMatchObject({ ok: true, failed_step: null, steps: ["check", "lint tells", "lint ste", "validate", "spec-length"] });
+    expect(typeof lines[0]!.at).toBe("string");
+    expect(typeof lines[0]!.duration_s).toBe("number");
+  });
+
+  test("SCN-STAT-005-1 a failure at lint tells logs ok false and the step", async () => {
+    p = new Project();
+    p.write("decisions/bad.md", "# Bad\n\nThe tool reads; it writes — fast.\n");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    expect((await p.run("gate", "--markdown", "decisions/*.md")).code).toBe(1);
+    expect(log().at(-1)).toMatchObject({ ok: false, failed_step: "lint tells", steps: ["check", "lint tells", "lint ste"] });
+  });
+
+  test("a failure at check or validate names that step", async () => {
+    p = new Project();
+    process.env.SPECCTX_OPENSPEC = "/bin/false";
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(1);
+    expect(log().at(-1)).toMatchObject({ ok: false, failed_step: "validate" });
+    p.append("openspec/specs/alpha/spec.md", "\nRefs: REQ-NOPE-001\n");
+    expect((await p.run("gate")).code).toBe(1);
+    expect(log().at(-1)).toMatchObject({ ok: false, failed_step: "check", steps: ["check"] });
+    expect(log()).toHaveLength(2);
+  });
+});

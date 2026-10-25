@@ -1,6 +1,6 @@
 // REQ-CLI-004 specctx gate: check, both linters, openspec validate, spec length. Stops at the first failure.
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Io } from "../main.ts";
 import { anyMatch, globRe } from "../util/glob.ts";
@@ -43,12 +43,36 @@ export interface GateOpts {
   check: () => Promise<{ code: number; out: string }>;
 }
 
+export const GATE_LOG = ".ctx/gate-log.jsonl";
+
+/** REQ-STAT-005 the gate steps in order. The log names the step that failed. */
+export const GATE_STEPS = ["check", "lint tells", "lint ste", "validate", "spec-length"] as const;
+type Step = (typeof GATE_STEPS)[number];
+
+/** REQ-STAT-005 one JSON line per gate run, after the last step or at the first failure. */
+export function appendGateLog(root: string, line: { at: string; ok: boolean; failed_step: string | null; duration_s: number; steps: string[] }): void {
+  mkdirSync(join(root, ".ctx"), { recursive: true });
+  const sorted = { at: line.at, duration_s: line.duration_s, failed_step: line.failed_step, ok: line.ok, steps: line.steps };
+  appendFileSync(join(root, GATE_LOG), JSON.stringify(sorted) + "\n");
+}
+
 export async function runGate(root: string, o: GateOpts, io: Io): Promise<number> {
+  const start = Date.now();
+  const ran: Step[] = [];
+  const r = await gateSteps(root, o, io, ran);
+  const { isoNow } = await import("../util/time.ts");
+  appendGateLog(root, { at: isoNow(), ok: r === null, failed_step: r, duration_s: Math.round((Date.now() - start) / 1000), steps: [...ran] });
+  return r === null ? 0 : 1;
+}
+
+/** The gate steps. Returns null when every step passed, else the name of the failed step. */
+async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promise<Step | null> {
   // gate 1: build and check
+  ran.push("check");
   const c = await o.check();
   if (c.code !== 0) {
     io.out("check: fail\n" + c.out);
-    return 1;
+    return "check";
   }
   io.out(`check: ok${o.strict ? " (strict)" : ""}\n`);
 
@@ -58,11 +82,14 @@ export async function runGate(root: string, o: GateOpts, io: Io): Promise<number
   const { steReport } = await import("../lint/cli.ts");
   const files = markdownFiles(root, o.markdown);
   const bad: string[] = [];
+  let tellsFailed = false;
+  ran.push("lint tells", "lint ste");
   const noRotation = new Set(["synonym-rotation"]);
   for (const f of files) {
     const text = readFileSync(join(root, f), "utf8").replace(/\r\n?/g, "\n");
     const tells = lintTells(text);
     const hard = tells.filter((x) => x.level === "hard");
+    if (hard.length) tellsFailed = true;
     if (hard.length) bad.push(`${f}\n` + tells.map((x) => `${f}:${x.line}: [${x.level}] ${x.rule}: ${x.match}\n`).join("") + `${hard.length} hard finding(s), baseline 0\n`);
     const r = lintSte(text, f);
     const ste = r.findings.filter((x) => !noRotation.has(x.rule));
@@ -71,27 +98,29 @@ export async function runGate(root: string, o: GateOpts, io: Io): Promise<number
   }
   if (bad.length) {
     io.out("linters: fail\n" + bad.join(""));
-    return 1;
+    return tellsFailed ? "lint tells" : "lint ste";
   }
   io.out(`linters: ok (${files.length} file(s))\n`);
 
+  ran.push("validate");
   // gate 3: openspec validate. SPECCTX_OPENSPEC replaces the command, for tests and offline use.
   const cmd = process.env.SPECCTX_OPENSPEC ?? "npx -y @fission-ai/openspec@latest";
   const v = spawnSync("/bin/sh", ["-c", `${cmd} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8" });
   if (v.status !== 0) {
     io.out("validate: fail\n" + (v.stdout ?? "") + (v.stderr ?? ""));
-    return 1;
+    return "validate";
   }
   io.out(`validate: ok${o.strict ? " (strict)" : ""}\n`);
 
+  ran.push("spec-length");
   // gate 4: the length of every requirement in the deltas of active changes
   const long = longRequirements(root);
   if (long.length) {
     io.out(long.map((l) => `spec-length: fail ${l.id} ${l.chars} chars\n`).join(""));
-    return 1;
+    return "spec-length";
   }
   io.out("spec-length: ok\n");
-  return 0;
+  return null;
 }
 
 // REQ-CLI-005 the limit strict validate applies to a requirement after archive

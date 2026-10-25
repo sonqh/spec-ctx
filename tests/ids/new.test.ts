@@ -58,6 +58,24 @@ describe("id new", () => {
     expect(r.code).toBe(2);
     expect(r.err).toContain("unknown-cap ZZZ");
     expect(r.err).toContain("AAA, BBB, IDX, TASK");
+    expect(r.err.trim().endsWith('Add "ZZZ" to caps under [ids] in spec-ctx.toml.')).toBe(true);
+  });
+
+  test("SCN-IDS-001-4 an empty caps list accepts any code", async () => {
+    const q = new Project(null);
+    try {
+      q.write("openspec/specs/a/spec.md", "# a\n");
+      q.write("spec-ctx.toml", "[ids]\ncaps = []\n");
+      const r = await q.run("id", "new", "REQ", "UA");
+      expect(r.code, r.err).toBe(0);
+      expect(r.out).toBe("REQ-UA-001\n");
+      expect((await q.run("id", "new", "REQ", "U1")).code).toBe(2);
+      // the default config of init has an empty list too
+      q.write("spec-ctx.toml", (await import("../../src/config.ts")).INIT_TEXT);
+      expect((await q.run("id", "new", "REQ", "PS")).out).toBe("REQ-PS-001\n");
+    } finally {
+      q.cleanup();
+    }
   });
 
   test("SCN-IDS-002-1 reserve three IDs for a new code", async () => {

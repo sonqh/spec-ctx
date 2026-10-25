@@ -112,7 +112,8 @@ tests = ["tests/**"]
 ignore = []
 
 [ids]
-# Capability codes. check reports a REQ whose code is not in this list. An empty list turns the rule off.
+# Capability codes. check reports a REQ whose code is not in this list. id new accepts only these codes.
+# An empty list turns the rule off, and id new accepts any code of 2 to 6 upper case letters.
 caps = []
 # Pattern of the task number in a tasks.md checkbox.
 task_pattern = '\\d+\\.\\d+'

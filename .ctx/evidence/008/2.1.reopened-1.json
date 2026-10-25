@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-25T01:43:52.915Z",
+  "bundle_chars": 4567,
+  "files": {
+    "src/cli/gate.ts": "ccbf44ca0f86efe6acc3d83ee7db6cba929f179bf5e6fb8217fe6ec63704f8a9",
+    "src/stats/stats.ts": "21cfb9f74f36fbcdabc739cd42a71375b212d3d4a8110a42757a44dd523ca2d4",
+    "src/stats/write.ts": "6d849db11a56b54c5a2f2519b90ab40d2fadcdd1362ababbd4e55f76376ee43c",
+    "tests/cli/gate.test.ts": "84175d8bed5e64bf8b1fa4622c5ee79af65094ddfea8c9bc5bbb828c2d0dd35a",
+    "tests/gov/gate-log.test.ts": "dfb1ccd748fe1ea20052838f55d34b8fde1d92fb568cb105dcdc51a9a4b43817",
+    "tests/stats/cli.test.ts": "09e631477da4be22bcb7dfbe9f2b7d4c60f0349ff3c73dbe5004542154973308"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 2: gate log, empty caps, stats footer",
+  "reqs": [
+    "REQ-STAT-005"
+  ],
+  "started_at": "2026-10-25T01:41:52.342Z",
+  "task": "008/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/gate.test.ts tests/stats",
+    "exit": 0,
+    "stderr_tail": "\n 22 pass\n 0 fail\n 82 expect() calls\nRan 22 tests across 3 files. [862.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

@@ -13,6 +13,11 @@ reopened:
 - 006/2.5 Verify or task text changed in 29623bc: specctx lint in place of the Python scripts (at 2026-10-24T04:53:38.057Z)
 - 003/3.5 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:05.769Z)
 - 003/5.3 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:06.559Z)
+- 003/2.2 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:37.109Z)
+- 003/3.6 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:37.490Z)
+- 008/1.1 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:38.590Z)
+- 008/1.3 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:41.384Z)
+- 008/2.1 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:42.050Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

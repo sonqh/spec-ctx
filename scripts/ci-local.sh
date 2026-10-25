@@ -24,32 +24,13 @@ if [ -n "${SPECCTX_CI_STEPS_FILE:-}" ]; then
   mapfile -t steps < "$SPECCTX_CI_STEPS_FILE"
 fi
 
-# REQ-STAT-005 one JSON line per run in .ctx/gate-log.jsonl, on success and on failure
-start=$(date +%s)
-gate_log() {
-  mkdir -p .ctx
-  GL_OK=$1 GL_FAILED=$2 GL_STEPS=$3 GL_START=$start node -e '
-    const ok = process.env.GL_OK === "true";
-    const line = {
-      at: new Date().toISOString(),
-      duration_s: Math.round(Date.now() / 1000) - Number(process.env.GL_START),
-      failed_step: ok ? null : process.env.GL_FAILED,
-      ok,
-      steps: Number(process.env.GL_STEPS),
-    };
-    require("node:fs").appendFileSync(".ctx/gate-log.jsonl", JSON.stringify(line) + "\n");
-  '
-}
-n=0
+# REQ-STAT-005 specctx gate writes the gate log line. This script appends none, so one run is one line.
 for s in "${steps[@]}"; do
-  n=$((n + 1))
   echo "ci-local: $s"
   if ! bash -c "$s" > "$log" 2>&1; then
     tail -40 "$log"
     echo "ci-local: fail: $s"
-    gate_log false "$s" "$n"
     exit 1
   fi
 done
-gate_log true "" "$n"
 echo "ci-local: ok, ${#steps[@]} steps"

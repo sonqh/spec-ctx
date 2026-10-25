@@ -23,6 +23,15 @@ describe("stats command", () => {
     expect(r.out).toContain("gate_runs 10\n");
   });
 
+  test("SCN-STAT-005-5 the last line defines the context ratio", async () => {
+    p = new Project();
+    const r = await p.run("stats");
+    expect(r.out.trimEnd().split("\n").at(-1)).toBe("context_ratio = bundle chars / chars of all specs. Lower is better.");
+    // old log lines with a number in steps still count
+    p.write(".ctx/gate-log.jsonl", logLine(true) + "\n" + JSON.stringify({ at: "2026-10-25T10:00:00.000Z", duration_s: 1, failed_step: "lint tells", ok: false, steps: ["check", "lint tells", "lint ste"] }) + "\n");
+    expect((await p.run("stats")).out).toContain("gate_pass_rate 0.50 (1/2)\n");
+  });
+
   test("only the last 100 lines count", async () => {
     p = new Project();
     p.write(".ctx/gate-log.jsonl", [...Array(50).fill(false), ...Array(100).fill(true)].map(logLine).join("\n") + "\n");
