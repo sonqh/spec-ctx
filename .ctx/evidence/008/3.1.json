@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-25T01:49:38.181Z",
+  "bundle_chars": 3841,
+  "files": {
+    "src/cli/help.ts": "638d8db672fd399813633ba5cf6c000a3aeca879731c11177079db9284229302",
+    "src/lint/cli.ts": "035d9c203a8983e9788c4a033db1a8f7624f26d8624ca9fc74dd0b3ba2c62bc7",
+    "src/main.ts": "f42b834c83f3db2adc845e5742c59e24025c1a9871ac54886a50df0b0572ea07",
+    "tests/cli/help.test.ts": "171e3ebaa0196eda7bea4c9f6024eeb8db240ebe8a540ec25471c9907fbc19d2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-006"
+  ],
+  "started_at": "2026-10-25T01:46:35.297Z",
+  "task": "008/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/help.test.ts && for c in status build query related bundle check gate stats init adopt \"task next\" \"task start\" \"task done\" \"id new\" \"handoff write\" \"lint tells\" \"lint ste\"; do node dist/cli.js $c --help > /tmp/h.md && node dist/cli.js lint ste --baseline 0 /tmp/h.md || exit 1; done",
+    "exit": 0,
+    "stderr_tail": "\n 8 pass\n 0 fail\n 108 expect() calls\nRan 8 tests across 1 file. [70.00ms]",
+    "stdout_sha256": "d28e27c05af1f15a5201d5bcf0a6c00374acbfafbbd9c3c1780c56589876f76d"
+  }
+}

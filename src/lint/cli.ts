@@ -136,14 +136,14 @@ const USAGE: Record<Linter, string> = {
   ste: "usage: specctx lint ste [-h] [--json] [--baseline N] [--disable RULES] [--selftest] [FILE ...]\n",
 };
 
-const HELP: Record<Linter, string> = {
-  tells: USAGE.tells + "\nLint markdown for the AI writing tells that a regex can see. Read stdin when no file is given.\n",
-  ste: USAGE.ste + "\nLint markdown for the structural STE rules. Read stdin when no file is given.\n",
-};
-
 /** `specctx lint <linter> ...`. Exit 0, 1 when hard findings exceed the baseline, 2 on a usage error. */
 export async function runLint(argv: string[], io: Io): Promise<number> {
   const linter = argv[0];
+  if ((linter === "--help" || linter === "-h") && argv.length === 1) {
+    const { helpFor } = await import("../cli/help.ts");
+    io.out(helpFor("lint")!);
+    return 0;
+  }
   if (linter !== "tells" && linter !== "ste") {
     io.err(`specctx: lint needs a subcommand: ${LINTERS.join(", ")}\n`);
     return 2;
@@ -160,7 +160,9 @@ export async function runLint(argv: string[], io: Io): Promise<number> {
     throw e;
   }
   if (a.help) {
-    io.out(HELP[linter]);
+    // REQ-CLI-006 the lint pages render from the help table in the same layout
+    const { helpFor } = await import("../cli/help.ts");
+    io.out(helpFor(`lint ${linter}`)!);
     return 0;
   }
   if (a.selftest) {

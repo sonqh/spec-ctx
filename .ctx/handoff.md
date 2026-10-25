@@ -1,16 +1,21 @@
 # Handoff
 change: 003-distribution
 current: none
-base: 2026-10-24T04:45:25.743Z
-as_of: 2026-10-24T04:53:41.754Z
+base: 2026-10-24T04:53:41.754Z
+as_of: 2026-10-25T01:49:38.181Z
 done:
+- 003/2.2
+- 003/3.5
 - 003/3.6
-- 003/5.1
-- 003/5.2
+- 003/5.3
+- 008/1.1
+- 008/1.2
+- 008/1.3
+- 008/2.1
+- 008/2.2
+- 008/2.3
+- 008/3.1
 reopened:
-- 003/5.1 Verify or task text changed in 29623bc: specctx lint in place of the Python scripts (at 2026-10-24T04:53:36.937Z)
-- 003/5.2 Verify or task text changed in 29623bc: specctx lint in place of the Python scripts (at 2026-10-24T04:53:37.615Z)
-- 006/2.5 Verify or task text changed in 29623bc: specctx lint in place of the Python scripts (at 2026-10-24T04:53:38.057Z)
 - 003/3.5 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:05.769Z)
 - 003/5.3 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:06.559Z)
 - 003/2.2 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:37.109Z)
@@ -19,6 +24,7 @@ reopened:
 - 008/1.3 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:41.384Z)
 - 008/2.1 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:42.050Z)
 open_questions:
+- BLOCKER 008/3.2 and 008/3.4: the parity goldens cannot stay unchanged. tests/fixtures/parity-golden/check.out and check-strict.out end with 'N finding(s)'. REQ-CHK-004 (008/D6) replaces that line with '<n> findings in <m> files (<h> hard, <a> advisory)' and per rule hint lines. status.out ends with 'uncovered active REQs in main: 104'. 008/D7 adds a 'next: ...' line to status. So bash tests/parity/run.sh fails on check, check --strict, and status, while the brief says goldens must not change and the proposal says the parity goldens do not change. Options: A) allow one re-record of those three goldens with run.sh --record and a note in docs/verification/008.md, B) keep the old check and status output when stdout is not a TTY or under a flag (adds a mode the design does not name), C) drop the summary and the status next line from 008. 3.2, 3.3, 3.4, 4.1, 4.2 and the archive wait on this. Also open: does 'advisory' in the summary count the manual-evidence warnings? (task none, 2026-10-25)
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)
 - 003/4.2 and 5.3 wait for 4.1. Python removal follows agentrc running on the npm package. (task none, 2026-10-24) answer: order set: 3.4, 3.5, agentrc 007, then 4.1, 4.2, 5.3
@@ -45,4 +51,4 @@ resolved:
 - Python bugs kept, per the rules: tells reports repeated-closer at the first substring match, so the line can be wrong. tells blanks every token with a slash (and/or) as a URL. tells rejects 'a.md --json b.md' with exit 2. tells accepts a negative --baseline. Stderr text of usage errors names specctx lint and is not byte identical to argparse. Stdout and exit codes match. (task none, 2026-10-24) answer: kept as documented behavior in docs/verification/006.md. A later change fixes them
 - OpenSpec does not write archived: into .openspec.yaml (the 005 archive has schema and created only). The 006 design says it does. status reads archived when present, else the folder date, then the folder name. Confirm. (task none, 2026-10-24) answer: fallback to the folder date stays. Noted in docs/verification/006.md
 next: 003/3.3  Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir.
-evidence: 15 task(s), 15 command, 0 manual
+evidence: 22 task(s), 22 command, 0 manual

@@ -1,0 +1,527 @@
+== status
+specctx status: Show the active changes, the current task, and the open questions.
+
+Usage:
+  `specctx status [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx status`
+
+== query
+specctx query: Find the entries that contain all terms.
+
+Usage:
+  `specctx query <term...> [flags]`
+
+Flags:
+  `--kind <kind>`              Show only entries of this kind.
+  `--change <name>`            Show only entries of this change. The key or the full folder name works.
+  `--limit <n>`                Show n lines at most. The default is 20. Use 0 for no limit.
+  `--all`                      Show all copies of an ID.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx query lockfile --kind req`
+
+== related
+specctx related: Show the entries that link to an ID.
+
+Usage:
+  `specctx related <ID> [flags]`
+
+Flags:
+  `--depth <n>`                Follow links n steps. The default is 1.
+  `--all`                      Show all copies of an ID.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error or an unknown ID.
+  `3` An internal error.
+
+Example:
+  `specctx related REQ-IDX-001`
+
+== bundle
+specctx bundle: Print the spec text for the IDs and their links.
+
+Usage:
+  `specctx bundle <ID...> [flags]`
+
+Flags:
+  `--budget <n>`               Stop at n characters. The default is 8000.
+  `--depth <n>`                Follow links n steps. The default is 1.
+  `--all`                      Show all copies of an ID.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error or an unknown ID.
+  `3` An internal error.
+
+Example:
+  `specctx bundle REQ-IDX-001 --budget 3000`
+
+== check
+specctx check: Find ID and link errors.
+
+Usage:
+  `specctx check [flags]`
+
+Flags:
+  `--strict`                   Also find gaps in tests and evidence.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` No finding.
+  `1` One finding or more.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx check --strict`
+
+== gate
+specctx gate: Run `check`, the markdown linters, `openspec validate`, and the length check. Stop at the first failure.
+
+Usage:
+  `specctx gate [flags]`
+
+Flags:
+  `--strict`                   Run `check` and `openspec validate` in strict mode.
+  `--markdown <globs>`         Lint these markdown globs. Separate them with spaces.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Every step passed.
+  `1` A step failed.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx gate --strict`
+
+== task next
+specctx task next: Show the next open task.
+
+Usage:
+  `specctx task next [flags]`
+
+Flags:
+  `--change <name>`            Look only in this change. The key or the full folder name works.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` An open task.
+  `1` No open task.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx task next --change 008`
+
+== task verify
+specctx task verify: Run the `Verify:` command of a task. Write nothing.
+
+Usage:
+  `specctx task verify <task> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` The command passed.
+  `1` The command failed.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx task verify 008/1.1`
+
+== stats
+specctx stats: Show five metrics for each change and the gate runs.
+
+Usage:
+  `specctx stats [flags]`
+
+Flags:
+  `--change <name>`            Show only this change.
+  `--write`                    Also write docs/metrics/<date>.md.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx stats --write`
+
+== lint tells
+specctx lint tells: Find the AI writing tells in markdown files. Read stdin when no file is given.
+
+Usage:
+  `specctx lint tells <file...> [flags]`
+
+Flags:
+  `--baseline <n>`             Exit 0 when the hard findings are n or fewer. The default is 0.
+  `--disable <rules>`          Ignore these rules. Separate them with commas.
+  `--json`                     Print the findings as JSON.
+  `--selftest`                 Run the built in tests of the linter.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` The hard findings are at the baseline or below.
+  `1` The hard findings are over the baseline.
+  `2` A usage error.
+
+Example:
+  `specctx lint tells --baseline 0 README.md`
+
+== lint ste
+specctx lint ste: Find the breaks of the structural STE rules in markdown files. Read stdin when no file is given.
+
+Usage:
+  `specctx lint ste <file...> [flags]`
+
+Flags:
+  `--baseline <n>`             Exit 0 when the hard findings are n or fewer. The default is 0.
+  `--disable <rules>`          Ignore these rules. Separate them with commas.
+  `--json`                     Print the findings as JSON.
+  `--selftest`                 Run the built in tests of the linter.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` The hard findings are at the baseline or below.
+  `1` The hard findings are over the baseline.
+  `2` A usage error.
+
+Example:
+  `specctx lint ste --baseline 0 README.md`
+
+== build
+specctx build: Write the index to .ctx/index.json.
+
+Usage:
+  `specctx build [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx build`
+
+== id new
+specctx id new: Print the next free ID. The kind is REQ, SCN, ADR, or DEC.
+
+Usage:
+  `specctx id new <kind> <code> [flags]`
+
+Flags:
+  `--for <REQ-ID>`             Give the requirement of a new scenario.
+  `--count <n>`                Print n IDs in sequence.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error or an unknown code.
+  `3` An internal error.
+
+Example:
+  `specctx id new REQ IDX`
+
+== id retire
+specctx id retire: Add an ID to decisions/retired-ids.md.
+
+Usage:
+  `specctx id retire <ID> <reason> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error, or the ID is still in use.
+  `3` An internal error.
+
+Example:
+  `specctx id retire REQ-IDX-009 merged into REQ-IDX-001`
+
+== task start
+specctx task start: Print the bundle of a task and set it as the current task.
+
+Usage:
+  `specctx task start <task> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error, or the task is done or unknown.
+  `3` An internal error.
+
+Example:
+  `specctx task start 008/1.1`
+
+== task done
+specctx task done: Run the `Verify:` command. On success, write the evidence and set the checkbox.
+
+Usage:
+  `specctx task done <task> [flags]`
+
+Flags:
+  `--manual <note>`            Record a manual note. A task with no `Verify:` command needs this flag.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `1` The `Verify:` command failed. The task stays open.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx task done 008/1.1`
+
+== task reopen
+specctx task reopen: Clear the checkbox and keep the old evidence.
+
+Usage:
+  `specctx task reopen <task> <why> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx task reopen 008/1.1 the spec changed`
+
+== handoff write
+specctx handoff write: Write .ctx/handoff.md from the index and the evidence.
+
+Usage:
+  `specctx handoff write [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx handoff write`
+
+== handoff ask
+specctx handoff ask: Add an open question to the handoff.
+
+Usage:
+  `specctx handoff ask <question> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx handoff ask "Keep the old flag?"`
+
+== handoff resolve
+specctx handoff resolve: Move open question n to the resolved list.
+
+Usage:
+  `specctx handoff resolve <n> <answer> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx handoff resolve 1 "yes, for one release"`
+
+== init
+specctx init: Write a default spec-ctx.toml file.
+
+Usage:
+  `specctx init [flags]`
+
+Flags:
+  `--schema`                   Also install the spec-driven-ids schema and add its rules to openspec/config.yaml.
+  `--skills`                   Also install the three skills in .claude/skills and .agents/skills.
+  `--all`                      Do all three.
+  `--force`                    Install over files that exist. An existing spec-ctx.toml stays.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx init --all`
+
+== adopt
+specctx adopt: Write IDs into the headers of the main specs and the active deltas. Undo on a new finding.
+
+Usage:
+  `specctx adopt [flags]`
+
+Flags:
+  `--dry-run`                  Show the ID that each header without an ID gets. Write nothing.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` The IDs are written, or nothing is left to adopt.
+  `1` The dry run found headers to adopt, or a new finding undid the write.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx adopt --dry-run`
+
+== task backfill
+specctx task backfill: Write manual evidence for every ticked task that has none.
+
+Usage:
+  `specctx task backfill --manual <note> [flags]`
+
+Flags:
+  `--manual <note>`            The note for the evidence. The flag is required.
+  `--change <name>`            Look only in this change.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx task backfill --manual "done before spec-ctx"`
+
+== baseline write
+specctx baseline write: Record the current debt in .ctx/baseline.json. `check` then hides it.
+
+Usage:
+  `specctx baseline write [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx baseline write`
+
+== baseline prune
+specctx baseline prune: Remove the entries that no longer apply.
+
+Usage:
+  `specctx baseline prune [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx baseline prune`
+
+== help
+specctx help: Show the help page of one command.
+
+Usage:
+  `specctx help <command> [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` An unknown command.
+
+Example:
+  `specctx help task start`

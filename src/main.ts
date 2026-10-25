@@ -10,6 +10,22 @@ export interface Io {
 
 export async function main(argv: string[], io: Io): Promise<number> {
   // REQ-LINT-001 the linters keep the argument rules of the Python scripts, so they skip this parser
+  // REQ-CLI-006 `specctx help <cmd>` prints the page of one command
+  if (argv[0] === "help") {
+    const { HELP, helpFor, commandList } = await import("./cli/help.ts");
+    const name = argv.slice(1).filter((a) => a !== "--help" && a !== "-h").join(" ");
+    if (!name) {
+      io.out(HELP);
+      return 0;
+    }
+    const page = helpFor(name);
+    if (page === null) {
+      io.err(`specctx: unknown command: ${name}\n${commandList()}`);
+      return 2;
+    }
+    io.out(page);
+    return 0;
+  }
   if (argv[0] === "lint") {
     const { runLint } = await import("./lint/cli.ts");
     return runLint(argv.slice(1), io);
@@ -29,12 +45,13 @@ export async function main(argv: string[], io: Io): Promise<number> {
     return 0;
   }
   if (parsed.flags.help || parsed.command === null) {
-    const { HELP } = await import("./cli/help.ts");
+    const { HELP, helpFor } = await import("./cli/help.ts");
     if (parsed.command === null && !parsed.flags.help) {
       io.err(HELP);
       return 2;
     }
-    io.out(HELP);
+    // REQ-CLI-006 `specctx <cmd> --help` prints the page of that command only
+    io.out((parsed.command !== null && helpFor(parsed.command)) || HELP);
     return 0;
   }
   if (GROUPS.includes(parsed.command)) {
