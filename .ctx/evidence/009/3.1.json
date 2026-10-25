@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-25T02:17:02.506Z",
+  "bundle_chars": 3391,
+  "files": {
+    "tests/gov/readme.test.ts": "741c4f4a49b4163f49859765f1c14cb56473642ca1326d496d7696a192b134bc"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-006"
+  ],
+  "started_at": "2026-10-25T02:16:36.774Z",
+  "task": "009/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/gov && head -3 README.md | grep -q \"Verify\" && head -3 README.md | grep -q \"2026-10-25\" && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "\n 16 pass\n 0 fail\n 78 expect() calls\nRan 16 tests across 4 files. [2.28s]",
+    "stdout_sha256": "b4afa026f5138a074fbde384ed0b65d6dee90f115e7ebe9709eaabaaf106f3e1"
+  }
+}

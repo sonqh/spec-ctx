@@ -1,5 +1,5 @@
 // Covers: REQ-GOV-006
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { REPO } from "../helpers.ts";
@@ -25,5 +25,28 @@ describe("README order", () => {
     const contrib = readFileSync(join(REPO, "docs/CONTRIBUTING.md"), "utf8");
     for (const h of ["## Develop", "## Layout", "## IDs", "## Gate steps"]) expect(contrib).toContain(`\n${h}\n`);
     expect(readme).toContain("`SPECCTX_OPENSPEC`");
+  });
+
+  test("SCN-GOV-006-3 the value sentence names Verify before the context ratio and cites the newest metrics file", () => {
+    const sentence = readme.split("\n")[2]!;
+    const verify = sentence.indexOf("Verify");
+    const ratio = sentence.indexOf("context ratio");
+    expect(verify).toBeGreaterThan(-1);
+    expect(ratio).toBeGreaterThan(verify);
+    const newest = readdirSync(join(REPO, "docs/metrics")).filter((n) => /^\d{4}-\d{2}-\d{2}\.md$/.test(n)).sort().pop()!;
+    expect(sentence).toContain(`(\`docs/metrics/${newest}\`)`);
+  });
+
+  test("REQ-GOV-006 a Why list of three lines follows the excerpt", () => {
+    const lines = readme.split("\n");
+    const at = lines.indexOf("## Why");
+    expect(at).toBeGreaterThan(lines.indexOf("$ specctx task start add-mfa/1.3"));
+    const items: string[] = [];
+    for (const l of lines.slice(at + 1)) {
+      if (l.startsWith("## ")) break;
+      if (l.startsWith("- ")) items.push(l);
+    }
+    expect(items).toHaveLength(3);
+    for (const l of items) expect(l).toMatch(/\d/);
   });
 });
