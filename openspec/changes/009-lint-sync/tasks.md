@@ -13,7 +13,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root. T
 ## 3. README
 
 - [x] 3.1 Rewrite the first sentence per 009/D4 with the ratio and file name from `docs/metrics/2026-10-25.md`. Add `## Why` with three lines after the excerpt, each with a metric from that file. Extend `tests/gov/readme.test.ts` for SCN-GOV-006-3. Lint. [REQ-GOV-006] Verify: `bun test tests/gov && head -3 README.md | grep -q "Verify" && head -3 README.md | grep -q "2026-10-25" && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md`
-- [ ] 3.2 Write `docs/verification/009.md`. List every golden that changed with the rule that caused it. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
+- [x] 3.2 Write `docs/verification/009.md`. List every golden that changed with the rule that caused it. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
 
 ## Workflow follow-up
 
