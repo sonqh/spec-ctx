@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-25T01:58:50.821Z",
+  "files": {
+    "src/check/check.ts": "ee1eb320473600454fb9266baaa24c31befc1e70a755c8650d8d37cbc5fc3cf5",
+    "src/check/hints.ts": "2b61f448786d6e776f82e9dc04d70b7bf848d1e23dba5a947a79a60b1c3dcd2a",
+    "src/cli/commands.ts": "564f5c492f183e69b94ce5dd8f491c428a14d3af120a1ed1f79ce66210a8eefc",
+    "tests/check/dupkey.test.ts": "d5025202a28f69ea272457c5753b20ff310c167a1911812bfb1d9c53ea31b22d",
+    "tests/gov/governance.test.ts": "0d173f6b0b8202b2411286ee4b4096f7860b06d8458674d12922a792f82addb6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-004"
+  ],
+  "task": "008/3.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check && node dist/cli.js check --json | node -e 'JSON.parse(require(\"fs\").readFileSync(0,\"utf8\"))'",
+    "exit": 0,
+    "stderr_tail": "\n 36 pass\n 0 fail\n 124 expect() calls\nRan 36 tests across 4 files. [1050.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

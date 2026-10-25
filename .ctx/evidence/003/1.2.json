@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-23T23:57:29.362Z",
+  "at": "2026-10-25T01:58:42.407Z",
   "files": {
-    "tests/schema/roundtrip.sh": "4bb9d402101db8c77d261b2b525be8ed64b7c43003f5fdca37818a3ee6ac65e9"
+    "tests/schema/roundtrip.sh": "0f5071fa48b4d90c5988727ad019d52fa92126d4cada9ae111c3f499d922231f"
   },
   "kind": "command",
   "reqs": [
@@ -13,6 +13,6 @@
     "command": "bash tests/schema/roundtrip.sh",
     "exit": 0,
     "stderr_tail": "",
-    "stdout_sha256": "4c06436a2dc788b484664af5bad4d30c0f705d597841a6fc569bdf9ad675d2f3"
+    "stdout_sha256": "9b1648138b83de3138367518c2594efaea78151595b82b58deb2d5c24efb7534"
   }
 }

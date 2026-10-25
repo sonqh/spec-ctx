@@ -17,6 +17,8 @@ export interface InitOpts {
 export interface InitResult {
   written: string[];
   kept: string[];
+  /** REQ-CLI-007 true when every file is present and equal */
+  nothing?: boolean;
   notes: string[];
 }
 
@@ -109,6 +111,16 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
 export function runInit(root: string, o: InitOpts): InitResult {
   const res: InitResult = { written: [], kept: [], notes: [] };
   let files = plan(o);
+  // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
+  const same = files.every(([rel, data]) => existsSync(join(root, rel)) && readFileSync(join(root, rel)).equals(data));
+  if (same && !o.force) {
+    const cfgPath = join(root, "openspec/config.yaml");
+    const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
+    if (!o.schema || !mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")).added.length) {
+      res.nothing = true;
+      return res;
+    }
+  }
   if (existsSync(join(root, CONFIG_FILE))) {
     if (!o.force) throw new UsageExit(`${CONFIG_FILE} exists. Use --force to install the other files over it`);
     // --force never replaces a config that the user wrote

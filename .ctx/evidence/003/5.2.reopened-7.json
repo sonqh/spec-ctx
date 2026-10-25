@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T04:53:37.937Z",
+  "bundle_chars": 5996,
+  "files": {
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 3: check summary, project detection, next step lines",
+  "reqs": [
+    "REQ-GOV-003"
+  ],
+  "started_at": "2026-10-24T04:53:37.738Z",
+  "task": "003/5.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 docs/upstream-issue.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "06cd7c521d7953c80789b93d17b7c44903f76b437097227cba72fd57566f39f2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-25T01:41:34.044Z",
+  "bundle_chars": 2983,
+  "files": {
+    "src/check/check.ts": "ee1eb320473600454fb9266baaa24c31befc1e70a755c8650d8d37cbc5fc3cf5",
+    "tests/check/dupkey.test.ts": "cac319aae0c6772d7fdf77b503b62d3dc78558891b77e975597cff8050bce2a8"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 3: check summary, project detection, next step lines",
+  "reqs": [
+    "REQ-CHK-004"
+  ],
+  "started_at": "2026-10-25T01:40:21.111Z",
+  "task": "008/1.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check",
+    "exit": 0,
+    "stderr_tail": "\n 31 pass\n 0 fail\n 93 expect() calls\nRan 31 tests across 4 files. [493.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-25T01:55:14.224Z",
+  "bundle_chars": 3159,
+  "files": {
+    "src/check/check.ts": "ee1eb320473600454fb9266baaa24c31befc1e70a755c8650d8d37cbc5fc3cf5",
+    "src/check/hints.ts": "2b61f448786d6e776f82e9dc04d70b7bf848d1e23dba5a947a79a60b1c3dcd2a",
+    "src/cli/commands.ts": "be8acaca45a832732d862392ffc292c1046a46a8c9a8f5e8d9320f9a14eb31ba",
+    "tests/check/dupkey.test.ts": "d5025202a28f69ea272457c5753b20ff310c167a1911812bfb1d9c53ea31b22d",
+    "tests/gov/governance.test.ts": "0d173f6b0b8202b2411286ee4b4096f7860b06d8458674d12922a792f82addb6"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 3: check summary, project detection, next step lines",
+  "reqs": [
+    "REQ-CHK-004"
+  ],
+  "started_at": "2026-10-25T01:52:51.271Z",
+  "task": "008/3.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check && node dist/cli.js check --json | node -e 'JSON.parse(require(\"fs\").readFileSync(0,\"utf8\"))'",
+    "exit": 0,
+    "stderr_tail": "\n 36 pass\n 0 fail\n 124 expect() calls\nRan 36 tests across 4 files. [1045.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

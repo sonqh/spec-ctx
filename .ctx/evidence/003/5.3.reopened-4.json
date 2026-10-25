@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-25T01:42:22.205Z",
+  "files": {
+    "src/check/check.ts": "ee1eb320473600454fb9266baaa24c31befc1e70a755c8650d8d37cbc5fc3cf5",
+    "tests/check/base.test.ts": "1bd46642fba2ff0786f4e3f440674ec31e6430f4849e0be9b6483d35fa4f4e65",
+    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a",
+    "tests/ids/retire.test.ts": "5d01dae6bdb2a6d2598ee44692f24399aa4a9dbd61919aa0fb19d6155addfefd"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 3: check summary, project detection, next step lines",
+  "reqs": [
+    "REQ-GOV-001",
+    "REQ-IDS-003",
+    "REQ-CHK-001"
+  ],
+  "task": "003/5.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict",
+    "exit": 0,
+    "stderr_tail": "\n 269 pass\n 0 fail\n 1310 expect() calls\nRan 269 tests across 50 files. [13.88s]\nRules for 'specs' must be an array of strings, ignoring this artifact's rules. rules.specs[0] is a mapping; rules.specs[1] is a mapping; rules.specs[2] is a mapping — an unquoted \": \" makes YAML read the item as a key/value pair; quote the whole scalar to keep it a string.\nGuidance for operation 'apply' must be an array of strings, ignoring this operation's guidance\nRules for 'specs' must be an array of strings, ignoring this artifact's rules. rules.specs[0] is a mapping; rules.specs[1] is a mapping; rules.specs[2] is a mapping — an unquoted \": \" makes YAML read the item as a key/value pair; quote the whole scalar to keep it a string.\nGuidance for operation 'apply' must be an array of strings, ignoring this operation's guidance",
+    "stdout_sha256": "0ece793d107e39ab1b4b9f5217e4abc2b1f2d3b22c9d2f5a0df2c303ffd93f60"
+  }
+}

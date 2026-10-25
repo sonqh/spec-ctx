@@ -31,7 +31,8 @@ describe("commands and flags", () => {
     p = new Project(null);
     const r = await p.run("status");
     expect(r.code).toBe(2);
-    expect(r.err).toContain("no project root");
+    // REQ-CLI-007 replaced the old no project root message
+    expect(r.err).toContain("not an OpenSpec project (no openspec/ under ");
   });
 
   test("status shows the active change and the uncovered count", async () => {

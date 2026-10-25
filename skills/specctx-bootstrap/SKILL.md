@@ -9,7 +9,7 @@ Load the minimum context for one task. Run `specctx` as `npx spec-ctx` when it i
 
 ## Steps
 
-1. Run `specctx status`. It rebuilds a stale index first. Note the active change, the current task, and the count of open questions.
+1. Run `specctx status`. It rebuilds a stale index first. Note the active change, the current task, and the count of open questions. The last line `next: <step>` names the next step. Exit 2 with `not an OpenSpec project` means the folder has no `openspec/`. Tell the user to run `npx -y @fission-ai/openspec@latest init` and stop.
 2. Read `.ctx/handoff.md` if it exists. Note `current`, `reopened`, and `open_questions`.
 3. If `status` prints `no active change`, show the open questions to the user. Ask which change to start. Stop here.
 4. Pick the task. Use `current` from the handoff, then the user's message, then the output of `specctx task next`.

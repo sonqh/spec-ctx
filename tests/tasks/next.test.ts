@@ -44,6 +44,15 @@ describe("task next", () => {
     p = new Project();
     p.write("openspec/changes/001-x/tasks.md", tasks("- [x] 1.1 A. [REQ-AAA-001] Verify: `true`\n"));
     const r = await p.run("task", "next");
-    expect(r).toMatchObject({ code: 1, out: "no open task\n" });
+    expect(r).toMatchObject({ code: 1, out: "no open task. Every task in the active changes is done. Next: archive 001-x.\n" });
+  });
+
+  // Covers: REQ-TASK-001
+  test("SCN-TASK-001-3 the message names the change 009-x", async () => {
+    p = new Project();
+    p.write("openspec/changes/001-x/tasks.md", tasks("- [x] 1.1 A. [REQ-AAA-001] Verify: `true`\n"));
+    p.write("openspec/changes/009-x/tasks.md", tasks("- [x] 1.1 A. [REQ-AAA-001] Verify: `true`\n"));
+    const r = await p.run("task", "next", "--change", "009");
+    expect(r).toMatchObject({ code: 1, out: "no open task. Every task in the active changes is done. Next: archive 009-x.\n" });
   });
 });

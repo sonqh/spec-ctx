@@ -270,4 +270,21 @@ src/plant.ts:2  code-tag-no-canonical  REQ-OLD-001
 src/plant.ts:6  dangling-ref  REQ-NOPE-002
 warning: manual-evidence 007/1.1
 warning: manual-evidence 007/1.2
-270 finding(s)
+
+272 findings in 18 files (270 hard, 2 advisory)
+bad-ref  1  Write only IDs on the Refs line, separated by commas.
+code-tag-no-canonical  1  The tag names an archived requirement. Tag the current requirement.
+dangling-ref  2  Fix the ID or remove the link. No entry has this ID.
+evidence-without-done  1  Run specctx task done, or remove the evidence file.
+manual-evidence  2  Give the task a Verify command and run specctx task done again.
+missing-id  1  Add an ID to the header. Run specctx adopt --dry-run to see the plan.
+req-without-scn  1  Add a scenario under the requirement.
+reused-id  1  The ID is retired. Get a new ID from specctx id new.
+scenario-id-mismatch  1  Give the scenario the number of its requirement.
+scenario-untested  152  Name the scenario ID in a test.
+stale-evidence  1  Run specctx task reopen and then specctx task done.
+task-without-req  1  Cite a requirement in brackets on the task line, for example [REQ-ABC-001].
+task-without-verify  1  Add Verify: and a command in backticks to the task line.
+uncovered  104  Add a test with a Covers tag for the requirement.
+unknown-cap  1  Add the code to caps under [ids] in spec-ctx.toml.
+unknown-task-req  1  The task cites an ID that the index does not hold. Fix the ID on the task line.

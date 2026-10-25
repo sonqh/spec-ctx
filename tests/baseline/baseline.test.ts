@@ -26,11 +26,11 @@ describe("baseline", () => {
     expect(list).toContain("manual-evidence add-mfa/1.1");
     const r = await p.run("check", "--strict");
     expect(r.code, r.out).toBe(0);
-    expect(r.out).toBe(`0 finding(s)\nbaselined: ${list.length}\n`);
+    expect(r.out).toBe(`0 findings\nbaselined: ${list.length}\n`);
     // the filter applies to plain check too
     const plain = await p.run("check");
     expect(plain.code).toBe(0);
-    expect(plain.out).toMatch(/^0 finding\(s\)\nbaselined: \d+\n$/);
+    expect(plain.out).toMatch(/^0 findings\nbaselined: \d+\n$/);
   });
 
   test("SCN-ADOPT-005-2 new debt is visible", async () => {
@@ -71,7 +71,7 @@ describe("baseline", () => {
     p.write(".ctx/baseline.json", JSON.stringify(["scenario-untested SCN-AAA-003-1", "task-without-req 001/1.3", "uncovered REQ-AAA-003"]) + "\n");
     const r3 = await p.run("check", "--strict");
     expect(r3.out).toContain("task-without-verify  001/1.3");
-    expect(r3.out.endsWith("1 finding(s)\nbaselined: 3\n")).toBe(true);
+    expect(r3.out.endsWith("\n2 findings in 2 files (1 hard, 1 advisory)\nmanual-evidence  1  Give the task a Verify command and run specctx task done again.\ntask-without-verify  1  Add Verify: and a command in backticks to the task line.\nbaselined: 3\n")).toBe(true);
     const j = JSON.parse((await p.run("check", "--strict", "--json")).out);
     expect(j.baselined).toBe(3);
   });

@@ -94,7 +94,7 @@ describe("check strict rules", () => {
     expect(p.read(".ctx/evidence/001/1.1.json")).toContain('"task": "001/1.1"');
     const r = await check("--strict");
     // the fixture evidence is manual, so strict prints a warning that does not count
-    expect(r.out).toBe("warning: manual-evidence 001/1.1\n0 finding(s)\n");
+    expect(r.out).toBe("warning: manual-evidence 001/1.1\n\n1 finding in 1 file (0 hard, 1 advisory)\nmanual-evidence  1  Give the task a Verify command and run specctx task done again.\n");
     expect(r.code).toBe(0);
   });
 });

@@ -31,7 +31,7 @@ Seven small fixes and one README rewrite. The change key is the only one that to
 
 ## Risks / Trade-offs
 
-- A user with a kebab-case folder that happens to start with digits and a dash, like `2fa-login`, gets key `2`. Accepted. The full name works as alias and the duplicate rule catches a second `2`.
+- A folder like `2fa-login` keeps its full name as key, because the rule needs a dash right after the digits.
 - The per command help table is a rewrite of `help.ts`. The golden test for `--help` output changes once. Record it in the verification record.
 - Moving sections out of the README changes anchors. Nothing links to them yet.
 

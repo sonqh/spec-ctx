@@ -21,7 +21,7 @@ describe("check base rules", () => {
     p = new Project();
     const r = await check();
     expect(r.code, r.out).toBe(0);
-    expect(r.out).toBe("0 finding(s)\n");
+    expect(r.out).toBe("0 findings\n");
   });
 
   test("SCN-CHK-001-1 dangling ref", async () => {

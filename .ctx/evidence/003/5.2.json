@@ -1,14 +1,12 @@
 {
-  "at": "2026-10-24T04:53:37.937Z",
-  "bundle_chars": 5996,
+  "at": "2026-10-25T01:58:46.273Z",
   "files": {
-    "tests/gov/governance.test.ts": "7b6224acd45bb223b691c788d71c2eedb33501a0310a032e693d78e4f688b08a"
+    "tests/gov/governance.test.ts": "0d173f6b0b8202b2411286ee4b4096f7860b06d8458674d12922a792f82addb6"
   },
   "kind": "command",
   "reqs": [
     "REQ-GOV-003"
   ],
-  "started_at": "2026-10-24T04:53:37.738Z",
   "task": "003/5.2",
   "tool_version": "0.1.0",
   "verify": {

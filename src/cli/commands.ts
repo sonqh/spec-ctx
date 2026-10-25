@@ -3,7 +3,8 @@ import { resolve } from "node:path";
 import type { Io } from "../main.ts";
 import type { Parsed } from "./args.ts";
 import { UsageExit } from "./errors.ts";
-import { findRoot } from "./root.ts";
+import { findRoot, requireOpenSpec } from "./root.ts";
+import { hintOf } from "../check/hints.ts";
 
 /** check with warnings and the baseline filter. Strict mode adds the strict rules and the warnings. */
 async function runCheck(root: string, cfg: import("../config.ts").Config, data: import("../index/types.ts").Index, strict: boolean) {
@@ -19,11 +20,30 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
   return applyBaseline(root, findings, warnings);
 }
 
-function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }): string {
-  return r.findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("")
-    + r.warnings.map((w) => `warning: ${w}\n`).join("")
-    + `${r.findings.length} finding(s)\n`
-    + (r.baselined ? `baselined: ${r.baselined}\n` : "");
+/**
+ * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
+ * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
+ */
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }): string {
+  const body = r.findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("")
+    + r.warnings.map((w) => `warning: ${w}\n`).join("");
+  const base = r.baselined ? `baselined: ${r.baselined}\n` : "";
+  const n = r.findings.length + r.warnings.length;
+  if (!n) return `0 findings\n${base}`;
+  const files = new Set(r.findings.map((x) => x.file));
+  const count = new Map<string, number>();
+  for (const x of r.findings) count.set(x.rule, (count.get(x.rule) ?? 0) + 1);
+  for (const w of r.warnings) {
+    const [rule, task] = w.split(" ");
+    count.set(rule!, (count.get(rule!) ?? 0) + 1);
+    // a manual-evidence warning names a task. Its file is the evidence file of the task.
+    if (task?.includes("/")) files.add(`.ctx/evidence/${task}.json`);
+  }
+  const rules = [...count.keys()].sort();
+  return body
+    + `\n${n} finding${n === 1 ? "" : "s"} in ${files.size} file${files.size === 1 ? "" : "s"} (${r.findings.length} hard, ${r.warnings.length} advisory)\n`
+    + rules.map((rule) => `${rule}  ${count.get(rule)}  ${hintOf(rule)}\n`).join("")
+    + base;
 }
 
 export async function run(p: Parsed, io: Io): Promise<number> {
@@ -32,6 +52,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   const cmd = p.command!;
   if (cmd === "init") return init(p, io);
   const root = findRoot(io.cwd, f.root as string | undefined);
+  requireOpenSpec(root);
   const { loadConfig, ConfigError } = await import("../config.ts");
   let cfg;
   try {
@@ -60,7 +81,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     }
     if (json) print(plan);
     else if (!plan.edits.length) io.out(plan.unmatched.length ? planLines(plan).join("\n") + "\nnothing to adopt\n" : "nothing to adopt\n");
-    else io.out(planLines(plan).join("\n") + `\n${plan.edits.length} header(s) to adopt. Run adopt to write them.\n`);
+    // REQ-CLI-007 the dry run ends with the next step. The exit code stays 1.
+    else io.out(planLines(plan).join("\n") + `\n${plan.edits.length} headers need an ID. Next: specctx adopt\n`);
     return plan.edits.length ? 1 : 0;
   }
   if (cmd === "baseline write" || cmd === "baseline prune") {
@@ -205,9 +227,12 @@ async function init(p: Parsed, io: Io): Promise<number> {
   const all = !!p.flags.all;
   const r = runInit(root, { schema: all || !!p.flags.schema, skills: all || !!p.flags.skills, force: !!p.flags.force });
   if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
+  else if (r.nothing) io.out("nothing to do\nnext: specctx status\n");
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
+    // REQ-CLI-007 init ends with the next step
+    io.out("next: specctx status\n");
   }
   return 0;
 }

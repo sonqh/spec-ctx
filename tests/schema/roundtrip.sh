@@ -31,6 +31,6 @@ done
 echo "ok: $(echo "$reqs" | wc -l | tr -d ' ') REQ IDs survive archive once each"
 
 out=$($specctx check --strict 2>/dev/null)
-[ "$out" = "0 finding(s)" ] || { echo "$out"; exit 1; }
+[ "$out" = "0 findings" ] || { echo "$out"; exit 1; }
 $openspec validate --all --strict >/dev/null 2>&1
-echo "roundtrip: 0 finding(s) after archive"
+echo "roundtrip: 0 findings after archive"

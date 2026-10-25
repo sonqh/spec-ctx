@@ -102,5 +102,16 @@ export function statusLines(r: StatusReport): string[] {
     // with no active change the questions are the agenda, so status prints them
     if (!r.changes.length) for (const q of r.open_questions) out.push(`- ${q}`);
   }
+  const next = nextStep(r);
+  if (next) out.push(`next: ${next}`);
   return out;
+}
+
+/** REQ-CLI-007 the next step by state: an open task, then a change with every task done, then uncovered REQs. */
+export function nextStep(r: StatusReport): string | null {
+  if (r.changes.some((c) => c.open > 0)) return "specctx task next";
+  const ready = r.changes.find((c) => c.done > 0 && c.open === 0);
+  if (ready) return `archive ${ready.change}`;
+  if (r.uncovered > 0) return "specctx check";
+  return null;
 }

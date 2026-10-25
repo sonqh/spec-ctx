@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-25T01:58:31.220Z",
+  "bundle_chars": 4304,
+  "files": {
+    "src/adopt/write.ts": "b01666523358657d1ee27d2169b1089b3b4c7788b27a0713dd59b7e5b6b341ce",
+    "src/cli/commands.ts": "564f5c492f183e69b94ce5dd8f491c428a14d3af120a1ed1f79ce66210a8eefc",
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "1e79223133f72c9eeb9f7de3da081d80fb52bf0d1c29ebcc426ae0641329ba55",
+    "src/cli/workflow.ts": "dd92ce0b60e1927957b4fecd0b40c4d5bc1b72c1a23ab47e96a78a12cda4bde5",
+    "src/init/init.ts": "b3b7b55b29ef72c65cd1f27992a359d3780cf67fa14cda6ec11a4177c8b8876a",
+    "src/tasks/tasks.ts": "169e3f3ea4bd0b720a597e0694c496ef7207b35321fcbfb2b50521ebbc06d5fb",
+    "tests/cli/cli.test.ts": "db2d236e9b7579aadf29acdac1a31c52028e5196bb59d93dcae072b7513bc14d",
+    "tests/cli/nextstep.test.ts": "a88d5e84d0f683fe8002e05d52b1871a1c3c9fa290e663788ab593192f8c774a",
+    "tests/cli/root.test.ts": "b243ad4dd5da5eec9452b0c362812ebf2f3ec5db343be18ff7d8204a892fc960",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad",
+    "tests/tasks/next.test.ts": "f153c16db94bd2bb530d169f4de4e44de0d0724dacd6e6c08b2ce1fecfbd9166"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-007",
+    "REQ-TASK-001"
+  ],
+  "started_at": "2026-10-25T01:56:14.333Z",
+  "task": "008/3.4",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli tests/tasks tests/adopt",
+    "exit": 0,
+    "stderr_tail": "\n 99 pass\n 0 fail\n 542 expect() calls\nRan 99 tests across 19 files. [5.67s]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

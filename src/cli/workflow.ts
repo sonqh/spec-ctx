@@ -57,7 +57,16 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const t = nextTask(c.root, entries, f.change as string | undefined);
       if (!t) {
         if (c.json) print(c, null);
-        else c.io.out("no open task\n");
+        else {
+          // REQ-TASK-001 name the next step. The exit code stays 1.
+          const { activeChanges } = await import("../tasks/tasks.ts");
+          const { matchesChange } = await import("../index/scan.ts");
+          const want = f.change as string | undefined;
+          const ready = activeChanges(entries).filter((x) => !want || matchesChange(x, want));
+          c.io.out(ready.length
+            ? `no open task. Every task in the active changes is done. Next: archive ${ready.join(", ")}.\n`
+            : "no open task. No active change has a task.\n");
+        }
         return 1;
       }
       const bundleCommand = `specctx bundle ${t.reqs.join(" ")} --budget ${c.cfg.bundle.budget}`;

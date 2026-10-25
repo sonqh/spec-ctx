@@ -10,7 +10,7 @@ Move to the next open task. Run `specctx` as `npx spec-ctx` when it is not insta
 ## Steps
 
 1. Run `specctx task next`. It prints the task ID and text, then `reqs:` and `verify:`.
-2. If it prints `no open task`, every task of the active changes has its checkbox set. Run `specctx status` and tell the user that the change is ready for `specctx check --strict` and archive. Stop here.
+2. If it prints `no open task. Every task in the active changes is done. Next: archive <change>.`, every task of the active changes has its checkbox set. Run `specctx status`. Its last line is `next: archive <change>`. Tell the user that the change is ready for `specctx check --strict` and archive. Stop here.
 3. Run `specctx task start <task>`. It prints the bundle for the REQ IDs of the task and sets the current task in `.ctx/current.json`.
 4. Read the bundle. Request an omitted ID with `specctx bundle <id>` only when the task needs it.
 5. Run `specctx task verify <task>` once before the work. It runs the `Verify:` command and writes nothing. A failure now shows what the work must fix.

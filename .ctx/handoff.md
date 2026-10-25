@@ -1,30 +1,33 @@
 # Handoff
 change: 003-distribution
 current: none
-base: 2026-10-24T04:53:41.754Z
-as_of: 2026-10-25T01:49:38.181Z
+base: 2026-10-25T01:49:38.181Z
+as_of: 2026-10-25T01:59:10.497Z
 done:
+- 003/1.2
 - 003/2.2
 - 003/3.5
-- 003/3.6
+- 003/4.2
+- 003/5.1
+- 003/5.2
 - 003/5.3
-- 008/1.1
 - 008/1.2
-- 008/1.3
-- 008/2.1
 - 008/2.2
-- 008/2.3
-- 008/3.1
+- 008/3.2
+- 008/3.3
+- 008/3.4
 reopened:
-- 003/3.5 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:05.769Z)
-- 003/5.3 stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts (at 2026-10-25T01:42:06.559Z)
-- 003/2.2 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:37.109Z)
-- 003/3.6 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:37.490Z)
-- 008/1.1 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:38.590Z)
-- 008/1.3 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:41.384Z)
-- 008/2.1 stale after 008 group 2: gate log, empty caps, stats footer (at 2026-10-25T01:45:42.050Z)
+- 003/1.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:36.781Z)
+- 003/2.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:42.601Z)
+- 003/3.5 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:43.150Z)
+- 003/4.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:44.349Z)
+- 003/5.1 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:45.257Z)
+- 003/5.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:45.941Z)
+- 008/1.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:46.403Z)
+- 008/2.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:48.715Z)
+- 008/3.2 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:49.499Z)
+- 003/5.3 stale after 008 group 3: check summary, project detection, next step lines (at 2026-10-25T01:58:50.971Z)
 open_questions:
-- BLOCKER 008/3.2 and 008/3.4: the parity goldens cannot stay unchanged. tests/fixtures/parity-golden/check.out and check-strict.out end with 'N finding(s)'. REQ-CHK-004 (008/D6) replaces that line with '<n> findings in <m> files (<h> hard, <a> advisory)' and per rule hint lines. status.out ends with 'uncovered active REQs in main: 104'. 008/D7 adds a 'next: ...' line to status. So bash tests/parity/run.sh fails on check, check --strict, and status, while the brief says goldens must not change and the proposal says the parity goldens do not change. Options: A) allow one re-record of those three goldens with run.sh --record and a note in docs/verification/008.md, B) keep the old check and status output when stdout is not a TTY or under a flag (adds a mode the design does not name), C) drop the summary and the status next line from 008. 3.2, 3.3, 3.4, 4.1, 4.2 and the archive wait on this. Also open: does 'advisory' in the summary count the manual-evidence warnings? (task none, 2026-10-25)
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)
 - 003/4.2 and 5.3 wait for 4.1. Python removal follows agentrc running on the npm package. (task none, 2026-10-24) answer: order set: 3.4, 3.5, agentrc 007, then 4.1, 4.2, 5.3
@@ -50,5 +53,6 @@ resolved:
 - REQ-LINT-002 asks for test lines from the Python selftest. The tells selftest has no line for 8 rules (not-x-but-y, emoji-heading, sales-word, title-case-heading, stacked-qualifier, serves-as, closer, repeated-closer). Those tests use my lines, which the Python script flagged and passed. Confirm. (task none, 2026-10-24) answer: confirmed. Noted in docs/verification/006.md
 - Python bugs kept, per the rules: tells reports repeated-closer at the first substring match, so the line can be wrong. tells blanks every token with a slash (and/or) as a URL. tells rejects 'a.md --json b.md' with exit 2. tells accepts a negative --baseline. Stderr text of usage errors names specctx lint and is not byte identical to argparse. Stdout and exit codes match. (task none, 2026-10-24) answer: kept as documented behavior in docs/verification/006.md. A later change fixes them
 - OpenSpec does not write archived: into .openspec.yaml (the 005 archive has schema and created only). The 006 design says it does. status reads archived when present, else the folder date, then the folder name. Confirm. (task none, 2026-10-24) answer: fallback to the folder date stays. Noted in docs/verification/006.md
+- BLOCKER 008/3.2 and 008/3.4: the parity goldens cannot stay unchanged. tests/fixtures/parity-golden/check.out and check-strict.out end with 'N finding(s)'. REQ-CHK-004 (008/D6) replaces that line with '<n> findings in <m> files (<h> hard, <a> advisory)' and per rule hint lines. status.out ends with 'uncovered active REQs in main: 104'. 008/D7 adds a 'next: ...' line to status. So bash tests/parity/run.sh fails on check, check --strict, and status, while the brief says goldens must not change and the proposal says the parity goldens do not change. Options: A) allow one re-record of those three goldens with run.sh --record and a note in docs/verification/008.md, B) keep the old check and status output when stdout is not a TTY or under a flag (adds a mode the design does not name), C) drop the summary and the status next line from 008. 3.2, 3.3, 3.4, 4.1, 4.2 and the archive wait on this. Also open: does 'advisory' in the summary count the manual-evidence warnings? (task none, 2026-10-25) answer: Option A. Re-record check.out, check-strict.out, and status.out once with tests/parity/run.sh --record. The parity rule protects the index and bundle output. D6 and D7 change check and status output on purpose. index.json and the bundle goldens stay. Advisory counts every warning-level finding, manual-evidence included. Hard counts only the rules that set exit 1.
 next: 003/3.3  Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir.
-evidence: 22 task(s), 22 command, 0 manual
+evidence: 25 task(s), 25 command, 0 manual

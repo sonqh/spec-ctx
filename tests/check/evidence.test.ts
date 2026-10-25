@@ -21,7 +21,7 @@ describe("evidence rules", () => {
     expect((await p.run("task", "done", "002/2.1")).code).toBe(0);
     const r = await p.run("check", "--strict");
     // the base fixture evidence for 001/1.1 is manual, so strict prints its warning
-    expect(r.out).toBe("warning: manual-evidence 001/1.1\n0 finding(s)\n");
+    expect(r.out).toBe("warning: manual-evidence 001/1.1\n\n1 finding in 1 file (0 hard, 1 advisory)\nmanual-evidence  1  Give the task a Verify command and run specctx task done again.\n");
   });
 
   test("SCN-CHK-003-2 a task ticked by hand is done-without-evidence", async () => {
@@ -57,7 +57,7 @@ describe("evidence rules", () => {
     expect(r.code).toBe(0);
     expect(r.out).toContain("warning: manual-evidence 002/2.1\n");
     expect(r.out).toContain("warning: manual-evidence 001/1.1\n");
-    expect(r.out.endsWith("0 finding(s)\n")).toBe(true);
+    expect(r.out).toContain("\n2 findings in 2 files (0 hard, 2 advisory)\nmanual-evidence  2  ");
     const j = JSON.parse((await p.run("check", "--strict", "--json")).out);
     expect(j).toMatchObject({ count: 0, warnings: ["manual-evidence 001/1.1", "manual-evidence 002/2.1"] });
     expect((await p.run("check")).out).not.toContain("warning");

@@ -95,17 +95,21 @@ export async function applyAdopt(root: string, _cfg: Config, plan: Plan, io: Io,
       io.err(`specctx: adopt restored every file. The write added ${introduced.length} finding(s).\n`);
       return 1;
     }
-    writeFileSync(join(root, REPORT_FILE), reportText(plan));
+    // REQ-CLI-007 no header changed, so no report
+    if (plan.edits.length) writeFileSync(join(root, REPORT_FILE), reportText(plan));
   } catch (e) {
     restore();
     throw e;
   }
   rmSync(join(root, ".ctx/index.json"), { force: true });
   const files = new Set(plan.edits.map((e) => e.file)).size;
-  if (json) io.out(dumps({ adopted: plan.edits.length, caps: plan.caps, files, report: REPORT_FILE, unmatched: plan.unmatched }) + "\n");
+  const report = plan.edits.length ? REPORT_FILE : null;
+  if (json) io.out(dumps({ adopted: plan.edits.length, caps: plan.caps, files, report, unmatched: plan.unmatched }) + "\n");
   else {
     io.out(plan.unmatched.map((u) => `unmatched: ${u.file}:${u.line}  ${u.header}\n`).join(""));
-    io.out(`adopted ${plan.edits.length} header(s) in ${files} file(s). Report: ${REPORT_FILE}\n`);
+    // REQ-CLI-007 only the codes in spec-ctx.toml changed: no header, no report
+    if (!report) io.out(`wrote the codes to ${CONFIG_FILE}\nnothing to adopt\n`);
+    else io.out(`adopted ${plan.edits.length} header(s) in ${files} file(s). Report: ${REPORT_FILE}\n`);
   }
   return 0;
 }

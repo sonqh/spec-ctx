@@ -17,7 +17,9 @@ describe("spec governance", () => {
     await p.build();
     const r = await p.run("check", "--strict");
     // warning lines for manual evidence are no findings (REQ-CHK-003)
-    expect(r.out.split("\n").filter((l) => l && !l.startsWith("warning: "))).toEqual(["0 finding(s)"]);
+    // REQ-CHK-004 a manual-evidence warning is advisory. No hard finding may stay.
+    expect(r.out.split("\n").filter((l) => l.includes("  ") && !l.startsWith("manual-evidence  "))).toEqual([]);
+    expect(r.out).toMatch(/^0 findings\n$|\(0 hard, \d+ advisory\)/);
     expect(r.code).toBe(0);
   });
 

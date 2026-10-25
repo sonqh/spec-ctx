@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-25T01:56:02.990Z",
+  "bundle_chars": 2404,
+  "files": {
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "1e79223133f72c9eeb9f7de3da081d80fb52bf0d1c29ebcc426ae0641329ba55",
+    "tests/cli/cli.test.ts": "db2d236e9b7579aadf29acdac1a31c52028e5196bb59d93dcae072b7513bc14d",
+    "tests/cli/root.test.ts": "b243ad4dd5da5eec9452b0c362812ebf2f3ec5db343be18ff7d8204a892fc960"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-007"
+  ],
+  "started_at": "2026-10-25T01:55:14.432Z",
+  "task": "008/3.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli/root.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 4 pass\n 0 fail\n 50 expect() calls\nRan 4 tests across 1 file. [27.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

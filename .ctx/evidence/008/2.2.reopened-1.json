@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-25T01:45:11.364Z",
+  "bundle_chars": 4712,
+  "files": {
+    "src/cli/workflow.ts": "aee288552d65b9872c7cc9278f59b0ab7b77a0970e00d801efbdcadc371a7f4c",
+    "src/ids/ids.ts": "b9ac6a1bc3d476616bac5129499c3ff8a0e34898c76ac138c14f528f368b32e7",
+    "tests/ids/new.test.ts": "9711cdc2c8dc1048349b3813e66140e9085e3e5b36777fc415466381ca1205c0"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 3: check summary, project detection, next step lines",
+  "reqs": [
+    "REQ-IDS-001"
+  ],
+  "started_at": "2026-10-25T01:43:53.020Z",
+  "task": "008/2.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/ids",
+    "exit": 0,
+    "stderr_tail": "\n 12 pass\n 0 fail\n 43 expect() calls\nRan 12 tests across 2 files. [142.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

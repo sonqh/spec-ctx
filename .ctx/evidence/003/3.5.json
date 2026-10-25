@@ -1,12 +1,12 @@
 {
-  "at": "2026-10-25T01:42:06.359Z",
+  "at": "2026-10-25T01:58:44.239Z",
   "files": {
     "src/baseline/baseline.ts": "44b4e3d73a40dbc728ecbb50adf6301e7947539ace1c6f5f371dedfed90702ff",
     "src/check/evidence.ts": "ffae16540b16d978af2d4ec254f497035ebc62f49fdcb59678c6db970feca794",
     "src/index/scan.ts": "65e624a0741c27cce7b64227e67df3fc92f7d970fa3c95330f877757986a57c0",
-    "tests/baseline/baseline.test.ts": "5f35b4fd397a8bb8a3a6f97b67d8d89cf64620baaeb42e223008ab40365cdb8d",
-    "tests/check/evidence.test.ts": "268f147ce5bb79cdcfe427c8570be354f28f6e1f1e13595327e95a06ad2c0785",
-    "tests/check/strict.test.ts": "c3862b9be0a74f994af87960fd9c57c444004e847471216049661ee65bf12c60"
+    "tests/baseline/baseline.test.ts": "0c1ad550389465c5e795087ce16ca6b251493b6a9b316c0f75d9c4e740713193",
+    "tests/check/evidence.test.ts": "b34cec39752f43346b69564a133b748695cce8560a2746149c6e6f0b30a4fbc1",
+    "tests/check/strict.test.ts": "b3997ef636c707b10eb15f48caf568973768a23fa3f871065db4ed2dd8b99288"
   },
   "kind": "command",
   "reqs": [
@@ -18,7 +18,7 @@
   "verify": {
     "command": "bun test tests/check/",
     "exit": 0,
-    "stderr_tail": "\n 31 pass\n 0 fail\n 93 expect() calls\nRan 31 tests across 4 files. [399.00ms]",
+    "stderr_tail": "\n 36 pass\n 0 fail\n 124 expect() calls\nRan 36 tests across 4 files. [923.00ms]",
     "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
   }
 }
