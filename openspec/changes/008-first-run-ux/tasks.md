@@ -4,9 +4,9 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 1. Change key
 
-- [ ] 1.1 Rename `changeNum` to `changeKey` in `src/index/scan.ts`. Return the digits for `^(\d+)-`, else the full folder name. Update every caller (`tasks.ts`, `stats.ts`, `handoff.ts`, `ids.ts`, `workflow.ts`, `evidence.ts`). Add `resolveChange(input)` that accepts a key or a full folder name and returns the folder. Use it in `task start`, `task done`, `task verify`, `task reopen`, `--change`, and `stats --change`. Add `tests/fixtures/kebab-repo/` with changes `add-mfa` and `add-sso`, each with tasks 1.1 and 1.2 and one `Verify: true`. [REQ-IDX-005] Verify: `bun test tests/index tests/tasks && bash tests/parity/run.sh`
-- [ ] 1.2 Add `duplicate-change-key` to `check` as a hard rule. Add the fixture `tests/fixtures/dup-key-repo/` with `001-a` and `001-b`. [REQ-CHK-004] Verify: `bun test tests/check`
-- [ ] 1.3 Amend `decisions/ADR-002-id-scheme.md`. The Design decision and Task rows read `<key>/D<n>` and `<key>/<group>.<n>`. Add one line under the table that defines the key and names 008/D1. Lint. [REQ-IDX-005] Verify: `node dist/cli.js lint tells --baseline 0 decisions/ADR-002-id-scheme.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation decisions/ADR-002-id-scheme.md`
+- [x] 1.1 Rename `changeNum` to `changeKey` in `src/index/scan.ts`. Return the digits for `^(\d+)-`, else the full folder name. Update every caller (`tasks.ts`, `stats.ts`, `handoff.ts`, `ids.ts`, `workflow.ts`, `evidence.ts`). Add `resolveChange(input)` that accepts a key or a full folder name and returns the folder. Use it in `task start`, `task done`, `task verify`, `task reopen`, `--change`, and `stats --change`. Add `tests/fixtures/kebab-repo/` with changes `add-mfa` and `add-sso`, each with tasks 1.1 and 1.2, and one task whose Verify command is `true`. [REQ-IDX-005] Verify: `bun test tests/index tests/tasks && bash tests/parity/run.sh`
+- [x] 1.2 Add `duplicate-change-key` to `check` as a hard rule. Add the fixture `tests/fixtures/dup-key-repo/` with `001-a` and `001-b`. [REQ-CHK-004] Verify: `bun test tests/check`
+- [x] 1.3 Amend `decisions/ADR-002-id-scheme.md`. The Design decision and Task rows read `<key>/D<n>` and `<key>/<group>.<n>`. Add one line under the table that defines the key and names 008/D1. Lint. [REQ-IDX-005] Verify: `node dist/cli.js lint tells --baseline 0 decisions/ADR-002-id-scheme.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation decisions/ADR-002-id-scheme.md`
 
 ## 2. Gate log and IDs
 

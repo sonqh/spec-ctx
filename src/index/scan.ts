@@ -125,9 +125,36 @@ export function changeOf(path: string): string {
   return name;
 }
 
-/** ADR-002: task and decision IDs use the number prefix of the change folder. */
-export function changeNum(change: string): string {
-  return change.split("-")[0]!;
+/**
+ * REQ-IDX-005 the change key: the leading digits of a folder like `003-distribution`,
+ * else the full folder name. Task and decision IDs use the key (ADR-002, 008/D1).
+ */
+export function changeKey(change: string): string {
+  const m = /^(\d+)-/.exec(change);
+  return m ? m[1]! : change;
+}
+
+/** REQ-IDX-005 a key or a full folder name names the same change. */
+export function matchesChange(folder: string, input: string): boolean {
+  return folder === input || changeKey(folder) === input;
+}
+
+/**
+ * REQ-IDX-005 resolve a key or a full folder name to the change folder.
+ * An exact folder name wins. Unknown input returns undefined.
+ */
+export function resolveChange(entries: readonly { change: string }[], input: string): string | undefined {
+  const folders = [...new Set(entries.map((e) => e.change).filter((c) => c !== "main"))];
+  if (folders.includes(input)) return input;
+  return folders.find((f) => changeKey(f) === input);
+}
+
+/** REQ-IDX-005 a task or decision ID may name its change by the full folder name: `003-distribution/3.3` is `003/3.3`. */
+export function resolveTaskId(entries: readonly { change: string }[], id: string): string {
+  const i = id.indexOf("/");
+  if (i < 0) return id;
+  const folder = resolveChange(entries, id.slice(0, i));
+  return folder === undefined ? id : `${changeKey(folder)}${id.slice(i)}`;
 }
 
 export function readText(abs: string): string {
@@ -201,7 +228,7 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
     }
     if (isDesign && section === "DECISIONS" && line.startsWith("- ")) {
       decision = entry({
-        id: `${changeNum(change)}/D${decisions.length + 1}`, kind: "decision", file: rpath, line: i,
+        id: `${changeKey(change)}/D${decisions.length + 1}`, kind: "decision", file: rpath, line: i,
         title: "", change, status, refs: [],
       });
       decision._lines = [pyStrip(line.slice(2))];
@@ -271,7 +298,7 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       const box = m[1]!;
       const num = m[2]!;
       const body = m[m.length - 1]!;
-      const tid = `${changeNum(change)}/${num}`;
+      const tid = `${changeKey(change)}/${num}`;
       const reqs: string[] = [];
       for (const g of body.matchAll(TASK_REQ)) reqs.push(...g[1]!.split(COMMA));
       if (reqs.length === 0) problems.push([rpath, i, "task-without-req", tid]);

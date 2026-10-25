@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
 import type { Config } from "../config.ts";
 import { canon } from "../index/canonical.ts";
-import { changeNum } from "../index/scan.ts";
+import { changeKey, resolveChange } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { today } from "../util/time.ts";
 
@@ -76,13 +76,12 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
       return seq(start, (n) => `ADR-${pad(n)}`);
     }
     case "DEC": {
-      // a design decision ID is <change number>/D<n>. The CAP argument names the change.
-      if (!o.cap) throw new UsageExit("id new DEC needs a change name or number");
-      const num = changeNum(o.cap);
-      if (!entries.some((e) => changeNum(e.change) === num && e.change !== "main")) {
-        throw new UsageExit(`no change with the number ${num}`);
-      }
-      const start = next(new RegExp(`^${num}/D(\\d+)$`));
+      // REQ-IDX-005 a design decision ID is <change key>/D<n>. The CAP argument names the change by key or folder.
+      if (!o.cap) throw new UsageExit("id new DEC needs a change name or key");
+      const folder = resolveChange(entries, o.cap);
+      if (folder === undefined) throw new UsageExit(`no change with the key ${changeKey(o.cap)}`);
+      const num = changeKey(folder);
+      const start = next(new RegExp(`^${num.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/D(\\d+)$`));
       return seq(start, (n) => `${num}/D${n}`);
     }
   }

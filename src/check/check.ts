@@ -1,8 +1,9 @@
 // REQ-CHK-001 REQ-CHK-002 REQ-GOV-002 integrity rules over the index.
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "../config.ts";
 import { canon, SPEC_KINDS } from "../index/canonical.ts";
+import { changeKey } from "../index/scan.ts";
 import type { Index, Problem } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
@@ -23,6 +24,30 @@ export function retiredIds(root: string): Set<string> {
   return out;
 }
 
+/**
+ * REQ-CHK-004 two change folders, active or archived, with one key are a hard finding.
+ * The first folder in path order keeps the key. Every later folder gets a finding.
+ */
+export function duplicateChangeKeys(root: string): Problem[] {
+  const base = join(root, "openspec/changes");
+  const dirs = (abs: string): string[] => {
+    if (!existsSync(abs)) return [];
+    return readdirSync(abs).filter((n) => statSync(join(abs, n)).isDirectory()).sort();
+  };
+  const folders: [string, string][] = [];
+  for (const n of dirs(base)) if (n !== "archive") folders.push([`openspec/changes/${n}`, n]);
+  // openspec archive prefixes the folder with a date: 2026-10-23-001-foundation
+  for (const n of dirs(join(base, "archive"))) folders.push([`openspec/changes/archive/${n}`, n.replace(/^\d{4}-\d{2}-\d{2}-/, "")]);
+  const seen = new Set<string>();
+  const out: Problem[] = [];
+  for (const [rel, name] of folders.sort((a, b) => cmpTuple(a, b))) {
+    const key = changeKey(name);
+    if (seen.has(key)) out.push([rel, 1, "duplicate-change-key", key]);
+    seen.add(key);
+  }
+  return out;
+}
+
 export interface Finding {
   file: string;
   line: number;
@@ -34,6 +59,7 @@ export interface Finding {
 export function check(root: string, cfg: Config, data: Index, strict: boolean): Finding[] {
   const entries = data.entries;
   const findings: Problem[] = data.problems.map((p) => [...p] as Problem);
+  findings.push(...duplicateChangeKeys(root));
   const seen = new Set<string>();
   for (const e of entries) {
     if (!SPEC_KINDS.has(e.kind)) continue;

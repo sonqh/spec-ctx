@@ -21,9 +21,9 @@ describe("baseline", () => {
     const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
     expect(list).toEqual([...list].sort());
     for (const id of ["REQ-UA-001", "REQ-UA-002", "REQ-UA-003", "REQ-PS-001", "REQ-PS-002"]) expect(list).toContain(`uncovered ${id}`);
-    expect(list).toContain("task-without-req add/1.1");
-    expect(list).toContain("task-without-verify add/1.3");
-    expect(list).toContain("manual-evidence add/1.1");
+    expect(list).toContain("task-without-req add-mfa/1.1");
+    expect(list).toContain("task-without-verify add-mfa/1.3");
+    expect(list).toContain("manual-evidence add-mfa/1.1");
     const r = await p.run("check", "--strict");
     expect(r.code, r.out).toBe(0);
     expect(r.out).toBe(`0 finding(s)\nbaselined: ${list.length}\n`);

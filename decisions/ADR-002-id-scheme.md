@@ -11,10 +11,12 @@ Every requirement, scenario, decision, design decision, and task has an ID that 
 | Requirement | `REQ-<CAP>-<NNN>` | `REQ-IDX-003` | `### Requirement:` header |
 | Scenario | `SCN-<CAP>-<NNN>-<n>` | `SCN-IDX-003-2` | `#### Scenario:` header |
 | Decision record | `ADR-<NNN>` | `ADR-002` | `decisions/ADR-NNN-*.md` title |
-| Design decision | `<change>/D<n>` | `002/D3` | bullet under `## Decisions` in design.md |
-| Task | `<change>/<group>.<n>` | `002/3.2` | tasks.md checkbox |
+| Design decision | `<key>/D<n>` | `002/D3` | bullet under `## Decisions` in design.md |
+| Task | `<key>/<group>.<n>` | `002/3.2` | tasks.md checkbox |
 | Code tag | comment `REQ-<CAP>-<NNN>` | `// REQ-IDX-003` | source file |
 | Test tag | comment `Covers: REQ-...` | `// Covers: REQ-IDX-003` | test file |
+
+`<key>` is the change key from 008/D1. A folder that starts with digits and a dash, like `002-ids`, has the digits as its key. Any other folder, like `add-mfa`, has its full name as its key.
 
 `<CAP>` is a capability code from the project config. `<NNN>` is allocated by `specctx id new` and never reused. Links are written as a line `Refs: ID, ID`. The engine reads these lines and nothing else to build its graph.
 

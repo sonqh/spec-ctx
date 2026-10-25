@@ -158,13 +158,13 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const note = (f.manual as string | undefined)?.trim();
       if (!note) throw new UsageExit('task backfill needs --manual "<note>"');
       const { tasksOf, toTask, hasEvidence } = await import("../tasks/tasks.ts");
-      const { changeNum } = await import("../index/scan.ts");
+      const { matchesChange } = await import("../index/scan.ts");
       const { writeEvidence } = await import("../tasks/evidence.ts");
       const want = f.change as string | undefined;
       const counts = new Map<string, number>();
       for (const e of tasksOf(entries)) {
         if (e.status !== "done") continue;
-        if (want && e.change !== want && changeNum(e.change) !== want) continue;
+        if (want && !matchesChange(e.change, want)) continue;
         if (hasEvidence(c.root, e)) continue;
         const t = toTask(c.root, e);
         writeEvidence(c.root, t, entries, { command: t.verify.command, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", note);

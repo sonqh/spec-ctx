@@ -2,7 +2,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
-import { changeNum } from "../index/scan.ts";
+import { changeKey } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { activeChanges, nextTask } from "../tasks/tasks.ts";
@@ -94,7 +94,8 @@ interface EvidenceRow {
 }
 
 function evidenceRows(root: string, active: string[]): EvidenceRow[] {
-  const nums = new Set(active.map(changeNum));
+  // REQ-IDX-005 evidence files name the change by its key
+  const nums = new Set(active.map(changeKey));
   const rows: EvidenceRow[] = [];
   for (const rel of listEvidence(root)) {
     try {

@@ -9,6 +9,8 @@ export const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const BASE_FIXTURE = join(REPO, "tests/fixtures/ctx-repo");
 export const PARITY_FIXTURE = join(REPO, "tests/fixtures/parity-repo");
 export const NO_ID_FIXTURE = join(REPO, "tests/fixtures/no-id-repo");
+export const KEBAB_FIXTURE = join(REPO, "tests/fixtures/kebab-repo");
+export const DUP_KEY_FIXTURE = join(REPO, "tests/fixtures/dup-key-repo");
 
 /** Tag text built at run time, so the index of this repo does not read test data as tags. */
 export const TAG = "// " + "REQ-";

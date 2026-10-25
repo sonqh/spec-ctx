@@ -1,5 +1,6 @@
 // REQ-QRY-001 token AND over id, title, text. Score 3 for id, 2 for title, 1 for text, per term.
 import { poolOf } from "../index/canonical.ts";
+import { matchesChange } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpTuple, pySplit } from "../util/pystr.ts";
 
@@ -14,7 +15,8 @@ export function query(entries: Entry[], args: string[], o: QueryOpts = {}): Entr
   const terms = args.flatMap((a) => pySplit(a.toLowerCase()));
   const hits: [number, string, string, number, Entry][] = [];
   for (const e of poolOf(entries, !!o.all)) {
-    if ((o.kind && e.kind !== o.kind) || (o.change && e.change !== o.change)) continue;
+    if ((o.kind && e.kind !== o.kind) || (o.change && !matchesChange(e.change, o.change))) continue;
+    // REQ-IDX-005 --change takes a key or a full folder name
     const idl = e.id.toLowerCase();
     const tl = e.title.toLowerCase();
     const xl = e.text ?? "";

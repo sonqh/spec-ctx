@@ -68,11 +68,11 @@ describe("adopt write", () => {
     p = new Project(NO_ID_FIXTURE);
     p.write("spec-ctx.toml", "# none\n");
     const pre = await p.run("check");
-    expect(pre.out).toContain("task-without-req  add/1.1");
+    expect(pre.out).toContain("task-without-req  add-mfa/1.1");
     const r = await p.run("adopt");
     expect(r.code, r.err + r.out).toBe(0);
     expect(p.read(MAIN)).toContain("REQ-UA-001");
-    expect((await p.run("check")).out).toContain("task-without-req  add/1.1");
+    expect((await p.run("check")).out).toContain("task-without-req  add-mfa/1.1");
   });
 
   test("the report names every code, file, and header", async () => {

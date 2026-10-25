@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
-import { changeNum } from "../index/scan.ts";
+import { matchesChange, resolveTaskId } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpStr, cmpTuple, splitLines } from "../util/pystr.ts";
 import { parseVerify, type VerifySpec } from "../verify/parse.ts";
@@ -58,7 +58,9 @@ export function tasksOf(entries: Entry[]): Entry[] {
 }
 
 export function findTask(root: string, entries: Entry[], id: string): Task {
-  const hits = tasksOf(entries).filter((e) => e.id === id);
+  // REQ-IDX-005 the full folder name works as an alias of the key
+  const want = resolveTaskId(entries, id);
+  const hits = tasksOf(entries).filter((e) => e.id === want);
   if (hits.length === 0) throw new UsageExit(`no task ${id}`);
   // an active copy wins over an archived one with the same number
   hits.sort((a, b) => Number(a.file.includes("/archive/")) - Number(b.file.includes("/archive/")));
@@ -73,7 +75,7 @@ export function activeChanges(entries: Entry[]): string[] {
 
 /** The first open task whose earlier tasks in the same group are done, in the lowest numbered active change. */
 export function nextTask(root: string, entries: Entry[], change?: string): Task | null {
-  const changes = activeChanges(entries).filter((c) => !change || c === change || changeNum(c) === change);
+  const changes = activeChanges(entries).filter((c) => !change || matchesChange(c, change));
   for (const c of changes) {
     const ts = tasksOf(entries)
       .filter((e) => e.change === c && !e.file.includes("/archive/"))

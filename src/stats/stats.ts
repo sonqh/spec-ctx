@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { readBaseline } from "../baseline/baseline.ts";
 import type { Finding } from "../check/check.ts";
-import { changeNum } from "../index/scan.ts";
+import { changeKey, matchesChange } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpStr, cpLen } from "../util/pystr.ts";
 
@@ -137,9 +137,9 @@ export function computeStats(root: string, entries: Entry[], strictFindings: Fin
     .filter((e) => e.canonical && (e.kind === "req" || e.kind === "scn" || e.kind === "decision"))
     .reduce((a, e) => a + cpLen(e.text ?? ""), 0);
   const { live, reopened } = readEvidence(root);
-  // the change name of each change number, from the task entries
+  // REQ-IDX-005 the change name of each change key, from the task entries
   const names = new Map<string, string>();
-  for (const e of entries) if (e.kind === "task") names.set(changeNum(e.change), e.change);
+  for (const e of entries) if (e.kind === "task") names.set(changeKey(e.change), e.change);
   const nameOf = (task: string): string => {
     const num = task.split("/")[0]!;
     return names.get(num) ?? num;
@@ -160,7 +160,7 @@ export function computeStats(root: string, entries: Entry[], strictFindings: Fin
     });
     return { value: keys.length, n: keys.length, text: String(keys.length) };
   };
-  const changes = [...new Set([...live, ...reopened].map((e) => nameOf(e.task)))].sort(cmpStr).filter((c) => !only || c === only || changeNum(c) === only);
+  const changes = [...new Set([...live, ...reopened].map((e) => nameOf(e.task)))].sort(cmpStr).filter((c) => !only || matchesChange(c, only));
   const rows = changes.map((c) => metrics(c, live.filter((e) => nameOf(e.task) === c), reopened.filter((e) => nameOf(e.task) === c), specChars, taskDebt(c)));
   const pick = (xs: Ev[]): Ev[] => (only ? xs.filter((e) => changes.includes(nameOf(e.task))) : xs);
   const total = metrics("total", pick(live), pick(reopened), specChars, debtAll);

@@ -1,4 +1,4 @@
-// REQ-TASK-004 evidence files under .ctx/evidence/<change number>/<task>.json.
+// REQ-TASK-004 evidence files under .ctx/evidence/<change key>/<task>.json.
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Entry } from "../index/types.ts";

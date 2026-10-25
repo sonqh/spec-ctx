@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-24T02:09:01.814Z",
+  "files": {
+    "src/check/evidence.ts": "ffae16540b16d978af2d4ec254f497035ebc62f49fdcb59678c6db970feca794",
+    "src/index/scan.ts": "a2fad3dd7702089eced1874f92b85f5a9efb079e7d4a004b5c4f7c4266b0b740",
+    "tests/check/evidence.test.ts": "268f147ce5bb79cdcfe427c8570be354f28f6e1f1e13595327e95a06ad2c0785",
+    "tests/check/strict.test.ts": "c3862b9be0a74f994af87960fd9c57c444004e847471216049661ee65bf12c60"
+  },
+  "kind": "command",
+  "reason": "stale after 008 group 1: change key in src/index/scan.ts and src/check/check.ts",
+  "reqs": [
+    "REQ-CHK-002",
+    "REQ-CHK-003"
+  ],
+  "task": "003/3.5",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/check/",
+    "exit": 0,
+    "stderr_tail": "\n 26 pass\n 0 fail\n 80 expect() calls\nRan 26 tests across 3 files. [179.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}
