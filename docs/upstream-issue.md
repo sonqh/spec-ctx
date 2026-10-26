@@ -74,6 +74,8 @@ The workflow built on the IDs also measured two things that header text cannot. 
 
 ## Community schema entry
 
+Status: posted on 2026-10-26 as [Fission-AI/OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157), labels `documentation` and `needs-triage`. A reply on [discussion #743](https://github.com/Fission-AI/OpenSpec/discussions/743) points to the #1967 comment and invites a trial.
+
 Title: `Community schema: spec-driven-ids`
 
 Link: https://github.com/sonqh/spec-ctx/tree/main/schemas/spec-driven-ids
