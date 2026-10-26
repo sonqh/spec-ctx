@@ -1,4 +1,4 @@
-schema: spec-driven
+schema: spec-driven-ids
 
 context: |
   spec-ctx is a deterministic context engine and task workflow for OpenSpec projects.
@@ -11,28 +11,28 @@ context: |
 
 rules:
   proposal:
-    - Under 400 words.
-    - Name what is out of scope.
+    - 'Under 400 words.'
+    - 'Name what is out of scope.'
   specs:
-    - Every requirement header starts with its ID, e.g. "### Requirement: REQ-IDX-001 Index sources".
-    - Every scenario header starts with its ID, e.g. "#### Scenario: SCN-IDX-001-1 Clean build".
-    - A requirement may end with a line "Refs: REQ-X-001, ADR-002" to link related IDs.
-    - Write in English. Short sentences. Active voice. No semicolons, no dashes. Keep technical terms as the field uses them.
-    - Requirement text stays under 500 characters. Move detail into scenarios.
+    - 'Every requirement header starts with its ID, e.g. "### Requirement: REQ-IDX-001 Index sources".'
+    - 'Every scenario header starts with its ID, e.g. "#### Scenario: SCN-IDX-001-1 Clean build".'
+    - 'A requirement may end with a line "Refs: REQ-X-001, ADR-002" to link related IDs.'
+    - 'Write in English. Short sentences. Active voice. No semicolons, no dashes. Keep technical terms as the field uses them.'
+    - 'Requirement text stays under 500 characters. Move detail into scenarios.'
   design:
-    - Each decision references an ADR ID or states that it creates one.
+    - 'Each decision references an ADR ID or states that it creates one.'
   tasks:
-    - Every task cites at least one REQ ID in square brackets, e.g. "[REQ-IDX-001]".
-    - Every task states its verification as a command in a code span after "Verify:".
+    - 'Every task cites at least one REQ ID in square brackets, e.g. "[REQ-IDX-001]".'
+    - 'Every task states its verification as a command in a code span after "Verify:".'
 
 operations:
   apply:
     guidance:
-      - Before reading specs, run `node dist/cli.js task start <task>` and read the bundle it prints first.
-      - Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.
-      - Run `ctx check` after each task group.
+      - 'Before reading specs, run `node dist/cli.js task start <task>` and read the bundle it prints first.'
+      - 'Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.'
+      - 'Run `node dist/cli.js check` after each task group.'
   archive:
     guidance:
-      - Run `ctx check --strict` and `openspec validate --all --strict`. Both must pass before archive.
-      - Rebuild the index after archive.
-      - Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.
+      - 'Run `node dist/cli.js check --strict` and `openspec validate --all --strict`. Both must pass before archive.'
+      - 'Rebuild the index after archive.'
+      - 'Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.'
