@@ -9,7 +9,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 2. Demo
 
-- [ ] 2.1 Rewrite `docs/demo/record.sh` per 010/D4: five captions, the failing `task done` first, the heredoc edit, the `git diff` of `tasks.md`, the stale check. `git init` and one commit in the fixture after adopt. Record with `FORCE_COLOR=1`. Write `docs/demo/loop.cast`, `loop.svg`, `loop.txt`. Add `tests/gov/demo.test.ts` for the two REQ-GOV-008 scenarios. [REQ-GOV-008] Verify: `bash docs/demo/record.sh && bun test tests/gov/demo.test.ts`
+- [x] 2.1 Rewrite `docs/demo/record.sh` per 010/D4: five captions, the failing `task done` first, the heredoc edit, the `git diff` of `tasks.md`, the stale check. `git init` and one commit in the fixture after adopt. Record with `FORCE_COLOR=1`. Write `docs/demo/loop.cast`, `loop.svg`, `loop.txt`. Add `tests/gov/demo.test.ts` for the two REQ-GOV-008 scenarios. [REQ-GOV-008] Verify: `bash docs/demo/record.sh && bun test tests/gov/demo.test.ts`
 
 ## 3. README
 

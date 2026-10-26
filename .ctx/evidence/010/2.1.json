@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-26T07:11:55.034Z",
+  "bundle_chars": 4616,
+  "files": {
+    "tests/gov/demo.test.ts": "de5a1aa0d1ecac868a17f65cd4a252b07e00898be629fd185d9c5ff6b316c68e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-008"
+  ],
+  "started_at": "2026-10-26T07:09:38.576Z",
+  "task": "010/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash docs/demo/record.sh && bun test tests/gov/demo.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 2 pass\n 0 fail\n 15 expect() calls\nRan 2 tests across 1 file. [18.00ms]",
+    "stdout_sha256": "21c0ac860f93cfae2a8bcb2893f996e10fa3e47f374beda9c4bffc6f8a5376c7"
+  }
+}

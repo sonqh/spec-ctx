@@ -1,0 +1,38 @@
+// Covers: REQ-GOV-008
+import { readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, test } from "vitest";
+import { REPO } from "../helpers.ts";
+
+const DEMO = join(REPO, "docs/demo");
+
+describe("demo story", () => {
+  test("SCN-GOV-008-1 the transcript holds the five steps, the refusal, the diff, and the stale catch", () => {
+    const lines = readFileSync(join(DEMO, "loop.txt"), "utf8").split("\n");
+    let at = -1;
+    for (let n = 1; n <= 5; n++) {
+      const i = lines.findIndex((l, k) => k > at && l.startsWith(`# ${n}.`));
+      expect(i, `caption # ${n}.`).toBeGreaterThan(at);
+      at = i;
+    }
+    const refused = lines.findIndex((l) => l.includes("The task stays open."));
+    const done = lines.findIndex((l) => l.startsWith("done add-mfa/1.3."));
+    expect(refused).toBeGreaterThan(0);
+    expect(done).toBeGreaterThan(refused);
+    expect(lines.some((l) => l.startsWith("-- [ ] 1.3"))).toBe(true);
+    expect(lines.some((l) => l.startsWith("+- [x] 1.3"))).toBe(true);
+    expect(lines.some((l) => /stale-evidence\s+add-mfa\/1\.3/.test(l))).toBe(true);
+    expect(lines.some((l) => l.startsWith("$ specctx stats"))).toBe(false);
+  });
+
+  test("SCN-GOV-008-2 the SVG is under 400 kB and the cast is under 30 seconds", () => {
+    expect(statSync(join(DEMO, "loop.svg")).size).toBeLessThan(400_000);
+    const events = readFileSync(join(DEMO, "loop.cast"), "utf8").trim().split("\n");
+    const last = JSON.parse(events[events.length - 1]!) as [number, string, string];
+    expect(last[0]).toBeLessThan(30);
+    // the captions print dim and the refusal prints red
+    const cast = events.join("\n");
+    expect(cast).toContain("\\u001b[2m# 1.");
+    expect(cast).toContain("\\u001b[31mVerify failed (exit 1). The task stays open.");
+  });
+});

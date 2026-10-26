@@ -1,35 +1,32 @@
-$ specctx status
-index rebuilt
-add-mfa  done 2  open 1
-uncovered active REQs in main: 5
-next: specctx task next
+
+# 1. The next task and the command that proves it
 $ specctx task next
 add-mfa/1.3  Add the TOTP prompt to the login form.
 reqs: REQ-UA-004
 verify: grep -q totp src/login.ts
-$ specctx task start add-mfa/1.3 | head -12
--- REQ-UA-004 | openspec/changes/add-mfa/specs/user-auth/spec.md:5 | active | requested
-### Requirement: REQ-UA-004 Second factor
-The system SHALL ask for a TOTP code after a valid password.
 
-#### Scenario: SCN-UA-004-1 Valid code
-- **WHEN** the user enters the current TOTP code
-- **THEN** the system opens a session
-
-#### Scenario: SCN-UA-004-2 Expired code
-- **WHEN** the user enters a code older than 30 seconds
-- **THEN** the system rejects it
-
-$ printf '// REQ-UA-004\nexport const prompt = "totp";\n' > src/login.ts
+# 2. Done? Not until Verify passes
 $ specctx task done add-mfa/1.3
-index rebuilt
+Verify failed (exit 1). The task stays open.
+
+# 3. The agent does the work
+$ cat > src/login.ts <<'EOF'
+// REQ-UA-004
+export const prompt = "totp";
+EOF
+
+# 4. Verify passes. The box flips and the evidence is written
+$ specctx task done add-mfa/1.3
 done add-mfa/1.3. Evidence: .ctx/evidence/add-mfa/1.3.json
-$ specctx stats --change add-mfa
-index rebuilt
-change   context_ratio  evidence_ratio  stale_catches  cycle_time_median_s  debt
-add-mfa  0.2950 (n=1)   1.00 (1/1)      n/a            6 (n=1)              2
-total    0.2950 (n=1)   1.00 (1/1)      n/a            6 (n=1)              13 (0 baselined + 13 new)
-gate_runs n/a
-gate_pass_rate n/a
-gate_failures_caught n/a
-context_ratio = bundle chars / chars of all specs. Lower is better.
+$ git diff --no-color openspec/changes/add-mfa/tasks.md | grep '^[-+]- '
+-- [ ] 1.3 Add the TOTP prompt to the login form. [REQ-UA-004] Verify: `grep -q totp src/login.ts`
++- [x] 1.3 Add the TOTP prompt to the login form. [REQ-UA-004] Verify: `grep -q totp src/login.ts`
+
+# 5. A later edit makes the evidence stale. check says so
+$ echo >> src/login.ts
+$ specctx check --strict
+.ctx/evidence/add-mfa/1.3.json:1  stale-evidence  add-mfa/1.3 src/login.ts
+
+1 finding in 1 file (1 hard, 0 advisory)
+stale-evidence  1  Run specctx task reopen and then specctx task done.
+baselined: 17
