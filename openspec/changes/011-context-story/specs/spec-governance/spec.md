@@ -24,7 +24,7 @@ Refs: REQ-GOV-003
 - **THEN** the first holds a fenced `mermaid` block that names `REQ-UA-004` and `Covers`, and the second names `specctx-bootstrap`, `specctx-next`, `specctx-done`, and `handoff write`
 
 ### Requirement: REQ-GOV-008 Demo story
-The demo SHALL run six captioned steps on the fixture before adopt. Steps: `adopt --dry-run` then `adopt`. `status`. `task next`. `task start` with its footer. A `task done` that fails with `The task stays open.`, the edit with its content on screen, and a `task done` that passes. `handoff write` and the head of `.ctx/handoff.md`. Captions start with `# <n>.` and print dim. No `stats`. Under 30 seconds and 400 kB. `loop.txt` holds the transcript.
+The demo SHALL run six captioned steps on the fixture before adopt. Steps: `adopt --dry-run` then `adopt`. `status`. `task next`. `task start` with its footer. A `task done` that fails with `The task stays open.`, the edit on screen, and a `task done` that passes. `handoff write` and the head of `.ctx/handoff.md`. Captions start with `# <n>.` and print dim. No `stats`. Under 30 seconds and 400 kB. `loop.txt` holds the transcript.
 
 Refs: REQ-GOV-003, REQ-TASK-002, REQ-TASK-003, REQ-CLI-008
 

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-26T07:39:34.769Z",
+  "bundle_chars": 5083,
+  "files": {
+    "tests/gov/readme.test.ts": "cfbd128c70b329947233fcdb1848269d90beeaca0c01d62b826900e88ef37388"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-006"
+  ],
+  "started_at": "2026-10-26T07:38:34.862Z",
+  "task": "011/3.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/gov && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "\n 18 pass\n 0 fail\n 126 expect() calls\nRan 18 tests across 5 files. [3.03s]",
+    "stdout_sha256": "0e6ae9665250df426728a54930c2df15e535f7efb524624645128822ef64798b"
+  }
+}

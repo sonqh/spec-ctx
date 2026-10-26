@@ -1,6 +1,6 @@
 # spec-ctx
 
-Your coding agent reads only the spec it needs, and cannot tick a task until its Verify command passes.
+Stable IDs for OpenSpec. Your coding agent loads only the spec one task needs, and knows what to do next.
 
 For teams that run Claude Code, Codex, or Cursor on an OpenSpec project.
 
@@ -8,35 +8,84 @@ For teams that run Claude Code, Codex, or Cursor on an OpenSpec project.
 
 [OpenSpec](https://github.com/Fission-AI/OpenSpec) keeps the specs and a task list of a change in your repo. A coding agent works down the list. Three things go wrong.
 
-- The agent ticks a task when it thinks it finished. No test ran. The `[x]` is a claim.
-- The agent reads every spec file for a small task. The part that matters is lost in the rest.
-- A task passed last week. Then a later edit broke it, and the box still says done.
+- The agent reads the whole `openspec/` tree for every task. Most of it is not about the task. Tokens go to text the agent will not use.
+- OpenSpec links a change to a spec by header text. A reword breaks the link, and the agent loses the thread between requirement, code, and test.
+- A new session starts cold. The agent does not know which task is next, what it already did, or which questions are open.
 
 ## What spec-ctx does
 
 | Without | With spec-ctx |
 | --- | --- |
+| The agent reads the whole `openspec/` tree. | The agent gets the bundle of one task: the requirements it cites, their scenarios, decisions, and neighbors. |
+| Links go by header text. | Every requirement, scenario, decision, and task has an ID. Code and tests carry tags that name it. |
+| Each session starts cold. | `status`, `task next`, and the generated handoff say where the work stands. |
 | The agent ticks `[x]` by hand. | `[x]` appears only after the Verify command of the task exits 0. The run leaves an evidence file. |
-| The agent reads the whole `openspec/` tree. | The agent gets a few kilobytes: the requirements and scenarios that the task names. |
-| An old `[x]` stays after a later edit. | `check --strict` names each task whose files changed after its Verify passed. |
+
+A later edit can break a task that passed. `check --strict` names each task whose files changed after its Verify passed.
 
 No LLM call. No daemon. The same files give the same output.
 
 ## Demo
 
-![One task: the agent asks to close it, Verify refuses, the agent does the work, Verify passes, a later edit makes the evidence stale](docs/demo/loop.svg)
+![Six steps on a project without IDs: adopt, status, task next, the bundle of one task, a done that waits for Verify, and the handoff](docs/demo/loop.svg)
 
-The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` after `specctx adopt`. `bash docs/demo/record.sh` records it again.
+The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` before `specctx adopt`. `bash docs/demo/record.sh` records it again.
 
 ## Quickstart
 
 ```bash
 npx -y spec-ctx init --all              # config, schema, and three agent skills
 npx -y spec-ctx task next               # the next task and the command that proves it
+npx -y spec-ctx task start <task>       # only the spec that this task needs
 npx -y spec-ctx task done <task>        # runs that command. A pass ticks the box.
 ```
 
 A project with specs but no IDs needs `specctx adopt` first. See [Two paths](#two-paths).
+
+## How it finds the context
+
+```mermaid
+graph LR
+  T["task add-mfa/1.3"] -->|cites| R["REQ-UA-004"]
+  R -->|scenario| S1["SCN-UA-004-1"]
+  R -->|scenario| S2["SCN-UA-004-2"]
+  R -->|"// REQ tag"| C["src/login.ts"]
+  R -->|"Covers:"| X["tests/login.test.ts"]
+```
+
+The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. `bundle` walks the edges to the configured depth inside a character budget. A decision record joins the graph through its `Refs:` line. The demo fixture has none, so the graph above shows no decision.
+
+`specctx related` prints each neighbor of an ID and the reason for the link. This is the output for the demo project after its last step:
+
+```text
+$ specctx related REQ-UA-004
+scn  SCN-UA-004-1  active  openspec/changes/add-mfa/specs/user-auth/spec.md:8  scenario of REQ-UA-004
+scn  SCN-UA-004-2  active  openspec/changes/add-mfa/specs/user-auth/spec.md:12  scenario of REQ-UA-004
+task  add-mfa/1.3  done  openspec/changes/add-mfa/tasks.md:7  task cites REQ-UA-004
+code  src/login.ts:1  active  src/login.ts:1  implements REQ-UA-004
+test  tests/login.test.ts:1  active  tests/login.test.ts:1  covers REQ-UA-004
+```
+
+## The life cycle for agents
+
+`init --all` installs three skills. Each one fires at a fixed point of the session.
+
+- `specctx-bootstrap` fires at the start of a session. It reads the status and the handoff and starts the task.
+- `specctx-next` fires after a task closes. It picks the next task and loads its bundle.
+- `specctx-done` fires when the work is complete. It runs Verify, closes the task, and writes the handoff.
+
+The loop that the skills teach:
+
+```bash
+specctx init --all             # config, schema, and the three skills
+specctx status                 # active changes, current task, open questions
+specctx task next              # the next open task, its REQ IDs, and its Verify command
+specctx task start <task>      # the bundle of that task and its size
+specctx task done <task>       # run Verify, write evidence, set the checkbox
+specctx handoff write          # .ctx/handoff.md for the next session
+```
+
+The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. The skills are in [`skills/`](skills/).
 
 ## Install
 

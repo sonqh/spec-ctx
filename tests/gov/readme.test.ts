@@ -7,27 +7,45 @@ import { REPO } from "../helpers.ts";
 const readme = readFileSync(join(REPO, "README.md"), "utf8");
 
 describe("README order", () => {
-  test("SCN-GOV-006-1 line 3 is a short tagline with Verify, and the story headers come first", () => {
+  test("SCN-GOV-006-1 line 3 is a short tagline with IDs, and the story headers come first", () => {
     const lines = readme.split("\n");
     expect(lines[0]).toBe("# spec-ctx");
     const tagline = lines[2]!;
-    expect(tagline.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(20);
-    expect(tagline).toContain("Verify");
+    expect(tagline.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(25);
+    expect(tagline).toContain("IDs");
     expect(lines[4]).toMatch(/^For teams that run /);
     let at = -1;
-    for (const h of ["## The problem", "## What spec-ctx does", "## Demo", "## Quickstart"]) {
+    for (const h of ["## The problem", "## What spec-ctx does", "## Demo", "## Quickstart", "## How it finds the context", "## The life cycle for agents"]) {
       const i = lines.indexOf(h);
       expect(i, h).toBeGreaterThan(at);
-      expect(i, h).toBeLessThan(60);
+      expect(i, h).toBeLessThan(110);
       at = i;
     }
     const problem = lines.slice(lines.indexOf("## The problem"), lines.indexOf("## What spec-ctx does"));
     expect(problem.filter((l) => l.startsWith("- "))).toHaveLength(3);
     const table = lines.slice(lines.indexOf("## What spec-ctx does"), lines.indexOf("## Demo")).filter((l) => l.startsWith("| "));
     expect(table[0]).toBe("| Without | With spec-ctx |");
-    expect(table).toHaveLength(5);
+    expect(table).toHaveLength(6);
+    // the Verify gate is the last row
+    expect(table[5]).toContain("Verify");
+    expect(table.slice(2, 5).some((l) => l.includes("Verify"))).toBe(false);
     const quick = lines.slice(lines.indexOf("## Quickstart")).filter((l) => /^npx -y spec-ctx /.test(l));
     expect(quick.length).toBeGreaterThanOrEqual(3);
+  });
+
+  test("SCN-GOV-006-4 the graph section holds a mermaid block, and the life cycle names the skills and the handoff", () => {
+    const lines = readme.split("\n");
+    const g = lines.indexOf("## How it finds the context");
+    const l = lines.indexOf("## The life cycle for agents");
+    const graph = lines.slice(g, l).join("\n");
+    const mermaid = /```mermaid\n([\s\S]*?)```/.exec(graph);
+    expect(mermaid).not.toBeNull();
+    expect(mermaid![1]).toMatch(/^graph LR/);
+    for (const w of ["REQ-UA-004", "Covers", "SCN-UA-004-1", "SCN-UA-004-2", "add-mfa/1.3"]) expect(mermaid![1]).toContain(w);
+    expect(graph).toContain("$ specctx related REQ-UA-004");
+    const next = lines.findIndex((x, k) => k > l && x.startsWith("## "));
+    const cycle = lines.slice(l, next).join("\n");
+    for (const w of ["specctx-bootstrap", "specctx-next", "specctx-done", "handoff write"]) expect(cycle).toContain(w);
   });
 
   test("SCN-GOV-006-2 maintainer content lives in docs/CONTRIBUTING.md", () => {
