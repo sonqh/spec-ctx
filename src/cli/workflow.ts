@@ -6,6 +6,7 @@ import type { Index } from "../index/types.ts";
 import type { Io } from "../main.ts";
 import { dumps } from "../util/json.ts";
 import type { Parsed } from "./args.ts";
+import { paint } from "./color.ts";
 import { UsageExit } from "./errors.ts";
 
 export interface Ctx {
@@ -115,7 +116,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         if (!t.done) setBox(c.root, t, true);
         clearCurrent(c.root, t.id);
         if (c.json) print(c, { evidence: rel, kind: "manual", task: t.id });
-        else c.io.out(`done ${t.id} (manual). Evidence: ${rel}\n`);
+        else c.io.out(paint("ok", `done ${t.id} (manual). Evidence: ${rel}\n`, c.io.tty));
         return 0;
       }
       if (!dry && t.done) throw new UsageExit(`task ${t.id} is done`);
@@ -144,7 +145,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         const msg = r.timedOut ? `verify timed out after ${c.cfg.verify.timeout_s}s` : `verify failed with exit ${r.exit}`;
         if (c.json) print(c, { command: t.verify.command, error: msg, exit: r.exit, tail: outTail, task: t.id });
         else c.io.out(outTail ? outTail + "\n" : "");
-        c.io.err(`specctx: ${msg}. Task ${t.id} stays open.\n`);
+        // REQ-VER-003 a timeout keeps its own line on stderr
+        if (r.timedOut) c.io.err(`specctx: ${msg}. Task ${t.id} stays open.\n`);
+        // REQ-TASK-003 the refusal is the last line of the output. REQ-CLI-008 it is red on a TTY.
+        else if (!c.json) c.io.out(paint("fail", `Verify failed (exit ${r.exit}). The task stays open.\n`, c.io.tty));
         return 1;
       }
       const { sha256 } = await import("../util/hash.ts");
@@ -158,7 +162,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       setBox(c.root, t, true);
       clearCurrent(c.root, t.id);
       if (c.json) print(c, { evidence: rel, kind: "command", task: t.id });
-      else c.io.out(`done ${t.id}. Evidence: ${rel}\n`);
+      else c.io.out(paint("ok", `done ${t.id}. Evidence: ${rel}\n`, c.io.tty)); // REQ-CLI-008
       return 0;
     }
     case "task backfill": {

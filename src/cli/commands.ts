@@ -5,6 +5,7 @@ import type { Parsed } from "./args.ts";
 import { UsageExit } from "./errors.ts";
 import { findRoot, requireOpenSpec } from "./root.ts";
 import { hintOf } from "../check/hints.ts";
+import { paint } from "./color.ts";
 
 /** check with warnings and the baseline filter. Strict mode adds the strict rules and the warnings. */
 async function runCheck(root: string, cfg: import("../config.ts").Config, data: import("../index/types.ts").Index, strict: boolean) {
@@ -24,12 +25,13 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
  * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
  * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
  */
-export function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }): string {
-  const body = r.findings.map((x) => `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`).join("")
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
+  // REQ-CLI-008 every finding of check is hard, so every finding line is red. stale-evidence is one of them.
+  const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`, tty)).join("")
     + r.warnings.map((w) => `warning: ${w}\n`).join("");
   const base = r.baselined ? `baselined: ${r.baselined}\n` : "";
   const n = r.findings.length + r.warnings.length;
-  if (!n) return `0 findings\n${base}`;
+  if (!n) return paint("dim", "0 findings\n", tty) + base;
   const files = new Set(r.findings.map((x) => x.file));
   const count = new Map<string, number>();
   for (const x of r.findings) count.set(x.rule, (count.get(x.rule) ?? 0) + 1);
@@ -41,7 +43,7 @@ export function checkText(r: { findings: { file: string; line: number; rule: str
   }
   const rules = [...count.keys()].sort();
   return body
-    + `\n${n} finding${n === 1 ? "" : "s"} in ${files.size} file${files.size === 1 ? "" : "s"} (${r.findings.length} hard, ${r.warnings.length} advisory)\n`
+    + "\n" + paint("dim", `${n} finding${n === 1 ? "" : "s"} in ${files.size} file${files.size === 1 ? "" : "s"} (${r.findings.length} hard, ${r.warnings.length} advisory)\n`, tty)
     + rules.map((rule) => `${rule}  ${count.get(rule)}  ${hintOf(rule)}\n`).join("")
     + base;
 }
@@ -119,7 +121,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         void check;
         const data = buildIndex(root, cfg);
         const r = await runCheck(root, cfg, data, strict);
-        return { code: r.findings.length ? 1 : 0, out: checkText(r) };
+        return { code: r.findings.length ? 1 : 0, out: checkText(r, io.tty) };
       },
     }, io);
   }
@@ -147,7 +149,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { statusReport, statusLines } = await import("./status.ts");
       const r = statusReport(root, entries);
       if (json) print(r);
-      else io.out(statusLines(r).map((l) => l + "\n").join(""));
+      // REQ-CLI-008 the next: line is dim
+      else io.out(statusLines(r).map((l) => (l.startsWith("next: ") ? paint("dim", l, io.tty) : l) + "\n").join(""));
       return 0;
     }
     case "query": {
@@ -213,7 +216,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     case "check": {
       const r = await runCheck(root, cfg, data, !!f.strict);
       if (json) print({ baselined: r.baselined, count: r.findings.length, findings: r.findings, warnings: r.warnings });
-      else io.out(checkText(r));
+      else io.out(checkText(r, io.tty));
       return r.findings.length ? 1 : 0;
     }
   }
@@ -227,12 +230,12 @@ async function init(p: Parsed, io: Io): Promise<number> {
   const all = !!p.flags.all;
   const r = runInit(root, { schema: all || !!p.flags.schema, skills: all || !!p.flags.skills, force: !!p.flags.force });
   if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
-  else if (r.nothing) io.out("nothing to do\nnext: specctx status\n");
+  else if (r.nothing) io.out("nothing to do\n" + paint("dim", "next: specctx status\n", io.tty));
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
     // REQ-CLI-007 init ends with the next step
-    io.out("next: specctx status\n");
+    io.out(paint("dim", "next: specctx status\n", io.tty));
   }
   return 0;
 }

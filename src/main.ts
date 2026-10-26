@@ -6,6 +6,8 @@ export interface Io {
   cwd: string;
   out: (s: string) => void;
   err: (s: string) => void;
+  /** REQ-CLI-008 true when stdout is a TTY. Tests that capture the output leave it unset. */
+  tty?: boolean;
 }
 
 export async function main(argv: string[], io: Io): Promise<number> {

@@ -33,8 +33,9 @@ describe("task done", () => {
     const before = readFileSync(p.path(TASKS));
     const r = await p.run("task", "done", "002/2.2");
     expect(r.code).toBe(1);
-    expect(r.out).toBe("bad\n");
-    expect(r.err).toContain("verify failed with exit 1");
+    expect(r.out).toBe("bad\nVerify failed (exit 1). The task stays open.\n");
+    expect(r.out.trimEnd().split("\n").pop()).toBe("Verify failed (exit 1). The task stays open.");
+    expect(r.err).not.toContain("verify failed");
     expect(readFileSync(p.path(TASKS)).equals(before)).toBe(true);
     expect(existsSync(p.path(".ctx/evidence/002/2.2.json"))).toBe(false);
   });
@@ -44,7 +45,7 @@ describe("task done", () => {
     p.write(TASKS, "# Tasks\n\n- [ ] 2.1 Long. [REQ-AAA-001] Verify: `seq 1 30 && exit 2`\n");
     const r = await p.run("task", "done", "002/2.1");
     expect(r.code).toBe(1);
-    expect(r.out.trimEnd().split("\n")).toEqual(Array.from({ length: 20 }, (_, i) => String(i + 11)));
+    expect(r.out.trimEnd().split("\n")).toEqual([...Array.from({ length: 20 }, (_, i) => String(i + 11)), "Verify failed (exit 2). The task stays open."]);
   });
 
   test("SCN-TASK-003-3 manual evidence holds the note", async () => {

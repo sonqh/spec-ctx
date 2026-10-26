@@ -6,6 +6,7 @@ as_of: none
 done:
 reopened:
 - 003/3.3 skip.sh unsets GITHUB_OUTPUT (at 2026-10-26T06:03:31.521Z)
+- 010/1.1 workflow.ts changed for the 1.2 failure line (at 2026-10-26T07:09:15.883Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

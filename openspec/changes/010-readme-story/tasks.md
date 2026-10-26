@@ -4,8 +4,8 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 1. Engine
 
-- [ ] 1.1 Add `src/cli/color.ts` with `paint(kind, text)` per 010/D5. Use it for the `done <task>` line, the `Verify failed` line, hard finding lines and `stale-evidence` in `check`, `next:` lines, and the `check` summary line. Never in `--json`. Add tests for the three REQ-CLI-008 scenarios. [REQ-CLI-008] Verify: `bun test tests/cli && bash tests/parity/run.sh`
-- [ ] 1.2 `task done` prints `Verify failed (exit <n>). The task stays open.` after the output on a non-zero exit. Update the test for SCN-TASK-003-2 and the `specctx-done` skill text that describes a failed Verify. [REQ-TASK-003] Verify: `bun test tests/tasks tests/skills`
+- [x] 1.1 Add `src/cli/color.ts` with `paint(kind, text)` per 010/D5. Use it for the `done <task>` line, the `Verify failed` line, hard finding lines and `stale-evidence` in `check`, `next:` lines, and the `check` summary line. Never in `--json`. Add tests for the three REQ-CLI-008 scenarios. [REQ-CLI-008] Verify: `bun test tests/cli && bash tests/parity/run.sh`
+- [x] 1.2 `task done` prints `Verify failed (exit <n>). The task stays open.` after the output on a non-zero exit. Update the test for SCN-TASK-003-2 and the `specctx-done` skill text that describes a failed Verify. [REQ-TASK-003] Verify: `bun test tests/tasks tests/skills`
 
 ## 2. Demo
 

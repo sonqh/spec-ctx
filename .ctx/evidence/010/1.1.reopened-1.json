@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-26T07:07:48.330Z",
+  "bundle_chars": 3300,
+  "files": {
+    "src/cli/color.ts": "d7e2decd1f432a5842e169ba1f73b0a9547e85eae0d2df0b196a046787d1048a",
+    "src/cli/commands.ts": "7d723d427a883e5c5662a83edb07311cad44b96646476ceaff45a4455581e41c",
+    "src/cli/workflow.ts": "012e40e9cd95dd07bd8abf7a3fbdc8e756da24e3bb3c522b9096c8f94078b740",
+    "src/main.ts": "185beabfc7f50afe5f98296631a95c42f0f5e6dd1034857d12b9f864b20d7019",
+    "tests/cli/color.test.ts": "0def82520057ac71a8ef02dc85dec5d8c9409060071d977720202ba4bb091c2c"
+  },
+  "kind": "command",
+  "reason": "workflow.ts changed for the 1.2 failure line",
+  "reqs": [
+    "REQ-CLI-008"
+  ],
+  "started_at": "2026-10-26T07:05:52.626Z",
+  "task": "010/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/cli && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "\n 54 pass\n 0 fail\n 327 expect() calls\nRan 54 tests across 9 files. [1.96s]",
+    "stdout_sha256": "9322b1b307f6510bf50f51921b0d4fff8c1904be412f7e967d31bce386735086"
+  }
+}
