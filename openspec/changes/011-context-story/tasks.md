@@ -8,7 +8,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 2. Demo
 
-- [ ] 2.1 Rewrite `docs/demo/record.sh` per 011/D7: six captions, the fixture before adopt, pauses of 1.2 seconds, typing delay 0.02 seconds. Record with `FORCE_COLOR=1`. Write `loop.cast`, `loop.svg`, `loop.txt`. Update `tests/gov/demo.test.ts` for the new SCN-GOV-008-1. [REQ-GOV-008] Verify: `bash docs/demo/record.sh && bun test tests/gov/demo.test.ts`
+- [x] 2.1 Rewrite `docs/demo/record.sh` per 011/D7: six captions, the fixture before adopt, pauses of 1.2 seconds, typing delay 0.02 seconds. Record with `FORCE_COLOR=1`. Write `loop.cast`, `loop.svg`, `loop.txt`. Update `tests/gov/demo.test.ts` for the new SCN-GOV-008-1. [REQ-GOV-008] Verify: `bash docs/demo/record.sh && bun test tests/gov/demo.test.ts`
 
 ## 3. README
 

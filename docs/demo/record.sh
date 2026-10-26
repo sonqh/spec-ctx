@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Records the README demo: one task told in five captioned steps on a temp copy of tests/fixtures/no-id-repo after adopt.
+# Records the README demo: the life cycle of one task in six captioned steps on a temp copy of tests/fixtures/no-id-repo before adopt.
 # Writes docs/demo/loop.cast, loop.svg, and loop.txt. Needs dist/ (bun run build). asciinema comes from pip, svg-term-cli from npm.
-# REQ-GOV-008 the story: next task, a refused done, the work, a passing done with the diff of tasks.md, a stale catch.
+# REQ-GOV-008 the story: adopt, status, the next task, the bundle with its footer, a refused and a passing done, the handoff.
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd)
 out="$root/docs/demo"
@@ -9,26 +9,18 @@ out="$root/docs/demo"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
-# the project: the fixture after init and adopt, with task 1.3 tied to its requirement and a login file without the prompt
+# the project: the fixture before adopt, after init. Task 1.3 cites the ID that adopt gives its requirement.
+# A login file without the prompt, and a test file that covers the requirement.
 cp -R "$root/tests/fixtures/no-id-repo/." "$work/project"
 cd "$work/project"
 node "$root/dist/cli.js" init >/dev/null
-node "$root/dist/cli.js" adopt >/dev/null
-rm -f adopt-report.md
 sed -i 's/^- \[ \] 1.3 Add the TOTP prompt to the login form$/- [ ] 1.3 Add the TOTP prompt to the login form. [REQ-UA-004] Verify: `grep -q totp src\/login.ts`/' openspec/changes/add-mfa/tasks.md
 grep -q 'REQ-UA-004\] Verify' openspec/changes/add-mfa/tasks.md
-mkdir -p src
+mkdir -p src tests
 printf 'export const prompt = "password";\n' > src/login.ts
-# the legacy findings of the fixture go to the baseline, so check shows only what the session causes
-node "$root/dist/cli.js" baseline write >/dev/null 2>&1
-# one commit after adopt, so git diff shows the checkbox flip
-git init -q
-git config user.name "spec-ctx demo"
-git config user.email "demo@example.invalid"
-git add -A
-git commit -qm "adopt"
+printf '// Covers: REQ-UA-004\n// SCN-UA-004-1 SCN-UA-004-2\nimport { prompt } from "../src/login";\n' > tests/login.test.ts
 
-# the session: a dim caption, then each command is typed, run, and followed by a short pause
+# the session: a dim caption, then each command is typed, run, and followed by a pause of 1.2 seconds
 cat > "$work/session.sh" <<'SESSION'
 export FORCE_COLOR=1
 specctx() { node "$SPECCTX_ROOT/dist/cli.js" "$@" 2>/dev/null; }
@@ -38,28 +30,32 @@ show() {
   for ((i = 0; i < ${#1}; i++)); do printf '%s' "${1:i:1}"; sleep 0.02; done
   printf '\n'
   eval "$1" || true
-  sleep "${2:-1.4}"
+  sleep "${2:-1.2}"
 }
-say "# 1. The next task and the command that proves it"
+say "# 1. Give every requirement an ID"
+show "specctx adopt --dry-run | head -6"
+show "specctx adopt"
+say "# 2. Where are we"
+show "specctx status"
+say "# 3. What is next"
 show "specctx task next"
-say "# 2. Done? Not until Verify passes"
-show "specctx task done add-mfa/1.3" 1.8
-say "# 3. The agent does the work"
+say "# 4. Only the spec this task needs"
+show "specctx task start add-mfa/1.3" 2
+say "# 5. Done means Verify passed"
+show "specctx task done add-mfa/1.3"
 show "cat > src/login.ts <<'EOF'
 // REQ-UA-004
 export const prompt = \"totp\";
-EOF" 1
-say "# 4. Verify passes. The box flips and the evidence is written"
-show "specctx task done add-mfa/1.3" 1
-show "git diff --no-color openspec/changes/add-mfa/tasks.md | grep '^[-+]- '" 2
-say "# 5. A later edit makes the evidence stale. check says so"
-show "echo >> src/login.ts" 0.5
-show "specctx check --strict" 2.5
+EOF" 0.6
+show "specctx task done add-mfa/1.3"
+say "# 6. Hand off to the next session"
+show "specctx handoff write" 0.6
+show "head -8 .ctx/handoff.md" 2
 SESSION
 export SPECCTX_ROOT="$root"
 
 if command -v asciinema >/dev/null; then
-  asciinema rec --overwrite --quiet --cols 100 --rows 32 -i 2 -t "spec-ctx: one task, refused, done, and caught stale" -c "bash $work/session.sh" "$out/loop.cast"
+  asciinema rec --overwrite --quiet --cols 100 --rows 32 -i 2 -t "spec-ctx: IDs, the bundle of one task, Verify, and the handoff" -c "bash $work/session.sh" "$out/loop.cast"
 else
   # fallback: script records a typescript and its timing, then node writes an asciicast v2 file
   script -q --timing="$work/timing" -c "bash $work/session.sh" "$work/typescript" >/dev/null
@@ -69,7 +65,7 @@ const [timing, ts, cast] = process.argv.slice(2);
 const data = fs.readFileSync(ts);
 let pos = data.indexOf(10) + 1; // skip the header line of script
 let t = 0;
-const lines = [JSON.stringify({ version: 2, width: 100, height: 32, title: "spec-ctx: one task, refused, done, and caught stale" })];
+const lines = [JSON.stringify({ version: 2, width: 100, height: 32, title: "spec-ctx: IDs, the bundle of one task, Verify, and the handoff" })];
 for (const l of fs.readFileSync(timing, "utf8").trim().split("\n")) {
   const [d, n] = l.split(" ").map(Number);
   t += d;

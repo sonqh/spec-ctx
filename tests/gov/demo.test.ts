@@ -7,21 +7,24 @@ import { REPO } from "../helpers.ts";
 const DEMO = join(REPO, "docs/demo");
 
 describe("demo story", () => {
-  test("SCN-GOV-008-1 the transcript holds the five steps, the refusal, the diff, and the stale catch", () => {
+  test("SCN-GOV-008-1 the transcript holds the six steps: adopt, status, next, the bundle footer, Verify, and the handoff", () => {
     const lines = readFileSync(join(DEMO, "loop.txt"), "utf8").split("\n");
     let at = -1;
-    for (let n = 1; n <= 5; n++) {
+    for (let n = 1; n <= 6; n++) {
       const i = lines.findIndex((l, k) => k > at && l.startsWith(`# ${n}.`));
       expect(i, `caption # ${n}.`).toBeGreaterThan(at);
       at = i;
     }
+    // adopt --dry-run prints "<old header>  ->  <new header>"
+    expect(lines.some((l) => /->\s+### Requirement: REQ-/.test(l))).toBe(true);
+    const footer = lines.findIndex((l) => l.startsWith("-- bundle "));
     const refused = lines.findIndex((l) => l.includes("The task stays open."));
-    const done = lines.findIndex((l) => l.startsWith("done add-mfa/1.3."));
-    expect(refused).toBeGreaterThan(0);
+    const done = lines.findIndex((l) => l.startsWith("done add-mfa/1.3"));
+    const handoff = lines.findIndex((l) => l.startsWith("$ specctx handoff write"));
+    expect(footer).toBeGreaterThan(0);
+    expect(refused).toBeGreaterThan(footer);
     expect(done).toBeGreaterThan(refused);
-    expect(lines.some((l) => l.startsWith("-- [ ] 1.3"))).toBe(true);
-    expect(lines.some((l) => l.startsWith("+- [x] 1.3"))).toBe(true);
-    expect(lines.some((l) => /stale-evidence\s+add-mfa\/1\.3/.test(l))).toBe(true);
+    expect(handoff).toBeGreaterThan(done);
     expect(lines.some((l) => l.startsWith("$ specctx stats"))).toBe(false);
   });
 
