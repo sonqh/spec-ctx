@@ -31,13 +31,13 @@ Refs: ADR-005
 - **THEN** the `specs` CI job fails
 
 ### Requirement: REQ-GOV-006 README order
-`README.md` SHALL open with the title, a tagline of at most 20 words that names Verify, and an audience line. Then `## The problem` with three bullets, `## What spec-ctx does` with a `Without | With spec-ctx` table, `## Demo`, and `## Quickstart`. No metric SHALL appear before `## Measured`, which cites the newest `docs/metrics/*.md` by name and explains each column. Maintainer content SHALL live in `docs/CONTRIBUTING.md`.
+`README.md` SHALL open with the title, a tagline of at most 25 words that names IDs, and an audience line. Then `## The problem`, `## What spec-ctx does` with a table whose last row is the Verify gate, `## Demo`, `## Quickstart`, `## How it finds the context` with a Mermaid graph, and `## The life cycle for agents`. No metric SHALL appear before `## Measured`, which cites the newest `docs/metrics/*.md` by name. Maintainer content SHALL live in `docs/CONTRIBUTING.md`.
 
 Refs: REQ-GOV-003
 
 #### Scenario: SCN-GOV-006-1 First screen
 - **WHEN** a reader opens `README.md`
-- **THEN** line 3 has at most 20 words and contains `Verify`, and the headers `## The problem`, `## What spec-ctx does`, `## Demo`, `## Quickstart` appear in that order before line 60
+- **THEN** line 3 has at most 25 words and contains `IDs`, and the headers `## The problem`, `## What spec-ctx does`, `## Demo`, `## Quickstart`, `## How it finds the context`, `## The life cycle for agents` appear in that order before line 110
 
 #### Scenario: SCN-GOV-006-2 Maintainer content moved
 - **WHEN** `grep -c "^## Develop" README.md` runs
@@ -46,6 +46,10 @@ Refs: REQ-GOV-003
 #### Scenario: SCN-GOV-006-3 Current ratio
 - **WHEN** the test reads `## Measured` and lists `docs/metrics/`
 - **THEN** the section cites the newest metrics file by name, and no line before `## Measured` matches `docs/metrics/`
+
+#### Scenario: SCN-GOV-006-4 Graph and life cycle
+- **WHEN** the test reads the two new sections
+- **THEN** the first holds a fenced `mermaid` block that names `REQ-UA-004` and `Covers`, and the second names `specctx-bootstrap`, `specctx-next`, `specctx-done`, and `handoff write`
 
 ### Requirement: REQ-GOV-004 Local gate before push
 `.githooks/pre-push` SHALL run `scripts/ci-local.sh`, which runs the same steps as the CI workflow: `specctx gate --strict`, `bun run typecheck`, `bun run test`, `bun run test:node`, and the help text lint. A failing step SHALL block the push. `SPECCTX_SKIP_PUSH_GATE=1` SHALL skip the hook and print `push gate skipped` so the skip is visible in the terminal. `CLAUDE.md` SHALL state the rule: run `bun run ci:local` before every push.
@@ -89,13 +93,13 @@ Refs: REQ-DIST-004, REQ-GOV-003
 - **THEN** the pre-commit hook passes
 
 ### Requirement: REQ-GOV-008 Demo story
-The demo SHALL run five captioned steps on the fixture. Steps: `task next`. A `task done` that fails with `The task stays open.`. The edit, with its content on screen. A `task done` that passes, plus the `git diff` of `tasks.md`. An edit and `check --strict` that prints `stale-evidence`. Captions start with `# <n>.` and print dim. No `stats`. Under 30 seconds and 400 kB. `loop.txt` holds the transcript.
+The demo SHALL run six captioned steps on the fixture before adopt. Steps: `adopt --dry-run` then `adopt`. `status`. `task next`. `task start` with its footer. A `task done` that fails with `The task stays open.`, the edit on screen, and a `task done` that passes. `handoff write` and the head of `.ctx/handoff.md`. Captions start with `# <n>.` and print dim. No `stats`. Under 30 seconds and 400 kB. `loop.txt` holds the transcript.
 
-Refs: REQ-GOV-003, REQ-TASK-003, REQ-CLI-008
+Refs: REQ-GOV-003, REQ-TASK-002, REQ-TASK-003, REQ-CLI-008
 
 #### Scenario: SCN-GOV-008-1 Transcript has the story
 - **WHEN** the test reads `docs/demo/loop.txt`
-- **THEN** it has the lines `# 1.` to `# 5.` in order, `The task stays open.`, `-- [ ] 1.3`, `+- [x] 1.3`, and `stale-evidence add-mfa/1.3`, and no line starts with `$ specctx stats`
+- **THEN** it has the lines `# 1.` to `# 6.` in order, `-> ### Requirement: REQ-`, `-- bundle `, `The task stays open.`, `done add-mfa/1.3`, and `$ specctx handoff write`, and no line starts with `$ specctx stats`
 
 #### Scenario: SCN-GOV-008-2 Size
 - **WHEN** the test stats `docs/demo/loop.svg` and reads the cast duration

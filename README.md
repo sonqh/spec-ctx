@@ -230,7 +230,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.0` on npm, with tags `v0.1.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 010. No change is open.
+- Archived: 001 to 011. No change is open.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 
 ## Measured
@@ -239,7 +239,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0489 (n=31) | 0.83 (77/93) | 36 (of 61 reopens) | 42 (n=31) | 0 (0 baselined + 0 new) |
+| total | 0.0483 (n=35) | 0.84 (81/97) | 36 (of 61 reopens) | 60 (n=35) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
