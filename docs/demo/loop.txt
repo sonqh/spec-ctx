@@ -1,4 +1,3 @@
-
 # 1. Give every requirement an ID
 $ specctx adopt --dry-run | head -6
 openspec/changes/add-mfa/specs/user-auth/spec.md:5  ### Requirement: Second factor  ->  ### Requirement: REQ-UA-004 Second factor
@@ -60,7 +59,7 @@ $ head -8 .ctx/handoff.md
 change: add-mfa
 current: none
 base: none
-as_of: 2026-10-26T07:50:57.491Z
+as_of: 2026-10-26T08:46:03.829Z
 done:
 - add-mfa/1.3
 reopened:

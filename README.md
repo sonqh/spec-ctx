@@ -4,15 +4,19 @@ Stable IDs for OpenSpec. Your coding agent loads only the spec one task needs, a
 
 For teams that run Claude Code, Codex, or Cursor on an OpenSpec project.
 
+## What OpenSpec is
+
+[OpenSpec](https://github.com/Fission-AI/OpenSpec) is a folder named `openspec/` in your repo. It holds specs, the rules your software must follow, and changes. A change holds a proposal, a design, and a task list. A coding agent reads them and works down the list.
+
 ## The problem
 
-[OpenSpec](https://github.com/Fission-AI/OpenSpec) keeps the specs and a task list of a change in your repo. A coding agent works down the list. Three things go wrong.
+Three things go wrong.
 
 - The agent reads the whole `openspec/` tree for every task. Most of it is not about the task. Tokens go to text the agent will not use.
 - OpenSpec links a change to a spec by header text. A reword breaks the link, and the agent loses the thread between requirement, code, and test.
 - A new session starts cold. The agent does not know which task is next, what it already did, or which questions are open.
 
-## What spec-ctx does
+## What spec-ctx adds
 
 | Without | With spec-ctx |
 | --- | --- |
@@ -25,11 +29,59 @@ A later edit can break a task that passed. `check --strict` names each task whos
 
 No LLM call. No daemon. The same files give the same output.
 
-## Demo
+## See it work
 
-![Six steps on a project without IDs: adopt, status, task next, the bundle of one task, a done that waits for Verify, and the handoff](docs/demo/loop.svg)
+Six commands on a small project. Each clip is one command.
 
-The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` plus the six capabilities in `docs/demo/specs/`, before `specctx adopt`. `bash docs/demo/record.sh` records it again.
+### 1. Give every requirement an ID
+
+OpenSpec names a requirement by its header text. A reword breaks every link to it. `adopt` gives each requirement and scenario an ID that stays. Run it once on a project that has specs. A new project gets IDs from `init --all`.
+
+![The adopt dry run lists each header and its new ID](docs/demo/clips/1-adopt.svg)
+
+You see: the dry run prints each header and the ID it gets. Then `adopt` writes them.
+
+### 2. Where are we
+
+`status` shows the open change, the task counts, and the next command to run.
+
+![One change with two tasks done and one open](docs/demo/clips/2-status.svg)
+
+You see: one change, two tasks done, one open, and the hint.
+
+### 3. What is next
+
+`task next` picks the first open task. It prints the requirement IDs the task cites and the Verify command, the shell command that proves the task is done.
+
+![Task add-mfa/1.3 with its requirement and Verify command](docs/demo/clips/3-next.svg)
+
+You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
+
+### 4. Only the spec this task needs
+
+`task start` prints the requirement, its scenarios, the task line, and the test that covers it. Nothing else. The last line is the size of that bundle next to the size of all spec text.
+
+![The bundle of one task and its size footer](docs/demo/clips/4-start.svg)
+
+You see: 711 characters, 3.6 percent of the tree. The agent reads this instead of the tree.
+
+### 5. Done means Verify passed
+
+`task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that were checked. The agent cannot tick the box by hand.
+
+![A refused done, the edit, and a passing done](docs/demo/clips/5-done.svg)
+
+You see: a red refusal, the edit, then a green done line.
+
+### 6. Hand off to the next session
+
+`handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it.
+
+![The head of the handoff file](docs/demo/clips/6-handoff.svg)
+
+You see: the head of `.ctx/handoff.md`.
+
+The transcript of all six clips is in `docs/demo/loop.txt`. The clips run on a copy of `tests/fixtures/no-id-repo` plus the six capabilities in `docs/demo/specs/`. `bash docs/demo/record.sh` records them again.
 
 ## Quickstart
 

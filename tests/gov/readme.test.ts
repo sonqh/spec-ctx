@@ -15,15 +15,19 @@ describe("README order", () => {
     expect(tagline).toContain("IDs");
     expect(lines[4]).toMatch(/^For teams that run /);
     let at = -1;
-    for (const h of ["## The problem", "## What spec-ctx does", "## Demo", "## Quickstart", "## How it finds the context", "## The life cycle for agents"]) {
+    for (const h of ["## What OpenSpec is", "## The problem", "## What spec-ctx adds", "## See it work", "## Quickstart", "## How it finds the context", "## The life cycle for agents"]) {
       const i = lines.indexOf(h);
       expect(i, h).toBeGreaterThan(at);
-      expect(i, h).toBeLessThan(110);
       at = i;
     }
-    const problem = lines.slice(lines.indexOf("## The problem"), lines.indexOf("## What spec-ctx does"));
+    expect(lines.indexOf("## Demo")).toBe(-1);
+    // one paragraph says what OpenSpec is
+    const openspec = lines.slice(lines.indexOf("## What OpenSpec is") + 1, lines.indexOf("## The problem")).filter((l) => l.trim());
+    expect(openspec).toHaveLength(1);
+    expect(openspec[0]).toMatch(/^\[OpenSpec\]\(https:\/\/github\.com\/Fission-AI\/OpenSpec\) is a folder named `openspec\/`/);
+    const problem = lines.slice(lines.indexOf("## The problem"), lines.indexOf("## What spec-ctx adds"));
     expect(problem.filter((l) => l.startsWith("- "))).toHaveLength(3);
-    const table = lines.slice(lines.indexOf("## What spec-ctx does"), lines.indexOf("## Demo")).filter((l) => l.startsWith("| "));
+    const table = lines.slice(lines.indexOf("## What spec-ctx adds"), lines.indexOf("## See it work")).filter((l) => l.startsWith("| "));
     expect(table[0]).toBe("| Without | With spec-ctx |");
     expect(table).toHaveLength(6);
     // the Verify gate is the last row
@@ -31,6 +35,25 @@ describe("README order", () => {
     expect(table.slice(2, 5).some((l) => l.includes("Verify"))).toBe(false);
     const quick = lines.slice(lines.indexOf("## Quickstart")).filter((l) => /^npx -y spec-ctx /.test(l));
     expect(quick.length).toBeGreaterThanOrEqual(3);
+  });
+
+  test("SCN-GOV-006-5 See it work holds six numbered steps, each with its SVG clip between two paragraphs", () => {
+    const lines = readme.split("\n");
+    const from = lines.indexOf("## See it work");
+    const to = lines.indexOf("## Quickstart");
+    let at = from;
+    for (let n = 1; n <= 6; n++) {
+      const i = lines.findIndex((l, k) => k > at && k < to && l.startsWith(`### ${n}. `));
+      expect(i, `### ${n}.`).toBeGreaterThan(at);
+      const near = lines.slice(i + 1, i + 5);
+      const img = near.findIndex((l) => new RegExp(`^!\\[[^\\]]+\\]\\(docs/demo/clips/${n}-[a-z]+\\.svg\\)$`).test(l));
+      expect(img, `clip ${n}`).toBeGreaterThan(0);
+      // a paragraph before the clip and one after it
+      expect(near.slice(0, img).some((l) => l.trim() !== "")).toBe(true);
+      const next = lines.findIndex((l, k) => k > i + 1 + img && (l.startsWith("### ") || l.startsWith("## ")));
+      expect(lines.slice(i + 2 + img, next).some((l) => l.startsWith("You see: "))).toBe(true);
+      at = i;
+    }
   });
 
   test("SCN-GOV-006-4 the graph section holds a mermaid block, and the life cycle names the skills and the handoff", () => {
