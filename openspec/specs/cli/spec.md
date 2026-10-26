@@ -104,3 +104,20 @@ Every command except `init`, `--help`, and `--version` SHALL exit 2 with `not an
 #### Scenario: SCN-CLI-007-4 Adopt with nothing to do
 - **WHEN** `adopt` runs on a project where every header has an ID
 - **THEN** it prints `nothing to adopt`, exits 0, and no `adopt-report.md` exists
+
+### Requirement: REQ-CLI-004 gate command
+`specctx gate [--strict] [--markdown <globs>]` SHALL run these gates in order: `check` (after `build`), `specctx lint tells` and `specctx lint ste` on the markdown globs, then `openspec validate --all`. Default globs: `openspec/**/*.md decisions/*.md docs/**/*.md *.md`. It SHALL print one `ok` or `fail` line per gate, stop at the first failure, and exit 1. `gate` SHALL need no `python3`.
+
+Refs: REQ-CHK-001, REQ-GOV-003
+
+#### Scenario: SCN-CLI-004-1 Clean tree
+- **WHEN** `specctx gate --strict` runs on this repository
+- **THEN** it prints three `ok` lines and exits 0
+
+#### Scenario: SCN-CLI-004-2 Stops at first failure
+- **WHEN** a spec has a dangling ref
+- **THEN** `gate` prints `check: fail`, prints the findings, runs no linter, and exits 1
+
+#### Scenario: SCN-CLI-004-3 No python
+- **WHEN** `python3` is not on PATH
+- **THEN** `gate --strict` runs both linters and the output has no `skipped` line

@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-26T06:03:14.245Z",
+  "files": {
+    "tests/release/skip.sh": "c199b9c4c976e5b3144e975eee394dc68fc60ebbf20330074e189adbf5ce46ed"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-004"
+  ],
+  "task": "003/3.8",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+  }
+}

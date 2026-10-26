@@ -1,11 +1,11 @@
 # spec-ctx
 
-spec-ctx ticks an [OpenSpec](https://github.com/Fission-AI/OpenSpec) task only after its Verify command passes and hands the agent one task of spec text, a context ratio of 0.0518 (`docs/metrics/2026-10-25.md`).
+spec-ctx ticks an [OpenSpec](https://github.com/Fission-AI/OpenSpec) task only after its Verify command passes and hands the agent one task of spec text, a context ratio of 0.0502 (`docs/metrics/2026-10-26.md`).
 
 ```bash
-npx -y github:sonqh/spec-ctx#4490d188ad48 init --all
-npx -y github:sonqh/spec-ctx#4490d188ad48 task next
-npx -y github:sonqh/spec-ctx#4490d188ad48 task start add-mfa/1.3
+npx -y spec-ctx init --all
+npx -y spec-ctx task next
+npx -y spec-ctx task start add-mfa/1.3
 ```
 
 ```text
@@ -25,9 +25,9 @@ The system SHALL ask for a TOTP code after a valid password.
 
 ## Why
 
-- Checkboxes lie. `task done` runs Verify and writes evidence, and 70 of 86 tasks hold it (evidence ratio 0.81).
-- Context overflows. A bundle holds 0.0518 of the spec text on average (27 tasks).
-- Evidence goes stale. The check caught 36 stale results in 59 reopens.
+- Checkboxes lie. `task done` runs Verify and writes evidence, and 72 of 88 tasks hold it (evidence ratio 0.82).
+- Context overflows. A bundle holds 0.0502 of the spec text on average (27 tasks).
+- Evidence goes stale. The check caught 36 stale results in 60 reopens.
 
 ## Demo
 
@@ -97,15 +97,16 @@ No LLM call. No daemon. The same files give the same bytes.
 spec-ctx needs Node 22. Run it in a project after `openspec init`.
 
 ```bash
-npx -y github:sonqh/spec-ctx#4490d188ad48 init --all    # from git, works today
-npx spec-ctx init --all                                # from npm, after the 0.1.0 publish
+npx -y spec-ctx init --all                           # from npm
+npm install -g spec-ctx                              # puts specctx on your path
+npx -y github:sonqh/spec-ctx#<sha> init --all        # from git, for an unreleased commit
 ```
 
 The git form builds the package on install with Node only. Pin a commit SHA. A branch name such as `main` also works, but it moves.
 
 The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`.
 
-The examples below use `specctx`. With `npx`, write the `npx` form in its place. After the publish, `npm install -g spec-ctx` puts `specctx` on your path. Each GitHub release also carries a single binary for Linux and macOS.
+The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its place. Each GitHub release also carries a single binary for Linux and macOS.
 
 ## Two paths
 
@@ -233,9 +234,9 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 ## Status
 
-- Archived: 001 engine port, 002 IDs and tasks, 004 adopt existing, 005 metrics, 006 polish, 007 README and demo, 008 first run UX.
-- Open: 003 distribution. Only the npm publish of `0.1.0` waits.
-- Until the publish, install from git with `npx -y github:sonqh/spec-ctx#4490d188ad48`. The npm forms `npx spec-ctx` and `npm install -g spec-ctx` work after it.
+- Published: `spec-ctx@0.1.0` on npm, with tags `v0.1.0` and `v0` and binaries on the GitHub release.
+- Archived: 001 to 009. No change is open.
+- A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 
 ## Contribute
 

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-26T05:56:09.874Z",
+  "bundle_chars": 7187,
+  "files": {
+    "tests/gov/version-guard.sh": "1a02d11f73495d10ff0d4cfec8f092e7c31453d2e01748a58a272e3091aec21b",
+    "tests/release/skip.sh": "6a939bd97e69c33e57501b624afd8aadc11aef73e02aef1bc6a1cd3268400199"
+  },
+  "kind": "command",
+  "reason": "skip.sh unsets GITHUB_OUTPUT",
+  "reqs": [
+    "REQ-DIST-004",
+    "REQ-GOV-007"
+  ],
+  "started_at": "2026-10-26T05:55:36.340Z",
+  "task": "003/3.3",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bash tests/gov/version-guard.sh && bash tests/release/skip.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "61483eaaf6336127c5b31d36044e12e64e949fe176c745cb656868482d990b01"
+  }
+}

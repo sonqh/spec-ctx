@@ -1,16 +1,14 @@
 {
-  "at": "2026-10-26T05:56:09.874Z",
-  "bundle_chars": 7187,
+  "at": "2026-10-26T06:03:33.143Z",
   "files": {
     "tests/gov/version-guard.sh": "1a02d11f73495d10ff0d4cfec8f092e7c31453d2e01748a58a272e3091aec21b",
-    "tests/release/skip.sh": "6a939bd97e69c33e57501b624afd8aadc11aef73e02aef1bc6a1cd3268400199"
+    "tests/release/skip.sh": "c199b9c4c976e5b3144e975eee394dc68fc60ebbf20330074e189adbf5ce46ed"
   },
   "kind": "command",
   "reqs": [
     "REQ-DIST-004",
     "REQ-GOV-007"
   ],
-  "started_at": "2026-10-26T05:55:36.340Z",
   "task": "003/3.3",
   "tool_version": "0.1.0",
   "verify": {

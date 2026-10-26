@@ -11,7 +11,7 @@ describe("README order", () => {
     const head = readme.split("\n").slice(0, 25);
     expect(head[0]).toBe("# spec-ctx");
     expect(head.some((l) => /context ratio of \d\.\d+ \(`docs\/metrics\/\d{4}-\d{2}-\d{2}\.md`\)/.test(l))).toBe(true);
-    const quick = head.filter((l) => /^npx -y github:sonqh\/spec-ctx#[0-9a-f]{12} /.test(l));
+    const quick = head.filter((l) => /^npx -y spec-ctx /.test(l));
     expect(quick).toHaveLength(3);
     const start = head.indexOf("$ specctx task start add-mfa/1.3");
     expect(start).toBeGreaterThan(0);

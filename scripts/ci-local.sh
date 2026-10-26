@@ -19,7 +19,7 @@ steps=(
   'bash tests/action/selftest.sh'
   'bash tests/paths/fresh.sh && bash tests/paths/existing.sh'
   'bash tests/install/ci.sh'
-  'bash tests/gov/version-guard.sh && bash tests/release/skip.sh'
+  'bash tests/gov/version-guard.sh && bash tests/release/skip.sh && bash tests/release/published.sh && bash tests/dogfood/agentrc.sh'
   'bun run build:bin && ./build/specctx --version'
 )
 # SPECCTX_CI_STEPS_FILE replaces the step list, one step per line. Only the gate log test uses it.

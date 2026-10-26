@@ -62,7 +62,7 @@ jobs:
         if: matrix.runtime == 'node'
         env:
           GH_TOKEN: ${{ github.token }}
-      - run: bash tests/gov/version-guard.sh && bash tests/release/skip.sh
+      - run: bash tests/gov/version-guard.sh && bash tests/release/skip.sh && bash tests/release/published.sh && bash tests/dogfood/agentrc.sh
         if: matrix.runtime == 'bun'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'
