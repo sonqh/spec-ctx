@@ -25,3 +25,20 @@ The CI workflow SHALL run on `push` to `main` and on `pull_request` only. It SHA
 #### Scenario: SCN-GOV-005-2 Two pushes in a row
 - **WHEN** a second push lands while the first run is in progress
 - **THEN** the first run is cancelled
+
+### Requirement: REQ-GOV-007 A version bump is a release
+`version` in `package.json` SHALL change only in a commit whose subject starts with `release:`. The pre-commit hook SHALL reject any other staged change to that field with the message `package.json version changed. A version bump publishes to npm. Use a commit subject that starts with "release:".` `CLAUDE.md` SHALL state the rule.
+
+Refs: REQ-DIST-004, REQ-GOV-003
+
+#### Scenario: SCN-GOV-007-1 Bump without the subject
+- **WHEN** a commit changes `version` in `package.json` and its subject is `fix typo`
+- **THEN** the pre-commit hook exits 1 with the message above
+
+#### Scenario: SCN-GOV-007-2 Bump with the subject
+- **WHEN** a commit changes `version` and its subject is `release: 0.1.1`
+- **THEN** the pre-commit hook passes
+
+#### Scenario: SCN-GOV-007-3 Other package.json edits
+- **WHEN** a commit changes a script in `package.json` and not `version`
+- **THEN** the pre-commit hook passes

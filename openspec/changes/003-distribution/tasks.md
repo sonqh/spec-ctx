@@ -14,7 +14,8 @@
 
 - [x] 3.1 Add `.github/workflows/release.yml`: on tag, `bun run build`, `npm publish`, `bun build --compile` for three targets, upload to the release. [REQ-DIST-004] Verify: `bun run build && node dist/cli.js --version && bun build --compile src/cli.ts --outfile /tmp/specctx && /tmp/specctx --version`
 - [x] 3.2 Add `action.yml` and a self-test workflow that uses it on this repo. [REQ-DIST-005] Verify: `bash tests/action/selftest.sh`
-- [ ] 3.3 Publish `v0.1.0`. Smoke test `npx spec-ctx@0.1.0 --version` in a clean temp dir. [REQ-DIST-004] Verify: `cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version`
+- [ ] 3.3 Rewrite `.github/workflows/release.yml` per REQ-DIST-004: trigger on push to `main`, read the version, skip when npm has it, else publish, create `v<version>`, move `v<major>`, build and attach the binaries. Use `GITHUB_TOKEN` for the tags and the release. Add `tests/release/skip.sh` that runs the version check script against a version npm has and asserts the skip message. Add the version rule to the pre-commit hook as `scripts/version-guard.sh` with tests for the three REQ-GOV-007 scenarios in `tests/gov/version-guard.sh`. Add the rule to `CLAUDE.md` under Hard rules. [REQ-DIST-004] [REQ-GOV-007] Verify: `bash tests/gov/version-guard.sh && bash tests/release/skip.sh`
+- [ ] 3.8 Publish `0.1.0`: push the 3.3 commit to `main`, wait for the `release` run, then smoke test in a clean temp dir. Record the run URL in `docs/verification/003.md`. [REQ-DIST-004] Verify: `cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version`
 
 ## 3b. Pre-publish adoption
 

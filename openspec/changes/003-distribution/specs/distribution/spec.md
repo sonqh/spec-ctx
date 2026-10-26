@@ -40,9 +40,9 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 ## ADDED Requirements
 
 ### Requirement: REQ-DIST-004 Publish and binaries
-The package SHALL publish to npm as `spec-ctx` from a tag `v<version>` through a GitHub workflow with `NPM_TOKEN`. The same workflow SHALL attach `bun build --compile` binaries for linux x64, darwin arm64, and darwin x64 to the release.
+The `release` workflow SHALL run on push to `main`. It SHALL read `version` from `package.json`. When `spec-ctx@<version>` is not on npm, it SHALL publish with `NPM_TOKEN`, create the tag `v<version>` on that commit, and move the tag `v<major>` to it. It SHALL attach `bun build --compile` binaries for linux x64, darwin arm64, and darwin x64 to the GitHub release. When the version is on npm, it SHALL exit 0 and publish nothing.
 
-Refs: ADR-001
+Refs: ADR-001, REQ-GOV-007
 
 #### Scenario: SCN-DIST-004-1 npx works
 - **WHEN** `npx spec-ctx@<version> --version` runs on a clean machine with Node 22
@@ -51,6 +51,14 @@ Refs: ADR-001
 #### Scenario: SCN-DIST-004-2 Binary works
 - **WHEN** the linux x64 binary runs `--version`
 - **THEN** it prints the version
+
+#### Scenario: SCN-DIST-004-3 Same version twice
+- **WHEN** a push to `main` lands and `package.json` holds a version that npm already has
+- **THEN** the workflow prints `spec-ctx@<version> is on npm. Nothing to publish.` and exits 0
+
+#### Scenario: SCN-DIST-004-4 Tags from the workflow
+- **WHEN** the workflow publishes `0.1.0`
+- **THEN** the tags `v0.1.0` and `v0` point at the published commit
 
 ### Requirement: REQ-DIST-005 GitHub Action
 `action.yml` at the repo root SHALL run `specctx gate`, which covers `check`, both linters on the configured markdown paths, and `openspec validate --all`. Inputs: `version` (default latest), `strict` (default true), `markdown`, `specctx`. The action SHALL hold no gate logic of its own beyond choosing the `specctx` command.

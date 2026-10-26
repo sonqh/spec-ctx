@@ -23,6 +23,8 @@ Everything here is packaging around a finished engine. The design questions are 
 - Python removal happens last, after agentrc runs on the npm package for one full change. Follows ADR-001.
 - The upstream issue proposes stable IDs as the base fingerprint their parallel merge plan asks for, and links this repo as the proof. No PR until a maintainer invites one. Creates no ADR.
 
+- D-release Release on version bump. The `release` workflow runs on push to `main` and publishes when `package.json` holds a version that npm does not have. The workflow creates the tags, because the git proxy of a Claude Code session rejects a tag push. A version bump is the release trigger, so the pre-commit hook rejects a bump outside a `release:` commit. Trade-off accepted on 2026-10-26: no manual tag step, in exchange for a guard on one field. Refs: REQ-DIST-004, REQ-GOV-007.
+
 ## Risks / Trade-offs
 
 - OpenSpec schema format can change between versions. Mitigation: pin the OpenSpec version in the bundle README and test against it in CI.
