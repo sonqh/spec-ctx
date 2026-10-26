@@ -29,7 +29,7 @@ No LLM call. No daemon. The same files give the same output.
 
 ![Six steps on a project without IDs: adopt, status, task next, the bundle of one task, a done that waits for Verify, and the handoff](docs/demo/loop.svg)
 
-The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` before `specctx adopt`. `bash docs/demo/record.sh` records it again.
+The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` plus the six capabilities in `docs/demo/specs/`, before `specctx adopt`. `bash docs/demo/record.sh` records it again.
 
 ## Quickstart
 
@@ -82,10 +82,11 @@ specctx status                 # active changes, current task, open questions
 specctx task next              # the next open task, its REQ IDs, and its Verify command
 specctx task start <task>      # the bundle of that task and its size
 specctx task done <task>       # run Verify, write evidence, set the checkbox
+specctx check --strict         # IDs, links, coverage, and evidence
 specctx handoff write          # .ctx/handoff.md for the next session
 ```
 
-The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. The skills are in [`skills/`](skills/).
+The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. The skills are in [`skills/`](skills/). Install them alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
 
 ## Install
 
@@ -132,19 +133,6 @@ specctx gate --strict
 - Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
 
 Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/existing.sh`.
-
-## The loop
-
-```bash
-specctx status                 # active changes, current task, open questions
-specctx task next              # the next open task, its REQ IDs, and its Verify command
-specctx task start 001/1.1     # the spec bundle for that task
-specctx task done 001/1.1      # run Verify, write evidence, set the checkbox
-specctx check --strict         # IDs, links, coverage, and evidence
-specctx handoff write          # .ctx/handoff.md for the next session
-```
-
-The skills `specctx-bootstrap`, `specctx-next`, and `specctx-done` teach an agent this loop. Install them alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
 
 ## Commands
 

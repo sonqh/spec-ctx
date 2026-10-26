@@ -9,10 +9,12 @@ out="$root/docs/demo"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
-# the project: the fixture before adopt, after init. Task 1.3 cites the ID that adopt gives its requirement.
+# the project: the fixture plus docs/demo/specs, before adopt, after init. Task 1.3 cites the ID that adopt gives its requirement.
 # A login file without the prompt, and a test file that covers the requirement.
 cp -R "$root/tests/fixtures/no-id-repo/." "$work/project"
 cd "$work/project"
+# six more capabilities without IDs, so the bundle of one task is a small share of the tree
+cp -R "$root/docs/demo/specs/." openspec/specs/
 node "$root/dist/cli.js" init >/dev/null
 sed -i 's/^- \[ \] 1.3 Add the TOTP prompt to the login form$/- [ ] 1.3 Add the TOTP prompt to the login form. [REQ-UA-004] Verify: `grep -q totp src\/login.ts`/' openspec/changes/add-mfa/tasks.md
 grep -q 'REQ-UA-004\] Verify' openspec/changes/add-mfa/tasks.md
