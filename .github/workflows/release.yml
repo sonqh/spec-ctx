@@ -1,32 +1,51 @@
 name: release
-# REQ-DIST-004 publish to npm and attach compiled binaries on a version tag.
+# REQ-DIST-004 publish to npm and attach compiled binaries when main holds a version npm does not have.
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
 permissions:
   contents: write
   id-token: write
+concurrency: release
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - name: tag matches package.json
-        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - id: check
+        run: bash scripts/release-check.sh
       - run: bun run typecheck
+        if: steps.check.outputs.publish == 'true'
       - run: bun run build
+        if: steps.check.outputs.publish == 'true'
       - run: bun run test
+        if: steps.check.outputs.publish == 'true'
       - run: node dist/cli.js --version
+        if: steps.check.outputs.publish == 'true'
       - run: npm publish --provenance --access public
+        if: steps.check.outputs.publish == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: tag the commit
+        if: steps.check.outputs.publish == 'true'
+        run: |
+          set -e
+          version=$(node -p 'require("./package.json").version')
+          major=${version%%.*}
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "v$version"
+          git tag -f "v$major"
+          git push origin "v$version" "v$major" --force
       - name: compile binaries
+        if: steps.check.outputs.publish == 'true'
         run: |
           set -e
           mkdir -p build
@@ -35,8 +54,10 @@ jobs:
           done
           ./build/specctx-linux-x64 --version
       - name: attach binaries to the release
+        if: steps.check.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "spec-ctx $GITHUB_REF_NAME"
-          gh release upload "$GITHUB_REF_NAME" build/specctx-linux-x64 build/specctx-darwin-arm64 build/specctx-darwin-x64 --clobber
+          version=$(node -p 'require("./package.json").version')
+          gh release view "v$version" >/dev/null 2>&1 || gh release create "v$version" --title "v$version" --notes "spec-ctx v$version"
+          gh release upload "v$version" build/specctx-linux-x64 build/specctx-darwin-arm64 build/specctx-darwin-x64 --clobber

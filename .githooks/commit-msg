@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# REQ-GOV-007 version guard. git passes the message file path as $1.
+set -euo pipefail
+exec bash "$(git rev-parse --show-toplevel)/scripts/version-guard.sh" "$1"

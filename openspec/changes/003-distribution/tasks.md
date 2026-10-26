@@ -14,7 +14,7 @@
 
 - [x] 3.1 Add `.github/workflows/release.yml`: on tag, `bun run build`, `npm publish`, `bun build --compile` for three targets, upload to the release. [REQ-DIST-004] Verify: `bun run build && node dist/cli.js --version && bun build --compile src/cli.ts --outfile /tmp/specctx && /tmp/specctx --version`
 - [x] 3.2 Add `action.yml` and a self-test workflow that uses it on this repo. [REQ-DIST-005] Verify: `bash tests/action/selftest.sh`
-- [ ] 3.3 Rewrite `.github/workflows/release.yml` per REQ-DIST-004: trigger on push to `main`, read the version, skip when npm has it, else publish, create `v<version>`, move `v<major>`, build and attach the binaries. Use `GITHUB_TOKEN` for the tags and the release. Add `tests/release/skip.sh` that runs the version check script against a version npm has and asserts the skip message. Add the version rule to the pre-commit hook as `scripts/version-guard.sh` with tests for the three REQ-GOV-007 scenarios in `tests/gov/version-guard.sh`. Add the rule to `CLAUDE.md` under Hard rules. [REQ-DIST-004] [REQ-GOV-007] Verify: `bash tests/gov/version-guard.sh && bash tests/release/skip.sh`
+- [x] 3.3 Rewrite `.github/workflows/release.yml` per REQ-DIST-004. Trigger on push to `main`. Read the version and skip when npm has it. Else publish, create `v<version>`, move `v<major>`, and attach the binaries. Use `GITHUB_TOKEN` for the tags and the release. Add `tests/release/skip.sh` that runs the check script on a version npm has. It asserts the skip text. Add the version rule to the hooks as `scripts/version-guard.sh`. Test the three REQ-GOV-007 scenarios in `tests/gov/version-guard.sh`. Add the rule to `CLAUDE.md`. [REQ-DIST-004] [REQ-GOV-007] Verify: `bash tests/gov/version-guard.sh && bash tests/release/skip.sh`
 - [ ] 3.8 Publish `0.1.0`: push the 3.3 commit to `main`, wait for the `release` run, then smoke test in a clean temp dir. Record the run URL in `docs/verification/003.md`. [REQ-DIST-004] Verify: `cd $(mktemp -d) && npx -y spec-ctx@0.1.0 --version`
 
 ## 3b. Pre-publish adoption
@@ -33,7 +33,7 @@
 ## 5. Docs
 
 - [x] 5.1 README: what it is, install, the loop in six commands, config reference, a 60 second asciinema or GIF of `init --all` then `task next` then `task done`. [REQ-GOV-003] Verify: `node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md`
-- [x] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, the numbers from agentrc, what is offered. Do not open the issue. [REQ-GOV-003] Verify: `node dist/cli.js lint tells --baseline 0 docs/upstream-issue.md`
+- [x] 5.2 Write `docs/upstream-issue.md`: the problem in OpenSpec terms, the link to their parallel merge plan, the ID scheme, and the numbers from agentrc. Say what the issue offers. Do not open the issue. [REQ-GOV-003] Verify: `node dist/cli.js lint tells --baseline 0 docs/upstream-issue.md`
 - [x] 5.3 Encode the engine fixes already made: SCN-IDS-003-3, SCN-CHK-001-4, SCN-CHK-001-5, SCN-DIST-003-2 as tests. Write `docs/verification/003.md`. Run the full gate. [REQ-GOV-001, REQ-IDS-003, REQ-CHK-001] Verify: `bun test && node dist/cli.js check --strict && npx -y @fission-ai/openspec@latest validate --all --strict`
 
 ## Workflow follow-up

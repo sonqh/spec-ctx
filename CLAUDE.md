@@ -39,6 +39,7 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 - No LLM call anywhere in the engine. No daemon, no file watcher. See ADR-003.
 - Only Node 22 APIs. No `Bun.` global outside `scripts/`. See ADR-001.
 - Runtime dependencies: `smol-toml` only. A new one needs an ADR.
+- Never change `version` in `package.json` unless the user asks for a release. A version bump on `main` publishes to npm. The commit subject starts with `release:`. See REQ-GOV-007.
 - Tests write only under a temp dir or `tests/fixtures/`. Never the real home or another repo.
 - `tests/parity/run.sh` diffs the engine against the goldens in `tests/fixtures/parity-golden/`. A golden changes only with `run.sh --record` and a note in the verification record of the change.
 

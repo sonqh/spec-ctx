@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # REQ-GOV-004 the CI workflow, run on this machine before a push. Every run line of ci.yml is a line here.
 set -uo pipefail
+# REQ-GOV-007 the commit-msg hook (.githooks/commit-msg) runs scripts/version-guard.sh. It rejects a package.json version change
+# unless the commit subject starts with "release:". Hooks are enabled with: git config core.hooksPath .githooks
 cd "$(dirname "$0")/.."
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
@@ -17,6 +19,7 @@ steps=(
   'bash tests/action/selftest.sh'
   'bash tests/paths/fresh.sh && bash tests/paths/existing.sh'
   'bash tests/install/ci.sh'
+  'bash tests/gov/version-guard.sh && bash tests/release/skip.sh'
   'bun run build:bin && ./build/specctx --version'
 )
 # SPECCTX_CI_STEPS_FILE replaces the step list, one step per line. Only the gate log test uses it.
