@@ -1,96 +1,42 @@
 # spec-ctx
 
-spec-ctx ticks an [OpenSpec](https://github.com/Fission-AI/OpenSpec) task only after its Verify command passes and hands the agent one task of spec text, a context ratio of 0.0502 (`docs/metrics/2026-10-26.md`).
+Your coding agent reads only the spec it needs, and cannot tick a task until its Verify command passes.
 
-```bash
-npx -y spec-ctx init --all
-npx -y spec-ctx task next
-npx -y spec-ctx task start add-mfa/1.3
-```
+For teams that run Claude Code, Codex, or Cursor on an OpenSpec project.
 
-```text
-$ specctx task start add-mfa/1.3
--- REQ-UA-004 | openspec/changes/add-mfa/specs/user-auth/spec.md:5 | active | requested
-### Requirement: REQ-UA-004 Second factor
-The system SHALL ask for a TOTP code after a valid password.
+## The problem
 
-#### Scenario: SCN-UA-004-1 Valid code
-- **WHEN** the user enters the current TOTP code
-- **THEN** the system opens a session
+[OpenSpec](https://github.com/Fission-AI/OpenSpec) keeps the specs and a task list of a change in your repo. A coding agent works down the list. Three things go wrong.
 
-#### Scenario: SCN-UA-004-2 Expired code
-- **WHEN** the user enters a code older than 30 seconds
-- **THEN** the system rejects it
-```
+- The agent ticks a task when it thinks it finished. No test ran. The `[x]` is a claim.
+- The agent reads every spec file for a small task. The part that matters is lost in the rest.
+- A task passed last week. Then a later edit broke it, and the box still says done.
 
-## Why
+## What spec-ctx does
 
-- Checkboxes lie. `task done` runs Verify and writes evidence, and 72 of 88 tasks hold it (evidence ratio 0.82).
-- Context overflows. A bundle holds 0.0502 of the spec text on average (27 tasks).
-- Evidence goes stale. The check caught 36 stale results in 60 reopens.
+| Without | With spec-ctx |
+| --- | --- |
+| The agent ticks `[x]` by hand. | `[x]` appears only after the Verify command of the task exits 0. The run leaves an evidence file. |
+| The agent reads the whole `openspec/` tree. | The agent gets a few kilobytes: the requirements and scenarios that the task names. |
+| An old `[x]` stays after a later edit. | `check --strict` names each task whose files changed after its Verify passed. |
+
+No LLM call. No daemon. The same files give the same output.
 
 ## Demo
 
-![One task loop: status, task next, task start, an edit, task done, stats](docs/demo/loop.svg)
+![One task: the agent asks to close it, Verify refuses, the agent does the work, Verify passes, a later edit makes the evidence stale](docs/demo/loop.svg)
 
-<details>
-<summary>Transcript of the demo</summary>
+The plain text transcript is in `docs/demo/loop.txt`. The demo runs on a copy of `tests/fixtures/no-id-repo` after `specctx adopt`. `bash docs/demo/record.sh` records it again.
 
-```text
-$ specctx status
-index rebuilt
-add-mfa  done 2  open 1
-uncovered active REQs in main: 5
-next: specctx task next
-$ specctx task next
-add-mfa/1.3  Add the TOTP prompt to the login form.
-reqs: REQ-UA-004
-verify: grep -q totp src/login.ts
-$ specctx task start add-mfa/1.3 | head -12
--- REQ-UA-004 | openspec/changes/add-mfa/specs/user-auth/spec.md:5 | active | requested
-### Requirement: REQ-UA-004 Second factor
-The system SHALL ask for a TOTP code after a valid password.
+## Quickstart
 
-#### Scenario: SCN-UA-004-1 Valid code
-- **WHEN** the user enters the current TOTP code
-- **THEN** the system opens a session
-
-#### Scenario: SCN-UA-004-2 Expired code
-- **WHEN** the user enters a code older than 30 seconds
-- **THEN** the system rejects it
-
-$ printf '// REQ-UA-004\nexport const prompt = "totp";\n' > src/login.ts
-$ specctx task done add-mfa/1.3
-index rebuilt
-done add-mfa/1.3. Evidence: .ctx/evidence/add-mfa/1.3.json
-$ specctx stats --change add-mfa
-index rebuilt
-change   context_ratio  evidence_ratio  stale_catches  cycle_time_median_s  debt
-add-mfa  0.2950 (n=1)   1.00 (1/1)      n/a            6 (n=1)              2
-total    0.2950 (n=1)   1.00 (1/1)      n/a            6 (n=1)              13 (0 baselined + 13 new)
-gate_runs n/a
-gate_pass_rate n/a
-gate_failures_caught n/a
-context_ratio = bundle chars / chars of all specs. Lower is better.
+```bash
+npx -y spec-ctx init --all              # config, schema, and three agent skills
+npx -y spec-ctx task next               # the next task and the command that proves it
+npx -y spec-ctx task done <task>        # runs that command. A pass ticks the box.
 ```
 
-</details>
-
-The demo runs on a copy of `tests/fixtures/no-id-repo` after `specctx adopt`. `bash docs/demo/record.sh` records it again.
-
-## What it does
-
-spec-ctx is a deterministic context engine and task workflow for OpenSpec projects. The CLI is `specctx`.
-
-OpenSpec gives you a proposal, specs, a design, and tasks. spec-ctx adds what an AI agent needs to work on them without reading the whole tree:
-
-- Stable IDs on every requirement, scenario, decision, and task.
-- An index that links each ID to code, tests, and other IDs.
-- `bundle`: the few kilobytes of spec that one task needs, with the file and line of each block.
-- `task next`, `task start`, `task done`: the checkbox changes only after the `Verify:` command of the task exits 0, and the evidence stays beside the tree.
-- A generated handoff, so the next session starts with one command.
-
-No LLM call. No daemon. The same files give the same bytes.
+A project with specs but no IDs needs `specctx adopt` first. See [Two paths](#two-paths).
 
 ## Install
 
@@ -235,8 +181,24 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.0` on npm, with tags `v0.1.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 009. No change is open.
+- Archived: 001 to 010. No change is open.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
+
+## Measured
+
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-26.md`. Its total row:
+
+| change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
+| --- | --- | --- | --- | --- | --- |
+| total | 0.0502 (n=27) | 0.82 (72/88) | 36 (of 60 reopens) | 26 (n=27) | 0 (0 baselined + 0 new) |
+
+- `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
+- `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
+- `stale_catches`: reopened tasks that `check --strict` flagged as stale, out of all reopened tasks. A higher share means the check found the drift before a person did.
+- `cycle_time_median_s`: the median number of seconds from `task start` to `task done`. Lower is faster.
+- `debt`: findings that the baseline hides plus new findings. Zero is the goal.
+
+The value in brackets is the count of inputs. A value without inputs reads n/a.
 
 ## Contribute
 

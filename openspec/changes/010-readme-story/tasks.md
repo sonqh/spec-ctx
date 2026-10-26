@@ -13,8 +13,8 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 3. README
 
-- [ ] 3.1 Rewrite the top of `README.md` per 010/D1 to D3: tagline, audience line, `## The problem`, `## What spec-ctx does` table, `## Demo`, `## Quickstart`. Move every metric number into `## Measured` before `## Contribute`, with the total row of the newest `docs/metrics/*.md` and one line per column. Keep Install, Two paths, The loop, Commands, Config reference, Markdown linters, GitHub Action, Status, Contribute, License. Update `tests/gov/readme.test.ts` for the new SCN-GOV-006-1 and -3. Lint. [REQ-GOV-006] Verify: `bun test tests/gov && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md`
-- [ ] 3.2 Write `docs/verification/010.md`. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
+- [x] 3.1 Rewrite the top of `README.md` per 010/D1 to D3: tagline, audience line, `## The problem`, `## What spec-ctx does` table, `## Demo`, `## Quickstart`. Move every metric number into `## Measured` before `## Contribute`, with the total row of the newest `docs/metrics/*.md` and one line per column. Keep Install, Two paths, The loop, Commands, Config reference, Markdown linters, GitHub Action, Status, Contribute, License. Update `tests/gov/readme.test.ts` for the new SCN-GOV-006-1 and -3. Lint. [REQ-GOV-006] Verify: `bun test tests/gov && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md`
+- [x] 3.2 Write `docs/verification/010.md`. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
 
 ## Workflow follow-up
 
