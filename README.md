@@ -190,7 +190,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0502 (n=27) | 0.82 (72/88) | 36 (of 60 reopens) | 26 (n=27) | 0 (0 baselined + 0 new) |
+| total | 0.0489 (n=31) | 0.83 (77/93) | 36 (of 61 reopens) | 42 (n=31) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
