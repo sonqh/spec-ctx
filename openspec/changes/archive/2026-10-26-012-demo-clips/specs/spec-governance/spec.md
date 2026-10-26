@@ -28,7 +28,7 @@ Refs: REQ-GOV-003
 - **THEN** it holds `### 1.` to `### 6.` in order, each followed within 4 lines by an image link to `docs/demo/clips/<n>-*.svg`
 
 ### Requirement: REQ-GOV-008 Demo story
-The demo SHALL be six clips under `docs/demo/clips/`, one command each, recorded in order on one project before adopt: `adopt --dry-run` then `adopt`. `status`. `task next`. `task start` with its footer. A `task done` that fails with `The task stays open.`, the edit, and a `task done` that passes. `handoff write` with the head of the handoff. No caption inside a clip. Each clip under 7 seconds. All SVGs under 400 kB together. `loop.txt` holds the six transcripts, one heading line per step.
+The demo SHALL be six clips under `docs/demo/clips/`, one command each, in order on one project before adopt: `adopt --dry-run` then `adopt`. `status`. `task next`. `task start` with its footer. A failing `task done`, the edit, and a passing `task done`. `handoff write` and the handoff head. No caption inside a clip. Each clip under 7 seconds. The SVGs under 400 kB in all. `loop.txt` holds the six transcripts, one heading line per step.
 
 Refs: REQ-GOV-003, REQ-TASK-002, REQ-TASK-003, REQ-CLI-008
 

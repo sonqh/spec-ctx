@@ -9,7 +9,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 ## 2. README
 
 - [x] 2.1 Rewrite the top of `README.md` per 012/D2 and D3 with the exact text of D2. Remove the old `## Demo` section. Update `tests/gov/readme.test.ts` for SCN-GOV-006-1 and -5. Lint. [REQ-GOV-006] Verify: `bun test tests/gov && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md`
-- [ ] 2.2 Write `docs/verification/012.md`. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
+- [x] 2.2 Write `docs/verification/012.md`. Full gate. [REQ-GOV-001] Verify: `bun run ci:local`
 
 ## Workflow follow-up
 
