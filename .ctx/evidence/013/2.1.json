@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-26T13:29:31.995Z",
+  "bundle_chars": 1210,
+  "files": {
+    "tests/schema/readme.test.ts": "04a51130fb9a344be806f35b19ec76ae540073b9983404a2375eaf9421919288"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-004"
+  ],
+  "started_at": "2026-10-26T13:29:22.324Z",
+  "task": "013/2.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/schema && node dist/cli.js lint tells --baseline 0 schemas/spec-driven-ids/README.md docs/upstream-issue.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation schemas/spec-driven-ids/README.md docs/upstream-issue.md",
+    "exit": 0,
+    "stderr_tail": "\n 5 pass\n 0 fail\n 36 expect() calls\nRan 5 tests across 2 files. [11.00ms]",
+    "stdout_sha256": "fc11888d135ec7355900363e3b0c003840c3dbc5fce8888e09111f0db985ba7f"
+  }
+}

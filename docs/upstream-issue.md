@@ -18,7 +18,7 @@ Header text is not stable. People improve wording, and agents rewrite headers wh
 
 The parallel merge plan in this repository, [`openspec-parallel-merge-plan.md`](https://github.com/Fission-AI/OpenSpec/blob/main/openspec-parallel-merge-plan.md), names the same gap:
 
-- Root cause 2, "Missing base fingerprint": a change does not record which version of a requirement it was written against. Archive cannot see that the live spec moved.
+- Root cause 2, "Missing base fingerprint": a change does not record the version of a requirement that it targets. Archive cannot see that the live spec moved.
 - Phase 2, "Increase Delta Granularity": scenario level operations "backed by stable scenario identifiers (explicit IDs or generated hashes) stored in `meta.json`".
 
 This proposal is the "explicit IDs" branch of Phase 2, and it fits beside the Phase 0 content hash. The two answer different questions. The ID says which requirement a block is about. The hash says which version of it the author saw. An ID in the header also lets Phase 1 rebase find the matching block after a rename, which a hash alone cannot do.
@@ -71,3 +71,13 @@ The workflow built on the IDs also measured two things that header text cannot. 
 - Is ID matching in archive a direction you want, or should IDs stay a convention outside the core?
 - Would you accept the ID as an optional prefix, with header text as the fallback when no ID is present?
 - Does the parallel merge plan already have a fingerprint design that IDs should follow?
+
+## Community schema entry
+
+Title: `Community schema: spec-driven-ids`
+
+Link: https://github.com/sonqh/spec-ctx/tree/main/schemas/spec-driven-ids
+
+Row for "Community Schemas" in `docs/customization.md`:
+
+- `spec-driven` with a stable ID on every requirement, scenario, decision, and task. `specctx` allocates the IDs, bundles the spec of one task for an agent, and ticks a task only after its Verify command passes. Adopts an existing project in one run.
