@@ -26,8 +26,23 @@ A change written with the bundle SHALL archive with `openspec archive` and the I
 - **THEN** every REQ ID from the change exists once in `openspec/specs/` and `check --strict` prints `0 findings`
 
 ### Requirement: REQ-SCH-003 Project rules
-The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` text this repo uses, so `init --schema` can merge it into the project's config without overwriting other keys.
+The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` text this repo uses, so `init --schema` can merge it into the project's config without overwriting other keys. Every list item under `rules.*` and `operations.*.guidance` SHALL parse as a YAML string. `init --schema` SHALL repair an item in the project config that parsed as a one key mapping into the string `<key>: <value>`.
 
 #### Scenario: SCN-SCH-003-1 Merge keeps keys
 - **WHEN** the project config already has a `context` key
 - **THEN** `init --schema` adds `rules` and `operations` and leaves `context` unchanged
+
+#### Scenario: SCN-SCH-003-2 Items are strings
+- **WHEN** the test parses `config-fragment.yaml`
+- **THEN** every item under `rules.*` and `operations.*.guidance` is a string
+
+#### Scenario: SCN-SCH-003-3 Repair
+- **WHEN** the project config holds a rule item that YAML reads as a mapping
+- **THEN** after `init --schema` the item is one string and `openspec validate --all` prints no `must be an array of strings` warning
+
+### Requirement: REQ-SCH-004 Install paths in the bundle README
+`schemas/spec-driven-ids/README.md` SHALL describe the copy install first: clone, copy the folder into `openspec/schemas/spec-driven-ids/`, set `schema`, merge the fragment. Then the `npx -y spec-ctx init --schema` path. It SHALL name the OpenSpec version the bundle was forked from.
+
+#### Scenario: SCN-SCH-004-1 Both paths
+- **WHEN** the test reads the README
+- **THEN** a heading that contains `copy` comes before one that contains `init --schema`, and the text names `1.14.3`
