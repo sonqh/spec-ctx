@@ -1,7 +1,7 @@
 // Covers: REQ-TASK-002, REQ-STAT-002
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync } from "node:fs";
-import { Project } from "../helpers.ts";
+import { NO_ID_FIXTURE, Project } from "../helpers.ts";
 
 let p: Project;
 afterEach(() => p?.cleanup());
@@ -15,6 +15,16 @@ function setup(): Project {
   return pr;
 }
 
+const FOOTER = /^-- bundle \d+ chars, \d+(\.\d)?% of \d+ chars of spec text$/;
+
+/** The output without its footer line. */
+function bundleOf(out: string): string {
+  const lines = out.split("\n");
+  expect(lines.at(-1)).toBe("");
+  expect(lines.at(-2)).toMatch(FOOTER);
+  return lines.slice(0, -2).join("\n") + (lines.length > 2 ? "\n" : "");
+}
+
 describe("task start", () => {
   test("SCN-TASK-002-1 start prints the bundle and writes current.json", async () => {
     process.env.SPECCTX_NOW = "2026-10-24T09:00:00.000Z";
@@ -24,8 +34,9 @@ describe("task start", () => {
       expect(r.code, r.err).toBe(0);
       expect(r.out.startsWith("-- REQ-TASK-001 |")).toBe(true);
       expect(r.out).toContain("#### Scenario: SCN-TASK-001-1 Pick");
-      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: [...r.out].length, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1" });
-      expect(p.read(".ctx/current.json")).toBe(`{\n  "bundle_chars": ${[...r.out].length},\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1"\n}\n`);
+      const n = [...bundleOf(r.out)].length;
+      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: n, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1" });
+      expect(p.read(".ctx/current.json")).toBe(`{\n  "bundle_chars": ${n},\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1"\n}\n`);
     } finally {
       delete process.env.SPECCTX_NOW;
     }
@@ -35,7 +46,7 @@ describe("task start", () => {
     p = setup();
     const r = await p.run("task", "start", "002/2.1");
     const cur = JSON.parse(p.read(".ctx/current.json"));
-    expect(cur.bundle_chars).toBe([...r.out].length);
+    expect(cur.bundle_chars).toBe([...bundleOf(r.out)].length);
     expect(cur.bundle_chars).toBeGreaterThan(50);
   });
 
@@ -59,5 +70,32 @@ describe("task start", () => {
     const r = await p.run("task", "start", "002/9.9");
     expect(r.code).toBe(2);
     expect(r.err).toContain("no task 002/9.9");
+  });
+
+  test("SCN-TASK-002-3 the footer ends task start on the fixture task add-mfa/1.3, and bundle has none", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    expect((await p.run("init")).code).toBe(0);
+    expect((await p.run("adopt")).code).toBe(0);
+    const tasks = "openspec/changes/add-mfa/tasks.md";
+    const before = p.read(tasks);
+    const after = before.replace(/^- \[ \] 1\.3 (.*)$/m, "- [ ] 1.3 $1. [REQ-UA-004] Verify: `true`");
+    expect(after).not.toBe(before);
+    p.write(tasks, after);
+    const r = await p.run("task", "start", "add-mfa/1.3");
+    expect(r.code, r.err).toBe(0);
+    const lines = r.out.trimEnd().split("\n");
+    const last = lines.at(-1)!;
+    expect(last).toMatch(FOOTER);
+    const [, n, pct, m] = /^-- bundle (\d+) chars, ([\d.]+)% of (\d+) chars/.exec(last)!;
+    const cur = JSON.parse(p.read(".ctx/current.json"));
+    expect(Number(n)).toBe(cur.bundle_chars);
+    expect(Number(m)).toBeGreaterThan(Number(n));
+    expect(Math.abs(Number(pct) - (100 * Number(n)) / Number(m))).toBeLessThan(0.06);
+    const s = await p.run("stats", "--json");
+    if (s.code === 0 && s.out.trim().startsWith("{")) expect(JSON.parse(s.out).spec_chars).toBe(Number(m));
+    const b = await p.run("bundle", "REQ-UA-004");
+    expect(b.code).toBe(0);
+    expect(b.out).toContain("REQ-UA-004");
+    expect(b.out.split("\n").some((l) => FOOTER.test(l))).toBe(false);
   });
 });

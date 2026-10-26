@@ -132,10 +132,15 @@ export function gateMetrics(root: string, last = 100): Gate {
   };
 }
 
-export function computeStats(root: string, entries: Entry[], strictFindings: Finding[], warnings: string[], only?: string): Stats {
-  const specChars = entries
+// REQ-STAT-002 REQ-TASK-002 the size of all canonical req, scn, and decision text. stats and the task start footer share it.
+export function specCharsOf(entries: Entry[]): number {
+  return entries
     .filter((e) => e.canonical && (e.kind === "req" || e.kind === "scn" || e.kind === "decision"))
     .reduce((a, e) => a + cpLen(e.text ?? ""), 0);
+}
+
+export function computeStats(root: string, entries: Entry[], strictFindings: Finding[], warnings: string[], only?: string): Stats {
+  const specChars = specCharsOf(entries);
   const { live, reopened } = readEvidence(root);
   // REQ-IDX-005 the change name of each change key, from the task entries
   const names = new Map<string, string>();

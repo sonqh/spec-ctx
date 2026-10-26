@@ -97,7 +97,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       // REQ-STAT-002 the bundle size goes next to the current task, so stats can compute the context ratio
       writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id }) + "\n");
       if (c.json) print(c, { bundle: b, task: t.id });
-      else c.io.out(b.text);
+      else c.io.out(b.text + footer(cpLen(b.text), (await import("../stats/stats.ts")).specCharsOf(entries)));
       return 0;
     }
     case "task verify":
@@ -243,4 +243,10 @@ function clearCurrent(root: string, task: string): void {
   } catch {
     // a damaged current.json stays for the user to read
   }
+}
+
+// REQ-TASK-002 the footer of task start: the bundle size and its share of the spec text. bundle never prints it.
+export function footer(n: number, m: number): string {
+  const p = m > 0 ? Math.round((n / m) * 1000) / 10 : 0;
+  return `-- bundle ${n} chars, ${p}% of ${m} chars of spec text\n`;
 }

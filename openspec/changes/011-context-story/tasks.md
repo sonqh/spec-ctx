@@ -4,7 +4,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 
 ## 1. Engine
 
-- [ ] 1.1 `task start` prints the footer line per 011/D6. Reuse the spec text size that `stats` computes. `bundle` stays unchanged. Add a test for SCN-TASK-002-3. [REQ-TASK-002] Verify: `bun test tests/tasks tests/query && bash tests/parity/run.sh`
+- [x] 1.1 `task start` prints the footer line per 011/D6. Reuse the spec text size that `stats` computes. `bundle` stays unchanged. Add a test for SCN-TASK-002-3. [REQ-TASK-002] Verify: `bun test tests/tasks tests/query && bash tests/parity/run.sh`
 
 ## 2. Demo
 

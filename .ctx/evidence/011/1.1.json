@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-26T07:36:19.648Z",
+  "bundle_chars": 5141,
+  "files": {
+    "src/cli/workflow.ts": "a0e8bd1cb1e1ffe5686f5b027716d0b795a2d8f6f813c7b67d4e765f3de8e856",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad",
+    "tests/tasks/start.test.ts": "a0559eb5907bd730e44fc59a05c5c43808b65cad9445d8d0aa63c184e6036cdd"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-002"
+  ],
+  "started_at": "2026-10-26T07:34:45.802Z",
+  "task": "011/1.1",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/tasks tests/query && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "\n 47 pass\n 0 fail\n 259 expect() calls\nRan 47 tests across 10 files. [1.79s]",
+    "stdout_sha256": "9322b1b307f6510bf50f51921b0d4fff8c1904be412f7e967d31bce386735086"
+  }
+}
