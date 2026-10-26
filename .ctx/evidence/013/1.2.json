@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-26T13:28:55.367Z",
+  "bundle_chars": 3967,
+  "files": {
+    "src/init/init.ts": "7ff49018f4b363ecde4ff4bb7e73f7a2a12585f2f5588699505d5ee52920c362",
+    "tests/init/init.test.ts": "4b61cf9a611156dce9937f09daeebb3731c1c7e64f04829742d69d74458cd762",
+    "tests/schema/strings.test.ts": "7f0b43a3f0ffbf3a99401e6007b56290d681f67ffe20b858e590549380193a77",
+    "tests/schema/validate.sh": "b30b819c9a3e4b9a64f187f48d1c14bff82f485080483cea7f13672d25efc171"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-003"
+  ],
+  "started_at": "2026-10-26T13:28:40.749Z",
+  "task": "013/1.2",
+  "tool_version": "0.1.0",
+  "verify": {
+    "command": "bun test tests/init",
+    "exit": 0,
+    "stderr_tail": "\n 9 pass\n 0 fail\n 68 expect() calls\nRan 9 tests across 2 files. [88.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

@@ -77,6 +77,39 @@ describe("init", () => {
     expect(none.added).toEqual(["schema", "rules", "operations"]);
   });
 
+  test("SCN-SCH-003-3 init --schema repairs an item that YAML reads as a mapping", async () => {
+    p = freshOpenspec();
+    const broken = [
+      "schema: spec-driven-ids",
+      "",
+      "context: |",
+      "  Keep: this line.",
+      "",
+      "rules:",
+      "  specs:",
+      '    - Every header starts with its ID, e.g. "### Requirement: REQ-ABC-001 Name".',
+      "    - 'Already quoted: stays.'",
+      "    - Plain item.",
+      "    - It's a rule: with a quote.",
+      "operations:",
+      "  apply:",
+      "    guidance:",
+      "      - Run `specctx check`: then stop.",
+      "",
+    ].join("\n");
+    p.write("openspec/config.yaml", broken);
+    expect((await p.run("init", "--schema")).code).toBe(0);
+    const cfg = p.read("openspec/config.yaml");
+    expect(cfg).toContain("    - 'Every header starts with its ID, e.g. \"### Requirement: REQ-ABC-001 Name\".'\n");
+    expect(cfg).toContain("    - 'It''s a rule: with a quote.'\n");
+    expect(cfg).toContain("      - 'Run `specctx check`: then stop.'\n");
+    expect(cfg).toContain("    - 'Already quoted: stays.'\n    - Plain item.\n");
+    expect(cfg).toContain("context: |\n  Keep: this line.\n");
+    const again = await p.run("init", "--schema");
+    expect(again.code).toBe(0);
+    expect(p.read("openspec/config.yaml")).toBe(cfg);
+  });
+
   test("SCN-SKL-002-1 init --skills copies the skills byte for byte", async () => {
     p = new Project(null);
     expect((await p.run("init", "--skills")).code).toBe(0);

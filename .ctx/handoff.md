@@ -5,6 +5,7 @@ base: 2026-10-26T08:46:23.500Z
 as_of: none
 done:
 reopened:
+- 013/1.1 init.ts and its test changed in 1.2 (at 2026-10-26T13:29:07.371Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

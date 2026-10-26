@@ -5,7 +5,7 @@ Run `bun run build` before every Verify. Every Verify runs from the repo root.
 ## 1. Strings
 
 - [x] 1.1 Quote every list item in `schemas/spec-driven-ids/config-fragment.yaml` and in `openspec/config.yaml`. Fix `schema: spec-driven` to `spec-driven-ids` and `ctx check` to `node dist/cli.js check` in the project config. Add `tests/schema/strings.test.ts` for SCN-SCH-003-2. Regenerate `src/assets.generated.ts`. [REQ-SCH-003] Verify: `bun run build && bun test tests/schema && npx -y @fission-ai/openspec@latest validate --all --strict 2>&1 | grep -c "must be an array of strings" | grep -qx 0`
-- [ ] 1.2 `init --schema` repairs one key mapping items under `rules.*` and `operations.*.guidance` into strings. Add a test for SCN-SCH-003-3 with a broken config in a temp dir. [REQ-SCH-003] Verify: `bun test tests/init`
+- [x] 1.2 `init --schema` repairs one key mapping items under `rules.*` and `operations.*.guidance` into strings. Add a test for SCN-SCH-003-3 with a broken config in a temp dir. [REQ-SCH-003] Verify: `bun test tests/init`
 
 ## 2. README and catalog
 

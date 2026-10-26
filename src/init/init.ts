@@ -79,6 +79,28 @@ function topBlocks(text: string): Map<string, string> {
 }
 
 /**
+ * REQ-SCH-003 quote list items under `rules` and `operations` that hold `: ` and are not quoted.
+ * YAML reads such an item as a one key mapping. Every other line stays byte for byte.
+ */
+export function repairItems(text: string): { text: string; fixed: number } {
+  let inBlock = false;
+  let fixed = 0;
+  const out = text.split("\n").map((line) => {
+    const top = TOP_KEY.exec(line);
+    if (top) {
+      inBlock = top[1] === "rules" || top[1] === "operations";
+      return line;
+    }
+    if (!inBlock) return line;
+    const m = /^(\s+- )(.*?)(\s*)$/.exec(line);
+    if (!m || /^['"]/.test(m[2]!) || !/:(\s|$)/.test(m[2]!)) return line;
+    fixed++;
+    return `${m[1]}'${m[2]!.replace(/'/g, "''")}'${m[3]}`;
+  });
+  return { text: out.join("\n"), fixed };
+}
+
+/**
  * REQ-SCH-003 add each top-level key of the fragment that the project config lacks.
  * Keys that exist stay as they are. The schema key names the installed bundle.
  */
@@ -104,6 +126,11 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
     }
     text = text.replace(/\n*$/, "\n\n") + block;
     added.push(key);
+  }
+  const r = repairItems(text);
+  if (r.fixed) {
+    text = r.text;
+    added.push("repaired items");
   }
   return { text, added, kept };
 }

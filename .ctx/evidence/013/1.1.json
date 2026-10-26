@@ -1,9 +1,8 @@
 {
-  "at": "2026-10-26T13:28:33.992Z",
-  "bundle_chars": 3870,
+  "at": "2026-10-26T13:29:11.244Z",
   "files": {
-    "src/init/init.ts": "b3b7b55b29ef72c65cd1f27992a359d3780cf67fa14cda6ec11a4177c8b8876a",
-    "tests/init/init.test.ts": "98a138a23b40af25f4675bff905ef260644b3d6f87f74784ab00ac89206f5c55",
+    "src/init/init.ts": "7ff49018f4b363ecde4ff4bb7e73f7a2a12585f2f5588699505d5ee52920c362",
+    "tests/init/init.test.ts": "4b61cf9a611156dce9937f09daeebb3731c1c7e64f04829742d69d74458cd762",
     "tests/schema/strings.test.ts": "7f0b43a3f0ffbf3a99401e6007b56290d681f67ffe20b858e590549380193a77",
     "tests/schema/validate.sh": "b30b819c9a3e4b9a64f187f48d1c14bff82f485080483cea7f13672d25efc171"
   },
@@ -11,13 +10,12 @@
   "reqs": [
     "REQ-SCH-003"
   ],
-  "started_at": "2026-10-26T13:28:06.989Z",
   "task": "013/1.1",
   "tool_version": "0.1.0",
   "verify": {
     "command": "bun run build && bun test tests/schema && npx -y @fission-ai/openspec@latest validate --all --strict 2>&1 | grep -c \"must be an array of strings\" | grep -qx 0",
     "exit": 0,
-    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 3 pass\n 0 fail\n 33 expect() calls\nRan 3 tests across 1 file. [11.00ms]",
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 3 pass\n 0 fail\n 33 expect() calls\nRan 3 tests across 1 file. [9.00ms]",
     "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
   }
 }
