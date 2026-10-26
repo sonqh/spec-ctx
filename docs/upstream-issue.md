@@ -1,6 +1,6 @@
 # Draft issue for OpenSpec: stable IDs as the base fingerprint for requirements
 
-This is a draft. The issue is not open yet. Open it only after a review, and send no pull request until a maintainer asks for one.
+Status: posted on 2026-10-26 as a comment on the maintainer's own issue, [Fission-AI/OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). That issue names the same gap: requirements have no stable identity beyond their heading text. The text below is the long form. The comment is a shorter answer to the three questions the issue asks. Send no pull request until a maintainer asks for one.
 
 ## Title
 
