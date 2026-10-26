@@ -36,22 +36,25 @@ With an ID in the header, archive can match a delta block to its main block by I
 
 The scheme needs no change to the delta format. The ID is the first word of the header text, so current parsers read it today.
 
-## Evidence from a real project
+## Evidence from real projects
 
-spec-ctx implements the scheme beside OpenSpec as a separate CLI. Its engine started inside agentrc, an OpenSpec project with six archived changes:
+spec-ctx implements the scheme beside OpenSpec as a separate CLI, published as `spec-ctx` on npm. Three projects run it:
 
-- 110 canonical requirements and 160 canonical scenarios, all with IDs.
-- 1,149 index entries, with code tags and test tags on the requirements.
-- 185 kB of spec markdown. A task loads one requirement and its links as a bundle of about 4.7 kB.
-- `specctx check --strict` gates every commit on ID integrity, test coverage of each main requirement, and a named test for each scenario.
+- spec-ctx itself: 69 requirements and 165 scenarios with IDs, 110 code tags and 99 test tags, nine archived changes. A task loads a bundle of about 5 percent of the spec text (`docs/metrics/2026-10-26.md`: context ratio 0.0502 over 27 tasks).
+- agentrc, an OpenSpec project with eleven archived changes, migrated with `specctx adopt`. 110 requirements and 160 scenarios got IDs in one run.
+- ste-humanize-skill, a fresh OpenSpec project started with IDs from the first change.
 
-During the work on spec-ctx itself, archive refused one MODIFIED block with new header text, and `openspec validate` predicted the same refusal for a second one. The IDs stayed the same. Each fix was a RENAMED block that the ID could have made unnecessary.
+A read only dry run of `specctx adopt` on the OpenSpec repository at commit 56ef0ac gives a sense of scale. It holds 36 capabilities, 252 requirements, 748 scenarios, and 30 active changes. 16 delta headers in those changes match no main requirement by text today. An ID in the header would have kept each of those links.
+
+During the work on spec-ctx, archive refused one MODIFIED block with new header text, and `openspec validate` predicted the same refusal for a second one. The IDs stayed the same. Each fix was a RENAMED block that the ID could have made unnecessary.
+
+The workflow built on the IDs also measured two things that header text cannot. A task closes only when its `Verify:` command passes, and 72 of 88 tasks hold that evidence. 36 of 60 task reopens caught evidence that a later edit made stale.
 
 ## What we offer
 
 - The ID scheme and its rules: `decisions/ADR-002-id-scheme.md` in https://github.com/sonqh/spec-ctx.
 - A schema bundle, `spec-driven-ids`, a fork of `spec-driven` with ID placeholders in its templates. It validates with `openspec schema validate` and archives with `openspec archive` unchanged.
-- An engine under the MIT license that indexes the IDs, finds dangling links, and allocates the next free number.
+- An engine under the MIT license, `npx -y spec-ctx`. It indexes the IDs, finds dangling links, and allocates the next free number. It adopts an existing project in one run.
 - Help with a design for ID matching in archive, if the maintainers want it. A pull request follows only on an invitation.
 
 ## How this fits the plan
