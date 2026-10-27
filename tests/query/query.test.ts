@@ -1,6 +1,6 @@
 // Covers: REQ-QRY-001
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { Project, PARITY_FIXTURE } from "../helpers.ts";
+import { NO_ID_FIXTURE, Project, PARITY_FIXTURE } from "../helpers.ts";
 
 let p: Project;
 let base: Project;
@@ -73,6 +73,36 @@ describe("query", () => {
   });
 
   test("query needs a term", async () => {
-    expect((await p.run("query")).code).toBe(2);
+    const r = await p.run("query");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("query needs at least one term");
+  });
+
+  test("SCN-QRY-001-5 --change with no term lists every entry of the change", async () => {
+    const q = new Project(NO_ID_FIXTURE);
+    try {
+      expect((await q.run("init")).code).toBe(0);
+      expect((await q.run("adopt")).code).toBe(0);
+      const reqs = await lines(q, "query", "--change", "add-mfa", "--kind", "req");
+      const ids = reqs.map((l) => l.split("  ")[0]);
+      // every requirement header of the add-mfa delta, sorted by ID, each once
+      const headers = q.read("openspec/changes/add-mfa/specs/user-auth/spec.md").split("\n")
+        .filter((l) => l.startsWith("### Requirement: ")).map((l) => l.split(" ")[2]!).sort();
+      expect(ids).toEqual(headers);
+      expect(reqs.every((l) => l.split("  ")[1] === "req")).toBe(true);
+      // without --kind every kind of the change appears, scenarios and tasks included
+      const all = await lines(q, "query", "--change", "add-mfa", "--limit", "0");
+      expect(all.length).toBeGreaterThan(reqs.length);
+      expect(all.some((l) => l.split("  ")[1] === "scn")).toBe(true);
+      expect(all.some((l) => l.split("  ")[1] === "task")).toBe(true);
+      // the JSON output has the same entries
+      expect(JSON.parse((await q.run("query", "--change", "add-mfa", "--kind", "req", "--json")).out).map((e: { id: string }) => e.id)).toEqual(headers);
+      // no term and no --change stays a usage error
+      const bad = await q.run("query", "--kind", "req");
+      expect(bad.code).toBe(2);
+      expect(bad.err).toContain("query needs at least one term");
+    } finally {
+      q.cleanup();
+    }
   });
 });

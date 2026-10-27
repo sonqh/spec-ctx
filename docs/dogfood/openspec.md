@@ -147,6 +147,22 @@ The gate now stops only on the fork's own validate failures, which their maintai
 
 The third commit on the branch is the baseline written with the 016 build.
 
+## Rerun with the local build after change 017
+
+Change 017 took five items from the friction log: 2, 3, 5, 6, and 10. `node /home/claude/spec-ctx/dist/cli.js` after 017 on the same fork tree. Every write below was undone after the run.
+
+| Command | Exit | Time | Result |
+| --- | --- | --- | --- |
+| `task backfill --manual adopted` with `.ctx/evidence/` set aside | 0 | 0.48 s | `backfilled 471 task(s)` in 25 active changes. The first run wrote 1,812 files in 94 changes. The archive got none. |
+| `init --all` | 0 | | `wrote .gitignore (1 line)`: the fork already had `.ctx/index.json` by hand, so only `adopt-report.md` went in, under the `# spec-ctx` comment. Then the note: `note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.` |
+| `init` on a copy of the tree with `test/` and `src/` | 0 | | `spec-ctx.toml` has `tests = ["test/**"]` and `code = ["src/**"]`. |
+| `adopt --dry-run` | 0 | | `nothing to adopt`. The tree is adopted. On the no-ID fixture the last line reads `exit 1: 20 headers need an ID. Next: specctx adopt`. |
+| `query --change add-change-stacking-awareness --kind req` | 0 | | 7 requirements, one per line, sorted by ID. |
+| `query --kind req` | 2 | | `query needs at least one term`. |
+| `task start add-change-stacking-awareness/1.1` | 0 | | The hint names the call: `Run specctx query --change add-change-stacking-awareness --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.` |
+
+Items 4, 8, 12, and 14 stay open.
+
 ## Friction log, in the order I hit it
 
 1. The fork ignores `.claude/` in `.gitignore` line 145. `init` wrote three skills there and said nothing. They never reach git.

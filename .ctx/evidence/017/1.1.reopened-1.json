@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-27T06:52:53.088Z",
+  "bundle_chars": 4898,
+  "files": {
+    "src/cli/workflow.ts": "138a6d102e92ed2f8b9caa406c7b0ce0801a345812171befac7f8d35aad2725a",
+    "tests/tasks/backfill.test.ts": "cc0703a316d8c128b9c6dc67cb2c96557fc11cea0bf68cdbc058528de8f5ffbc"
+  },
+  "kind": "command",
+  "reason": "src/cli/workflow.ts changed in 3.2 (the task start hint)",
+  "reqs": [
+    "REQ-TASK-006"
+  ],
+  "started_at": "2026-10-27T06:51:54.537Z",
+  "task": "017/1.1",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/backfill.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 4 pass\n 0 fail\n 18 expect() calls\nRan 4 tests across 1 file. [72.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

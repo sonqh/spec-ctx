@@ -18,8 +18,9 @@ printf '\n### Requirement: Lockout policy\nThe system SHALL lock an account afte
 mkdir -p docs
 printf '# Notes\n\nOne thing \xe2\x80\x94 another; a third.\n' > docs/notes.md
 $specctx init --all >/dev/null
-# the dry run exits 1 when headers need an ID
-if $specctx adopt --dry-run >/dev/null; then echo "adopt --dry-run found nothing on the no-ID fixture"; exit 1; fi
+# the dry run exits 1 when headers need an ID, and its last line says why (SCN-ADOPT-001-3)
+if dry=$($specctx adopt --dry-run); then echo "adopt --dry-run found nothing on the no-ID fixture"; exit 1; fi
+printf "%s\n" "$dry" | tail -n 1 | grep -qE "^exit 1: [0-9]+ headers need an ID\. Next: specctx adopt$"
 $specctx adopt
 $specctx task backfill --manual "adopted"
 $specctx baseline write

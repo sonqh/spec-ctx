@@ -80,7 +80,7 @@ describe("task start", () => {
     expect(r.code, r.err).toBe(0);
     const lines = r.out.trimEnd().split("\n");
     expect(lines).toHaveLength(2);
-    expect(lines[0]).toBe("task add-mfa/1.3 cites no REQ. Find one with specctx query <term> --change add-mfa --kind req, then add [REQ-<CAP>-NNN] to the task line.");
+    expect(lines[0]).toBe("task add-mfa/1.3 cites no REQ. Run specctx query --change add-mfa --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.");
     expect(lines[1]).toMatch(/^-- bundle 0 chars, 0% of \d+ chars of spec text$/);
     const j = JSON.parse((await p.run("task", "start", "add-mfa/1.3", "--json")).out);
     expect(j.hint).toBe(lines[0]);

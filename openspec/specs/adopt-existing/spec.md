@@ -6,7 +6,7 @@ How a project that already has OpenSpec specs gets IDs and a usable strict mode 
 ## Requirements
 
 ### Requirement: REQ-ADOPT-001 Dry run
-`specctx adopt --dry-run` SHALL scan `openspec/specs/**/spec.md` and the deltas of active changes, list every `### Requirement:` and `#### Scenario:` header that carries no ID, and print the ID each would receive as `file:line  old header  ->  new header`. It SHALL print the derived CAP codes and SHALL write nothing. Exit 0 when nothing needs an ID.
+`specctx adopt --dry-run` SHALL scan `openspec/specs/**/spec.md` and the deltas of active changes, list every `### Requirement:` and `#### Scenario:` header that carries no ID, and print the ID each would receive as `file:line  old header  ->  new header`. It SHALL print the derived CAP codes and SHALL write nothing. Exit 0 when nothing needs an ID. Exit 1 otherwise, with a last line `exit 1: <n> headers need an ID. Next: specctx adopt`.
 
 Refs: ADR-002
 
@@ -17,6 +17,10 @@ Refs: ADR-002
 #### Scenario: SCN-ADOPT-001-2 Nothing to do
 - **WHEN** `adopt --dry-run` runs on this repository
 - **THEN** it prints `nothing to adopt` and exits 0
+
+#### Scenario: SCN-ADOPT-001-3 The exit code has a reason
+- **WHEN** `adopt --dry-run` runs on the no-ID fixture
+- **THEN** it exits 1 and the last line is `exit 1: <n> headers need an ID. Next: specctx adopt`, where `<n>` is the count of `->` lines
 
 ### Requirement: REQ-ADOPT-002 Atomic assignment
 `specctx adopt` SHALL write the dry run IDs into main spec headers and into every matching active delta header in one operation. Matching uses exact header text, or the delta `RENAMED` mapping. It SHALL run `check` before and after. A finding the write introduced SHALL restore every file and exit 1. Findings that existed before SHALL not block. It SHALL add derived CAP codes to `spec-ctx.toml` and write `adopt-report.md`.

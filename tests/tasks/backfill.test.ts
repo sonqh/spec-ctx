@@ -1,6 +1,6 @@
 // Covers: REQ-TASK-006
 import { afterEach, describe, expect, test } from "vitest";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { Project } from "../helpers.ts";
 
 let p: Project;
@@ -10,10 +10,10 @@ const ticked = (n: number, from = 1): string =>
   Array.from({ length: n }, (_, i) => `- [x] 1.${i + from} Task ${i + from}. [REQ-AAA-001] Verify: \`true\`\n`).join("");
 
 describe("task backfill", () => {
-  test("SCN-TASK-006-1 two archived changes with 5 and 7 ticked tasks", async () => {
+  test("SCN-TASK-006-1 two active changes with 5 and 7 ticked tasks", async () => {
     p = new Project();
-    p.write("openspec/changes/archive/2026-10-01-010-five/tasks.md", "# Tasks\n\n" + ticked(5));
-    p.write("openspec/changes/archive/2026-10-02-011-seven/tasks.md", "# Tasks\n\n" + ticked(7));
+    p.write("openspec/changes/010-five/tasks.md", "# Tasks\n\n" + ticked(5));
+    p.write("openspec/changes/011-seven/tasks.md", "# Tasks\n\n" + ticked(7));
     const r = await p.run("task", "backfill", "--manual", "adopted");
     expect(r.code, r.err).toBe(0);
     expect(r.out).toBe("010-five: 5\n011-seven: 7\nbackfilled 12 task(s)\n");
@@ -38,10 +38,23 @@ describe("task backfill", () => {
     expect(JSON.parse(p.read(".ctx/evidence/002/2.2.json")).kind).toBe("manual");
   });
 
+  test("SCN-TASK-006-3 an archived change gets no evidence", async () => {
+    p = new Project();
+    p.write("openspec/changes/010-five/tasks.md", "# Tasks\n\n" + ticked(2));
+    p.write("openspec/changes/archive/2026-10-02-011-seven/tasks.md", "# Tasks\n\n" + ticked(3));
+    const r = await p.run("task", "backfill", "--manual", "adopted");
+    expect(r.code, r.err).toBe(0);
+    expect(r.out).toBe("010-five: 2\nbackfilled 2 task(s)\n");
+    expect(readdirSync(p.path(".ctx/evidence/010"))).toHaveLength(2);
+    expect(existsSync(p.path(".ctx/evidence/011"))).toBe(false);
+    // --change on the archived change finds nothing
+    expect((await p.run("task", "backfill", "--manual", "adopted", "--change", "011")).out).toBe("backfilled 0 task(s)\n");
+  });
+
   test("--change narrows the run and a note is required", async () => {
     p = new Project();
-    p.write("openspec/changes/archive/2026-10-01-010-five/tasks.md", "# Tasks\n\n" + ticked(2));
-    p.write("openspec/changes/archive/2026-10-02-011-seven/tasks.md", "# Tasks\n\n" + ticked(3));
+    p.write("openspec/changes/010-five/tasks.md", "# Tasks\n\n" + ticked(2));
+    p.write("openspec/changes/011-seven/tasks.md", "# Tasks\n\n" + ticked(3));
     expect((await p.run("task", "backfill", "--manual", "x", "--change", "011")).out).toBe("011-seven: 3\nbackfilled 3 task(s)\n");
     expect((await p.run("task", "backfill")).code).toBe(2);
   });

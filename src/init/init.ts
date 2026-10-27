@@ -1,5 +1,5 @@
 // REQ-DIST-002 REQ-SCH-003 REQ-SKL-002 specctx init: config file, schema bundle, skills.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
@@ -30,9 +30,21 @@ function asset(rel: string): Buffer {
   return Buffer.from(b64, "base64");
 }
 
+/**
+ * REQ-DIST-002 the config text for one project (017/D4). `tests/**` becomes `test/**` when only `test/`
+ * exists at the root. `src/**` becomes `lib/**` when only `lib/` exists. The comments stay.
+ */
+export function configText(root: string): string {
+  const isDir = (d: string): boolean => existsSync(join(root, d)) && statSync(join(root, d)).isDirectory();
+  let text = INIT_TEXT;
+  if (!isDir("tests") && isDir("test")) text = text.replace('\ntests = ["tests/**"]\n', '\ntests = ["test/**"]\n');
+  if (!isDir("src") && isDir("lib")) text = text.replace('\ncode = ["src/**"]\n', '\ncode = ["lib/**"]\n');
+  return text;
+}
+
 /** Target path relative to the project root for every file that init installs, with its bytes. */
-export function plan(o: InitOpts): [string, Buffer][] {
-  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(INIT_TEXT)]];
+export function plan(o: InitOpts, root: string): [string, Buffer][] {
+  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root))]];
   for (const rel of Object.keys(ASSETS).sort()) {
     if (o.schema && rel.startsWith(`schemas/${SCHEMA}/`) && !rel.endsWith("/config-fragment.yaml")) {
       out.push([`openspec/${rel}`, asset(rel)]);
@@ -137,17 +149,56 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
   return { text, added, kept };
 }
 
+/** REQ-DIST-002 the two lines init owns in .gitignore (017/D2). */
+export const GITIGNORE_LINES = [".ctx/index.json", "adopt-report.md"];
+const GITIGNORE = ".gitignore";
+
+/** The lines of a .gitignore, trimmed, with a leading slash dropped, so `/x` and `x` compare equal. */
+function ignoreLines(text: string): Set<string> {
+  return new Set(text.split(/\r?\n/).map((l) => l.trim().replace(/^\//, "")));
+}
+
+/**
+ * REQ-DIST-002 add the absent lines under a `# spec-ctx` comment. Create the file when it is missing.
+ * Returns the number of lines added, 0 when both are present.
+ */
+export function writeGitignore(root: string): number {
+  const p = join(root, GITIGNORE);
+  const cur = existsSync(p) ? readFileSync(p, "utf8") : null;
+  const have = cur === null ? new Set<string>() : ignoreLines(cur);
+  const add = GITIGNORE_LINES.filter((l) => !have.has(l));
+  if (!add.length) return 0;
+  const block = `# spec-ctx\n${add.join("\n")}\n`;
+  let text: string;
+  if (cur === null || cur === "") text = block;
+  else text = cur.replace(/\n*$/, "\n") + "\n" + block;
+  writeFileSync(p, text);
+  return add.length;
+}
+
+/** REQ-DIST-002 true when .gitignore has a line that ignores the whole .claude directory (017/D3). */
+export function ignoresClaude(root: string): boolean {
+  const p = join(root, GITIGNORE);
+  if (!existsSync(p)) return false;
+  const lines = ignoreLines(readFileSync(p, "utf8"));
+  return lines.has(".claude") || lines.has(".claude/");
+}
+
+export const CLAUDE_NOTE = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
+
 export function runInit(root: string, o: InitOpts): InitResult {
   const res: InitResult = { written: [], kept: [], changed: [], notes: [] };
-  let files = plan(o);
+  let files = plan(o, root);
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
   // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
   const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));
-  if (same && !o.force) {
+  const ignoreDone = existsSync(join(root, GITIGNORE)) && GITIGNORE_LINES.every((l) => ignoreLines(readFileSync(join(root, GITIGNORE), "utf8")).has(l));
+  if (same && ignoreDone && !o.force) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
     if (!o.schema || !mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")).added.length) {
       res.nothing = true;
+      if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
       return res;
     }
   }
@@ -179,5 +230,11 @@ export function runInit(root: string, o: InitOpts): InitResult {
     }
     for (const k of m.kept) res.kept.push(`openspec/config.yaml ${k}`);
   }
+  // REQ-DIST-002 the two .gitignore lines (017/D2)
+  const added = writeGitignore(root);
+  if (added) res.written.push(`${GITIGNORE} (${added} line${added === 1 ? "" : "s"})`);
+  else res.kept.push(GITIGNORE);
+  // REQ-DIST-002 skills under an ignored .claude/ never reach git (017/D3)
+  if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
   return res;
 }

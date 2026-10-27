@@ -83,8 +83,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     }
     if (json) print(plan);
     else if (!plan.edits.length) io.out(plan.unmatched.length ? planLines(plan).join("\n") + "\nnothing to adopt\n" : "nothing to adopt\n");
-    // REQ-CLI-007 the dry run ends with the next step. The exit code stays 1.
-    else io.out(planLines(plan).join("\n") + `\n${plan.edits.length} headers need an ID. Next: specctx adopt\n`);
+    // REQ-CLI-007 the dry run ends with the next step. REQ-ADOPT-001 the exit code stays 1 and the last line says why (017/D5).
+    else io.out(planLines(plan).join("\n") + `\nexit 1: ${plan.edits.length} headers need an ID. Next: specctx adopt\n`);
     return plan.edits.length ? 1 : 0;
   }
   if (cmd === "baseline write" || cmd === "baseline prune") {
@@ -133,7 +133,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   const need = (n: number, what: string): void => {
     if (p.positional.length < n) throw new UsageExit(`${cmd} needs ${what}`);
   };
-  if (cmd === "query") need(1, "at least one term");
+  // REQ-QRY-001 no term lists a whole change. Without --change a term is required (017/D6).
+  if (cmd === "query" && !f.change) need(1, "at least one term");
   if (cmd === "related") {
     need(1, "one ID");
     if (p.positional.length > 1) throw new UsageExit("related takes one ID");
@@ -234,10 +235,11 @@ async function init(p: Parsed, io: Io): Promise<number> {
   const all = !!p.flags.all;
   const r = runInit(root, { schema: all || !!p.flags.schema, skills: all || !!p.flags.skills, force: !!p.flags.force });
   if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
-  else if (r.nothing) io.out("nothing to do\n" + paint("dim", "next: specctx status\n", io.tty));
+  else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + paint("dim", "next: specctx status\n", io.tty));
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
+    io.out(r.notes.map((n) => `${n}\n`).join(""));
     // REQ-CLI-007 init ends with the next step. REQ-DIST-002 a kept changed file points to --force (014/D2).
     const again = ["specctx init", all ? "--all" : [p.flags.schema ? "--schema" : "", p.flags.skills ? "--skills" : ""].filter(Boolean).join(" "), "--force"].filter(Boolean).join(" ");
     io.out(paint("dim", `next: ${r.changed.length ? again : "specctx status"}\n`, io.tty));

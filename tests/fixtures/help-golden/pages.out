@@ -18,10 +18,10 @@ Example:
   `specctx status`
 
 == query
-specctx query: Find the entries that contain all terms.
+specctx query: Find the entries that contain all terms. With --change and no term, list every entry of that change.
 
 Usage:
-  `specctx query <term...> [flags]`
+  `specctx query [term...] [flags]`
 
 Flags:
   `--kind <kind>`              Show only entries of this kind. Any case works.
@@ -450,7 +450,7 @@ Example:
   `specctx adopt --dry-run`
 
 == task backfill
-specctx task backfill: Write manual evidence for every ticked task that has none.
+specctx task backfill: Write manual evidence for every ticked task of an active change that has none.
 
 Usage:
   `specctx task backfill --manual <note> [flags]`

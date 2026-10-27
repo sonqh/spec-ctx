@@ -45,6 +45,17 @@ describe("adopt --dry-run", () => {
     expect(r.out).toContain("- TO: `### Requirement: Trusted device`  ->  - TO: `### Requirement: REQ-UA-003 Trusted device`");
   });
 
+  test("SCN-ADOPT-001-3 the last line gives the reason for exit 1", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    const r = await p.run("adopt", "--dry-run");
+    expect(r.code).toBe(1);
+    const lines = r.out.trimEnd().split("\n");
+    const n = lines.filter((l) => l.includes("  ->  ")).length;
+    expect(n).toBeGreaterThan(0);
+    expect(lines.at(-1)).toBe(`exit 1: ${n} headers need an ID. Next: specctx adopt`);
+    expect(r.out).not.toContain(`\n${n} headers need an ID`);
+  });
+
   test("SCN-ADOPT-001-2 this repository has nothing to adopt", async () => {
     p = new Project(null);
     for (const d of ["openspec", "decisions", "spec-ctx.toml"]) cpSync(join(REPO, d), p.path(d), { recursive: true });

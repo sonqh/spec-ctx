@@ -47,7 +47,7 @@ describe("next step lines", () => {
     p = new Project(NO_ID_FIXTURE);
     const r = await p.run("adopt", "--dry-run");
     expect(r.code).toBe(1);
-    expect(last(r.out)).toMatch(/^\d+ headers need an ID\. Next: specctx adopt$/);
+    expect(last(r.out)).toMatch(/^exit 1: \d+ headers need an ID\. Next: specctx adopt$/);
   });
 
   test("SCN-CLI-007-4 adopt with nothing to do writes no report", async () => {

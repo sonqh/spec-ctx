@@ -1,4 +1,5 @@
 // REQ-QRY-001 token AND over id, title, text. Score 3 for id, 2 for title, 1 for text, per term.
+// With no term and a change filter, every entry of the change matches with score 0 (017/D6).
 import { poolOf } from "../index/canonical.ts";
 import { matchesChange } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";

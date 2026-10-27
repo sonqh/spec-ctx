@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-27T06:59:56.800Z",
+  "bundle_chars": 8168,
+  "files": {
+    "src/cli/commands.ts": "42bae8545b7e80925fe67929ce4813368182e6b9ed814670d546f7048bdb1033",
+    "src/cli/workflow.ts": "6630c70413cc9d4c4299a9af3cbbdf086cc550004c90fb6044a403fcb6d0bbe8",
+    "src/graph/query.ts": "aa1aaa72f586e3cfd4055a87e3962b4d7e7c83ed202beef455f9e76aae396923",
+    "tests/query/query.test.ts": "afdd6b8d2ea76e3116264d983029e2d8f189af004189f04720771f08919cc98c",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad",
+    "tests/tasks/start.test.ts": "d4c03b42d3959734f91780d8d1d68fc76e4bac408488026a47f5cca52694811d"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-001",
+    "REQ-TASK-002"
+  ],
+  "started_at": "2026-10-27T06:58:22.999Z",
+  "task": "017/3.2",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/query/query.test.ts tests/tasks/start.test.ts tests/cli",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 71 pass\n 0 fail\n 450 expect() calls\nRan 71 tests across 11 files. [2.58s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

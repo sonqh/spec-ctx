@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { INIT_TEXT, loadConfig } from "../../src/config.ts";
 import { mergeConfig } from "../../src/init/init.ts";
 import { Project, REPO } from "../helpers.ts";
 
@@ -162,6 +163,79 @@ describe("init", () => {
     expect(f.code).toBe(0);
     expect(p.read(".claude/skills/specctx-done/SKILL.md")).toBe(readFileSync(join(REPO, "skills/specctx-done/SKILL.md"), "utf8"));
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+  });
+
+  test("SCN-DIST-002-6 init writes the two .gitignore lines once", async () => {
+    p = freshOpenspec();
+    // no .gitignore at all
+    const r = await p.run("init");
+    expect(r.code, r.err).toBe(0);
+    expect(r.out).toContain("wrote .gitignore (2 lines)\n");
+    expect(p.read(".gitignore")).toBe("# spec-ctx\n.ctx/index.json\nadopt-report.md\n");
+    const again = await p.run("init", "--skills");
+    expect(again.code).toBe(0);
+    expect(again.out).toContain("kept .gitignore\n");
+    expect(again.out).not.toContain("wrote .gitignore");
+    expect(p.read(".gitignore")).toBe("# spec-ctx\n.ctx/index.json\nadopt-report.md\n");
+    // an existing file without a final newline, with one of the two lines present
+    p.write(".gitignore", "node_modules/\n/adopt-report.md");
+    expect((await p.run("init", "--skills", "--force")).out).toContain("wrote .gitignore (1 line)\n");
+    expect(p.read(".gitignore")).toBe("node_modules/\n/adopt-report.md\n\n# spec-ctx\n.ctx/index.json\n");
+    const j = JSON.parse((await p.run("init", "--schema", "--json")).out);
+    expect(j.kept).toContain(".gitignore");
+    // nothing to do stays when every file and both lines are present
+    expect((await p.run("init", "--skills")).out).toContain("nothing to do\n");
+  });
+
+  test("SCN-DIST-002-7 init notes a .gitignore that ignores .claude/", async () => {
+    p = freshOpenspec();
+    p.write(".gitignore", "dist/\n.claude/\n");
+    const r = await p.run("init", "--skills");
+    expect(r.code, r.err).toBe(0);
+    const note = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
+    const lines = r.out.trimEnd().split("\n");
+    expect(lines.filter((l) => l === note)).toHaveLength(1);
+    // the note comes after the kept lines and before next:
+    expect(lines.indexOf(note)).toBe(lines.length - 2);
+    expect(lines.at(-1)).toBe("next: specctx status");
+    const j = JSON.parse((await p.run("init", "--skills", "--json")).out);
+    expect(j.notes).toEqual([note]);
+    // no skills, no note
+    p.cleanup();
+    p = freshOpenspec();
+    p.write(".gitignore", ".claude/\n");
+    expect((await p.run("init")).out).not.toContain("note:");
+    // a .gitignore without the line gives no note
+    p.cleanup();
+    p = freshOpenspec();
+    p.write(".gitignore", "dist/\n");
+    expect((await p.run("init", "--skills")).out).not.toContain("note:");
+  });
+
+  test("SCN-DIST-002-8 init detects test/ and lib/ when tests/ and src/ are absent", async () => {
+    p = freshOpenspec();
+    p.write("test/a.test.ts", "");
+    p.write("lib/a.ts", "");
+    expect((await p.run("init")).code).toBe(0);
+    const text = p.read("spec-ctx.toml");
+    expect(text).toContain("# Test files that carry Covers tags and scenario IDs.\ntests = [\"test/**\"]\n");
+    expect(text).toContain("# Source files that carry code tags. A code tag is a comment with a REQ ID.\ncode = [\"lib/**\"]\n");
+    expect(loadConfig(p.root).scan.tests).toEqual(["test/**"]);
+    expect(loadConfig(p.root).scan.code).toEqual(["lib/**"]);
+    // the default wins when both dirs exist, and when neither exists
+    p.cleanup();
+    p = freshOpenspec();
+    p.write("test/a.test.ts", "");
+    p.write("tests/a.test.ts", "");
+    p.write("lib/a.ts", "");
+    p.write("src/a.ts", "");
+    expect((await p.run("init")).code).toBe(0);
+    expect(p.read("spec-ctx.toml")).toContain('\ntests = ["tests/**"]\n');
+    expect(p.read("spec-ctx.toml")).toContain('\ncode = ["src/**"]\n');
+    p.cleanup();
+    p = freshOpenspec();
+    expect((await p.run("init")).code).toBe(0);
+    expect(p.read("spec-ctx.toml")).toBe(INIT_TEXT);
   });
 
   test("SCN-SCH-003-4 init --schema repairs the config of an adopted project without --force", async () => {

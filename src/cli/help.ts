@@ -46,7 +46,7 @@ export const TABLE: CommandHelp[] = [
   // Read
   { name: "status", group: "Read", args: "", summary: "Show the active changes, the current task, and the open questions.", flags: [], exit: PLAIN, example: "specctx status" },
   {
-    name: "query", group: "Read", args: "<term...>", summary: "Find the entries that contain all terms.",
+    name: "query", group: "Read", args: "[term...]", summary: "Find the entries that contain all terms. With --change and no term, list every entry of that change.",
     flags: [
       ["--kind <kind>", "Show only entries of this kind. Any case works."],
       ["--change <name>", "Show only entries of this change. The key or the full folder name works."],
@@ -156,7 +156,7 @@ export const TABLE: CommandHelp[] = [
     example: "specctx adopt --dry-run",
   },
   {
-    name: "task backfill", group: "Setup", args: "--manual <note>", summary: "Write manual evidence for every ticked task that has none.",
+    name: "task backfill", group: "Setup", args: "--manual <note>", summary: "Write manual evidence for every ticked task of an active change that has none.",
     flags: [["--manual <note>", "The note for the evidence. The flag is required."], ["--change <name>", "Look only in this change."]],
     exit: PLAIN, example: "specctx task backfill --manual \"done before spec-ctx\"",
   },

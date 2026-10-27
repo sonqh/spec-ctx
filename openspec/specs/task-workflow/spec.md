@@ -39,7 +39,7 @@ Refs: REQ-QRY-003, REQ-STAT-002
 
 #### Scenario: SCN-TASK-002-4 No REQ gives a hint
 - **WHEN** `task start add-mfa/1.3` runs on the no-ID fixture after `adopt` and the task line cites no REQ
-- **THEN** stdout has two lines: `task add-mfa/1.3 cites no REQ. Find one with specctx query <term> --change add-mfa --kind req, then add [REQ-<CAP>-NNN] to the task line.` and the footer with `bundle 0 chars`
+- **THEN** stdout has two lines: `task add-mfa/1.3 cites no REQ. Run specctx query --change add-mfa --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.` and the footer with `bundle 0 chars`
 
 ### Requirement: REQ-TASK-003 Done
 `specctx task done <id>` SHALL parse the task's Verify command, run it in the project root, and on exit 0 write `.ctx/evidence/<change>/<task>.json` and change `[ ]` to `[x]` on that task line only. On a non-zero exit it SHALL write nothing, print the last 20 lines of output, then `Verify failed (exit <n>). The task stays open.`, and exit 1. `--manual "<note>"` SHALL be required when the task has no Verify command.
@@ -79,14 +79,18 @@ Refs: ADR-004
 - **THEN** the task is open, the old evidence is kept under the new name, and the handoff lists the reason
 
 ### Requirement: REQ-TASK-006 Backfill
-`specctx task backfill --manual "<note>" [--change <name>]` SHALL write manual evidence for every `[x]` task that has no evidence file, in active and archived changes, through the same path as `task done --manual`. It SHALL print the count per change and SHALL not touch tasks that already have evidence.
+`specctx task backfill --manual "<note>" [--change <name>]` SHALL write manual evidence for every `[x]` task that has no evidence file, in active changes only, through the same path as `task done --manual`. It SHALL skip archived changes, print the count per change, and SHALL not touch tasks that already have evidence.
 
 Refs: REQ-TASK-003, ADR-004
 
 #### Scenario: SCN-TASK-006-1 Count per change
-- **WHEN** two archived changes have 5 and 7 ticked tasks without evidence
+- **WHEN** two active changes have 5 and 7 ticked tasks without evidence
 - **THEN** `task backfill --manual adopted` writes 12 files and prints both counts
 
 #### Scenario: SCN-TASK-006-2 Existing evidence kept
 - **WHEN** a task already has command evidence
 - **THEN** `backfill` leaves its file byte-identical
+
+#### Scenario: SCN-TASK-006-3 Archived changes skipped
+- **WHEN** one active change has 2 ticked tasks without evidence and one archived change has 3
+- **THEN** `task backfill --manual adopted` prints `backfilled 2 task(s)`, names only the active change, and writes no file under `.ctx/evidence/` for the archived one

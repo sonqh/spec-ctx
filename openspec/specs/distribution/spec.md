@@ -19,7 +19,7 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `[scan]`, `[ids] caps`, `[ids] task_pattern`, `[bundle] budget`, `[bundle] depth`, `[verify] timeout_s`, `[gate] markdown`. Missing keys SHALL take defaults. `init` SHALL write a commented default file. `init --schema` installs the schema and merges its config fragment. `init --skills` installs the skills, `init --all` all three. `init` never replaces `spec-ctx.toml`. Without `--force`, it SHALL keep and list each changed file.
+`spec-ctx.toml` SHALL hold `scan`, `ids.caps`, `ids.task_pattern`, `bundle.budget`, `bundle.depth`, `verify.timeout_s`, `gate.markdown`. Missing keys take defaults. `init` SHALL write a commented default file, with `test/**` or `lib/**` if only that dir exists, and add its two `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It never replaces `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
 
 Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 
@@ -42,6 +42,18 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 #### Scenario: SCN-DIST-002-5 Gate globs
 - **WHEN** `spec-ctx.toml` sets `[gate] markdown = ["docs/*.md"]`
 - **THEN** `gate` lints only the files under `docs/`, and a project without the key lints `openspec/**/*.md decisions/*.md docs/**/*.md *.md`
+
+#### Scenario: SCN-DIST-002-6 Gitignore lines
+- **WHEN** `init` runs in a project whose `.gitignore` lacks `.ctx/index.json` and `adopt-report.md`, or has no `.gitignore`
+- **THEN** the file ends with a `# spec-ctx` comment and both lines, the output has `wrote .gitignore (2 lines)`, and a second run prints `kept .gitignore` and leaves the file byte-identical
+
+#### Scenario: SCN-DIST-002-7 Ignored skills dir
+- **WHEN** `.gitignore` has a line `.claude/` and `init --skills` writes the skills
+- **THEN** the output has one line `note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.`
+
+#### Scenario: SCN-DIST-002-8 Test and code dirs
+- **WHEN** `init` runs in a project with `test/` and `lib/` at the root and no `tests/` or `src/`
+- **THEN** `spec-ctx.toml` has `tests = ["test/**"]` and `code = ["lib/**"]`, each with its comment above, and a project with `tests/` and `src/` gets `tests/**` and `src/**`
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.

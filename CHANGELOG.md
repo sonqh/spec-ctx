@@ -13,6 +13,11 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 - `task start` prints one hint line when the task cites no REQ. It names `specctx query --change <change> --kind req` and the citation to add.
 - `query --kind` accepts the kind in any case. `--kind REQ` and `--kind req` return the same entries.
 - `baseline write` records the hard lint findings per file and rule as `lint <file> <rule> <count>`. `gate` fails the lint step only when a count rises above its line. It prints one summary line and cuts the detail at 50 lines (`--json` keeps every line). `baseline prune` lowers and drops the lines. `spec-ctx.toml` gets `[gate] markdown`, the globs the gate lints. `--markdown` still overrides it.
+- `task backfill` writes evidence only for ticked tasks of active changes. Archived changes stay untouched. On a fork of OpenSpec it wrote 1,351 files for the archive before.
+- `init` adds `.ctx/index.json` and `adopt-report.md` to `.gitignore` under a `# spec-ctx` comment when they are absent, and creates the file when it is missing. It prints `wrote .gitignore (2 lines)` or `kept .gitignore`. When `.gitignore` ignores `.claude/` and `init` writes skills there, it prints one note that names the tracked copies under `.agents/skills/`.
+- `init` writes `tests = ["test/**"]` when `test/` exists and `tests/` does not, and `code = ["lib/**"]` when `lib/` exists and `src/` does not.
+- `adopt --dry-run` ends with `exit 1: <n> headers need an ID. Next: specctx adopt`. The exit code stays 1.
+- `query --change <name>` with no term lists every canonical entry of that change. `--kind` still filters. Without `--change`, no term stays a usage error. The hint of `task start` names this call.
 
 ## 0.1.1
 
