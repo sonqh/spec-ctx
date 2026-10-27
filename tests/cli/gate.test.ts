@@ -1,4 +1,4 @@
-// Covers: REQ-CLI-004, REQ-LINT-003
+// Covers: REQ-CLI-004, REQ-LINT-003, REQ-ADOPT-007
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, readFileSync } from "node:fs";
@@ -41,7 +41,7 @@ describe("gate", () => {
     process.env.SPECCTX_OPENSPEC = "/bin/true";
     const r = await p.run("gate", "--markdown", "decisions/*.md");
     expect(r.code).toBe(1);
-    expect(r.out).toContain("linters: fail\ndecisions/bad.md");
+    expect(r.out).toContain("linters: fail, 1 new finding(s) in 1 file(s)\ndecisions/bad.md  ste:semicolon  1 (baseline 0)\n");
     expect(r.out).not.toContain("validate:");
     p.write("decisions/bad.md", "# Good\n\nThe tool reads the file.\n");
     process.env.SPECCTX_OPENSPEC = "/bin/false";
@@ -49,6 +49,50 @@ describe("gate", () => {
     expect(v.code).toBe(1);
     expect(v.out).toContain("linters: ok");
     expect(v.out).toContain("validate: fail");
+  });
+
+  test("SCN-CLI-004-4 the lint detail has a summary line and stops at 50 lines", async () => {
+    p = new Project();
+    for (let i = 0; i < 60; i++) p.write(`docs/f${String(i).padStart(2, "0")}.md`, "# F\n\nOne \u2014 two.\n");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const r = await p.run("gate", "--markdown", "docs/*.md");
+    expect(r.code).toBe(1);
+    const lines = r.out.trimEnd().split("\n");
+    expect(lines[1]).toBe("linters: fail, 60 new finding(s) in 60 file(s)");
+    expect(lines[2]).toBe("docs/f00.md  tells:dash  1 (baseline 0)");
+    expect(lines.at(-1)).toBe("... 10 more line(s)");
+    expect(lines).toHaveLength(53);
+    const j = await p.run("gate", "--markdown", "docs/*.md", "--json");
+    expect(j.out.trimEnd().split("\n")).toHaveLength(62);
+    expect(j.out).not.toContain("more line(s)");
+  });
+
+  test("SCN-ADOPT-007-2 a count above the baseline fails the gate", async () => {
+    p = new Project();
+    p.write("docs/notes.md", "# Notes\n\nOne \u2014 two.\n");
+    p.write(".ctx/baseline.json", JSON.stringify(["lint docs/notes.md tells:dash 1"]) + "\n");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const ok = await p.run("gate", "--markdown", "docs/*.md");
+    expect(ok.code, ok.out).toBe(0);
+    expect(ok.out).toContain("linters: ok (1 file(s), 1 baselined)");
+    p.write("docs/notes.md", "# Notes\n\nOne \u2014 two \u2014 three.\n");
+    const r = await p.run("gate", "--markdown", "docs/*.md");
+    expect(r.code).toBe(1);
+    expect(r.out).toContain("linters: fail, 1 new finding(s) in 1 file(s)\ndocs/notes.md  tells:dash  2 (baseline 1)\n");
+  });
+
+  test("SCN-CLI-004-5 the globs come from spec-ctx.toml and --markdown overrides them", async () => {
+    p = new Project();
+    p.write("decisions/bad.md", "# Bad\n\nThe tool reads; it writes.\n");
+    p.write("docs/ok.md", "# Ok\n\nThe tool reads the file.\n");
+    p.write("spec-ctx.toml", '[gate]\nmarkdown = ["docs/*.md"]\n');
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const r = await p.run("gate");
+    expect(r.out, r.out).toContain("linters: ok (1 file(s)");
+    expect(r.code).toBe(0);
+    const o = await p.run("gate", "--markdown", "decisions/*.md");
+    expect(o.code).toBe(1);
+    expect(o.out).toContain("linters: fail");
   });
 
   // REQ-LINT-003 removes the skip of SCN-CLI-004-3: with no python3 the linters still run

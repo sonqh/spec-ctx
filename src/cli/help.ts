@@ -79,7 +79,7 @@ export const TABLE: CommandHelp[] = [
     summary: "Run `check`, the markdown linters, `openspec validate`, and the length check. Stop at the first failure.",
     flags: [
       ["--strict", "Run `check` and `openspec validate` in strict mode."],
-      ["--markdown <globs>", "Lint these markdown globs. Separate them with spaces."],
+      ["--markdown <globs>", "Lint these markdown globs instead of [gate] markdown. Separate them with spaces."],
     ],
     exit: [["0", "Every step passed."], ["1", "A step failed."], USAGE, INTERNAL], example: "specctx gate --strict",
   },

@@ -40,12 +40,17 @@ export function markdownFiles(root: string, globs: string): string[] {
 export interface GateOpts {
   strict: boolean;
   markdown: string;
+  /** With --json the lint detail is not cut at LINT_DETAIL_CAP. */
+  json?: boolean;
   check: () => Promise<{ code: number; out: string }>;
 }
 
 export const GATE_LOG = ".ctx/gate-log.jsonl";
 
 /** REQ-STAT-005 the gate steps in order. The log names the step that failed. */
+/** REQ-CLI-004 the lint detail stops here unless --json asks for every line. */
+export const LINT_DETAIL_CAP = 50;
+
 export const GATE_STEPS = ["check", "lint tells", "lint ste", "validate", "spec-length"] as const;
 type Step = (typeof GATE_STEPS)[number];
 
@@ -77,30 +82,24 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   io.out(`check: ok${o.strict ? " (strict)" : ""}\n`);
 
   // gate 2: REQ-LINT-003 both linters of this package on the markdown globs. No python3.
-  const { lintSte } = await import("../lint/ste.ts");
-  const { lintTells } = await import("../lint/tells.ts");
-  const { steReport } = await import("../lint/cli.ts");
-  const files = markdownFiles(root, o.markdown);
-  const bad: string[] = [];
-  let tellsFailed = false;
+  // REQ-ADOPT-007 the step fails only on a count above its baseline line.
+  const { lintCounts, lintRises } = await import("../lint/counts.ts");
+  const { readBaseline } = await import("../baseline/baseline.ts");
   ran.push("lint tells", "lint ste");
-  const noRotation = new Set(["synonym-rotation"]);
-  for (const f of files) {
-    const text = readFileSync(join(root, f), "utf8").replace(/\r\n?/g, "\n");
-    const tells = lintTells(text);
-    const hard = tells.filter((x) => x.level === "hard");
-    if (hard.length) tellsFailed = true;
-    if (hard.length) bad.push(`${f}\n` + tells.map((x) => `${f}:${x.line}: [${x.level}] ${x.rule}: ${x.match}\n`).join("") + `${hard.length} hard finding(s), baseline 0\n`);
-    const r = lintSte(text, f);
-    const ste = r.findings.filter((x) => !noRotation.has(x.rule));
-    const steHard = ste.filter((x) => x.level === "advisory-free").length;
-    if (steHard) bad.push(`${f}\n` + steReport(ste, r.words, false, steHard, 0));
+  const { counts, files } = lintCounts(root, o.markdown);
+  const base = readBaseline(root);
+  const rises = lintRises(counts, base);
+  const baselined = [...base ?? []].filter((l) => l.startsWith("lint ")).length;
+  if (rises.length) {
+    const newFindings = rises.reduce((a, r) => a + r.current - r.baseline, 0);
+    const inFiles = new Set(rises.map((r) => r.key.split(" ")[1])).size;
+    const lines = rises.map((r) => `${r.key.slice(5).replace(" ", "  ")}  ${r.current} (baseline ${r.baseline})`);
+    const shown = o.json ? lines : lines.slice(0, LINT_DETAIL_CAP);
+    const more = lines.length - shown.length;
+    io.out(`linters: fail, ${newFindings} new finding(s) in ${inFiles} file(s)\n` + shown.map((l) => l + "\n").join("") + (more ? `... ${more} more line(s)\n` : ""));
+    return rises.some((r) => r.key.includes(" tells:")) ? "lint tells" : "lint ste";
   }
-  if (bad.length) {
-    io.out("linters: fail\n" + bad.join(""));
-    return tellsFailed ? "lint tells" : "lint ste";
-  }
-  io.out(`linters: ok (${files.length} file(s))\n`);
+  io.out(`linters: ok (${files} file(s)${baselined ? `, ${baselined} baselined` : ""})\n`);
 
   ran.push("validate");
   // gate 3: openspec validate. SPECCTX_OPENSPEC replaces the command, for tests and offline use.

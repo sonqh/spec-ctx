@@ -1,4 +1,4 @@
-// Covers: REQ-ADOPT-005, REQ-CHK-002
+// Covers: REQ-ADOPT-005, REQ-ADOPT-007, REQ-CHK-002
 import { afterEach, describe, expect, test } from "vitest";
 import { COVERS, NO_ID_FIXTURE, Project } from "../helpers.ts";
 
@@ -85,6 +85,39 @@ describe("baseline", () => {
     expect(r.code).toBe(1);
     expect(r.out).toContain("missing-id  Rate limit");
     expect(r.out.split("\n").filter((l) => /  missing-id  /.test(l))).toHaveLength(1);
+  });
+
+  test("SCN-ADOPT-007-1 lint counts enter the baseline and the gate passes on dirty prose", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    p.write("docs/notes.md", "# Notes\n\nOne thing \u2014 another; a third.\n");
+    expect((await p.run("init")).code).toBe(0);
+    expect((await p.run("adopt")).code).toBe(0);
+    expect((await p.run("task", "backfill", "--manual", "adopted")).code).toBe(0);
+    expect((await p.run("baseline", "write")).code).toBe(0);
+    const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
+    expect(list).toContain("lint docs/notes.md tells:dash 1");
+    expect(list).toContain("lint docs/notes.md ste:semicolon 1");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const g = await p.run("gate", "--strict");
+    delete process.env.SPECCTX_OPENSPEC;
+    expect(g.code, g.out).toBe(0);
+    expect(g.out).toContain("linters: ok (");
+  });
+
+  test("SCN-ADOPT-007-3 prune lowers a lint count and drops one at zero", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    p.write("docs/notes.md", "# Notes\n\nOne \u2014 two \u2014 three; four.\n");
+    await p.run("init");
+    await p.run("adopt");
+    await p.run("task", "backfill", "--manual", "adopted");
+    await p.run("baseline", "write");
+    expect(JSON.parse(p.read(".ctx/baseline.json"))).toContain("lint docs/notes.md tells:dash 2");
+    p.write("docs/notes.md", "# Notes\n\nOne \u2014 two three. Four.\n");
+    const r = await p.run("baseline", "prune");
+    expect(r.out).toBe("pruned 2\n");
+    const after = JSON.parse(p.read(".ctx/baseline.json")) as string[];
+    expect(after).toContain("lint docs/notes.md tells:dash 1");
+    expect(after.some((e) => e.startsWith("lint docs/notes.md ste:semicolon"))).toBe(false);
   });
 
   test("SCN-CHK-002-4 three baselined entries that still fire are counted", async () => {

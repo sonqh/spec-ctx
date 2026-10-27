@@ -14,6 +14,9 @@ cd "$work"
 mkdir -p openspec/changes/archive/2026-01-01-old/specs/user-auth
 printf '## ADDED Requirements\n\n### Requirement: Old header\nText.\n\n#### Scenario: Old case\n- a\n' > openspec/changes/archive/2026-01-01-old/specs/user-auth/spec.md
 printf '\n### Requirement: Lockout policy\nThe system SHALL lock an account after five failures.\n\n#### Scenario: Five failures\n- **WHEN** a user fails five times\n- **THEN** the account locks\n' >> openspec/changes/add-mfa/specs/user-auth/spec.md
+# prose that breaks the lint rules. The baseline records it, so the gate stays green.
+mkdir -p docs
+printf '# Notes\n\nOne thing \xe2\x80\x94 another; a third.\n' > docs/notes.md
 $specctx init --all >/dev/null
 # the dry run exits 1 when headers need an ID
 if $specctx adopt --dry-run >/dev/null; then echo "adopt --dry-run found nothing on the no-ID fixture"; exit 1; fi
@@ -21,4 +24,6 @@ $specctx adopt
 $specctx task backfill --manual "adopted"
 $specctx baseline write
 $specctx gate --strict
+grep -q '"lint docs/notes.md tells:dash 1"' .ctx/baseline.json
+grep -q '"lint docs/notes.md ste:semicolon 1"' .ctx/baseline.json
 echo "existing path: gate --strict exit 0"

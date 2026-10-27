@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-27T06:25:45.168Z",
+  "files": {
+    "src/cli/gate.ts": "0dc003af3444757d1e78cbc857ad3a82029dbeb6a46886c52d97f80235e249fa",
+    "src/config.ts": "d0263c289cf6320478eda4f9cd69063a5dd342fa7e9d18bb4a18a75164dbfbac",
+    "src/init/init.ts": "363e05ea6de18caa9d063181270941b4b668b331b4328c16a31b3f7459ae7322",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9",
+    "tests/cli/gate.test.ts": "473b2290b7f2c2e982100142f13952905f0773ebee9249e3d5d042e7fd4290c5",
+    "tests/config.test.ts": "2a4cd8c702a7612085edab30a94fb3ac49ff87d4119bd56ebddb285b1ae108cf",
+    "tests/init/init.test.ts": "59df07a5d764151f5812d192944d5ac19b85001f398687329aadfd6b2f1ff4a6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-002",
+    "REQ-CLI-004"
+  ],
+  "task": "016/1.1",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts tests/cli/gate.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 18 pass\n 0 fail\n 85 expect() calls\nRan 18 tests across 2 files. [827.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

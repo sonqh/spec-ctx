@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-27T06:25:49.932Z",
+  "files": {
+    "src/baseline/baseline.ts": "4c468e164b3e2610bb78e8d3cf3189daa2b5120f33db5bb7b97873e410965b9d",
+    "src/cli/commands.ts": "6c0179cc57e9b7604e0e2e2383bd1cad7753a3644d7f5365ea31ab366221f537",
+    "src/cli/gate.ts": "0dc003af3444757d1e78cbc857ad3a82029dbeb6a46886c52d97f80235e249fa",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-007"
+  ],
+  "task": "016/2.1",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/baseline",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 9 pass\n 0 fail\n 58 expect() calls\nRan 9 tests across 1 file. [1.61s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

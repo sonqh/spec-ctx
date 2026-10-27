@@ -2,6 +2,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Finding } from "../check/check.ts";
+import { lintLine, parseLintLine } from "../lint/counts.ts";
 import { cmpStr } from "../util/pystr.ts";
 
 export const BASELINE_PATH = ".ctx/baseline.json";
@@ -34,18 +35,37 @@ export function debt(findings: Finding[], warnings: string[]): string[] {
   return out;
 }
 
-export function writeBaseline(root: string, findings: Finding[], warnings: string[]): string[] {
-  return save(root, debt(findings, warnings));
+/** REQ-ADOPT-007 one `lint <file> <rule> <count>` line per key with hard lint findings. */
+export function lintDebt(counts: Map<string, number>): string[] {
+  return [...counts].filter(([, n]) => n > 0).map(([k, n]) => lintLine(k, n));
+}
+
+export function writeBaseline(root: string, findings: Finding[], warnings: string[], lint: Map<string, number> = new Map()): string[] {
+  return save(root, [...debt(findings, warnings), ...lintDebt(lint)]);
 }
 
 /** Drop entries that no longer fire. Returns the number dropped. */
-export function pruneBaseline(root: string, findings: Finding[], warnings: string[]): number {
+export function pruneBaseline(root: string, findings: Finding[], warnings: string[], lint: Map<string, number> = new Map()): number {
   const cur = readBaseline(root);
   if (!cur) return 0;
   const live = new Set(debt(findings, warnings));
-  const kept = [...cur].filter((e) => live.has(e));
+  const kept: string[] = [];
+  let pruned = 0;
+  for (const e of cur) {
+    const l = parseLintLine(e);
+    if (l) {
+      // REQ-ADOPT-007 a lint line drops at zero and lowers when the count fell
+      const now = lint.get(l.key) ?? 0;
+      if (now === 0) pruned++;
+      else if (now < l.count) {
+        pruned++;
+        kept.push(lintLine(l.key, now));
+      } else kept.push(e);
+    } else if (live.has(e)) kept.push(e);
+    else pruned++;
+  }
   save(root, kept);
-  return cur.size - kept.length;
+  return pruned;
 }
 
 export interface Filtered {

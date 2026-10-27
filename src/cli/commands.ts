@@ -97,12 +97,15 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     const data = buildIndex(root, cfg);
     const findings = check(root, cfg, data, true);
     const warnings = manualWarnings(root, data.entries, listEvidence(root));
+    // REQ-ADOPT-007 the lint debt of the gate globs joins the baseline
+    const { lintCounts } = await import("../lint/counts.ts");
+    const lint = lintCounts(root, cfg.gate.markdown.join(" ")).counts;
     if (cmd === "baseline write") {
-      const list = writeBaseline(root, findings, warnings);
+      const list = writeBaseline(root, findings, warnings, lint);
       if (json) print({ baseline: BASELINE_PATH, entries: list.length });
       else io.out(`wrote ${BASELINE_PATH} with ${list.length} entr${list.length === 1 ? "y" : "ies"}\n`);
     } else {
-      const n = pruneBaseline(root, findings, warnings);
+      const n = pruneBaseline(root, findings, warnings, lint);
       if (json) print({ pruned: n });
       else io.out(`pruned ${n}\n`);
     }
@@ -110,11 +113,12 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   }
   if (cmd === "gate") {
     if (p.positional.length) throw new UsageExit("gate takes no arguments");
-    const { runGate, DEFAULT_MARKDOWN } = await import("./gate.ts");
+    const { runGate } = await import("./gate.ts");
     const strict = !!f.strict;
     return runGate(root, {
       strict,
-      markdown: (f.markdown as string | undefined) ?? DEFAULT_MARKDOWN,
+      markdown: (f.markdown as string | undefined) ?? cfg.gate.markdown.join(" "),
+      json,
       check: async () => {
         const { buildIndex } = await import("../index/build.ts");
         const { check } = await import("../check/check.ts");

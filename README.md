@@ -181,7 +181,8 @@ specctx gate --strict
 - `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
 - `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
 - `task backfill` writes manual evidence for every ticked task that has none.
-- `baseline write` records the debt of the day in `.ctx/baseline.json`: untested requirements and scenarios, tasks without evidence, and legacy tasks without a citation or a Verify code span. `check` hides that debt and prints `baselined: <n>`. New debt still shows.
+- `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Untested requirements and scenarios. Tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
+- `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. Narrow it when a folder is not yours to fix.
 - Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
 
 Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/existing.sh`.
@@ -270,7 +271,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.1` on npm, with tags `v0.1.1` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 015. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 016. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -280,7 +281,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0458 (n=47) | 0.86 (96/112) | 36 (of 64 reopens) | 49 (n=47) | 0 (0 baselined + 0 new) |
+| total | 0.0440 (n=48) | 0.86 (100/116) | 36 (of 66 reopens) | 55 (n=48) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

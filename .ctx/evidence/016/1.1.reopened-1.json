@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-27T06:22:22.938Z",
+  "bundle_chars": 8329,
+  "files": {
+    "src/cli/gate.ts": "ccbf44ca0f86efe6acc3d83ee7db6cba929f179bf5e6fb8217fe6ec63704f8a9",
+    "src/config.ts": "d0263c289cf6320478eda4f9cd69063a5dd342fa7e9d18bb4a18a75164dbfbac",
+    "src/init/init.ts": "363e05ea6de18caa9d063181270941b4b668b331b4328c16a31b3f7459ae7322",
+    "tests/cli/gate.test.ts": "79f8ba758cd6ba11ab906dda9b989939fea79cb009f70ccdba9ad694af9d37ff",
+    "tests/config.test.ts": "2a4cd8c702a7612085edab30a94fb3ac49ff87d4119bd56ebddb285b1ae108cf",
+    "tests/init/init.test.ts": "59df07a5d764151f5812d192944d5ac19b85001f398687329aadfd6b2f1ff4a6"
+  },
+  "kind": "command",
+  "reason": "test files changed in 2.2",
+  "reqs": [
+    "REQ-DIST-002",
+    "REQ-CLI-004"
+  ],
+  "started_at": "2026-10-27T06:21:43.339Z",
+  "task": "016/1.1",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts tests/cli/gate.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 16 pass\n 0 fail\n 74 expect() calls\nRan 16 tests across 2 files. [645.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

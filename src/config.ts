@@ -15,6 +15,7 @@ export interface Config {
   ids: { caps: string[]; task_pattern: string; paths: Record<string, string> };
   bundle: { budget: number; depth: number };
   verify: { timeout_s: number };
+  gate: { markdown: string[] };
 }
 
 export const CONFIG_FILE = "spec-ctx.toml";
@@ -32,6 +33,7 @@ export function defaults(): Config {
     ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {} },
     bundle: { budget: 8000, depth: 1 },
     verify: { timeout_s: 600 },
+    gate: { markdown: ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"] },
   };
 }
 
@@ -91,6 +93,9 @@ export function loadConfig(root: string): Config {
     if (typeof v !== "number" || !(v > 0)) throw new ConfigError(`${CONFIG_FILE}: verify.timeout_s must be a number above 0.`);
     cfg.verify.timeout_s = v;
   }
+  // REQ-DIST-002 the globs that gate lints
+  const gate = sec("gate");
+  if ("markdown" in gate) cfg.gate.markdown = strList(gate.markdown, "gate.markdown");
   return cfg;
 }
 
@@ -127,4 +132,8 @@ depth = 1
 [verify]
 # Seconds before task done stops a Verify command.
 timeout_s = 600
+
+[gate]
+# Markdown globs that gate lints. The baseline holds the lint debt of these files.
+markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]
 `;

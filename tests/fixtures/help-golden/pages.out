@@ -112,7 +112,7 @@ Usage:
 
 Flags:
   `--strict`                   Run `check` and `openspec validate` in strict mode.
-  `--markdown <globs>`         Lint these markdown globs. Separate them with spaces.
+  `--markdown <globs>`         Lint these markdown globs instead of [gate] markdown. Separate them with spaces.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
   `--help`                     Show this help.

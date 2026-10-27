@@ -36,7 +36,9 @@ describe("spec governance", () => {
     const hook = readFileSync(join(REPO, ".githooks/pre-commit"), "utf8");
     for (const s of ["check --strict", "validate --all --strict", "lint tells --baseline 0", "lint ste --baseline 0 --disable synonym-rotation"]) expect(hook).toContain(s);
     expect(hook).not.toContain("python3");
-    expect(readFileSync(join(REPO, "src/cli/gate.ts"), "utf8")).toContain("lintTells");
+    // the gate lints through src/lint/counts.ts since 016
+    expect(readFileSync(join(REPO, "src/cli/gate.ts"), "utf8")).toContain("lintCounts");
+    expect(readFileSync(join(REPO, "src/lint/counts.ts"), "utf8")).toContain("lintTells");
   });
 
   test("SCN-DIST-003-1 the parity harness is green", () => {

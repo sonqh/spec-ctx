@@ -19,7 +19,7 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `[scan]`, `[ids] caps`, `[ids] task_pattern`, `[bundle] budget`, `[bundle] depth`, `[verify] timeout_s`. Missing keys SHALL take defaults. `init` SHALL write a commented default file. `init --schema` SHALL install the schema and merge its config fragment. `init --skills` SHALL install the skills, `init --all` all three. `init` SHALL never replace `spec-ctx.toml`. Without `--force`, it SHALL keep and list each changed file.
+`spec-ctx.toml` SHALL hold `[scan]`, `[ids] caps`, `[ids] task_pattern`, `[bundle] budget`, `[bundle] depth`, `[verify] timeout_s`, `[gate] markdown`. Missing keys SHALL take defaults. `init` SHALL write a commented default file. `init --schema` installs the schema and merges its config fragment. `init --skills` installs the skills, `init --all` all three. `init` never replaces `spec-ctx.toml`. Without `--force`, it SHALL keep and list each changed file.
 
 Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 
@@ -38,6 +38,10 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 #### Scenario: SCN-DIST-002-4 Existing files stay
 - **WHEN** `spec-ctx.toml` and one skill file exist with other content and `init --all` runs without `--force`
 - **THEN** it exits 0, both files keep their bytes, the output lists both as kept, the missing files exist, and the `next:` line names `--force`
+
+#### Scenario: SCN-DIST-002-5 Gate globs
+- **WHEN** `spec-ctx.toml` sets `[gate] markdown = ["docs/*.md"]`
+- **THEN** `gate` lints only the files under `docs/`, and a project without the key lints `openspec/**/*.md decisions/*.md docs/**/*.md *.md`
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.

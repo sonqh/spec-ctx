@@ -31,6 +31,13 @@ describe("config", () => {
     expect(c.ids).toEqual(defaults().ids);
   });
 
+  test("SCN-DIST-002-5 gate.markdown is a list with the old default", () => {
+    p = new Project();
+    expect(loadConfig(p.root).gate.markdown).toEqual(["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]);
+    p.write("spec-ctx.toml", '[gate]\nmarkdown = ["docs/*.md"]\n');
+    expect(loadConfig(p.root).gate.markdown).toEqual(["docs/*.md"]);
+  });
+
   test("the config changes what build scans", async () => {
     p = new Project();
     p.write("spec-ctx.toml", '[scan]\ncode = ["lib/**"]\n');
@@ -62,7 +69,7 @@ describe("config", () => {
         expect(lines[i - 1]!.startsWith("#"), l).toBe(true);
       }
     });
-    expect(keys).toBe(11);
+    expect(keys).toBe(12);
     // the written file parses to the defaults
     expect(loadConfig(p.root)).toEqual(defaults());
   });

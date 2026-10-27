@@ -133,6 +133,20 @@ Change 015 fixed the gate. `node /home/claude/spec-ctx/dist/cli.js` at adf08e1 o
 
 The second commit on the branch is `ab69ddc`: the baseline written with the local build.
 
+## Rerun with the local build after change 016
+
+Change 016 put the linters on the same ratchet as `check`. `node /home/claude/spec-ctx/dist/cli.js` after 016 on the same fork tree:
+
+| Command | Exit | Time | Result |
+| --- | --- | --- | --- |
+| `baseline write` | 0 | 11.4 s | 6,221 entries. 721 of them are `lint <file> <rule> <count>` lines. |
+| `gate --strict` | 1 | 14.0 s | `check: ok (strict)`, `linters: ok (659 file(s), 721 baselined)`, `validate: fail`. The output is 100 lines, all from the fork's own 13 strict failures. |
+| one new dash in `README.md`, then `gate --strict` | 1 | | `linters: fail, 1 new finding(s) in 1 file(s)` and `README.md  tells:dash  18 (baseline 17)`. |
+
+The gate now stops only on the fork's own validate failures, which their maintainers own. The lint step costs 11 s on 659 files. That is the whole cost of the step, not a regression from 016: the step read the same files before and printed 8,695 lines.
+
+The third commit on the branch is the baseline written with the 016 build.
+
 ## Friction log, in the order I hit it
 
 1. The fork ignores `.claude/` in `.gitignore` line 145. `init` wrote three skills there and said nothing. They never reach git.
@@ -147,7 +161,7 @@ The second commit on the branch is `ab69ddc`: the baseline written with the loca
 10. `query --change X --kind req` with no term exits 2: `query needs at least one term`. There is no way to list every requirement of one change. An agent needs that right after `task start` says `cites no REQ`.
 11. `query --kind REQ` returned nothing. `--kind req` returned 20 lines. Fixed in 015.
 12. `bundle` prints no size footer. REQ-TASK-002 asks for that. An agent that runs `bundle` by hand after the hint from 015 sees no size.
-13. `gate --strict` with a green `check` lints every markdown file of the adopter. 2,096 hard findings, 1.1 MB of output, no summary, no ratchet. The adopter did not write STE prose and never agreed to. Not fixed. See B3.
+13. `gate --strict` with a green `check` lints every markdown file of the adopter. 2,096 hard findings, 1.1 MB of output, no summary, no ratchet. The adopter did not write STE prose and never agreed to. Fixed in 016.
 14. `gate` counts the fork's own `openspec validate --all --strict` failures as a gate failure. That is correct, and it means this fork cannot get a green gate until its maintainers fix 11 MODIFIED blocks and 2 long requirements.
 
 ## Bugs in spec-ctx
@@ -156,11 +170,11 @@ The second commit on the branch is `ab69ddc`: the baseline written with the loca
 | --- | --- | --- |
 | B1 `check` reports `missing-id` on archived deltas that `adopt` never writes. The existing path ends with exit 1 on any repo with archived changes. | REQ-CHK-001, REQ-ADOPT-006 | 015, `missing-id` skips archived entries, SCN-CHK-001-6 |
 | B2 Unmatched active delta headers stay `missing-id` with no baseline rule. The gate stays red until the adopter rewrites a delta of their own. | REQ-ADOPT-005 | 015, `missing-id <file> <title>` enters the baseline, SCN-ADOPT-005-4 and -5 |
-| B3 `gate --strict` lints every markdown file with the STE and tells rules. A real repo gets thousands of findings and no ratchet. | REQ-LINT-003, REQ-ADOPT-006 | Open. Needs a decision: a linter baseline like `check`, or a `[gate] markdown` key that `init` writes, or lint only files the baseline has not seen. In every case: one summary line and a cap on the output. |
+| B3 `gate --strict` lints every markdown file with the STE and tells rules. A real repo gets thousands of findings and no ratchet. | REQ-LINT-003, REQ-ADOPT-006 | 016, the lint counts per file and rule join `.ctx/baseline.json`, `gate` fails only on a rise, one summary line, detail cut at 50 lines, `[gate] markdown` in `spec-ctx.toml`. SCN-ADOPT-007-1 to -3, SCN-CLI-004-4 and -5. |
 | `task start` gives no hint on a task with no REQ. | REQ-TASK-002 | 015, SCN-TASK-002-4 |
 | `query --kind` is case sensitive and fails in silence. | REQ-QRY-001 | 015, SCN-QRY-001-4 |
 
-Change 015 added 4 failing tests first, then the fix. `bun run ci:local` passed in 1 m 45 s, 14 steps. Commit adf08e1 on `main`.
+Change 015 added 4 failing tests first, then the fix. `bun run ci:local` passed in 1 m 45 s, 14 steps. Commit adf08e1 on `main`. Change 016 added 6 failing tests first, then the fix. `bun run ci:local` passed, 14 steps.
 
 ## Timings
 
@@ -168,4 +182,4 @@ Every spec-ctx command on this tree took 1.1 to 1.5 s through `npx -y`, and 0.3 
 
 ## Verdict
 
-Not ready for a stranger yet. The core holds. `adopt` wrote 1,625 IDs in 1.5 s. Their CLI kept working. Archive carried the IDs through. A renamed delta header stayed linked by ID. Three things block a stranger. First, the documented existing path ended red on this repo. The fix needs a release, because 015 is on `main` and not on npm. Second, with that fix the gate still fails on the adopter's own prose, with 1.1 MB of output and no way to ratchet it (B3). Third, the adopted tasks give the engine nothing. 118 open tasks, zero with a REQ or a Verify. So `task start` prints an empty bundle and `task done` needs `--manual` every time. The adoption guide has to say this: an agent adds a citation and a Verify span to each open task before the loop pays off. The tool needs a way to list the requirements of one change for that step. Four smaller fixes would remove most of the friction. Skip the archive in `task backfill`. Write the `.gitignore` lines in `init`. Detect `test/` versus `tests/`. Print a reason next to the exit 1 of `adopt --dry-run`.
+Not ready for a stranger yet. The core holds. `adopt` wrote 1,625 IDs in 1.5 s. Their CLI kept working. Archive carried the IDs through. A renamed delta header stayed linked by ID. Three things blocked a stranger at the start of the run. Changes 015 and 016 on `main` fix two of them. Both wait for a release. First, the documented existing path ended red on this repo. The fix needs a release, because 015 is on `main` and not on npm. Second, with that fix the gate still failed on the adopter's own prose, with 1.1 MB of output and no way to ratchet it. Change 016 fixed that: the gate on this fork now stops only on the fork's own validate failures. Third, the adopted tasks give the engine nothing. 118 open tasks, zero with a REQ or a Verify. So `task start` prints an empty bundle and `task done` needs `--manual` every time. The adoption guide has to say this: an agent adds a citation and a Verify span to each open task before the loop pays off. The tool needs a way to list the requirements of one change for that step. Four smaller fixes would remove most of the friction. Skip the archive in `task backfill`. Write the `.gitignore` lines in `init`. Detect `test/` versus `tests/`. Print a reason next to the exit 1 of `adopt --dry-run`.
