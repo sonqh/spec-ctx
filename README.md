@@ -269,8 +269,8 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 ## Status
 
-- Published: `spec-ctx@0.1.0` on npm, with tags `v0.1.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 012. No change is open.
+- Published: `spec-ctx@0.1.1` on npm, with tags `v0.1.1` and `v0` and binaries on the GitHub release.
+- Archived: 001 to 013. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
