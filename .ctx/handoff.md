@@ -6,6 +6,8 @@ as_of: none
 done:
 reopened:
 - 013/1.1 init.ts and its test changed in 1.2 (at 2026-10-26T13:29:07.371Z)
+- 014/1.1 tests/config.test.ts still expected exit 2 for an existing spec-ctx.toml (at 2026-10-27T02:15:44.490Z)
+- 014/1.2 tests/config.test.ts still expected exit 2 for an existing spec-ctx.toml (at 2026-10-27T02:15:47.465Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

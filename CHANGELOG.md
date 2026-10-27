@@ -2,6 +2,13 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+### Changed
+
+- `init` never replaces `spec-ctx.toml` and never exits 2 because a file exists. Without `--force`, it keeps each file with other content and lists it as `kept <file> (other content)`. The `next:` line then names the same command with `--force`.
+- `init --schema` repairs the config of a project that already has `spec-ctx.toml`. It needs no `--force`.
+
 ## 0.1.1
 
 ### Added

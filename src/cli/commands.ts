@@ -234,8 +234,9 @@ async function init(p: Parsed, io: Io): Promise<number> {
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
-    // REQ-CLI-007 init ends with the next step
-    io.out(paint("dim", "next: specctx status\n", io.tty));
+    // REQ-CLI-007 init ends with the next step. REQ-DIST-002 a kept changed file points to --force (014/D2).
+    const again = ["specctx init", all ? "--all" : [p.flags.schema ? "--schema" : "", p.flags.skills ? "--skills" : ""].filter(Boolean).join(" "), "--force"].filter(Boolean).join(" ");
+    io.out(paint("dim", `next: ${r.changed.length ? again : "specctx status"}\n`, io.tty));
   }
   return 0;
 }

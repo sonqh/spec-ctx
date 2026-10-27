@@ -270,17 +270,17 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.1` on npm, with tags `v0.1.1` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 013. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 014. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
 ## Measured
 
-`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-26.md`. Its total row:
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-27.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0469 (n=41) | 0.85 (88/104) | 36 (of 62 reopens) | 60 (n=41) | 0 (0 baselined + 0 new) |
+| total | 0.0466 (n=42) | 0.85 (91/107) | 36 (of 64 reopens) | 68 (n=42) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

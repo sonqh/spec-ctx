@@ -19,7 +19,7 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `[scan]`, `[ids] caps`, `[ids] task_pattern`, `[bundle] budget`, `[bundle] depth`, `[verify] timeout_s`. Missing keys SHALL take defaults. `specctx init` SHALL write a commented default file. `init --schema` SHALL install the schema bundle and merge the config fragment. `init --skills` SHALL install the skills. `init --all` SHALL do all three. It SHALL exit 2 if `spec-ctx.toml` exists and `--force` is absent.
+`spec-ctx.toml` SHALL hold `[scan]`, `[ids] caps`, `[ids] task_pattern`, `[bundle] budget`, `[bundle] depth`, `[verify] timeout_s`. Missing keys SHALL take defaults. `init` SHALL write a commented default file. `init --schema` SHALL install the schema and merge its config fragment. `init --skills` SHALL install the skills, `init --all` all three. `init` SHALL never replace `spec-ctx.toml`. Without `--force`, it SHALL keep and list each changed file.
 
 Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 
@@ -34,6 +34,10 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 #### Scenario: SCN-DIST-002-3 Init all
 - **WHEN** `specctx init --all` runs on a fresh `openspec init` project
 - **THEN** the config, the schema, and the skills exist and `specctx status` exits 0
+
+#### Scenario: SCN-DIST-002-4 Existing files stay
+- **WHEN** `spec-ctx.toml` and one skill file exist with other content and `init --all` runs without `--force`
+- **THEN** it exits 0, both files keep their bytes, the output lists both as kept, the missing files exist, and the `next:` line names `--force`
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.

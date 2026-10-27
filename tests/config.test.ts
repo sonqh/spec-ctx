@@ -67,11 +67,11 @@ describe("config", () => {
     expect(loadConfig(p.root)).toEqual(defaults());
   });
 
-  test("init exits 2 when the file exists", async () => {
+  test("init keeps the file when it exists", async () => {
     p = new Project(null);
     p.write("spec-ctx.toml", "# mine\n");
     const r = await p.run("init");
-    expect(r.code).toBe(2);
+    expect(r.code).toBe(0);
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
   });
 });

@@ -145,7 +145,7 @@ export const TABLE: CommandHelp[] = [
       ["--schema", "Also install the spec-driven-ids schema and add its rules to openspec/config.yaml."],
       ["--skills", "Also install the three skills in .claude/skills and .agents/skills."],
       ["--all", "Do all three."],
-      ["--force", "Install over files that exist. An existing spec-ctx.toml stays."],
+      ["--force", "Replace the files that have other content. spec-ctx.toml stays."],
     ],
     exit: PLAIN, example: "specctx init --all",
   },

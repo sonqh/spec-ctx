@@ -40,6 +40,10 @@ The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `o
 - **WHEN** the project config holds a rule item that YAML reads as a mapping
 - **THEN** after `init --schema` the item is one string and `openspec validate --all` prints no `must be an array of strings` warning
 
+#### Scenario: SCN-SCH-003-4 Repair in an adopted project
+- **WHEN** `spec-ctx.toml` exists, the config holds a rule item that YAML reads as a mapping, and `init --schema` runs without `--force`
+- **THEN** it exits 0, the item is one string, and `spec-ctx.toml` keeps its bytes
+
 ### Requirement: REQ-SCH-004 Install paths in the bundle README
 `schemas/spec-driven-ids/README.md` SHALL describe the copy install first: clone, copy the folder into `openspec/schemas/spec-driven-ids/`, set `schema`, merge the fragment. Then the `npx -y spec-ctx init --schema` path. It SHALL name the OpenSpec version the bundle was forked from.
 

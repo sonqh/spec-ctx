@@ -17,6 +17,8 @@ export interface InitOpts {
 export interface InitResult {
   written: string[];
   kept: string[];
+  /** REQ-DIST-002 files that exist with other content and stay, because --force is absent */
+  changed: string[];
   /** REQ-CLI-007 true when every file is present and equal */
   nothing?: boolean;
   notes: string[];
@@ -136,10 +138,11 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
 }
 
 export function runInit(root: string, o: InitOpts): InitResult {
-  const res: InitResult = { written: [], kept: [], notes: [] };
+  const res: InitResult = { written: [], kept: [], changed: [], notes: [] };
   let files = plan(o);
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
-  const same = files.every(([rel, data]) => existsSync(join(root, rel)) && readFileSync(join(root, rel)).equals(data));
+  // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
+  const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));
   if (same && !o.force) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
@@ -148,15 +151,16 @@ export function runInit(root: string, o: InitOpts): InitResult {
       return res;
     }
   }
+  // REQ-DIST-002 init never replaces spec-ctx.toml, and never fails because a file exists (014/D1)
   if (existsSync(join(root, CONFIG_FILE))) {
-    if (!o.force) throw new UsageExit(`${CONFIG_FILE} exists. Use --force to install the other files over it`);
-    // --force never replaces a config that the user wrote
     files = files.filter(([rel]) => rel !== CONFIG_FILE);
     res.kept.push(CONFIG_FILE);
   }
   if (!o.force) {
-    const clash = files.filter(([rel, data]) => existsSync(join(root, rel)) && !readFileSync(join(root, rel)).equals(data));
-    if (clash.length) throw new UsageExit(`these files exist with other content: ${clash.map(([r]) => r).join(", ")}. Use --force to replace them`);
+    const differs = (rel: string, data: Buffer): boolean => !readFileSync(join(root, rel)).equals(data);
+    res.changed = files.filter(([rel, data]) => existsSync(join(root, rel)) && differs(rel, data)).map(([rel]) => rel);
+    for (const rel of res.changed) res.kept.push(`${rel} (other content)`);
+    files = files.filter(([rel]) => !existsSync(join(root, rel)));
   }
   for (const [rel, data] of files) {
     const p = join(root, rel);

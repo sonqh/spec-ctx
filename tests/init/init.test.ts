@@ -125,28 +125,52 @@ describe("init", () => {
     expect(existsSync(p.path("openspec/schemas"))).toBe(false);
   });
 
-  test("an existing spec-ctx.toml exits 2 unless --force, and --force keeps it", async () => {
+  test("an existing spec-ctx.toml stays with or without --force", async () => {
     p = freshOpenspec();
     p.write("spec-ctx.toml", "# mine\n");
     const r = await p.run("init", "--all");
-    expect(r.code).toBe(2);
-    expect(existsSync(p.path(".claude/skills"))).toBe(false);
+    expect(r.code, r.err).toBe(0);
+    expect(r.out).toContain("kept spec-ctx.toml\n");
+    expect(r.out).toContain("next: specctx status");
+    expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+    expect(existsSync(p.path(".claude/skills/specctx-done/SKILL.md"))).toBe(true);
     const f = await p.run("init", "--all", "--force");
     expect(f.code, f.err).toBe(0);
     expect(f.out).toContain("kept spec-ctx.toml");
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
-    expect(existsSync(p.path(".claude/skills/specctx-done/SKILL.md"))).toBe(true);
+    const again = await p.run("init", "--all");
+    expect(again.code).toBe(0);
+    expect(again.out).toContain("nothing to do");
   });
 
-  test("a skill file with other content blocks init until --force", async () => {
-    p = new Project(null);
-    p.write(".claude/skills/specctx-done/SKILL.md", "my own\n");
-    const r = await p.run("init", "--skills");
-    expect(r.code).toBe(2);
-    expect(r.err).toContain(".claude/skills/specctx-done/SKILL.md");
-    expect(existsSync(p.path("spec-ctx.toml"))).toBe(false);
+  test("SCN-DIST-002-4 init keeps files with other content, lists them, and names --force", async () => {
+    p = freshOpenspec();
     p.write("spec-ctx.toml", "# mine\n");
-    expect((await p.run("init", "--skills", "--force")).code).toBe(0);
+    p.write(".claude/skills/specctx-done/SKILL.md", "my own\n");
+    const r = await p.run("init", "--all");
+    expect(r.code, r.err).toBe(0);
+    expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+    expect(p.read(".claude/skills/specctx-done/SKILL.md")).toBe("my own\n");
+    expect(r.out).toContain("kept spec-ctx.toml\n");
+    expect(r.out).toContain("kept .claude/skills/specctx-done/SKILL.md (other content)\n");
+    expect(existsSync(p.path(".claude/skills/specctx-next/SKILL.md"))).toBe(true);
+    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/schema.yaml"))).toBe(true);
+    expect(r.out.trimEnd().split("\n").at(-1)).toBe("next: specctx init --all --force");
+    const j = JSON.parse((await p.run("init", "--skills", "--json")).out);
+    expect(j.changed).toEqual([".claude/skills/specctx-done/SKILL.md"]);
+    const f = await p.run("init", "--skills", "--force");
+    expect(f.code).toBe(0);
     expect(p.read(".claude/skills/specctx-done/SKILL.md")).toBe(readFileSync(join(REPO, "skills/specctx-done/SKILL.md"), "utf8"));
+    expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+  });
+
+  test("SCN-SCH-003-4 init --schema repairs the config of an adopted project without --force", async () => {
+    p = freshOpenspec();
+    p.write("spec-ctx.toml", "# mine\n");
+    p.write("openspec/config.yaml", "schema: spec-driven-ids\n\nrules:\n  specs:\n    - Header: starts with the ID.\n");
+    const r = await p.run("init", "--schema");
+    expect(r.code, r.err).toBe(0);
+    expect(p.read("openspec/config.yaml")).toContain("    - 'Header: starts with the ID.'\n");
+    expect(p.read("spec-ctx.toml")).toBe("# mine\n");
   });
 });

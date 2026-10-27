@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-27T02:15:50.406Z",
+  "files": {
+    "src/config.ts": "50cb4a07a1fa4e483c8aa06cf38bf9301be9ead193494a69a4dcfff82f13c7f1",
+    "src/init/init.ts": "363e05ea6de18caa9d063181270941b4b668b331b4328c16a31b3f7459ae7322",
+    "tests/config.test.ts": "83f29b4b5e04b1b21f86ad81b1639edd3eaefa66088d52cbea862847fcbe1155",
+    "tests/init/init.test.ts": "59df07a5d764151f5812d192944d5ac19b85001f398687329aadfd6b2f1ff4a6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-002"
+  ],
+  "task": "014/1.2",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js init --help | node dist/cli.js lint ste --baseline 0 && grep -q \"Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "b523250af074b567da04aec11540fcdbf64a9c0a759fd0c2f93371cd80febd8d"
+  }
+}
