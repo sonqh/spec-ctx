@@ -241,7 +241,8 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       const rid = m[1];
       const title = pyStrip(m[2]!);
       if (!rid) {
-        problems.push([rpath, i, "missing-id", title]);
+        // REQ-CHK-001 an archived header without an ID is history. adopt never writes it.
+        if (status !== "archived") problems.push([rpath, i, "missing-id", title]);
         curReq = null;
         curEntry = null;
         continue;
@@ -263,7 +264,7 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       const sid = m[1];
       const title = pyStrip(m[2]!);
       if (!sid) {
-        problems.push([rpath, i, "missing-id", title]);
+        if (status !== "archived") problems.push([rpath, i, "missing-id", title]);
         continue;
       }
       const st = curEntry ? curEntry.status : status;

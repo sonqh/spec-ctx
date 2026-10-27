@@ -99,6 +99,17 @@ describe("check base rules", () => {
     expect((await check()).out).not.toContain("req-without-scn");
   });
 
+  test("SCN-CHK-001-6 an archived header without an ID is no finding", async () => {
+    p = new Project();
+    p.write("openspec/changes/archive/2026-10-01-000-old/specs/alpha/spec.md", "## ADDED Requirements\n\n### Requirement: Old header\nText.\n\n#### Scenario: Old case\n- a\n");
+    const r = await check();
+    expect(r.out).not.toContain("missing-id");
+    expect(r.code, r.out).toBe(0);
+    const dry = await p.run("adopt", "--dry-run");
+    expect(dry.out).not.toContain("Old header");
+    expect(dry.out).not.toContain("Old case");
+  });
+
   test("reused-id fires for a non-archived copy and not for an archived one", async () => {
     p = new Project();
     p.append("decisions/retired-ids.md", "\n| REQ-OLD-003 | 2026-10-24 | gone |\n");

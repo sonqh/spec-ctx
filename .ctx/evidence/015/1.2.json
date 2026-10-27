@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-27T04:33:26.955Z",
+  "bundle_chars": 5123,
+  "files": {
+    "src/baseline/baseline.ts": "9eab399e679deaf1a7515ca9666cbb9311781fee5575ac25a8a6005cbc2670ce",
+    "tests/baseline/baseline.test.ts": "8ce1f588b7e8aa09563b52f1546b8a12346b609f7f41a1295869df79056da5bf"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-005"
+  ],
+  "started_at": "2026-10-27T04:32:38.786Z",
+  "task": "015/1.2",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/baseline && bash tests/paths/existing.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 7 pass\n 0 fail\n 46 expect() calls\nRan 7 tests across 1 file. [1313.00ms]\nindex rebuilt",
+    "stdout_sha256": "39dcf769415c07ca29c380c7889cd9e4e723233751d48f4bb184f4308141e940"
+  }
+}

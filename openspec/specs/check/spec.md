@@ -6,7 +6,7 @@
 ## Requirements
 
 ### Requirement: REQ-CHK-001 Base rules
-`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id` (two canonical entries), `reused-id` (the first ID of a row in `decisions/retired-ids.md` that has a non-archived entry), `dangling-ref`, `req-without-scn` (non-archived entries only), `code-tag-no-canonical`, `unknown-cap` (a code not in config). Each finding SHALL print `file:line  rule  id`. Exit 1 on any finding, else print `0 findings`.
+`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id` (two canonical entries), `reused-id` (the first ID of a retired row with a non-archived entry), `dangling-ref`, `req-without-scn`, `code-tag-no-canonical`, `unknown-cap` (code not in config). `missing-id` and `req-without-scn` skip archived entries. Each finding SHALL print `file:line  rule  id`. Exit 1 on any finding, else print `0 findings`.
 
 Refs: ADR-002
 
@@ -29,6 +29,10 @@ Refs: ADR-002
 #### Scenario: SCN-CHK-001-5 Archived REMOVED block
 - **WHEN** an archived change holds a `## REMOVED` block whose requirement has no scenario
 - **THEN** `check` reports no `req-without-scn` for it
+
+#### Scenario: SCN-CHK-001-6 Archived header without an ID
+- **WHEN** an archived change holds `### Requirement: Old header` and `#### Scenario: Old case` with no ID
+- **THEN** `check` reports no `missing-id` for either line and `adopt --dry-run` does not list them
 
 ### Requirement: REQ-CHK-002 Strict rules
 `specctx check --strict` SHALL add three rules. `unknown-task-req`: a task cites an ID that does not exist. `uncovered`: a canonical active REQ with no `Covers:` test. An ID named by a `## REMOVED` block of an active change SHALL be exempt from `uncovered` and `scenario-untested` until archive. A finding in `.ctx/baseline.json` SHALL be dropped in strict and non-strict mode and counted in a final line `baselined: <n>`.

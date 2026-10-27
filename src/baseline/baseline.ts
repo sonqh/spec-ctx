@@ -5,9 +5,10 @@ import type { Finding } from "../check/check.ts";
 import { cmpStr } from "../util/pystr.ts";
 
 export const BASELINE_PATH = ".ctx/baseline.json";
-export const BASELINE_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence", "task-without-req", "task-without-verify"];
+export const BASELINE_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence", "task-without-req", "task-without-verify", "missing-id"];
 
-const key = (rule: string, id: string): string => `${rule} ${id}`;
+/** REQ-ADOPT-005 a missing-id finding has no ID. Its key carries the file and the header title. */
+const key = (f: Pick<Finding, "rule" | "id" | "file">): string => (f.rule === "missing-id" ? `${f.rule} ${f.file} ${f.id}` : `${f.rule} ${f.id}`);
 /** A warning line reads "manual-evidence <task>". */
 const warningKey = (w: string): string => w;
 
@@ -28,7 +29,7 @@ function save(root: string, entries: Iterable<string>): string[] {
 
 /** The current debt that the baseline may hold: strict findings and warnings of the listed rules. */
 export function debt(findings: Finding[], warnings: string[]): string[] {
-  const out = findings.filter((f) => BASELINE_RULES.includes(f.rule)).map((f) => key(f.rule, f.id));
+  const out = findings.filter((f) => BASELINE_RULES.includes(f.rule)).map((f) => key(f));
   for (const w of warnings) if (BASELINE_RULES.includes(w.split(" ")[0]!)) out.push(warningKey(w));
   return out;
 }
@@ -59,7 +60,7 @@ export function applyBaseline(root: string, findings: Finding[], warnings: strin
   if (!base) return { findings, warnings, baselined: 0 };
   let n = 0;
   const f2 = findings.filter((f) => {
-    const hit = base.has(key(f.rule, f.id));
+    const hit = base.has(key(f));
     if (hit) n++;
     return !hit;
   });

@@ -13,9 +13,11 @@ export interface QueryOpts {
 
 export function query(entries: Entry[], args: string[], o: QueryOpts = {}): Entry[] {
   const terms = args.flatMap((a) => pySplit(a.toLowerCase()));
+  // REQ-QRY-001 the index stores kinds in lower case. The user may type the kind as the ID shows it.
+  const kind = o.kind?.toLowerCase();
   const hits: [number, string, string, number, Entry][] = [];
   for (const e of poolOf(entries, !!o.all)) {
-    if ((o.kind && e.kind !== o.kind) || (o.change && !matchesChange(e.change, o.change))) continue;
+    if ((kind && e.kind !== kind) || (o.change && !matchesChange(e.change, o.change))) continue;
     // REQ-IDX-005 --change takes a key or a full folder name
     const idl = e.id.toLowerCase();
     const tl = e.title.toLowerCase();

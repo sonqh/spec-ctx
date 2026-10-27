@@ -48,7 +48,7 @@ export const TABLE: CommandHelp[] = [
   {
     name: "query", group: "Read", args: "<term...>", summary: "Find the entries that contain all terms.",
     flags: [
-      ["--kind <kind>", "Show only entries of this kind."],
+      ["--kind <kind>", "Show only entries of this kind. Any case works."],
       ["--change <name>", "Show only entries of this change. The key or the full folder name works."],
       ["--limit <n>", "Show n lines at most. The default is 20. Use 0 for no limit."],
       ["--all", "Show all copies of an ID."],

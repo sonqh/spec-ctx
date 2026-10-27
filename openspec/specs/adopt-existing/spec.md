@@ -64,7 +64,7 @@ Refs: ADR-002
 - **THEN** the code is `TEL`
 
 ### Requirement: REQ-ADOPT-005 Baseline ratchet
-`specctx baseline write` SHALL record every current finding of the rules `uncovered`, `scenario-untested`, `done-without-evidence`, `manual-evidence`, `task-without-req`, and `task-without-verify` as sorted `rule id` pairs in `.ctx/baseline.json`. `check` and `check --strict` SHALL not report a finding that is in the baseline. `baseline prune` SHALL drop entries that no longer fire and print the count. There SHALL be no command that adds a single entry.
+`specctx baseline write` SHALL record every current finding of `uncovered`, `scenario-untested`, `done-without-evidence`, `manual-evidence`, `task-without-req`, `task-without-verify`, and `missing-id` as sorted `rule id` pairs in `.ctx/baseline.json`. A `missing-id` pair has `<file> <title>` as id. `check` and `check --strict` SHALL hide a finding in the baseline. `baseline prune` SHALL drop entries that no longer fire and print the count. No command SHALL add a single entry.
 
 Refs: REQ-CHK-002
 
@@ -79,6 +79,14 @@ Refs: REQ-CHK-002
 #### Scenario: SCN-ADOPT-005-3 Prune
 - **WHEN** a test gains `Covers:` for a baselined requirement and `baseline prune` runs
 - **THEN** that entry is gone and the command prints `pruned 1`
+
+#### Scenario: SCN-ADOPT-005-4 Unmatched delta headers go in the baseline
+- **WHEN** an active delta holds a MODIFIED header that matches no main requirement, `adopt` leaves it without an ID, and `baseline write` runs
+- **THEN** `.ctx/baseline.json` holds `missing-id <file> <title>` for that header and each of its scenarios, and `gate --strict` exits 0
+
+#### Scenario: SCN-ADOPT-005-5 A new header without an ID still fires
+- **WHEN** a main spec gains `### Requirement: Rate limit` without an ID after the baseline
+- **THEN** `check` reports `missing-id` for it and for nothing in the baseline
 
 ### Requirement: REQ-ADOPT-006 Two documented paths
 The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`specctx init --all`, `adopt --dry-run`, `adopt`, `task backfill`, `baseline write`). The existing path section SHALL say that legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a Verify code span. `baseline prune` then drops them. Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.

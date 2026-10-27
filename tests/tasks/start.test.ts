@@ -72,6 +72,20 @@ describe("task start", () => {
     expect(r.err).toContain("no task 002/9.9");
   });
 
+  test("SCN-TASK-002-4 a task with no REQ gets one hint line before the footer", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    expect((await p.run("init")).code).toBe(0);
+    expect((await p.run("adopt")).code).toBe(0);
+    const r = await p.run("task", "start", "add-mfa/1.3");
+    expect(r.code, r.err).toBe(0);
+    const lines = r.out.trimEnd().split("\n");
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe("task add-mfa/1.3 cites no REQ. Find one with specctx query <term> --change add-mfa --kind req, then add [REQ-<CAP>-NNN] to the task line.");
+    expect(lines[1]).toMatch(/^-- bundle 0 chars, 0% of \d+ chars of spec text$/);
+    const j = JSON.parse((await p.run("task", "start", "add-mfa/1.3", "--json")).out);
+    expect(j.hint).toBe(lines[0]);
+  });
+
   test("SCN-TASK-002-3 the footer ends task start on the fixture task add-mfa/1.3, and bundle has none", async () => {
     p = new Project(NO_ID_FIXTURE);
     expect((await p.run("init")).code).toBe(0);

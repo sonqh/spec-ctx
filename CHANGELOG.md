@@ -8,6 +8,10 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 - `init` never replaces `spec-ctx.toml` and never exits 2 because a file exists. Without `--force`, it keeps each file with other content and lists it as `kept <file> (other content)`. The `next:` line then names the same command with `--force`.
 - `init --schema` repairs the config of a project that already has `spec-ctx.toml`. It needs no `--force`.
+- `check` reports no `missing-id` for a header inside an archived change. `adopt` never writes IDs there.
+- `baseline write` also records the `missing-id` findings of active changes, as `missing-id <file> <title>`. The existing path then ends with `gate --strict` exit 0 on a project with archived changes or a delta header that matches no main requirement. Found on a fork of OpenSpec, see `docs/dogfood/openspec.md`.
+- `task start` prints one hint line when the task cites no REQ. It names `specctx query --change <change> --kind req` and the citation to add.
+- `query --kind` accepts the kind in any case. `--kind REQ` and `--kind req` return the same entries.
 
 ## 0.1.1
 

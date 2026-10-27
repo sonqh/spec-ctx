@@ -37,7 +37,7 @@ Setup:
   `help <command>`             Show the help page of one command.
 
 Command flags:
-  `query --kind <kind>`        Show only entries of this kind.
+  `query --kind <kind>`        Show only entries of this kind. Any case works.
   `query --change <name>`      Show only entries of this change. The key or the full folder name works.
   `query --limit <n>`          Show n lines at most. The default is 20. Use 0 for no limit.
   `query --all`                Show all copies of an ID.

@@ -21,7 +21,7 @@ Three commands own the task checkbox and the evidence behind it.
 - **THEN** it prints `no open task. Every task in the active changes is done. Next: archive 009-x.` and exits 1
 
 ### Requirement: REQ-TASK-002 Start
-`specctx task start <id>` SHALL print the bundle for the REQ IDs the task cites with the configured budget. Then it SHALL print one footer line `-- bundle <n> chars, <p>% of <m> chars of spec text`. `<m>` is the size of all canonical requirement, scenario, and decision text. It SHALL then write `.ctx/current.json` with the task id and start time. It SHALL exit 2 if the task is done or does not exist. `bundle` SHALL not print the footer.
+`specctx task start <id>` SHALL print the bundle for the REQ IDs the task cites, within the budget. A task with no REQ gets one hint line: run `specctx query --change --kind req`, then add `[REQ-<CAP>-NNN]`. Then one footer `-- bundle <n> chars, <p>% of <m> chars of spec text`. `<m>` counts all canonical REQ, SCN, and decision text. It SHALL write `.ctx/current.json` with the task id and start time. Exit 2 if the task is done or missing. `bundle` prints no footer.
 
 Refs: REQ-QRY-003, REQ-STAT-002
 
@@ -36,6 +36,10 @@ Refs: REQ-QRY-003, REQ-STAT-002
 #### Scenario: SCN-TASK-002-3 Footer
 - **WHEN** `task start` runs on the fixture task `add-mfa/1.3`
 - **THEN** the last line matches `^-- bundle \d+ chars, \d+(\.\d)?% of \d+ chars of spec text$` and `specctx bundle REQ-UA-004` prints no such line
+
+#### Scenario: SCN-TASK-002-4 No REQ gives a hint
+- **WHEN** `task start add-mfa/1.3` runs on the no-ID fixture after `adopt` and the task line cites no REQ
+- **THEN** stdout has two lines: `task add-mfa/1.3 cites no REQ. Find one with specctx query <term> --change add-mfa --kind req, then add [REQ-<CAP>-NNN] to the task line.` and the footer with `bundle 0 chars`
 
 ### Requirement: REQ-TASK-003 Done
 `specctx task done <id>` SHALL parse the task's Verify command, run it in the project root, and on exit 0 write `.ctx/evidence/<change>/<task>.json` and change `[ ]` to `[x]` on that task line only. On a non-zero exit it SHALL write nothing, print the last 20 lines of output, then `Verify failed (exit <n>). The task stays open.`, and exit 1. `--manual "<note>"` SHALL be required when the task has no Verify command.

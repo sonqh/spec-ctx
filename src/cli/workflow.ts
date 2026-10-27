@@ -96,8 +96,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { cpLen } = await import("../util/pystr.ts");
       // REQ-STAT-002 the bundle size goes next to the current task, so stats can compute the context ratio
       writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id }) + "\n");
-      if (c.json) print(c, { bundle: b, task: t.id });
-      else c.io.out(b.text + footer(cpLen(b.text), (await import("../stats/stats.ts")).specCharsOf(entries)));
+      // REQ-TASK-002 a task that cites no REQ gets one hint line, so the agent knows what to add
+      const hint = t.reqs.length ? null : `task ${t.id} cites no REQ. Find one with specctx query <term> --change ${t.change} --kind req, then add [REQ-<CAP>-NNN] to the task line.`;
+      if (c.json) print(c, { bundle: b, hint, task: t.id });
+      else c.io.out(b.text + (hint ? hint + "\n" : "") + footer(cpLen(b.text), (await import("../stats/stats.ts")).specCharsOf(entries)));
       return 0;
     }
     case "task verify":

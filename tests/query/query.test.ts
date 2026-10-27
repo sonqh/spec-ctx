@@ -55,6 +55,12 @@ describe("query", () => {
     expect((await lines(base, "query", "revert", "--kind", "req")).map((l) => l.split("  ")[0])).toEqual(["REQ-APPLY-007", "REQ-APPLY-005"]);
   });
 
+  test("SCN-QRY-001-4 --kind in upper case matches the same entries", async () => {
+    const lower = await lines(base, "query", "revert", "--kind", "req");
+    expect(lower.length).toBeGreaterThan(0);
+    expect(await lines(base, "query", "revert", "--kind", "REQ")).toEqual(lower);
+  });
+
   test("line shape, no truncation, limit, and filters", async () => {
     expect(await lines(base, "query", "lockfile", "--kind", "req")).toContain("REQ-AAA-001  req  active  openspec/specs/alpha/spec.md:5  Lockfile writer");
     const long = "Do alpha with a very long body " + "and more words ".repeat(12) + "[REQ-AAA-001] Verify: the long check.";

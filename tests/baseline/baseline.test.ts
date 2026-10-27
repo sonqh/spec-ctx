@@ -59,6 +59,34 @@ describe("baseline", () => {
     expect((await p.run("baseline", "prune")).out).toBe("pruned 0\n");
   });
 
+  test("SCN-ADOPT-005-4 unmatched delta headers go in the baseline and the gate passes", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    const DELTA = "openspec/changes/add-mfa/specs/user-auth/spec.md";
+    p.append(DELTA, "\n### Requirement: Lockout policy\nThe system SHALL lock an account after five failures.\n\n#### Scenario: Five failures\n- **WHEN** a user fails five times\n- **THEN** the account locks\n");
+    expect((await p.run("adopt")).code).toBe(0);
+    expect((await p.run("task", "backfill", "--manual", "adopted")).code).toBe(0);
+    expect((await p.run("check")).out).toContain("missing-id  Lockout policy");
+    expect((await p.run("baseline", "write")).code).toBe(0);
+    const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
+    expect(list).toContain(`missing-id ${DELTA} Lockout policy`);
+    expect(list).toContain(`missing-id ${DELTA} Five failures`);
+    const r = await p.run("check", "--strict");
+    expect(r.code, r.out).toBe(0);
+    const g = await p.run("gate", "--strict");
+    expect(g.code, g.out).toBe(0);
+  });
+
+  test("SCN-ADOPT-005-5 a new header without an ID still fires after the baseline", async () => {
+    p = await adopted();
+    await p.run("baseline", "write");
+    p.append("openspec/specs/profile-schema/spec.md", "\n### Requirement: Rate limit\nThe profile API SHALL limit calls.\n\n#### Scenario: SCN-PS-009-1 Over\n- a\n");
+    p.touchForward("openspec/specs/profile-schema/spec.md");
+    const r = await p.run("check");
+    expect(r.code).toBe(1);
+    expect(r.out).toContain("missing-id  Rate limit");
+    expect(r.out.split("\n").filter((l) => /  missing-id  /.test(l))).toHaveLength(1);
+  });
+
   test("SCN-CHK-002-4 three baselined entries that still fire are counted", async () => {
     p = new Project();
     p.append("openspec/specs/alpha/spec.md", "\n### Requirement: REQ-AAA-003 A\nText.\n\n#### Scenario: SCN-AAA-003-1 S\n- a\n");

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-27T04:33:58.543Z",
+  "bundle_chars": 6158,
+  "files": {
+    "src/cli/workflow.ts": "e484414359a1ba32c52c1abb49a81e80f55a5e4f72b8b73100b87372f8ab6102",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad",
+    "tests/tasks/start.test.ts": "23361afa13db8cdf4e083f545cfc83343c3c3d50e7397ae536c132b5af1f4736"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-002"
+  ],
+  "started_at": "2026-10-27T04:33:27.128Z",
+  "task": "015/2.1",
+  "tool_version": "0.1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 33 pass\n 0 fail\n 138 expect() calls\nRan 33 tests across 7 files. [328.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}
