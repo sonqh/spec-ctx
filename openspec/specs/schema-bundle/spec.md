@@ -26,7 +26,7 @@ A change written with the bundle SHALL archive with `openspec archive` and the I
 - **THEN** every REQ ID from the change exists once in `openspec/specs/` and `check --strict` prints `0 findings`
 
 ### Requirement: REQ-SCH-003 Project rules
-The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` text this repo uses, so `init --schema` can merge it into the project's config without overwriting other keys. Every list item under `rules.*` and `operations.*.guidance` SHALL parse as a YAML string. `init --schema` SHALL repair an item in the project config that parsed as a one key mapping into the string `<key>: <value>`.
+The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` text this repo uses, so `init --schema` can merge it into the project config and keep other keys. Every list item under `rules.*` and `operations.*.guidance` SHALL parse as a YAML string. `init --schema` SHALL repair an item in the project config that parsed as a one key mapping into the string `<key>: <value>`. After the schema step, `init` SHALL print one `templates:` line with the templates folder.
 
 #### Scenario: SCN-SCH-003-1 Merge keeps keys
 - **WHEN** the project config already has a `context` key
@@ -43,6 +43,10 @@ The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `o
 #### Scenario: SCN-SCH-003-4 Repair in an adopted project
 - **WHEN** `spec-ctx.toml` exists, the config holds a rule item that YAML reads as a mapping, and `init --schema` runs without `--force`
 - **THEN** it exits 0, the item is one string, and `spec-ctx.toml` keeps its bytes
+
+#### Scenario: SCN-SCH-003-5 Templates line
+- **WHEN** `init --all` runs on a fresh `openspec init` project
+- **THEN** the output has one line `templates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)` before the `next:` line, and `init --skills` prints no `templates:` line
 
 ### Requirement: REQ-SCH-004 Install paths in the bundle README
 `schemas/spec-driven-ids/README.md` SHALL describe the copy install first: clone, copy the folder into `openspec/schemas/spec-driven-ids/`, set `schema`, merge the fragment. Then the `npx -y spec-ctx init --schema` path. It SHALL name the OpenSpec version the bundle was forked from.

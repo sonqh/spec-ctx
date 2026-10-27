@@ -38,6 +38,19 @@ describe("config", () => {
     expect(loadConfig(p.root).gate.markdown).toEqual(["docs/*.md"]);
   });
 
+  test("SCN-DIST-002-9 gate.openspec is a string with the npx default (018/D1)", async () => {
+    p = new Project();
+    expect(loadConfig(p.root).gate.openspec).toBe("npx -y @fission-ai/openspec@latest");
+    p.write("spec-ctx.toml", "[gate]\nopenspec = \"openspec\"\n");
+    expect(loadConfig(p.root).gate.openspec).toBe("openspec");
+    p.write("spec-ctx.toml", "[gate]\nopenspec = 3\n");
+    const r = await p.run("status");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("gate.openspec");
+    p.write("spec-ctx.toml", "[gate]\nopenspec = \"\"\n");
+    expect((await p.run("status")).code).toBe(2);
+  });
+
   test("the config changes what build scans", async () => {
     p = new Project();
     p.write("spec-ctx.toml", '[scan]\ncode = ["lib/**"]\n');
@@ -69,7 +82,7 @@ describe("config", () => {
         expect(lines[i - 1]!.startsWith("#"), l).toBe(true);
       }
     });
-    expect(keys).toBe(12);
+    expect(keys).toBe(13);
     // the written file parses to the defaults
     expect(loadConfig(p.root)).toEqual(defaults());
   });

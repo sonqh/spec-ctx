@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-27T08:27:30.463Z",
+  "bundle_chars": 8605,
+  "files": {
+    "src/cli/commands.ts": "145f358f60ee94bb3ff3fea01cc0e360f087217ecccea5cbacb44e59e443bfc2",
+    "src/cli/gate.ts": "b373b092f749f6828daa564a75dcc3305a52fb7c5aa45d540f79dbf0473f9b33",
+    "src/config.ts": "4dc5c1c36b6c31205f10ef8290ad63640cdc3770370f6280e28f2672f12f6a6d",
+    "src/init/init.ts": "9c22453664bc5e378566cf25270fce64b25d1dca01c8581df288fbfdc8f9ad14",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9",
+    "tests/cli/gate.test.ts": "26cdc348e69a6e9e1432e4979ee99ec8659a5e7d611acb62347eeb53628e9a3c",
+    "tests/config.test.ts": "f128a43e0d2e17078e7c7fae9128b75dd6a9b2ae3d194faa2eea3d939f8b3164",
+    "tests/init/init.test.ts": "45d905e7b87b76e2d0de00e037ba28b6e8c00021752af5a5552850375683920e"
+  },
+  "kind": "command",
+  "reason": "init.ts and its test changed in 2.1",
+  "reqs": [
+    "REQ-CLI-004",
+    "REQ-DIST-002"
+  ],
+  "started_at": "2026-10-27T08:26:01.220Z",
+  "task": "018/1.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/cli/gate.test.ts tests/cli && bash tests/paths/fresh.sh && bash tests/paths/existing.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 58 pass\n 0 fail\n 350 expect() calls\nRan 58 tests across 9 files. [2.10s]\nindex rebuilt",
+    "stdout_sha256": "2c6746307d36cb8f8343b51d0f9da3cb11703382f14d958932e5ce582798bc1f"
+  }
+}

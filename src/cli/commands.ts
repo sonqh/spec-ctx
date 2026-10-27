@@ -118,6 +118,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     return runGate(root, {
       strict,
       markdown: (f.markdown as string | undefined) ?? cfg.gate.markdown.join(" "),
+      // REQ-DIST-002 the env var wins over [gate] openspec, for tests and one-off runs (018/D2)
+      openspec: process.env.SPECCTX_OPENSPEC ?? cfg.gate.openspec,
       json,
       check: async () => {
         const { buildIndex } = await import("../index/build.ts");

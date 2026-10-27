@@ -105,7 +105,7 @@ Example:
   `specctx check --strict`
 
 == gate
-specctx gate: Run `check`, the markdown linters, `openspec validate`, and the length check. Stop at the first failure.
+specctx gate: Run `check`, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
 
 Usage:
   `specctx gate [flags]`

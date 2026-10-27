@@ -2,6 +2,14 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+### Changed
+
+- `spec-ctx.toml` gets `[gate] openspec`, the command that `gate` runs for `openspec validate`. The default is `npx -y @fission-ai/openspec@latest`. Set it to `openspec` for a global install or a fork of OpenSpec. The env var `SPECCTX_OPENSPEC` still overrides it for one run. `init` writes the key with a comment.
+- `init --schema` and `init --all` print one `templates:` line before `next:`. It names `openspec/schemas/spec-driven-ids/templates/` and the two files that hold the ID placeholders.
+- The README fresh path shows `openspec init --tools <tool>`, so the command runs without a prompt, and names `--no-animation` for clean logs. The existing path names `[gate] openspec`.
+
 ## 0.1.2
 
 ### Changed

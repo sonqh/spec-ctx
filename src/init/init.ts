@@ -184,6 +184,9 @@ export function ignoresClaude(root: string): boolean {
   return lines.has(".claude") || lines.has(".claude/");
 }
 
+/** REQ-SCH-003 where the templates with the ID placeholders are. Printed after the schema step (018/D5). */
+export const TEMPLATES_NOTE = `templates: openspec/schemas/${SCHEMA}/templates/ (spec.md, tasks.md hold the ID placeholders)`;
+
 export const CLAUDE_NOTE = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
 
 export function runInit(root: string, o: InitOpts): InitResult {
@@ -199,6 +202,7 @@ export function runInit(root: string, o: InitOpts): InitResult {
     if (!o.schema || !mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")).added.length) {
       res.nothing = true;
       if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
+      if (o.schema) res.notes.push(TEMPLATES_NOTE);
       return res;
     }
   }
@@ -236,5 +240,7 @@ export function runInit(root: string, o: InitOpts): InitResult {
   else res.kept.push(GITIGNORE);
   // REQ-DIST-002 skills under an ignored .claude/ never reach git (017/D3)
   if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
+  // REQ-SCH-003 the templates line comes last, right before next: (018/D5)
+  if (o.schema) res.notes.push(TEMPLATES_NOTE);
   return res;
 }

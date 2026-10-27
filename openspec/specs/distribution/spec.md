@@ -19,7 +19,7 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `scan`, `ids.caps`, `ids.task_pattern`, `bundle.budget`, `bundle.depth`, `verify.timeout_s`, `gate.markdown`. Missing keys take defaults. `init` SHALL write a commented default file, with `test/**` or `lib/**` if only that dir exists, and add its two `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It never replaces `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
+`spec-ctx.toml` SHALL hold `scan`, `ids.caps`, `ids.task_pattern`, `bundle.budget`, `bundle.depth`, `verify.timeout_s`, `gate.markdown`, `gate.openspec`. Absent keys default. `init` SHALL write a commented default, `test/**` or `lib/**` if only that dir exists, and add its two `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It keeps `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
 
 Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 
@@ -54,6 +54,10 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 #### Scenario: SCN-DIST-002-8 Test and code dirs
 - **WHEN** `init` runs in a project with `test/` and `lib/` at the root and no `tests/` or `src/`
 - **THEN** `spec-ctx.toml` has `tests = ["test/**"]` and `code = ["lib/**"]`, each with its comment above, and a project with `tests/` and `src/` gets `tests/**` and `src/**`
+
+#### Scenario: SCN-DIST-002-9 OpenSpec command
+- **WHEN** `spec-ctx.toml` has no `[gate] openspec` key, or `init` writes the file
+- **THEN** the key reads `npx -y @fission-ai/openspec@latest` with a comment above it, `gate` runs that command for `openspec validate`, and a value that is not a string exits 2 with `gate.openspec`
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.

@@ -40,7 +40,8 @@ describe("next step lines", () => {
     expect(last(a.out)).toBe("next: specctx status");
     const b = await p.run("init", "--all");
     expect(b.code, b.err).toBe(0);
-    expect(b.out).toBe("nothing to do\nnext: specctx status\n");
+    // the templates line stays on a nothing to do run (018/D5)
+    expect(b.out).toBe("nothing to do\ntemplates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)\nnext: specctx status\n");
   });
 
   test("adopt --dry-run with work ends with the next step and still exits 1", async () => {

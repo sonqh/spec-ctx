@@ -212,6 +212,31 @@ describe("init", () => {
     expect((await p.run("init", "--skills")).out).not.toContain("note:");
   });
 
+  test("SCN-SCH-003-5 init --all prints the templates line before next: and init --skills does not (018/D5)", async () => {
+    p = freshOpenspec();
+    const line = "templates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)";
+    const r = await p.run("init", "--all");
+    expect(r.code, r.err).toBe(0);
+    const lines = r.out.trimEnd().split("\n");
+    expect(lines.filter((l) => l === line)).toHaveLength(1);
+    expect(lines.indexOf(line)).toBe(lines.length - 2);
+    expect(lines.at(-1)).toBe("next: specctx status");
+    // the line names a folder that exists after init
+    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/templates/spec.md"))).toBe(true);
+    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/templates/tasks.md"))).toBe(true);
+    // a second run with nothing to do still says where the templates are
+    const again = await p.run("init", "--schema");
+    expect(again.out).toContain("nothing to do\n");
+    expect(again.out).toContain(line + "\n");
+    const j = JSON.parse((await p.run("init", "--schema", "--json")).out);
+    expect(j.notes).toContain(line);
+    // no schema step, no line
+    p.cleanup();
+    p = freshOpenspec();
+    expect((await p.run("init", "--skills")).out).not.toContain("templates:");
+    expect((await p.run("init")).out).not.toContain("templates:");
+  });
+
   test("SCN-DIST-002-8 init detects test/ and lib/ when tests/ and src/ are absent", async () => {
     p = freshOpenspec();
     p.write("test/a.test.ts", "");

@@ -42,6 +42,8 @@ export interface GateOpts {
   markdown: string;
   /** With --json the lint detail is not cut at LINT_DETAIL_CAP. */
   json?: boolean;
+  /** REQ-DIST-002 the command that runs OpenSpec, from [gate] openspec or SPECCTX_OPENSPEC (018/D2). */
+  openspec: string;
   check: () => Promise<{ code: number; out: string }>;
 }
 
@@ -102,9 +104,8 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   io.out(`linters: ok (${files} file(s)${baselined ? `, ${baselined} baselined` : ""})\n`);
 
   ran.push("validate");
-  // gate 3: openspec validate. SPECCTX_OPENSPEC replaces the command, for tests and offline use.
-  const cmd = process.env.SPECCTX_OPENSPEC ?? "npx -y @fission-ai/openspec@latest";
-  const v = spawnSync("/bin/sh", ["-c", `${cmd} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8" });
+  // gate 3: openspec validate with the command the caller resolved (018/D2)
+  const v = spawnSync("/bin/sh", ["-c", `${o.openspec} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8" });
   if (v.status !== 0) {
     io.out("validate: fail\n" + (v.stdout ?? "") + (v.stderr ?? ""));
     return "validate";

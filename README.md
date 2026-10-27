@@ -161,10 +161,12 @@ The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its pla
 ### Fresh project
 
 ```bash
-npx -y @fission-ai/openspec@latest init
+npx -y @fission-ai/openspec@latest init --tools <tool>
 npx spec-ctx init --all
 specctx gate --strict
 ```
+
+`--tools <tool>` names your agent, such as `claude`, and skips the interactive picker. `--no-animation` keeps logs clean.
 
 ### Existing OpenSpec project
 
@@ -183,6 +185,7 @@ specctx gate --strict
 - `task backfill` writes manual evidence for every ticked task that has none.
 - `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Untested requirements and scenarios. Tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
 - `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. Narrow it when a folder is not yours to fix.
+- `gate` runs the command in `[gate] openspec` for `openspec validate`. Set it to `openspec` for a global install or a fork.
 - Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
 
 Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/existing.sh`.
@@ -236,13 +239,17 @@ depth = 1
 
 [verify]
 timeout_s = 600
+
+[gate]
+markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]  # globs that gate lints
+openspec = "npx -y @fission-ai/openspec@latest"  # the command that runs OpenSpec
 ```
 
 One environment variable changes the engine:
 
 | Variable | Effect |
 | --- | --- |
-| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. The default is `npx -y @fission-ai/openspec@latest`. Tests and offline machines set it. |
+| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. It overrides `[gate] openspec` for one run. Tests and offline machines set it. |
 
 ## Markdown linters
 
@@ -271,7 +278,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 017. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 018. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -281,7 +288,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0435 (n=52) | 0.87 (106/122) | 36 (of 68 reopens) | 70 (n=52) | 0 (0 baselined + 0 new) |
+| total | 0.0430 (n=54) | 0.87 (110/126) | 36 (of 70 reopens) | 71 (n=54) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

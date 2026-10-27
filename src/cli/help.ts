@@ -76,7 +76,7 @@ export const TABLE: CommandHelp[] = [
   },
   {
     name: "gate", group: "Read", args: "",
-    summary: "Run `check`, the markdown linters, `openspec validate`, and the length check. Stop at the first failure.",
+    summary: "Run `check`, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.",
     flags: [
       ["--strict", "Run `check` and `openspec validate` in strict mode."],
       ["--markdown <globs>", "Lint these markdown globs instead of [gate] markdown. Separate them with spaces."],

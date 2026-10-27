@@ -1,4 +1,4 @@
-// Covers: REQ-CLI-004, REQ-LINT-003, REQ-ADOPT-007
+// Covers: REQ-CLI-004, REQ-LINT-003, REQ-ADOPT-007, REQ-DIST-002
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, readFileSync } from "node:fs";
@@ -93,6 +93,26 @@ describe("gate", () => {
     const o = await p.run("gate", "--markdown", "decisions/*.md");
     expect(o.code).toBe(1);
     expect(o.out).toContain("linters: fail");
+  });
+
+  test("SCN-CLI-004-6 SCN-DIST-002-9 the OpenSpec command comes from spec-ctx.toml and the env var wins (018/D2)", async () => {
+    p = new Project();
+    // a stand-in for openspec that records its arguments, so the test knows which command ran
+    p.write("fake-openspec.sh", "#!/bin/sh\necho \"$@\" > ran.txt\n");
+    p.write("spec-ctx.toml", '[gate]\nopenspec = "sh ./fake-openspec.sh"\n');
+    const r = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(r.code, r.out).toBe(0);
+    expect(r.out).toContain("validate: ok");
+    expect(p.read("ran.txt")).toBe("validate --all --no-interactive\n");
+    p.write("spec-ctx.toml", '[gate]\nopenspec = "/bin/false"\n');
+    const f = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(f.code).toBe(1);
+    expect(f.out).toContain("linters: ok");
+    expect(f.out).toContain("validate: fail");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const e = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(e.code, e.out).toBe(0);
+    expect(e.out).toContain("validate: ok");
   });
 
   // REQ-LINT-003 removes the skip of SCN-CLI-004-3: with no python3 the linters still run
