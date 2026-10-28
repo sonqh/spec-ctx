@@ -55,8 +55,8 @@ Command flags:
   `id new --for <REQ-ID>`      Give the requirement of a new scenario.
   `id new --count <n>`         Print n IDs in sequence.
   `task done --manual <note>`  Record a manual note. A task with no `Verify:` command needs this flag.
-  `init --schema`              Also install the spec-driven-ids schema and add its rules to openspec/config.yaml.
-  `init --skills`              Also install the three skills in .claude/skills and .agents/skills.
+  `init --schema`              Also install the ID templates and add the spec-ctx rules to openspec/config.yaml.
+  `init --skills`              Also install the specctx-run skill and its aliases in .claude/skills and .agents/skills.
   `init --all`                 Do all three.
   `init --force`               Replace the files that have other content. spec-ctx.toml stays.
   `adopt --dry-run`            Show the ID that each header without an ID gets. Write nothing.

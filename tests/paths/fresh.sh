@@ -19,7 +19,9 @@ before=$(sum)
 
 # a change from the templates, with IDs from specctx id new
 $openspec new change add-greeting >/dev/null 2>&1
-tpl=openspec/schemas/spec-driven-ids/templates
+tpl=openspec/templates/spec-driven-ids
+[ ! -d openspec/schemas ] || { echo "init --all installed a schema folder"; exit 1; }
+grep -q '^schema: spec-driven$' openspec/config.yaml || { echo "init --all changed the schema line"; exit 1; }
 chg=openspec/changes/add-greeting
 req=$($specctx id new REQ GRT)
 scns=$($specctx id new SCN GRT --for "$req" --count 2)

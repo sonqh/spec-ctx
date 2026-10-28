@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Covers: REQ-SCH-005, REQ-ADOPT-009
 # SCN-SCH-005-1 the rules that init --schema merges into openspec/config.yaml reach the artifact instructions
-# of the stock spec-driven schema on upstream OpenSpec. A pass means the schema copy can go (ADR-006 item 8).
+# of the stock spec-driven schema on upstream OpenSpec. The schema copy went in 025 (ADR-006 item 8).
 set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
 [ -f "$here/dist/cli.js" ] || (cd "$here" && bun run build >/dev/null)
@@ -12,9 +12,7 @@ trap 'rm -rf "$work"' EXIT
 cd "$work"
 $openspec init --tools none --no-animation . >/dev/null 2>&1
 $specctx init --schema >/dev/null
-grep -q '^schema: spec-driven-ids$' openspec/config.yaml
-# back to the stock schema. Only the merged rules and operations stay.
-sed -i.bak 's/^schema: spec-driven-ids$/schema: spec-driven/' openspec/config.yaml && rm -f openspec/config.yaml.bak
+# init leaves the stock schema in place. Only the merged rules and operations carry the ID instructions.
 grep -q '^schema: spec-driven$' openspec/config.yaml
 $openspec new change rules-only >/dev/null 2>&1
 json=$($openspec instructions specs --change rules-only --json 2>/dev/null)
@@ -34,5 +32,9 @@ process.stdin.on("data", (d) => (s += d)).on("end", () => {
 text=$($openspec instructions specs --change rules-only 2>/dev/null)
 printf '%s\n' "$text" | grep -q 'specctx id new' || { echo "the instruction text has no specctx id new"; printf '%s\n' "$text" | head -40; exit 1; }
 # the tasks instruction carries the Verify rule too
-$openspec instructions tasks --change rules-only 2>/dev/null | grep -q 'Verify:' || { echo "the tasks instruction has no Verify rule"; exit 1; }
+tasks=$($openspec instructions tasks --change rules-only 2>/dev/null)
+printf '%s\n' "$tasks" | grep -q 'Verify:' || { echo "the tasks instruction has no Verify rule"; exit 1; }
+# the apply guidance reaches the agent: task done only, no checkbox edit, no /opsx:apply
+apply=$($openspec instructions apply --change rules-only 2>/dev/null || true)
+printf '%s\n%s\n' "$tasks" "$apply" | grep -q 'Close each task only with `specctx task done <id>`' || { echo "no task done guidance in the tasks or apply instructions"; printf '%s\n' "$apply" | head -40; exit 1; }
 echo "rules-only: the stock schema carries the merged rules on upstream $($openspec --version 2>/dev/null)"

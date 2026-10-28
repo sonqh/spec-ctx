@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Covers: REQ-SCH-001, REQ-SCH-003
-# Copies the schema bundle into a fresh OpenSpec project in a temp dir and validates it.
+# Covers: REQ-SCH-003
+# SCN-SCH-003-7 the templates and the fragment work on a fresh upstream project with the stock spec-driven schema.
+# No schema folder is installed. ADR-006 item 8.
 set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
 openspec="npx -y @fission-ai/openspec@1.14.3"
@@ -10,24 +11,32 @@ trap 'rm -rf "$work"' EXIT
 cd "$work"
 $openspec init --tools none --no-animation . >/dev/null 2>&1
 
-# SCN-SCH-001-1 the bundle validates in a fresh project
-mkdir -p openspec/schemas
-cp -R "$here/schemas/spec-driven-ids" openspec/schemas/
-$openspec schema validate spec-driven-ids >/dev/null
-echo "ok: openspec schema validate spec-driven-ids"
+# the bundle has no schema.yaml. Only the templates, the fragment, and the README ship.
+[ ! -f "$here/schemas/spec-driven-ids/schema.yaml" ] || { echo "schemas/spec-driven-ids/schema.yaml must not exist"; exit 1; }
+node "$here/dist/cli.js" init --schema --root "$work" >/dev/null
+[ ! -d openspec/schemas ] || { echo "init --schema installed a schema folder"; exit 1; }
+grep -q '^schema: spec-driven$' openspec/config.yaml || { echo "the schema line changed"; head -1 openspec/config.yaml; exit 1; }
+tpl=openspec/templates/spec-driven-ids
+for f in proposal.md design.md spec.md tasks.md; do [ -f "$tpl/$f" ] || { echo "missing $tpl/$f"; exit 1; }; done
+echo "ok: templates in $tpl, schema stays spec-driven"
 
-# the templates carry the ID placeholders and the instructions name specctx id new
-grep -q '### Requirement: REQ-<CAP>-NNN' openspec/schemas/spec-driven-ids/templates/spec.md
-grep -q '#### Scenario: SCN-<CAP>-NNN-1' openspec/schemas/spec-driven-ids/templates/spec.md
-grep -q 'Refs:' openspec/schemas/spec-driven-ids/templates/design.md
-grep -q 'Verify: `' openspec/schemas/spec-driven-ids/templates/tasks.md
-grep -q 'specctx id new REQ' openspec/schemas/spec-driven-ids/schema.yaml
-grep -q 'specctx task done' openspec/schemas/spec-driven-ids/schema.yaml
-echo "ok: placeholders and instructions"
+# the templates carry the ID placeholders and the config carries the ID and task done rules
+grep -q '### Requirement: REQ-<CAP>-NNN' $tpl/spec.md
+grep -q '#### Scenario: SCN-<CAP>-NNN-1' $tpl/spec.md
+grep -q 'Refs:' $tpl/design.md
+grep -q 'Verify: `' $tpl/tasks.md
+grep -q 'specctx id new REQ' openspec/config.yaml
+grep -q 'Close each task only with `specctx task done <id>`' openspec/config.yaml
+! grep -q 'mark complete' openspec/config.yaml || { echo "mark complete is still in the config"; exit 1; }
+echo "ok: placeholders and rules"
 
-# SCN-SCH-001-2 a spec that keeps the placeholder is a missing-id finding
+# the project still validates on upstream with the merged config
+$openspec validate --all >/dev/null 2>&1 || { $openspec validate --all; exit 1; }
+echo "ok: openspec validate --all with the merged rules"
+
+# SCN-SCH-001-2 a spec that keeps the placeholder is a missing-id finding. The rule stays in check after REQ-SCH-001 went.
 mkdir -p openspec/changes/001-demo/specs/demo
-cp openspec/schemas/spec-driven-ids/templates/spec.md openspec/changes/001-demo/specs/demo/spec.md
+cp $tpl/spec.md openspec/changes/001-demo/specs/demo/spec.md
 set +e
 out=$(node "$here/dist/cli.js" check --root "$work" 2>/dev/null)
 code=$?

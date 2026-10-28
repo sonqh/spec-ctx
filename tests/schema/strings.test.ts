@@ -1,6 +1,6 @@
 // Covers: REQ-SCH-003
 import { describe, expect, test } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { REPO } from "../helpers.ts";
 
@@ -18,6 +18,19 @@ function items(text: string): string[] {
   return out;
 }
 
+describe("SCN-SCH-003-7 the apply guidance of the fragment", () => {
+  const frag = readFileSync(join(REPO, FILES[0]!), "utf8");
+  test("names task done, forbids the checkbox edit and /opsx:apply, and drops mark complete", () => {
+    expect(frag).toContain("- 'Close each task only with `specctx task done <id>`. Never edit a checkbox. Never run `/opsx:apply`; run the `specctx-run` skill.'");
+    expect(frag).not.toContain("mark complete");
+    expect(frag).toContain("openspec/templates/spec-driven-ids/");
+  });
+  test("the bundle has no schema.yaml and keeps the four templates", () => {
+    expect(existsSync(join(REPO, "schemas/spec-driven-ids/schema.yaml"))).toBe(false);
+    for (const n of ["proposal.md", "design.md", "spec.md", "tasks.md"]) expect(existsSync(join(REPO, "schemas/spec-driven-ids/templates", n)), n).toBe(true);
+  });
+});
+
 describe("SCN-SCH-003-2 Items are strings", () => {
   for (const f of FILES) {
     test(`${f}: every list item is a quoted scalar`, () => {
@@ -27,9 +40,10 @@ describe("SCN-SCH-003-2 Items are strings", () => {
     });
   }
 
-  test("project config names the bundle and the built CLI", () => {
+  test("project config names the stock schema and the built CLI (025/D8)", () => {
     const t = readFileSync(join(REPO, "openspec/config.yaml"), "utf8");
-    expect(t).toMatch(/^schema: spec-driven-ids$/m);
+    expect(t).toMatch(/^schema: spec-driven$/m);
+    expect(t).toContain("Never edit a checkbox.");
     expect(t).not.toContain("`ctx check");
   });
 });

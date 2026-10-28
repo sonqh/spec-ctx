@@ -432,8 +432,8 @@ Usage:
   `specctx init [flags]`
 
 Flags:
-  `--schema`                   Also install the spec-driven-ids schema and add its rules to openspec/config.yaml.
-  `--skills`                   Also install the three skills in .claude/skills and .agents/skills.
+  `--schema`                   Also install the ID templates and add the spec-ctx rules to openspec/config.yaml.
+  `--skills`                   Also install the specctx-run skill and its aliases in .claude/skills and .agents/skills.
   `--all`                      Do all three.
   `--force`                    Replace the files that have other content. spec-ctx.toml stays.
   `--root <path>`              Use this project root.

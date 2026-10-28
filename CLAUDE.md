@@ -4,13 +4,12 @@ spec-ctx is a deterministic context engine and task workflow for OpenSpec projec
 
 ## First thing in every session
 
-Run the `bootstrap-context` skill. It gives you only the specs for your task. The engine is the TypeScript CLI. Run `bun run build` once if `dist/` is missing.
+Run the `specctx-run` skill. It runs `specctx next --json` and acts on the action it gets, until the change reaches the archive or a human must decide. The repo-local `bootstrap-context` skill still loads the specs for one task when you need them by hand. The engine is the TypeScript CLI. Run `bun run build` once if `dist/` is missing. In this repository `specctx` is `node dist/cli.js`.
 
-The loop for every task:
+The loop that the skill runs for every task:
 
 ```bash
-node dist/cli.js status
-node dist/cli.js task next
+node dist/cli.js next --json           # the next action, its task, and its command
 node dist/cli.js task start <task>     # prints the bundle and sets the current task
 # work
 node dist/cli.js task done <task>      # runs Verify, writes evidence, sets the checkbox
@@ -21,7 +20,7 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 
 ## Workflow
 
-- One OpenSpec change at a time, in order: 001, 002, 003. Use `/opsx:apply <change>` and `/opsx:archive <change>`.
+- One OpenSpec change at a time, in order: 001, 002, 003. Plan with the upstream `openspec-propose` skill and archive with `openspec-archive-change`. Never run `/opsx:apply`. The `specctx-run` skill replaces it.
 - Tag code with its REQ: `// REQ-IDX-001`. Tag tests: `// Covers: REQ-IDX-001`.
 - A task closes when `task done` ran its `Verify:` command with exit 0 and wrote the evidence under `.ctx/evidence/`.
 - Before archive: `check --strict` and `npx -y @fission-ai/openspec@latest validate --all --strict` must both exit 0. Run validate again after archive, before push.
