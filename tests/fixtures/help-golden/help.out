@@ -4,6 +4,7 @@ Usage: specctx <command> [flags]
 
 Read:
   `status`                     Show the active changes, the current task, and the open questions.
+  `next`                       Name the next action of the loop from the files on disk. Write nothing.
   `query [term...]`            Find the entries that contain all terms. With --change and no term, list every entry of that change.
   `related <ID>`               Show the entries that link to an ID.
   `bundle <ID...>`             Print the spec text for the IDs and their links.
@@ -35,6 +36,7 @@ Setup:
   `help <command>`             Show the help page of one command.
 
 Command flags:
+  `next --change <name>`       Decide for this change. The key or the full folder name works.
   `query --kind <kind>`        Show only entries of this kind. Any case works.
   `query --change <name>`      Show only entries of this change. The key or the full folder name works.
   `query --limit <n>`          Show n lines at most. The default is 20. Use 0 for no limit.

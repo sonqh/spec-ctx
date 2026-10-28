@@ -10,6 +10,7 @@ export const GLOBAL_FLAGS: FlagSpec = { root: "string", json: "bool", help: "boo
 export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   build: {},
   status: {},
+  next: { change: "string" },
   query: { kind: "string", change: "string", all: "bool", limit: "int" },
   related: { depth: "int", all: "bool" },
   bundle: { budget: "int", depth: "int", all: "bool" },

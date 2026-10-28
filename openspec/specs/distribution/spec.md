@@ -19,7 +19,7 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `scan`, `ids`, `bundle`, `verify`, `gate.markdown` (default `[]`), `gate.openspec`. Absent keys default. `init` SHALL write a commented default, `test/**` or `lib/**` if only that dir exists, the detected OpenSpec version, and its four `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It keeps `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
+`spec-ctx.toml` SHALL hold `scan`, `ids`, `bundle`, `verify`, `gate.markdown`, `gate.openspec`, `loop` (REQ-LOOP-003). Absent keys default. `init` SHALL write a commented default, `test/**` or `lib/**` if only that dir exists, the detected OpenSpec version, and its four `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It keeps `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
 
 Refs: ADR-001, ADR-006, REQ-SCH-003, REQ-SKL-002
 
@@ -62,6 +62,10 @@ Refs: ADR-001, ADR-006, REQ-SCH-003, REQ-SKL-002
 #### Scenario: SCN-DIST-002-10 Pinned OpenSpec version
 - **WHEN** `init` writes `spec-ctx.toml` and `npx -y @fission-ai/openspec@latest --version` prints `1.15.0`
 - **THEN** the file has `openspec = "npx -y @fission-ai/openspec@1.15.0"`, a failed or timed out command writes `@latest` and prints `note: could not read the OpenSpec version. [gate] openspec uses @latest.`, and the env var `SPECCTX_OPENSPEC` at init time is written as it is
+
+#### Scenario: SCN-DIST-002-11 Loop keys
+- **WHEN** `spec-ctx.toml` has no `[loop]` section, or `init` writes the file
+- **THEN** `loadConfig` gives `max_attempts: 3` and `archive: "ask"`. The written file has both keys under `[loop]` with a comment above each, and 16 keys in all
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.

@@ -1,4 +1,4 @@
-// REQ-IDS-001 REQ-TASK-001 REQ-TASK-002 REQ-TASK-003 REQ-TASK-005 REQ-VER-002 REQ-HND-001 write commands.
+// REQ-IDS-001 REQ-TASK-001 REQ-TASK-002 REQ-TASK-003 REQ-TASK-005 REQ-VER-002 REQ-HND-001 REQ-LOOP-002 write commands.
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "../config.ts";
@@ -155,12 +155,22 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       }
       if (r.timedOut || r.exit !== 0) {
         const msg = r.timedOut ? `verify timed out after ${c.cfg.verify.timeout_s}s` : `verify failed with exit ${r.exit}`;
-        if (c.json) print(c, { command: t.verify.command, error: msg, exit: r.exit, tail: outTail, task: t.id });
+        // REQ-LOOP-002 the fail file is the retry record. At the cap, one question stops the loop (024/D4, 024/D5).
+        const { writeFail, openQuestionFor, capQuestion, blockedLine } = await import("../loop/fails.ts");
+        const { addQuestion } = await import("../handoff/questions.ts");
+        const fail = writeFail(c.root, t.id, { command: t.verify.command, exit: r.timedOut ? null : r.exit }, outTail);
+        let question: number | null = openQuestionFor(c.root, t.id)?.n ?? null;
+        if (question === null && fail.file.attempt >= c.cfg.loop.max_attempts) {
+          question = addQuestion(c.root, t.id, capQuestion(t.id, fail.file.attempt, outTail)).n;
+        }
+        if (c.json) print(c, { attempt: fail.file.attempt, command: t.verify.command, error: msg, exit: r.exit, fail: fail.rel, question, tail: outTail, task: t.id });
         else c.io.out(outTail ? outTail + "\n" : "");
         // REQ-VER-003 a timeout keeps its own line on stderr
         if (r.timedOut) c.io.err(`specctx: ${msg}. Task ${t.id} stays open.\n`);
         // REQ-TASK-003 the refusal is the last line of the output. REQ-CLI-008 it is red on a TTY.
         else if (!c.json) c.io.out(paint("fail", `Verify failed (exit ${r.exit}). The task stays open.\n`, c.io.tty));
+        // REQ-LOOP-002 the blocked line comes after the failure text, so the last line names the way out
+        if (!c.json && question !== null) c.io.out(blockedLine(question) + "\n");
         return 1;
       }
       const { sha256 } = await import("../util/hash.ts");

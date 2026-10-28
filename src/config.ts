@@ -16,6 +16,8 @@ export interface Config {
   bundle: { budget: number; depth: number };
   verify: { timeout_s: number };
   gate: { markdown: string[]; openspec: string; base: string };
+  /** REQ-LOOP-003 the Verify failure cap and the archive stop (024/D6, ADR-006 item 4). */
+  loop: { max_attempts: number; archive: "ask" | "auto" };
 }
 
 /** REQ-DIST-002 the command that gate runs for openspec validate (018/D1). */
@@ -38,6 +40,7 @@ export function defaults(): Config {
     verify: { timeout_s: 600 },
     // REQ-DIST-002 the gate lints nothing unless the project opts in (022/D1, ADR-006 item 9)
     gate: { markdown: [], openspec: DEFAULT_OPENSPEC, base: "origin/main" },
+    loop: { max_attempts: 3, archive: "ask" },
   };
 }
 
@@ -110,6 +113,18 @@ export function loadConfig(root: string): Config {
     if (typeof gate.base !== "string" || !gate.base.trim()) throw new ConfigError(`${CONFIG_FILE}: gate.base must be a string that is not empty.`);
     cfg.gate.base = gate.base;
   }
+  // REQ-LOOP-003 the loop keys (024/D6)
+  const loop = sec("loop");
+  if ("max_attempts" in loop) {
+    const v = loop.max_attempts;
+    if (typeof v !== "number" || !Number.isInteger(v) || v < 1) throw new ConfigError(`${CONFIG_FILE}: loop.max_attempts must be an integer of 1 or more.`);
+    cfg.loop.max_attempts = v;
+  }
+  if ("archive" in loop) {
+    const v = loop.archive;
+    if (v !== "ask" && v !== "auto") throw new ConfigError(`${CONFIG_FILE}: loop.archive must be "ask" or "auto".`);
+    cfg.loop.archive = v;
+  }
   return cfg;
 }
 
@@ -156,4 +171,10 @@ markdown = []
 openspec = "npx -y @fission-ai/openspec@latest"
 # The ref whose merge base with HEAD holds the baseline that gate compares with. New entries fail the gate.
 base = "origin/main"
+
+[loop]
+# Verify failures on one task before task done writes a question and the loop stops.
+max_attempts = 3
+# "ask" stops before archive for a human. "auto" lets the loop archive when the gate passes.
+archive = "ask"
 `;

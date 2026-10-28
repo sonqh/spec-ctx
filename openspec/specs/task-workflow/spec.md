@@ -46,9 +46,9 @@ Refs: REQ-QRY-003, REQ-STAT-002
 - **THEN** `.ctx/current.json` holds `"verify": "true"` beside `bundle_chars`, `started_at`, and `task`, and a task with no Verify code span gets `"verify": null`
 
 ### Requirement: REQ-TASK-003 Done
-`specctx task done <id>` SHALL run the Verify command of the task. Exit 0 writes `.ctx/evidence/<change>/<task>.json` and sets `[x]` on that line only. A non zero exit writes nothing, prints the last 20 lines of output, then `Verify failed (exit <n>). The task stays open.`, and exits 1. `--manual` SHALL be required without a Verify command and refused with one. A `[x]` task with no evidence gets the same run. A Verify command that differs from `current.json` exits 2.
+`specctx task done <id>` SHALL run the Verify command. Exit 0 writes `.ctx/evidence/<change>/<task>.json` and sets `[x]` on that line. A non zero exit writes a fail file (REQ-LOOP-002), prints the output tail, then `Verify failed (exit <n>). The task stays open.`, and exits 1. `--manual` SHALL be required without a Verify command and refused with one. A `[x]` task with no evidence gets the same run. A Verify command that differs from `current.json` exits 2.
 
-Refs: ADR-004, REQ-VER-001
+Refs: ADR-004, ADR-006, REQ-VER-001
 
 #### Scenario: SCN-TASK-003-1 Passing verify
 - **WHEN** the Verify command exits 0
@@ -77,6 +77,14 @@ Refs: ADR-004, REQ-VER-001
 #### Scenario: SCN-TASK-003-7 Verify changed since start
 - **WHEN** `task start 002/2.1` ran, the Verify code span on the task line changed, and `task done 002/2.1` runs
 - **THEN** it exits 2 with `task 002/2.1: the Verify command changed since task start. Run specctx task start 002/2.1 again.`, runs nothing, and the same edit with `current.json` naming another task runs the command
+
+#### Scenario: SCN-TASK-003-8 Fail file on a failed run
+- **WHEN** the Verify command of `002/2.2` exits 1 twice after `task start 002/2.2`
+- **THEN** `.ctx/evidence/002/2.2.fail-1.json` and `2.2.fail-2.json` exist with `attempt` 1 and 2, the box stays `[ ]`, `check --strict` reports no finding on either file, and `--json` prints `attempt`, `fail`, and `question: null`
+
+#### Scenario: SCN-TASK-003-9 Question at the cap
+- **WHEN** the failure count reaches `[loop] max_attempts`
+- **THEN** `.ctx/questions.json` has an open question with the task ID, the output ends with `blocked: question <k> written. Run specctx handoff resolve <k> "<answer>" to continue.`, `--json` prints `question: <k>`, and the exit code is 1
 
 ### Requirement: REQ-TASK-004 Evidence shape
 Each evidence file SHALL be JSON with sorted keys: `task`, `reqs`, `kind`, `verify`, `files`, `at` (ISO 8601 UTC), `tool_version`. `verify` SHALL hold `command`, `exit`, `stdout_sha256`, and `stderr_tail` of at most 20 lines. `files` SHALL map each code and test file tagged with a cited REQ to its sha256. Two runs with the same inputs SHALL differ only in `at`.

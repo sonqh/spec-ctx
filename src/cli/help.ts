@@ -46,6 +46,11 @@ export const TABLE: CommandHelp[] = [
   // Read
   { name: "status", group: "Read", args: "", summary: "Show the active changes, the current task, and the open questions.", flags: [], exit: PLAIN, example: "specctx status" },
   {
+    name: "next", group: "Read", args: "", summary: "Name the next action of the loop from the files on disk. Write nothing.",
+    flags: [["--change <name>", "Decide for this change. The key or the full folder name works."]],
+    exit: PLAIN, example: "specctx next --json",
+  },
+  {
     name: "query", group: "Read", args: "[term...]", summary: "Find the entries that contain all terms. With --change and no term, list every entry of that change.",
     flags: [
       ["--kind <kind>", "Show only entries of this kind. Any case works."],

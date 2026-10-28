@@ -17,6 +17,26 @@ Exit codes:
 Example:
   `specctx status`
 
+== next
+specctx next: Name the next action of the loop from the files on disk. Write nothing.
+
+Usage:
+  `specctx next [flags]`
+
+Flags:
+  `--change <name>`            Decide for this change. The key or the full folder name works.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx next --json`
+
 == query
 specctx query: Find the entries that contain all terms. With --change and no term, list every entry of that change.
 

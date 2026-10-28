@@ -5,6 +5,7 @@ import { readBaseline } from "../baseline/baseline.ts";
 import type { Finding } from "../check/check.ts";
 import { changeKey, matchesChange } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
+import { isFailFile } from "../tasks/evidence.ts";
 import { cmpStr, cpLen } from "../util/pystr.ts";
 
 export const DEBT_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence"];
@@ -63,7 +64,8 @@ function readEvidence(root: string): { live: Ev[]; reopened: Ev[] } {
       continue;
     }
     for (const n of names) {
-      if (!n.endsWith(".json")) continue;
+      // REQ-LOOP-002 a fail file is the retry record, not evidence (024/D4)
+      if (!n.endsWith(".json") || isFailFile(n)) continue;
       try {
         const ev = JSON.parse(readFileSync(join(dir, c, n), "utf8")) as Ev;
         if (typeof ev.task !== "string") continue;

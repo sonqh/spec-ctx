@@ -206,5 +206,14 @@
     "text": "BLOCKER 012/2.2: gate spec-length fails, REQ-GOV-008 in the 012 delta has 553 chars (limit 500). Proposed text, gate passes in a trial (reverted): 'recorded in order' becomes 'in order', the done sentence becomes 'A failing `task done`, the edit, and a passing `task done`.', 'with the head of the handoff' becomes 'and the handoff head', 'All SVGs under 400 kB together' becomes 'The SVGs under 400 kB in all'. SCN-GOV-008-1 still names The task stays open.",
     "status": "resolved",
     "answer": "approved the shorter text"
+  },
+  {
+    "n": 27,
+    "asked_at": "2026-10-28T16:17:00.456Z",
+    "task": "024/3.1",
+    "text": "task 024/3.1 failed Verify 3 times. Last: $ bash scripts/ci-local.sh. What should change?",
+    "status": "resolved",
+    "answer": "Two lint rises: the lead handoff file sat in docs/ (moved out, it is not part of the repo) and one 26 word sentence in the 024 loop delta (split).",
+    "resolved_at": "2026-10-28T16:17:38.667Z"
   }
 ]

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-28T13:54:15.442Z",
+  "attempt": 1,
+  "stderr_tail": "$ bash scripts/ci-local.sh\nci-local: bun install --frozen-lockfile\nci-local: bun run typecheck\nci-local: bun run build\nci-local: node dist/cli.js gate --strict --markdown \"*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md\"\ncheck: fail\n.ctx/evidence/024/1.1.json:1  stale-evidence  024/1.1 src/cli/commands.ts\n\n1 finding in 1 file (1 hard, 0 advisory)\nstale-evidence  1  Run specctx task reopen and then specctx task done.\nci-local: fail: node dist/cli.js gate --strict --markdown \"*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md\"\nerror: script \"ci:local\" exited with code 1",
+  "task": "024/3.1",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 1
+  }
+}

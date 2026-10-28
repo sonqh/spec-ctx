@@ -1,4 +1,4 @@
-// Covers: REQ-DIST-002
+// Covers: REQ-DIST-002, REQ-LOOP-003
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync } from "node:fs";
 import { defaults, loadConfig } from "../src/config.ts";
@@ -104,7 +104,7 @@ describe("config", () => {
         expect(lines[i - 1]!.startsWith("#"), l).toBe(true);
       }
     });
-    expect(keys).toBe(14);
+    expect(keys).toBe(16);
     // the written file parses to the defaults
     expect(loadConfig(p.root)).toEqual(defaults());
   });
@@ -115,5 +115,51 @@ describe("config", () => {
     const r = await p.run("init");
     expect(r.code).toBe(0);
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+  });
+
+  test("SCN-LOOP-003-1 the loop section defaults to 3 attempts and ask", () => {
+    p = new Project();
+    expect(loadConfig(p.root).loop).toEqual({ max_attempts: 3, archive: "ask" });
+    p.write("spec-ctx.toml", "[loop]\nmax_attempts = 5\narchive = \"auto\"\n");
+    expect(loadConfig(p.root).loop).toEqual({ max_attempts: 5, archive: "auto" });
+  });
+
+  test("SCN-LOOP-003-2 a bad max_attempts exits 2 with the key name", async () => {
+    p = new Project();
+    for (const v of ["0", "2.5", "\"3\"", "-1"]) {
+      p.write("spec-ctx.toml", `[loop]\nmax_attempts = ${v}\n`);
+      const r = await p.run("status");
+      expect(r.code, v).toBe(2);
+      expect(r.err, v).toContain("loop.max_attempts must be an integer of 1 or more");
+    }
+  });
+
+  test("SCN-LOOP-003-3 a bad archive exits 2 with the key name", async () => {
+    p = new Project();
+    for (const v of ["\"yes\"", "1", "true"]) {
+      p.write("spec-ctx.toml", `[loop]\narchive = ${v}\n`);
+      const r = await p.run("status");
+      expect(r.code, v).toBe(2);
+      expect(r.err, v).toContain("loop.archive must be \"ask\" or \"auto\"");
+    }
+  });
+
+  test("SCN-LOOP-003-4 SCN-DIST-002-11 init writes the loop section with a comment above each key", async () => {
+    p = new Project(null);
+    process.env.SPECCTX_OPENSPEC = "npx -y @fission-ai/openspec@latest";
+    const r = await p.run("init");
+    delete process.env.SPECCTX_OPENSPEC;
+    expect(r.code).toBe(0);
+    const text = p.read("spec-ctx.toml");
+    const lines = text.split("\n");
+    const section = lines.indexOf("[loop]");
+    expect(section).toBeGreaterThan(0);
+    for (const key of ["max_attempts = 3", "archive = \"ask\""]) {
+      const i = lines.indexOf(key);
+      expect(i, key).toBeGreaterThan(section);
+      expect(lines[i - 1]!.startsWith("#"), key).toBe(true);
+    }
+    expect(loadConfig(p.root).loop).toEqual({ max_attempts: 3, archive: "ask" });
+    expect(loadConfig(p.root)).toEqual(defaults());
   });
 });

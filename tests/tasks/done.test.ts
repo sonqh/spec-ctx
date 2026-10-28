@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-003, REQ-STAT-002
+// Covers: REQ-TASK-003, REQ-STAT-002, REQ-LOOP-002
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { Project } from "../helpers.ts";
@@ -164,6 +164,39 @@ describe("task done", () => {
     } finally {
       delete process.env.SPECCTX_NOW;
     }
+  });
+
+  test("SCN-TASK-003-8 two failed runs write two fail files, keep the box, and give check nothing", async () => {
+    p = setup();
+    await p.run("task", "start", "002/2.2");
+    expect((await p.run("task", "done", "002/2.2")).code).toBe(1);
+    const j = await p.run("task", "done", "002/2.2", "--json");
+    expect(j.code).toBe(1);
+    expect(JSON.parse(j.out)).toMatchObject({ attempt: 2, fail: ".ctx/evidence/002/2.2.fail-2.json", question: null });
+    expect(JSON.parse(p.read(".ctx/evidence/002/2.2.fail-1.json")).attempt).toBe(1);
+    expect(JSON.parse(p.read(".ctx/evidence/002/2.2.fail-2.json")).attempt).toBe(2);
+    expect(p.read(TASKS)).toContain("- [ ] 2.2 Fail.");
+    expect(existsSync(p.path(".ctx/evidence/002/2.2.json"))).toBe(false);
+    const c = await p.run("check", "--strict");
+    expect(c.out).not.toContain("fail-");
+    expect(c.out).not.toContain("evidence-without-done");
+  });
+
+  test("SCN-TASK-003-9 the cap writes a question and the blocked line, exit 1", async () => {
+    p = setup();
+    p.write("spec-ctx.toml", "[loop]\nmax_attempts = 2\n");
+    await p.run("task", "start", "002/2.2");
+    await p.run("task", "done", "002/2.2");
+    const r = await p.run("task", "done", "002/2.2");
+    expect(r.code).toBe(1);
+    expect(r.out.trimEnd().split("\n").slice(-2)).toEqual([
+      "Verify failed (exit 1). The task stays open.",
+      'blocked: question 1 written. Run specctx handoff resolve 1 "<answer>" to continue.',
+    ]);
+    const qs = JSON.parse(p.read(".ctx/questions.json"));
+    expect(qs[0]).toMatchObject({ n: 1, task: "002/2.2", status: "open", text: "task 002/2.2 failed Verify 2 times. Last: bad. What should change?" });
+    const j = await p.run("task", "done", "002/2.2", "--json");
+    expect(JSON.parse(j.out).question).toBe(1);
   });
 
   test("done clears current.json when it names the task", async () => {

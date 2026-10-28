@@ -196,6 +196,7 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | --- | --- |
 | `build` | Write `.ctx/index.json`. Every other command rebuilds a stale index first. |
 | `status` | Active changes with task counts, the current task, and open questions. |
+| `next` | The next action of the loop from the files on disk: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`. `--json` prints one object. Flag: `--change`. |
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
 | `related <ID>` | Linked entries with the reason for each link. Flags: `--depth`, `--all`. |
 | `bundle <ID...>` | Spec text of the IDs, their scenarios, decisions, and neighbors. Flags: `--budget`, `--depth`, `--all`. |
@@ -243,13 +244,17 @@ timeout_s = 600
 markdown = []                           # globs that gate lints. Empty means no lint. This repo opts in.
 openspec = "npx -y @fission-ai/openspec@1.15.0"  # the command that runs OpenSpec. init pins the version it found.
 base = "origin/main"  # the ref whose merge base holds the baseline that gate compares with
+
+[loop]
+max_attempts = 3                        # Verify failures on one task before task done writes a question
+archive = "ask"                         # "ask" stops before archive for a human. "auto" lets the loop archive.
 ```
 
 Two environment variables change the engine:
 
 | Variable | Effect |
 | --- | --- |
-| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. It overrides `[gate] openspec` for one run. At `init` time it is written into the file as it is, and no version detection runs. Tests and offline machines set it. |
+| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate` and `next` runs for `openspec status`. It overrides `[gate] openspec` for one run. At `init` time it is written into the file as it is, and no version detection runs. Tests and offline machines set it. |
 | `SPECCTX_BASELINE_SUBJECT` | The commit subject that the `baseline` step of `gate` tests for `baseline:`. It replaces the subject of `HEAD`. Tests set it. |
 
 ## Markdown linters
@@ -279,7 +284,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 023. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 024. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -289,7 +294,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0386 (n=67) | 0.89 (131/147) | 36 (of 78 reopens) | 91 (n=67) | 0 (0 baselined + 0 new) |
+| total | 0.0351 (n=70) | 0.89 (135/151) | 36 (of 79 reopens) | 94 (n=70) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

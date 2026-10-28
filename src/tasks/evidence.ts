@@ -88,7 +88,12 @@ export function retireEvidence(root: string, t: Task, reason?: string): string |
   return target;
 }
 
-/** Every live evidence file, as a path relative to the root. Reopened copies are history and stay out. */
+/** REQ-LOOP-002 the file name pattern of a fail file. Every evidence reader skips it (024/D4). */
+export const FAIL_RE = /\.fail-\d+\.json$/;
+
+export const isFailFile = (name: string): boolean => FAIL_RE.test(name);
+
+/** Every live evidence file, as a path relative to the root. Reopened copies and fail files are history and stay out. */
 export function listEvidence(root: string): string[] {
   const dir = join(root, ".ctx/evidence");
   if (!existsSync(dir)) return [];
@@ -101,7 +106,7 @@ export function listEvidence(root: string): string[] {
       continue;
     }
     for (const n of names.sort()) {
-      if (n.endsWith(".json") && !n.includes(".reopened-")) out.push(`.ctx/evidence/${c}/${n}`);
+      if (n.endsWith(".json") && !n.includes(".reopened-") && !isFailFile(n)) out.push(`.ctx/evidence/${c}/${n}`);
     }
   }
   return out;

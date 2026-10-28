@@ -35,6 +35,24 @@ describe("help", () => {
     }
   });
 
+  test("SCN-CLI-001-8 next appears under Read with its flag, has its own page, and is in the command list", async () => {
+    const p = new Project(null);
+    try {
+      const help = (await p.run("--help")).out;
+      expect(section(help, "Read").some((l) => l.startsWith("  `next`"))).toBe(true);
+      expect(section(help, "Command flags").some((l) => l.startsWith("  `next --change <name>`"))).toBe(true);
+      const page = await p.run("next", "--help");
+      expect(page.code).toBe(0);
+      expect(page.out).toContain("`specctx next [flags]`");
+      expect(page.out.split("\n").some((l) => l.includes("status"))).toBe(false);
+      const r = await p.run("frobnicate");
+      const list = r.err.split("\n").find((l) => l.startsWith("commands: "))!.slice("commands: ".length).split(", ");
+      expect(list).toContain("next");
+    } finally {
+      p.cleanup();
+    }
+  });
+
   test("a bare baseline needs a subcommand", async () => {
     const p = new Project();
     try {

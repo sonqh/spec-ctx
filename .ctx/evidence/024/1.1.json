@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-28T16:16:46.720Z",
+  "files": {
+    "src/cli/commands.ts": "6df2d933b5a744d62edea9de9e3a149463e3523b643f4c73710dd398df0437dd",
+    "src/cli/gate.ts": "2a051b690499781d9543ecf83c9e0cfe40af5ba2ec0bf5f271e645a228334914",
+    "src/config.ts": "04c2c5ef7b22cfb1dc80ed33240bbbd59cf736c94bd518b55576dfe48f32d962",
+    "src/init/init.ts": "bde5cf94f75c76a7b77996cdcdc644a3b0b4a8a3dcb767f34dcb4150795a6d9a",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6",
+    "tests/config.test.ts": "9aa0d72d32adc3e94ea80d91462569c29ac444f63e3af7967e65d79ea7100813",
+    "tests/init/init.test.ts": "0b9cfcc4384e3eb43f0b582d1fb41a4ef25e61e2598c8f4d29d20ca03c8b4b48",
+    "tests/loop/next.test.ts": "b760ed13a1d854ba334cdb5a3486b9027703029f89cabe222a90326aeab689c6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-003",
+    "REQ-DIST-002"
+  ],
+  "task": "024/1.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 12 pass\n 0 fail\n 73 expect() calls\nRan 12 tests across 1 file. [197.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

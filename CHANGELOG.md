@@ -4,6 +4,12 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+### Added
+
+- `specctx next [--json] [--change <c>]`. One read command names the next action of the loop from the files on disk. The `action` is one of `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, `stop`. The object has nine sorted keys: `action`, `attempt`, `change`, `command`, `human`, `max_attempts`, `reason`, `state`, `task`. The human form prints `action:` first and ends with `next: <command>`. Planning state comes from `<openspec> status --change <c> --json`, with the command from `[gate] openspec` or `SPECCTX_OPENSPEC`. ADR-006 item 2.
+- `task done` on a failed Verify writes `.ctx/evidence/<c>/<t>.fail-<n>.json` with `at`, `attempt`, `stderr_tail`, `task`, `verify`. The attempt counts the fail files since `task start`, and a resolved question for the task resets it. At `[loop] max_attempts` it appends a question to `.ctx/questions.json` and prints `blocked: question <k> written. Run specctx handoff resolve <k> "<answer>" to continue.` `check`, `stats`, and `handoff` skip fail files. ADR-006 item 4.
+- `spec-ctx.toml` gets `[loop] max_attempts` (an integer of 1 or more, default 3) and `[loop] archive` (`"ask"` or `"auto"`, default `"ask"`). `init` writes both with comments.
+
 ### Changed
 
 - `spec-ctx.toml` gets `[gate] openspec`, the command that `gate` runs for `openspec validate`. The default is `npx -y @fission-ai/openspec@latest`. Set it to `openspec` for a global install or a fork of OpenSpec. The env var `SPECCTX_OPENSPEC` still overrides it for one run. `init` writes the key with a comment.

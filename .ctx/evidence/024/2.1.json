@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-28T13:51:17.579Z",
+  "bundle_chars": 8350,
+  "files": {
+    "src/cli.ts": "0895f1edc853ae9462716e1256bc09ebcbc583c0376c00c1565c27c24bc80839",
+    "src/cli/args.ts": "532976bfaa20e765ef27582a30e0b50e8da4b462f17664aee7714efce2831106",
+    "src/cli/commands.ts": "6df2d933b5a744d62edea9de9e3a149463e3523b643f4c73710dd398df0437dd",
+    "src/cli/help.ts": "41c5554b5329622c85d9bd2430a209f2321eeaca0f007af449edf5a0347cf0d5",
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "83ce44e0297ba9b6821f38e6f58e9c27db61d6266ab62b95b195dfae1c706e7b",
+    "src/loop/next.ts": "cd28540176070c6e0589907eef399e573ddde028bd4e5070b15464140dfa44a1",
+    "src/loop/openspec.ts": "259881e88398779bf9a3a2e358fd057ad6c831747a496b5a895532b93dac074d",
+    "src/main.ts": "185beabfc7f50afe5f98296631a95c42f0f5e6dd1034857d12b9f864b20d7019",
+    "src/version.ts": "6cd78a25f67710f48e7b13e44ec28aac84978852cfc60cf22f0168a47a223f99",
+    "tests/cli/cli.test.ts": "4974a441cfe067ef2abc4550b6e24598cdb160f95566d7a3b608d6bc821f57e4",
+    "tests/cli/help.test.ts": "8bae9727a8b540a9ade992c63ea8f88b58b77c5f73889379d54a7a76b817b04a",
+    "tests/cli/status-archived.test.ts": "d8ddef2f245c9cf59876b710f1ed182e515c3e8c315e26a3c6f216cd520511c0",
+    "tests/loop/next.test.ts": "b760ed13a1d854ba334cdb5a3486b9027703029f89cabe222a90326aeab689c6",
+    "tests/stats/cli.test.ts": "914f55184df473f3488488066f09ba13e3b77a47787078061a9efefc0ecf92f3"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-001",
+    "REQ-CLI-001"
+  ],
+  "started_at": "2026-10-28T13:44:59.726Z",
+  "task": "024/2.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/cli && node dist/cli.js next | node dist/cli.js lint ste --baseline 0",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 89 pass\n 0 fail\n 677 expect() calls\nRan 89 tests across 11 files. [4.64s]",
+    "stdout_sha256": "03ca32b8f8905b3da83cfcf89281196576593094905a95cee84fdae4bb868152"
+  }
+}

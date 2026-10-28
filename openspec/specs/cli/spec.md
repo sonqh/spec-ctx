@@ -6,7 +6,7 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 ## Requirements
 
 ### Requirement: REQ-CLI-001 Commands and flags
-`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
+`specctx` SHALL expose `build`, `status`, `next`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
 
 #### Scenario: SCN-CLI-001-1 Version
 - **WHEN** `specctx --version` runs
@@ -35,6 +35,10 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 #### Scenario: SCN-CLI-001-7 Same day archives
 - **WHEN** 005 and 006 were archived on one day and 005 later than 006
 - **THEN** `status` prints `last archived: 005-metrics`
+
+#### Scenario: SCN-CLI-001-8 Next under Read
+- **WHEN** `specctx --help` runs
+- **THEN** `next` appears under `Read` with the flag `--change <name>`, `specctx next --help` prints that page only, and the unknown command list names `next`
 
 ### Requirement: REQ-CLI-002 Exit codes and output style
 Exit codes: 0 ok, 1 findings or drift, 2 usage or missing input, 3 internal error. Human output SHALL be one line per item, no color when stdout is not a TTY, no emoji. `--json` SHALL print one JSON document on stdout and nothing else. Help text SHALL pass `scripts/ste-lint.py --baseline 0`.

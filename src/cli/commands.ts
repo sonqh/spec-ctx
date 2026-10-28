@@ -146,7 +146,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     if (p.positional.length > 1) throw new UsageExit("related takes one ID");
   }
   if (cmd === "bundle") need(1, "at least one ID");
-  if ((cmd === "status" || cmd === "check") && p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
+  if ((cmd === "status" || cmd === "check" || cmd === "next") && p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
   const { data, rebuilt } = loadIndex(root, cfg);
   if (rebuilt) io.err("index rebuilt\n");
   const entries = data.entries;
@@ -162,6 +162,14 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       if (json) print(r);
       // REQ-CLI-008 the next: line is dim
       else io.out(statusLines(r).map((l) => (l.startsWith("next: ") ? paint("dim", l, io.tty) : l) + "\n").join(""));
+      return 0;
+    }
+    case "next": {
+      // REQ-LOOP-001 the decision is a pure function of the files. --json prints the object, else the lines with next: last (024/D1).
+      const { decideNext, renderNext } = await import("../loop/next.ts");
+      const d = decideNext(root, cfg, data, f.change as string | undefined);
+      if (json) print(d);
+      else io.out(renderNext(d).split("\n").map((l) => (l.startsWith("next: ") ? paint("dim", l, io.tty) : l)).join("\n"));
       return 0;
     }
     case "query": {

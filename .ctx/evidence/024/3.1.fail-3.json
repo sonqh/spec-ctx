@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-28T16:17:00.456Z",
+  "attempt": 3,
+  "stderr_tail": "$ bash scripts/ci-local.sh\nci-local: bun install --frozen-lockfile\nci-local: bun run typecheck\nci-local: bun run build\nci-local: node dist/cli.js gate --strict --markdown \"*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md\"\ncheck: ok (strict)\nbaseline: skipped (no .ctx/baseline.json at e88c1f9)\nlinters: fail, 16 new finding(s) in 2 file(s)\ndocs/handoff-2026-10-28-lead.md  ste:long-sentence  10 (baseline 0)\ndocs/handoff-2026-10-28-lead.md  ste:semicolon  5 (baseline 0)\nopenspec/changes/024-next/specs/loop/spec.md  ste:long-sentence  1 (baseline 0)\nci-local: fail: node dist/cli.js gate --strict --markdown \"*.md decisions/*.md openspec/**/*.md docs/**/*.md skills/**/*.md schemas/**/*.md\"\nerror: script \"ci:local\" exited with code 1",
+  "task": "024/3.1",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 1
+  }
+}

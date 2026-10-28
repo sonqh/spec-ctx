@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-28T13:44:53.287Z",
+  "bundle_chars": 8295,
+  "files": {
+    "src/cli/workflow.ts": "9264264996bfc22b761301d0e72c7c8fe35d275e626e9dd194764e3f05f897ae",
+    "src/loop/fails.ts": "4a2924f37c25a763bfe1e49ec6fca50bf2bd73e12ceffe1028c1ef072e528668",
+    "src/stats/stats.ts": "360a2e2fc930ebce6ca5ebaaa3af5c54fd875ea3dd5d3e9599ffc9b15a650f76",
+    "src/tasks/evidence.ts": "608afb6c43ba4467ea7e81f40af912108dfb19cde84d3a548927963f15bdf612",
+    "tests/loop/fails.test.ts": "12431ec222ae0363b00db1b745889a6abe44b3c00005afba6532571205fdc5c1",
+    "tests/tasks/done.test.ts": "a7396a93102e1776eed23b5b6d8672fafd070ea4c3572117877a98caa372bf26"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-002",
+    "REQ-TASK-003"
+  ],
+  "started_at": "2026-10-28T13:40:48.655Z",
+  "task": "024/1.2",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/fails.test.ts tests/tasks tests/stats tests/check tests/handoff",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 105 pass\n 0 fail\n 468 expect() calls\nRan 105 tests across 14 files. [1349.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}
