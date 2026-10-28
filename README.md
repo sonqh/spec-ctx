@@ -75,7 +75,7 @@ You see: a red refusal, the edit, then a green done line.
 
 ### 6. Hand off to the next session
 
-`handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it.
+`handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it. The questions live in `.ctx/questions.json`. `handoff ask` adds one and `handoff resolve <n>` answers it.
 
 ![The head of the handoff file](docs/demo/clips/6-handoff.svg)
 
@@ -152,11 +152,13 @@ npx -y github:sonqh/spec-ctx#<sha> init --all        # from git, for an unreleas
 
 The git form builds the package on install with Node only. Pin a commit SHA. A branch name such as `main` also works, but it moves.
 
-The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`.
+The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`. It pins the OpenSpec version it finds in `[gate] openspec`. It adds four lines to `.gitignore`: `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`. The rest of `.ctx/` is meant for git, `questions.json` included.
 
 The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its place. Each GitHub release also carries a single binary for Linux and macOS.
 
 ## Two paths
+
+[`docs/getting-started.md`](docs/getting-started.md) walks the fresh path on upstream OpenSpec with real output, for a developer who knows OpenSpec.
 
 ### Fresh project
 
@@ -166,7 +168,7 @@ npx spec-ctx init --all
 specctx gate --strict
 ```
 
-`--tools <tool>` names your agent, such as `claude`, and skips the interactive picker. `--no-animation` keeps logs clean.
+`--tools <tool>` names your agent, such as `claude`, and skips the interactive picker. `--no-animation` keeps logs clean. `init --all` merges the ID rules into an existing `rules` key of `openspec/config.yaml` item by item and prints `merged openspec/config.yaml rules (<n> added)`.
 
 ### Existing OpenSpec project
 
@@ -174,7 +176,6 @@ specctx gate --strict
 npx spec-ctx init --all
 specctx adopt --dry-run                 # the ID that each header gets. Writes nothing.
 specctx adopt                           # writes the IDs into main specs and active deltas
-specctx task backfill --manual "adopted"
 specctx baseline write
 specctx gate --strict
 ```
@@ -182,13 +183,12 @@ specctx gate --strict
 - `adopt` gives an ID to every requirement and scenario header without one, in `openspec/specs/` and in the deltas of active changes. A delta header gets the main ID by its text or through its RENAMED line. A delta header that matches neither keeps its text and goes into `adopt-report.md`.
 - `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
 - `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
-- `task backfill` writes manual evidence for every ticked task that has none.
-- `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Untested requirements and scenarios. Tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
-- `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. Narrow it when a folder is not yours to fix.
-- `gate` runs the command in `[gate] openspec` for `openspec validate`. Set it to `openspec` for a global install or a fork.
+- `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Untested requirements and scenarios. Ticked tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
+- `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. `init` writes `[]`, so the gate lints nothing until you opt in. The comment in the file names the globs this repository uses.
+- `gate` runs the command in `[gate] openspec` for `openspec validate`. `init` pins the version it found, such as `npx -y @fission-ai/openspec@1.15.0`. Set it to `openspec` for a global install.
 - Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
 
-Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/existing.sh`.
+Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` and `tests/paths/existing.sh`. `tests/paths/rules-only.sh` shows that the merged `rules` reach the stock `spec-driven` schema.
 
 ## Commands
 
@@ -202,11 +202,10 @@ Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/exis
 | `check` | ID and link integrity. `--strict` adds test coverage and evidence. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
-| `handoff write`, `ask`, `resolve` | The session handoff and its open questions. |
+| `handoff write`, `ask`, `resolve` | The session handoff and its open questions in `.ctx/questions.json`. |
 | `init` | Config file, schema bundle, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
 | `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
-| `task backfill` | Manual evidence for ticked tasks without it. |
 | `gate` | `check`, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
 | `lint tells`, `lint ste` | The two markdown linters. Flags: `--baseline`, `--disable`, `--json`, `--selftest`. |
 | `help <command>` | The page of one command. `specctx <command> --help` prints the same page. |
@@ -241,15 +240,15 @@ depth = 1
 timeout_s = 600
 
 [gate]
-markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]  # globs that gate lints
-openspec = "npx -y @fission-ai/openspec@latest"  # the command that runs OpenSpec
+markdown = []                           # globs that gate lints. Empty means no lint. This repo opts in.
+openspec = "npx -y @fission-ai/openspec@1.15.0"  # the command that runs OpenSpec. init pins the version it found.
 ```
 
 One environment variable changes the engine:
 
 | Variable | Effect |
 | --- | --- |
-| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. It overrides `[gate] openspec` for one run. Tests and offline machines set it. |
+| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. It overrides `[gate] openspec` for one run. At `init` time it is written into the file as it is, and no version detection runs. Tests and offline machines set it. |
 
 ## Markdown linters
 
@@ -278,17 +277,17 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 018. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 018, 022, and 023. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
 ## Measured
 
-`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-27.md`. Its total row:
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-28.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0430 (n=54) | 0.87 (110/126) | 36 (of 70 reopens) | 71 (n=54) | 0 (0 baselined + 0 new) |
+| total | 0.0405 (n=60) | 0.88 (121/137) | 36 (of 75 reopens) | 76 (n=60) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

@@ -1,13 +1,30 @@
 // Covers: REQ-DIST-002, REQ-SCH-003, REQ-SKL-002
 import { afterEach, describe, expect, test } from "vitest";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { chmodSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { INIT_TEXT, loadConfig } from "../../src/config.ts";
-import { mergeConfig } from "../../src/init/init.ts";
+import { mergeConfig, OPENSPEC_NOTE } from "../../src/init/init.ts";
 import { Project, REPO } from "../helpers.ts";
 
 let p: Project;
-afterEach(() => p?.cleanup());
+afterEach(() => {
+  p?.cleanup();
+  delete process.env.SPECCTX_OPENSPEC;
+});
+
+const CLI = join(REPO, "dist/cli.js");
+
+/** Run `init` in a child process with a fake `npx` first on PATH, so the detection never reaches the network. */
+function initWithFakeNpx(pr: Project, script: string): { status: number | null; stdout: string } {
+  pr.write("bin/npx", script);
+  chmodSync(pr.path("bin/npx"), 0o755);
+  const r = spawnSync(process.execPath, [CLI, "init", "--root", pr.root], {
+    encoding: "utf8",
+    env: { PATH: pr.path("bin"), HOME: pr.root },
+  });
+  return { status: r.status, stdout: r.stdout };
+}
 
 /** The tree that `openspec init --tools none` writes, as of OpenSpec 1.14.3. */
 function freshOpenspec(): Project {
@@ -63,19 +80,74 @@ describe("init", () => {
     expect(cfg).toContain("\noperations:\n  apply:\n");
   });
 
-  test("merge keeps rules that exist and adds nothing twice", () => {
+  test("merge adds the lists of an existing key and adds nothing twice (022/D4)", () => {
     const frag = readFileSync(join(REPO, "schemas/spec-driven-ids/config-fragment.yaml"), "utf8");
     const own = "schema: spec-driven-ids\nrules:\n  proposal:\n    - Mine.\n";
     const m = mergeConfig(own, frag);
-    expect(m.kept).toEqual(["rules"]);
+    expect(m.kept).toEqual([]);
+    expect(m.merged).toEqual([{ key: "rules", added: 7 }]);
     expect(m.added).toEqual(["operations"]);
     expect(m.text.startsWith(own)).toBe(true);
+    // the three lists of the fragment follow the own list, in fragment order
+    expect(m.text.indexOf("\n  specs:\n")).toBeGreaterThan(m.text.indexOf("    - Mine.\n"));
+    expect(m.text.indexOf("\n  design:\n")).toBeGreaterThan(m.text.indexOf("\n  specs:\n"));
+    expect(m.text.indexOf("\n  tasks:\n")).toBeGreaterThan(m.text.indexOf("\n  design:\n"));
+    expect(m.text.indexOf("\noperations:\n")).toBeGreaterThan(m.text.indexOf("\n  tasks:\n"));
     const again = mergeConfig(m.text, frag);
     expect(again.added).toEqual([]);
+    expect(again.merged).toEqual([]);
+    expect(again.kept).toEqual(["rules", "operations"]);
     expect(again.text).toBe(m.text);
     const none = mergeConfig(null, frag);
     expect(none.text.startsWith("schema: spec-driven-ids\n")).toBe(true);
     expect(none.added).toEqual(["schema", "rules", "operations"]);
+  });
+
+  test("SCN-SCH-003-6 init --schema merges rules items into an existing key and skips an item that exists (022/D4)", async () => {
+    p = freshOpenspec();
+    const own = [
+      "schema: spec-driven",
+      "",
+      "rules:",
+      "  specs:",
+      "    - 'Write in English.'",
+      "    - 'Every scenario header starts with its ID, e.g. \"#### Scenario: SCN-ABC-001-1 Name\".'",
+      "",
+      "operations:",
+      "  apply:",
+      "    guidance:",
+      "      - 'Run the tests.'",
+      "  archive:",
+      "    guidance:",
+      "      - 'Run `specctx check --strict` and `openspec validate --all --strict`. Both must pass before archive.'",
+      "",
+    ].join("\n");
+    p.write("openspec/config.yaml", own);
+    const r = await p.run("init", "--schema");
+    expect(r.code, r.err).toBe(0);
+    expect(r.out).toContain("merged openspec/config.yaml rules (6 added)\n");
+    expect(r.out).toContain("merged openspec/config.yaml operations (5 added)\n");
+    const cfg = p.read("openspec/config.yaml");
+    const lines = cfg.split("\n");
+    // the two own items stay first, the three other fragment items follow, the scenario rule is not added twice
+    const specs = lines.indexOf("  specs:");
+    expect(lines[specs + 1]).toBe("    - 'Write in English.'");
+    expect(lines[specs + 2]).toContain("Every scenario header starts with its ID");
+    expect(lines[specs + 3]).toContain("Every requirement header starts with its ID");
+    expect(lines[specs + 4]).toContain("Refs:");
+    expect(lines[specs + 5]).toContain("under 500 characters");
+    expect(lines.filter((l) => l.includes("Every scenario header starts with its ID"))).toHaveLength(1);
+    // the lists the own file lacked come after, and the context of operations stays
+    expect(cfg).toContain("\n  design:\n    - 'Each decision is one bullet");
+    expect(cfg).toContain("\n  tasks:\n    - 'Every task cites");
+    expect(cfg).toContain("      - 'Run the tests.'\n      - 'Start each task with `specctx task start <id>`");
+    expect(lines.filter((l) => l.includes("Both must pass before archive"))).toHaveLength(1);
+    expect(cfg).toContain("      - 'Run `openspec validate --all --strict` again after archive and before push.'\n");
+    expect(cfg.startsWith("schema: spec-driven-ids\n")).toBe(true);
+    // a second run adds nothing
+    const again = await p.run("init", "--schema");
+    expect(again.out).toContain("nothing to do\n");
+    expect(p.read("openspec/config.yaml")).toBe(cfg);
   });
 
   test("SCN-SCH-003-3 init --schema repairs an item that YAML reads as a mapping", async () => {
@@ -165,22 +237,23 @@ describe("init", () => {
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
   });
 
-  test("SCN-DIST-002-6 init writes the two .gitignore lines once", async () => {
+  test("SCN-DIST-002-6 init writes the four .gitignore lines once (022/D5)", async () => {
     p = freshOpenspec();
+    const four = "# spec-ctx\n.ctx/index.json\nadopt-report.md\n.ctx/current.json\n.ctx/gate-log.jsonl\n";
     // no .gitignore at all
     const r = await p.run("init");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("wrote .gitignore (2 lines)\n");
-    expect(p.read(".gitignore")).toBe("# spec-ctx\n.ctx/index.json\nadopt-report.md\n");
+    expect(r.out).toContain("wrote .gitignore (4 lines)\n");
+    expect(p.read(".gitignore")).toBe(four);
     const again = await p.run("init", "--skills");
     expect(again.code).toBe(0);
     expect(again.out).toContain("kept .gitignore\n");
     expect(again.out).not.toContain("wrote .gitignore");
-    expect(p.read(".gitignore")).toBe("# spec-ctx\n.ctx/index.json\nadopt-report.md\n");
-    // an existing file without a final newline, with one of the two lines present
-    p.write(".gitignore", "node_modules/\n/adopt-report.md");
+    expect(p.read(".gitignore")).toBe(four);
+    // an existing file without a final newline, with three of the four lines present
+    p.write(".gitignore", "node_modules/\n/adopt-report.md\n.ctx/current.json\n.ctx/gate-log.jsonl");
     expect((await p.run("init", "--skills", "--force")).out).toContain("wrote .gitignore (1 line)\n");
-    expect(p.read(".gitignore")).toBe("node_modules/\n/adopt-report.md\n\n# spec-ctx\n.ctx/index.json\n");
+    expect(p.read(".gitignore")).toBe("node_modules/\n/adopt-report.md\n.ctx/current.json\n.ctx/gate-log.jsonl\n\n# spec-ctx\n.ctx/index.json\n");
     const j = JSON.parse((await p.run("init", "--schema", "--json")).out);
     expect(j.kept).toContain(".gitignore");
     // nothing to do stays when every file and both lines are present
@@ -235,6 +308,40 @@ describe("init", () => {
     p = freshOpenspec();
     expect((await p.run("init", "--skills")).out).not.toContain("templates:");
     expect((await p.run("init")).out).not.toContain("templates:");
+  });
+
+  test("SCN-DIST-002-10 init pins the OpenSpec version, falls back to @latest with a note, and takes the env var (022/D2)", async () => {
+    // a fake npx that prints a version: the pin
+    p = new Project(null);
+    const ok = initWithFakeNpx(p, `#!/bin/sh\necho "$@" > "${p.path("bin/ran.txt")}"\necho 9.9.9\n`);
+    expect(ok.status, ok.stdout).toBe(0);
+    expect(p.read("bin/ran.txt")).toBe("-y @fission-ai/openspec@latest --version\n");
+    expect(p.read("spec-ctx.toml")).toContain('\nopenspec = "npx -y @fission-ai/openspec@9.9.9"\n');
+    expect(loadConfig(p.root).gate.openspec).toBe("npx -y @fission-ai/openspec@9.9.9");
+    expect(ok.stdout).not.toContain("note:");
+    // a fake npx that fails: @latest and the note
+    p.cleanup();
+    p = new Project(null);
+    const bad = initWithFakeNpx(p, "#!/bin/sh\nexit 1\n");
+    expect(bad.status).toBe(0);
+    expect(p.read("spec-ctx.toml")).toContain('\nopenspec = "npx -y @fission-ai/openspec@latest"\n');
+    expect(bad.stdout).toContain(OPENSPEC_NOTE + "\n");
+    // the env var at init time is written as it is, and no command runs
+    p.cleanup();
+    p = new Project(null);
+    process.env.SPECCTX_OPENSPEC = "openspec";
+    const r = await p.run("init");
+    expect(r.code, r.err).toBe(0);
+    expect(p.read("spec-ctx.toml")).toContain('\nopenspec = "openspec"\n');
+    expect(r.out).not.toContain("note:");
+    // an existing spec-ctx.toml stays, so no detection runs and no note prints
+    p.cleanup();
+    p = new Project(null);
+    p.write("spec-ctx.toml", "# mine\n");
+    const kept = initWithFakeNpx(p, "#!/bin/sh\nexit 1\n");
+    expect(kept.status).toBe(0);
+    expect(kept.stdout).not.toContain("note:");
+    expect(p.read("spec-ctx.toml")).toBe("# mine\n");
   });
 
   test("SCN-DIST-002-8 init detects test/ and lib/ when tests/ and src/ are absent", async () => {

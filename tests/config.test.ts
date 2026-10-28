@@ -31,11 +31,30 @@ describe("config", () => {
     expect(c.ids).toEqual(defaults().ids);
   });
 
-  test("SCN-DIST-002-5 gate.markdown is a list with the old default", () => {
+  test("SCN-DIST-002-5 gate.markdown is a list and the default is empty (022/D1)", async () => {
     p = new Project();
-    expect(loadConfig(p.root).gate.markdown).toEqual(["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]);
+    expect(loadConfig(p.root).gate.markdown).toEqual([]);
     p.write("spec-ctx.toml", '[gate]\nmarkdown = ["docs/*.md"]\n');
     expect(loadConfig(p.root).gate.markdown).toEqual(["docs/*.md"]);
+    // a project without the key lints no file
+    p.write("spec-ctx.toml", "");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const r = await p.run("gate");
+    delete process.env.SPECCTX_OPENSPEC;
+    expect(r.code, r.out).toBe(0);
+    expect(r.out).toContain("linters: ok (0 file(s))\n");
+    // init writes the empty list with a comment that says how to turn the lint on
+    p.cleanup();
+    p = new Project(null);
+    process.env.SPECCTX_OPENSPEC = "npx -y @fission-ai/openspec@latest";
+    expect((await p.run("init")).code).toBe(0);
+    delete process.env.SPECCTX_OPENSPEC;
+    const text = p.read("spec-ctx.toml");
+    expect(text).toContain("\nmarkdown = []\n");
+    const i = text.indexOf("\nmarkdown = []\n");
+    const above = text.slice(0, i).split("\n").at(-1)!;
+    expect(above.startsWith("#")).toBe(true);
+    expect(text).toContain("spec-ctx repository");
   });
 
   test("SCN-DIST-002-9 gate.openspec is a string with the npx default (018/D1)", async () => {
@@ -72,7 +91,10 @@ describe("config", () => {
 
   test("SCN-DIST-002-2 init writes a file with a comment above every key", async () => {
     p = new Project(null);
+    // the default command, so the written file equals the defaults (022/D2)
+    process.env.SPECCTX_OPENSPEC = "npx -y @fission-ai/openspec@latest";
     const r = await p.run("init");
+    delete process.env.SPECCTX_OPENSPEC;
     expect(r.code).toBe(0);
     const lines = p.read("spec-ctx.toml").split("\n");
     let keys = 0;

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T12:34:49.015Z",
+  "bundle_chars": 8417,
+  "files": {
+    "src/cli/commands.ts": "145f358f60ee94bb3ff3fea01cc0e360f087217ecccea5cbacb44e59e443bfc2",
+    "src/cli/gate.ts": "b373b092f749f6828daa564a75dcc3305a52fb7c5aa45d540f79dbf0473f9b33",
+    "src/config.ts": "fbd1485879b513decb2827751cc2341d6236177ca9e1faf74caf02004f4f0a48",
+    "src/init/init.ts": "3afd9c0a0716e6379ed9d990479dc18797d087a66ef8f94f492b21772708c399",
+    "tests/cli/gate.test.ts": "26cdc348e69a6e9e1432e4979ee99ec8659a5e7d611acb62347eeb53628e9a3c",
+    "tests/config.test.ts": "8a71656d70f27113dc67a1928b0faff96267e61e65fa6d00f4ef342bac01961e",
+    "tests/init/init.test.ts": "d987006c0927cd7dd58ca489d17280e18eb58105de0f0defa78d6fb66efa9960"
+  },
+  "kind": "command",
+  "reason": "init.ts and its test changed in 2.2 and 3.1",
+  "reqs": [
+    "REQ-DIST-002"
+  ],
+  "started_at": "2026-10-28T12:34:03.297Z",
+  "task": "022/1.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 8 pass\n 0 fail\n 46 expect() calls\nRan 8 tests across 1 file. [86.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

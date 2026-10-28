@@ -56,8 +56,16 @@ export class Project {
   async runIn(cwd: string, ...args: string[]): Promise<Run> {
     let out = "";
     let err = "";
-    const code = await main(args, { cwd, out: (s) => (out += s), err: (s) => (err += s) });
-    return { code, out, err };
+    // init detects the OpenSpec version with npx (022/D3). Tests never hit the network, so the default
+    // command stands in when a test did not set SPECCTX_OPENSPEC itself.
+    const stub = args[0] === "init" && process.env.SPECCTX_OPENSPEC === undefined;
+    if (stub) process.env.SPECCTX_OPENSPEC = "npx -y @fission-ai/openspec@latest";
+    try {
+      const code = await main(args, { cwd, out: (s) => (out += s), err: (s) => (err += s) });
+      return { code, out, err };
+    } finally {
+      if (stub) delete process.env.SPECCTX_OPENSPEC;
+    }
   }
   async build(): Promise<any> {
     const r = await this.run("build");

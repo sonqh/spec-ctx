@@ -7,7 +7,8 @@ import type { Entry } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { activeChanges, nextTask } from "../tasks/tasks.ts";
 import { cmpStr, splitLines } from "../util/pystr.ts";
-import { isoNow, today } from "../util/time.ts";
+import { isoNow } from "../util/time.ts";
+import { addQuestion, fromHandoffItems, hasQuestions, readQuestions, renderQuestions, resolveQuestion, writeQuestions } from "./questions.ts";
 
 export const HANDOFF_PATH = ".ctx/handoff.md";
 export const CURRENT_PATH = ".ctx/current.json";
@@ -26,6 +27,10 @@ export interface Handoff {
   resolved: string[];
   next: string;
   evidence: string;
+  /** REQ-HND-002 the n of the question that `ask` added (022/D9). Not rendered. */
+  asked?: number;
+  /** REQ-HND-002 the count of questions that `write` moved into questions.json (022/D8). Not rendered. */
+  migrated?: number;
 }
 
 function empty(): Handoff {
@@ -110,9 +115,23 @@ function evidenceRows(root: string, active: string[]): EvidenceRow[] {
 
 const AT = / \(at (\S+)\)$/;
 
+/**
+ * REQ-HND-002 move the questions of an old handoff.md into questions.json once (022/D8).
+ * Returns the count, 0 when the file exists or the handoff has no question.
+ */
+function migrateQuestions(root: string, prev: Handoff | null): number {
+  if (!prev || hasQuestions(root)) return 0;
+  if (!prev.open_questions.length && !prev.resolved.length) return 0;
+  const qs = fromHandoffItems(prev.open_questions, prev.resolved);
+  writeQuestions(root, qs);
+  return qs.length;
+}
+
 /** Generate the handoff. Two runs with no change in between write the same bytes. */
 export function writeHandoff(root: string, entries: Entry[]): Handoff {
   const prev = readHandoff(root);
+  const migrated = migrateQuestions(root, prev);
+  const lists = renderQuestions(readQuestions(root));
   const active = activeChanges(entries);
   const next = nextTask(root, entries);
   const rows = evidenceRows(root, active);
@@ -131,43 +150,43 @@ export function writeHandoff(root: string, entries: Entry[]): Handoff {
       const m = AT.exec(item.split("\n")[0]!);
       return !m || after(m[1]!);
     }),
-    open_questions: prev?.open_questions ?? [],
-    resolved: prev?.resolved ?? [],
+    // REQ-HND-001 both lists come from questions.json, never from the previous file (022/D7)
+    open_questions: lists.open_questions,
+    resolved: lists.resolved,
     next: next ? `${next.id}  ${next.text}` : "no open task",
     evidence: `${rows.length} task(s), ${rows.filter((r) => r.kind === "command").length} command, ${rows.filter((r) => r.kind === "manual").length} manual`,
   };
   save(root, h);
+  if (migrated) h.migrated = migrated;
   return h;
 }
 
-function ensure(root: string, entries: Entry[]): Handoff {
-  return readHandoff(root) ?? writeHandoff(root, entries);
+/** The handoff with its two question lists rendered again from questions.json. The other sections stay. */
+function refresh(root: string, entries: Entry[]): Handoff {
+  const h = readHandoff(root) ?? writeHandoff(root, entries);
+  const lists = renderQuestions(readQuestions(root));
+  h.open_questions = lists.open_questions;
+  h.resolved = lists.resolved;
+  save(root, h);
+  return h;
 }
 
+/** REQ-HND-002 append an open question to questions.json and render the handoff again (022/D6). */
 export function ask(root: string, entries: Entry[], text: string): Handoff {
-  const q = text.replace(/\s*\n\s*/g, " ").trim();
-  if (!q) throw new UsageExit("handoff ask needs a question");
-  const h = ensure(root, entries);
-  h.open_questions.push(`${q} (task ${currentTask(root)}, ${today()})`);
-  save(root, h);
+  const q = addQuestion(root, currentTask(root), text);
+  const h = refresh(root, entries);
+  h.asked = q.n;
   return h;
 }
 
+/** REQ-HND-002 resolve question n in questions.json and render the handoff again (022/D6). */
 export function resolve(root: string, entries: Entry[], n: number, answer: string): Handoff {
-  const h = ensure(root, entries);
-  if (!Number.isInteger(n) || n < 1 || n > h.open_questions.length) {
-    throw new UsageExit(`no open question ${n}. The handoff has ${h.open_questions.length}`);
-  }
-  const a = answer.replace(/\s*\n\s*/g, " ").trim();
-  if (!a) throw new UsageExit("handoff resolve needs an answer");
-  const [item] = h.open_questions.splice(n - 1, 1);
-  h.resolved.push(`${item!.split("\n")[0]} answer: ${a}`);
-  save(root, h);
-  return h;
+  resolveQuestion(root, n, answer);
+  return refresh(root, entries);
 }
 
 export function addReopened(root: string, entries: Entry[], task: string, reason: string): void {
-  const h = ensure(root, entries);
+  const h = readHandoff(root) ?? writeHandoff(root, entries);
   h.reopened.push(`${task} ${reason.replace(/\s*\n\s*/g, " ").trim()} (at ${isoNow()})`);
   save(root, h);
 }

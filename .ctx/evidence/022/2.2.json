@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-28T12:40:33.869Z",
+  "bundle_chars": 8500,
+  "files": {
+    "src/cli/commands.ts": "1d0dd5d255ad276eed9ba6600e25c92f15a2974ad3496744240c44d862c0163f",
+    "src/cli/gate.ts": "b373b092f749f6828daa564a75dcc3305a52fb7c5aa45d540f79dbf0473f9b33",
+    "src/config.ts": "fbd1485879b513decb2827751cc2341d6236177ca9e1faf74caf02004f4f0a48",
+    "src/init/init.ts": "bde5cf94f75c76a7b77996cdcdc644a3b0b4a8a3dcb767f34dcb4150795a6d9a",
+    "tests/cli/gate.test.ts": "26cdc348e69a6e9e1432e4979ee99ec8659a5e7d611acb62347eeb53628e9a3c",
+    "tests/config.test.ts": "8a71656d70f27113dc67a1928b0faff96267e61e65fa6d00f4ef342bac01961e",
+    "tests/init/init.test.ts": "0b9cfcc4384e3eb43f0b582d1fb41a4ef25e61e2598c8f4d29d20ca03c8b4b48"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-002"
+  ],
+  "started_at": "2026-10-28T12:40:17.824Z",
+  "task": "022/2.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/init && grep -q '^.ctx/current.json$' .gitignore && grep -q '^.ctx/gate-log.jsonl$' .gitignore",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 16 pass\n 0 fail\n 159 expect() calls\nRan 16 tests across 2 files. [345.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

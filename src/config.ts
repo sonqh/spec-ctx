@@ -36,7 +36,8 @@ export function defaults(): Config {
     ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {} },
     bundle: { budget: 8000, depth: 1 },
     verify: { timeout_s: 600 },
-    gate: { markdown: ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"], openspec: DEFAULT_OPENSPEC },
+    // REQ-DIST-002 the gate lints nothing unless the project opts in (022/D1, ADR-006 item 9)
+    gate: { markdown: [], openspec: DEFAULT_OPENSPEC },
   };
 }
 
@@ -142,8 +143,9 @@ depth = 1
 timeout_s = 600
 
 [gate]
-# Markdown globs that gate lints. The baseline holds the lint debt of these files.
-markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]
+# Markdown globs that gate lints with the tells and STE linters. Empty means no lint.
+# To turn it on, set markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]. The spec-ctx repository opts in.
+markdown = []
 # The command that gate runs for openspec validate. Set it to "openspec" for a global install or a fork,
 # or pin a version. The env var SPECCTX_OPENSPEC overrides it for one run.
 openspec = "npx -y @fission-ai/openspec@latest"

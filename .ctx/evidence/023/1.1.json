@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-28T13:05:36.809Z",
+  "files": {
+    "tests/paths/existing.sh": "a35af0348ece768d454dcf460c515f5bac3405ffbd97143c877849458838961a",
+    "tests/paths/fresh.sh": "4d8c51eec8d13e521906cabc271affb4222d74d328f2bba044ff3bfc098732a3",
+    "tests/paths/rules-only.sh": "ac86d922f1f574a33a4511313e02a91767935afc5c0905e8db5f38d56c14d048"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-008"
+  ],
+  "task": "023/1.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bash tests/paths/fresh.sh && bash tests/paths/existing.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt",
+    "stdout_sha256": "ea5c70bedb31770c42c379cc41d270b31a717bd322498c93413cd7f36a1f297a"
+  }
+}
