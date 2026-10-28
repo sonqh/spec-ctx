@@ -32,12 +32,12 @@ Skip the `/opsx:propose` hint that follows. Run spec-ctx first.
 ```bash
 $ specctx init --all
 wrote spec-ctx.toml
-wrote openspec/schemas/spec-driven-ids/schema.yaml
-wrote openspec/schemas/spec-driven-ids/templates/spec.md
-wrote .claude/skills/specctx-bootstrap/SKILL.md
-wrote openspec/config.yaml (schema, rules, operations)
+wrote openspec/templates/spec-driven-ids/spec.md
+wrote openspec/templates/spec-driven-ids/tasks.md
+wrote .claude/skills/specctx-run/SKILL.md
+wrote openspec/config.yaml (rules, operations)
 wrote .gitignore (4 lines)
-templates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)
+templates: openspec/templates/spec-driven-ids/ (spec.md, tasks.md hold the ID placeholders)
 next: specctx status
 ```
 
@@ -46,16 +46,16 @@ What this did:
 - `spec-ctx.toml` holds the scan globs. It found `code = ["src/**"]` and `tests = ["test/**"]` on its own.
 - `[gate] openspec` in that file pins the OpenSpec version that `init` found, such as `npx -y @fission-ai/openspec@1.15.0`. `gate` runs that build. Edit the line to move.
 - `[gate] markdown = []`. The gate lints no markdown until you set the globs.
-- `openspec/config.yaml` now says `schema: spec-driven-ids`. Its `rules` tell the agent to take IDs from `specctx id new`. A `rules` key that existed keeps its items and gains the ones it lacked.
+- `openspec/config.yaml` keeps `schema: spec-driven`. Its new `rules` tell the agent to take IDs from `specctx id new` and name the templates path. Its `operations.apply` guidance says that a task closes only with `specctx task done`. A `rules` key that existed keeps its items and gains the ones it lacked.
 - `.gitignore` gets `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`. The rest of `.ctx/` is meant for git.
-- Three skills under `.claude/skills/` and `.agents/skills/` teach an agent the loop below.
+- The `specctx-run` skill under `.claude/skills/` and `.agents/skills/` runs the loop below. The three older skill names stay as aliases for one release.
 
 Create a change and allocate IDs.
 
 ```bash
 $ openspec new change add-greeting
 Created change 'add-greeting' at openspec/changes/add-greeting/
-Schema: spec-driven-ids
+Schema: spec-driven
 
 $ specctx id new REQ GRT
 REQ-GRT-001
@@ -65,7 +65,7 @@ SCN-GRT-001-1
 SCN-GRT-001-2
 ```
 
-`new change` writes only `.openspec.yaml` and `README.md`. Copy `proposal.md`, `design.md`, `specs/<capability>/spec.md`, and `tasks.md` from `openspec/schemas/spec-driven-ids/templates/` and fill them in. The two headers that matter:
+`new change` writes only `.openspec.yaml` and `README.md`. Copy `proposal.md`, `design.md`, `specs/<capability>/spec.md`, and `tasks.md` from `openspec/templates/spec-driven-ids/` and fill them in. The two headers that matter:
 
 ```markdown
 ### Requirement: REQ-GRT-001 Greet by name
@@ -203,7 +203,7 @@ All six exit 0. `openspec/specs/greeting/spec.md` carries `REQ-GRT-001` with its
 
 - `openspec init` ends with a hint to run `/opsx:propose`. The propose skill does not know about `specctx id new`. Run `specctx init --all` first. The rules it merges into `openspec/config.yaml` reach every artifact instruction, so the agent learns the ID commands from there.
 - `[ids] caps` in `spec-ctx.toml` is a guard, not a requirement. `id new REQ GRT` and `check` work with `caps = []`. Set it when you want `check` to reject an unknown code.
-- `openspec new change` writes `.openspec.yaml` and `README.md` only. The artifact templates live in `openspec/schemas/spec-driven-ids/templates/`. `init` prints that path.
+- `openspec new change` writes `.openspec.yaml` and `README.md` only. The templates with the ID placeholders live in `openspec/templates/spec-driven-ids/`. `init` prints that path and one rule in `openspec/config.yaml` names it. OpenSpec reads its own templates from the `spec-driven` schema. The rules carry the header format into every artifact instruction.
 - The `task start` footer can read over 100 percent on a tiny project. The bundle holds decisions and task lines, which are not spec text.
 - `handoff write` after the last archive prints `change: none` and `evidence: 0 task(s)`. It counts active changes only. The evidence files stay under `.ctx/evidence/<change>/`.
 - `specctx task next` exits 1 with `no open task` when no change is active. Exit 1 is the findings code, not a crash.

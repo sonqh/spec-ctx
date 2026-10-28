@@ -1,4 +1,4 @@
-schema: spec-driven-ids
+schema: spec-driven
 
 context: |
   spec-ctx is a deterministic context engine and task workflow for OpenSpec projects.
@@ -30,6 +30,7 @@ operations:
     guidance:
       - 'Before reading specs, run `node dist/cli.js task start <task>` and read the bundle it prints first.'
       - 'Tag code with the REQ ID it implements (a comment `// REQ-XXX-NNN`). Tag tests with `// Covers: REQ-XXX-NNN`.'
+      - 'Close each task only with `node dist/cli.js task done <id>`. Never edit a checkbox. Never run `/opsx:apply`; run the `specctx-run` skill.'
       - 'Run `node dist/cli.js check` after each task group.'
   archive:
     guidance:

@@ -86,7 +86,7 @@ The transcript of all six clips is in `docs/demo/loop.txt`. The clips run on a c
 ## Quickstart
 
 ```bash
-npx -y spec-ctx init --all              # config, schema, and three agent skills
+npx -y spec-ctx init --all              # config, ID templates, rules, and the agent skill
 npx -y spec-ctx task next               # the next task and the command that proves it
 npx -y spec-ctx task start <task>       # only the spec that this task needs
 npx -y spec-ctx task done <task>        # runs that command. A pass ticks the box.
@@ -120,25 +120,25 @@ test  tests/login.test.ts:1  active  tests/login.test.ts:1  covers REQ-UA-004
 
 ## The life cycle for agents
 
-`init --all` installs three skills. Each one fires at a fixed point of the session.
+`init --all` installs one skill, `specctx-run`. The user types one prompt, such as "build this" or "continue". The skill loops until the change reaches the archive or a human must decide.
 
-- `specctx-bootstrap` fires at the start of a session. It reads the status and the handoff and starts the task.
-- `specctx-next` fires after a task closes. It picks the next task and loads its bundle.
-- `specctx-done` fires when the work is complete. It runs Verify, closes the task, and writes the handoff.
+- It runs `specctx next --json`. The engine reads the files on disk and prints one action: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`.
+- It acts on the action with the exact commands, runs `specctx handoff write`, and repeats.
+- It stops twice for a human by default: at the plan, and before archive. A Verify command that fails three times writes a question and stops too.
+- `specctx-bootstrap`, `specctx-next`, and `specctx-done` stay for one release as aliases. Each one says: run `specctx-run`.
 
-The loop that the skills teach:
+The commands the skill runs for one task:
 
 ```bash
-specctx init --all             # config, schema, and the three skills
-specctx status                 # active changes, current task, open questions
-specctx task next              # the next open task, its REQ IDs, and its Verify command
+specctx init --all             # config, ID templates, rules, and the skill
+specctx next --json            # the next action, its task, and its command
 specctx task start <task>      # the bundle of that task and its size
 specctx task done <task>       # run Verify, write evidence, set the checkbox
-specctx check --strict         # IDs, links, coverage, and evidence
+specctx gate --strict          # check, baseline, linters, openspec validate, length
 specctx handoff write          # .ctx/handoff.md for the next session
 ```
 
-The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. The skills are in [`skills/`](skills/). Install them alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
+The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
 
 ## Install
 
@@ -152,7 +152,7 @@ npx -y github:sonqh/spec-ctx#<sha> init --all        # from git, for an unreleas
 
 The git form builds the package on install with Node only. Pin a commit SHA. A branch name such as `main` also works, but it moves.
 
-The command writes `spec-ctx.toml`, installs the `spec-driven-ids` schema into `openspec/schemas/`, adds its rules to `openspec/config.yaml`, and installs three skills into `.claude/skills/` and `.agents/skills/`. It pins the OpenSpec version it finds in `[gate] openspec`. It adds four lines to `.gitignore`: `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`. The rest of `.ctx/` is meant for git, `questions.json` included.
+The command writes `spec-ctx.toml`, copies the templates with ID placeholders to `openspec/templates/spec-driven-ids/`, adds the spec-ctx `rules` and `operations` to `openspec/config.yaml`, and installs the `specctx-run` skill and its three aliases into `.claude/skills/` and `.agents/skills/`. The project keeps the stock `schema: spec-driven`. Upstream OpenSpec injects the rules into every artifact instruction. It pins the OpenSpec version it finds in `[gate] openspec`. It adds four lines to `.gitignore`: `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`. The rest of `.ctx/` is meant for git, `questions.json` included.
 
 The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its place. Each GitHub release also carries a single binary for Linux and macOS.
 
@@ -203,7 +203,7 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
 | `handoff write`, `ask`, `resolve` | The session handoff and its open questions in `.ctx/questions.json`. |
-| `init` | Config file, schema bundle, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
+| `init` | Config file, ID templates and rules, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
 | `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
 | `gate` | `check`, the baseline against the merge base, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
@@ -279,7 +279,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 023. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -289,7 +289,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0386 (n=67) | 0.89 (131/147) | 36 (of 78 reopens) | 91 (n=67) | 0 (0 baselined + 0 new) |
+| total | 0.0374 (n=69) | 0.89 (135/151) | 36 (of 80 reopens) | 93 (n=69) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

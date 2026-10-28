@@ -17,6 +17,8 @@ reopened:
 - 019/1.1 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:27.269Z)
 - 019/1.2 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:30.441Z)
 - 019/1.3 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:33.730Z)
+- 025/1.1 tests/init/init.test.ts changed in 2.1 (at 2026-10-28T13:46:54.515Z)
+- 025/2.1 tests/schema/validate.sh changed in 2.2 (at 2026-10-28T13:46:58.086Z)
 open_questions:
 resolved:
 - Q17 006 REQ-CLI-001 delta was written before the 005 archive. Strict validate refused it for dropping SCN-CLI-001-6. I added stats to its command list and copied SCN-CLI-001-6 from main into the 006 block, with no other change. Confirm. (task none, 2026-10-24) answer: confirmed in 29623bc: stats in the list, SCN-CLI-001-6 copied

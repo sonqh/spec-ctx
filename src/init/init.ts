@@ -1,4 +1,4 @@
-// REQ-DIST-002 REQ-SCH-003 REQ-SKL-002 specctx init: config file, schema bundle, skills.
+// REQ-DIST-002 REQ-SCH-003 REQ-SKL-002 specctx init: config file, ID templates and config rules, skills.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -7,6 +7,9 @@ import { UsageExit } from "../cli/errors.ts";
 import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
 
 export const SCHEMA = "spec-driven-ids";
+/** REQ-SCH-003 where the templates land in a project. Upstream reads no project override for the stock templates, so this is a reference path (025/D4). */
+export const TEMPLATES_DIR = `openspec/templates/${SCHEMA}`;
+const TEMPLATES_SRC = `schemas/${SCHEMA}/templates/`;
 export const SKILL_DIRS = [".claude/skills", ".agents/skills"];
 
 export interface InitOpts {
@@ -70,8 +73,9 @@ export function configText(root: string, openspec = DEFAULT_OPENSPEC): string {
 export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC): [string, Buffer][] {
   const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root, openspec))]];
   for (const rel of Object.keys(ASSETS).sort()) {
-    if (o.schema && rel.startsWith(`schemas/${SCHEMA}/`) && !rel.endsWith("/config-fragment.yaml")) {
-      out.push([`openspec/${rel}`, asset(rel)]);
+    // REQ-SCH-003 only the four templates land in the project. The fragment merges into config.yaml. No schema folder (025/D3)
+    if (o.schema && rel.startsWith(TEMPLATES_SRC)) {
+      out.push([`${TEMPLATES_DIR}/${rel.slice(TEMPLATES_SRC.length)}`, asset(rel)]);
     }
     if (o.skills && rel.startsWith("skills/")) {
       for (const d of SKILL_DIRS) out.push([`${d}/${rel.slice("skills/".length)}`, asset(rel)]);
@@ -257,25 +261,23 @@ export function mergeItems(lines: string[], key: string, block: string): number 
   return added;
 }
 
+/** REQ-SCH-003 true when the project config still names the schema copy that 025 removed (025/D5). */
+export function hasLegacySchema(text: string | null): boolean {
+  return text !== null && new RegExp(`^schema:\\s*${SCHEMA}\\s*$`, "m").test(text);
+}
+
+/** REQ-SCH-003 the note for a project that still says schema: spec-driven-ids (025/D5). Strict mode. */
+export const LEGACY_SCHEMA_NOTE = `note: schema ${SCHEMA} is no longer installed. Set schema: spec-driven in openspec/config.yaml. The rules now carry the ID instructions.`;
+
 /**
  * REQ-SCH-003 add each top-level key of the fragment that the project config lacks.
- * A key that exists gets the fragment items it lacks (022/D4). The schema key names the installed bundle.
+ * A key that exists gets the fragment items it lacks (022/D4). The schema key stays as the project wrote it (025/D5).
  */
 export function mergeConfig(current: string | null, fragment: string): { text: string; added: string[]; kept: string[]; merged: { key: string; added: number }[] } {
   let text = current ?? "";
   const added: string[] = [];
   const kept: string[] = [];
   const merged: { key: string; added: number }[] = [];
-  const schemaLine = `schema: ${SCHEMA}`;
-  if (/^schema:.*$/m.test(text)) {
-    if (!new RegExp(`^${schemaLine}\\s*$`, "m").test(text)) {
-      text = text.replace(/^schema:.*$/m, schemaLine);
-      added.push("schema");
-    }
-  } else {
-    text = schemaLine + "\n" + (text ? "\n" + text : "");
-    added.push("schema");
-  }
   const have = topKeys(text);
   for (const [key, block] of topBlocks(fragment)) {
     if (have.has(key)) {
@@ -287,7 +289,7 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
       } else kept.push(key);
       continue;
     }
-    text = text.replace(/\n*$/, "\n\n") + block;
+    text = text.trim() ? text.replace(/\n*$/, "\n\n") + block : block;
     added.push(key);
   }
   const r = repairItems(text);
@@ -333,8 +335,8 @@ export function ignoresClaude(root: string): boolean {
   return lines.has(".claude") || lines.has(".claude/");
 }
 
-/** REQ-SCH-003 where the templates with the ID placeholders are. Printed after the schema step (018/D5). */
-export const TEMPLATES_NOTE = `templates: openspec/schemas/${SCHEMA}/templates/ (spec.md, tasks.md hold the ID placeholders)`;
+/** REQ-SCH-003 where the templates with the ID placeholders are. Printed after the schema step (018/D5, 025/D4). */
+export const TEMPLATES_NOTE = `templates: ${TEMPLATES_DIR}/ (spec.md, tasks.md hold the ID placeholders)`;
 
 export const CLAUDE_NOTE = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
 
@@ -359,6 +361,7 @@ export function runInit(root: string, o: InitOpts): InitResult {
     if (!m || (!m.added.length && !m.merged.length)) {
       res.nothing = true;
       if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
+      if (o.schema && hasLegacySchema(cur)) res.notes.push(LEGACY_SCHEMA_NOTE);
       if (o.schema) res.notes.push(TEMPLATES_NOTE);
       return res;
     }
@@ -392,6 +395,8 @@ export function runInit(root: string, o: InitOpts): InitResult {
     // REQ-SCH-003 one line per key that gained items (022/D4)
     for (const x of m.merged) res.merged.push(`openspec/config.yaml ${x.key} (${x.added} added)`);
     for (const k of m.kept) res.kept.push(`openspec/config.yaml ${k}`);
+    // REQ-SCH-003 the schema line is the user's. A legacy value gets a note and stays (025/D5)
+    if (hasLegacySchema(cur)) res.notes.push(LEGACY_SCHEMA_NOTE);
   }
   // REQ-DIST-002 the four .gitignore lines (017/D2, 022/D5)
   const added = writeGitignore(root);

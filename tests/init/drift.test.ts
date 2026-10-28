@@ -5,7 +5,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { REPO } from "../helpers.ts";
 
-const SKILLS = ["specctx-bootstrap", "specctx-next", "specctx-done"];
+const SKILLS = ["specctx-run", "specctx-bootstrap", "specctx-next", "specctx-done"];
 
 describe("skill copies do not drift", () => {
   test("the copies in .claude/skills and .agents/skills of this repo equal skills/", () => {

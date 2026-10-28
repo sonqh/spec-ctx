@@ -5,28 +5,15 @@ An OpenSpec schema whose artifacts carry stable IDs and runnable Verify clauses.
 
 ## Requirements
 
-### Requirement: REQ-SCH-001 Fork with IDs
-`schemas/spec-driven-ids/` SHALL be a fork of OpenSpec `spec-driven`. Its `spec.md`, `design.md`, and `tasks.md` templates SHALL carry ID placeholders. Its artifact instructions SHALL tell the agent to allocate IDs with `specctx id new`, add `Refs:` lines, and write `Verify:` as a code span. `openspec schema validate spec-driven-ids` SHALL pass.
-
-Refs: ADR-002
-
-#### Scenario: SCN-SCH-001-1 Validates
-- **WHEN** the bundle is copied into `openspec/schemas/` of a fresh project
-- **THEN** `openspec schema validate spec-driven-ids` exits 0
-
-#### Scenario: SCN-SCH-001-2 Placeholder caught
-- **WHEN** a spec keeps the literal `REQ-<CAP>-NNN`
-- **THEN** `specctx check` reports `missing-id` for that header
-
 ### Requirement: REQ-SCH-002 Archive compatible
-A change written with the bundle SHALL archive with `openspec archive` and the IDs SHALL survive into `openspec/specs/`. After archive `specctx check --strict` SHALL pass on the fixture project.
+A change written from the bundle templates on the stock `spec-driven` schema SHALL archive with `openspec archive` and the IDs SHALL survive into `openspec/specs/`. After archive `specctx check --strict` SHALL pass on the fixture project.
 
 #### Scenario: SCN-SCH-002-1 Round trip
 - **WHEN** the fixture change is archived
 - **THEN** every REQ ID from the change exists once in `openspec/specs/` and `check --strict` prints `0 findings`
 
 ### Requirement: REQ-SCH-003 Project rules
-The bundle SHALL ship an `openspec/config.yaml` fragment with the `rules` and `operations` of this repo. `init --schema` SHALL merge it into the project config, keep other keys, and merge list items one by one into an existing key with no duplicate. Every item under `rules.*` and `operations.*.guidance` SHALL parse as a YAML string. `init --schema` SHALL repair an item that parsed as a mapping into one string. After the schema step, `init` SHALL print one `templates:` line.
+The bundle SHALL ship four templates with ID placeholders and a config fragment with `rules` and `operations`. `init --schema` SHALL install the templates into `openspec/templates/spec-driven-ids/`, merge the fragment item by item with no duplicate, keep other keys, and never write the `schema` key. Every item under `rules.*` and `operations.*.guidance` SHALL parse as a YAML string. `init --schema` SHALL repair a mapping item into one string and print one `templates:` line.
 
 Refs: ADR-006
 
@@ -48,11 +35,19 @@ Refs: ADR-006
 
 #### Scenario: SCN-SCH-003-5 Templates line
 - **WHEN** `init --all` runs on a fresh `openspec init` project
-- **THEN** the output has one line `templates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)` before the `next:` line, and `init --skills` prints no `templates:` line
+- **THEN** the output has one line `templates: openspec/templates/spec-driven-ids/ (spec.md, tasks.md hold the ID placeholders)` before the `next:` line, and `init --skills` prints no `templates:` line
 
 #### Scenario: SCN-SCH-003-6 Merge items into an existing key
 - **WHEN** the project config has a `rules` key with two `specs` items, one of them equal to a fragment item
 - **THEN** `init --schema` keeps both, adds every other fragment item of `rules.specs` after them, adds the other `rules` lists, prints `merged openspec/config.yaml rules (<n> added)`, and a second run adds nothing
+
+#### Scenario: SCN-SCH-003-7 Templates only, stock schema
+- **WHEN** `init --all` runs on a fresh `openspec init` project
+- **THEN** `openspec/templates/spec-driven-ids/` holds `proposal.md`, `design.md`, `spec.md`, and `tasks.md`, no `openspec/schemas/` folder exists, `openspec/config.yaml` still says `schema: spec-driven`, and the `apply` guidance names `specctx task done <id>` and the `specctx-run` skill
+
+#### Scenario: SCN-SCH-003-8 Legacy schema value
+- **WHEN** `openspec/config.yaml` says `schema: spec-driven-ids` and `init --schema` runs
+- **THEN** the output has the line `note: schema spec-driven-ids is no longer installed. Set schema: spec-driven in openspec/config.yaml. The rules now carry the ID instructions.` and the `schema` line keeps its value
 
 ### Requirement: REQ-SCH-004 Install paths in the bundle README
 `schemas/spec-driven-ids/README.md` SHALL describe the copy install first: clone, copy the folder into `openspec/schemas/spec-driven-ids/`, set `schema`, merge the fragment. Then the `npx -y spec-ctx init --schema` path. It SHALL name the OpenSpec version the bundle was forked from.

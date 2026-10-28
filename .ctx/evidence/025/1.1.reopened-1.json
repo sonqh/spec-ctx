@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-28T13:38:14.524Z",
+  "bundle_chars": 8056,
+  "files": {
+    "tests/init/drift.test.ts": "124969ea5fea2200b95da0e62af72b7e2eea42ecb8caba647025498af22e1964",
+    "tests/init/init.test.ts": "ab264921da917c587b3a77ac10a7f97f3276a7dde6d9e7e0cf10d18f06c1853c",
+    "tests/skills/lint.test.ts": "c17f15c26ea7e75bee91209df5d54b5c895ca29a231f0c7fb9f8ca576f205fd7"
+  },
+  "kind": "command",
+  "reason": "tests/init/init.test.ts changed in 2.1",
+  "reqs": [
+    "REQ-SKL-001",
+    "REQ-SKL-002"
+  ],
+  "started_at": "2026-10-28T13:36:27.998Z",
+  "task": "025/1.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/skills tests/init/drift.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 8 pass\n 0 fail\n 65 expect() calls\nRan 8 tests across 2 files. [384.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

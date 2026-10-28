@@ -142,8 +142,8 @@ export const TABLE: CommandHelp[] = [
   {
     name: "init", group: "Setup", args: "", summary: "Write a default spec-ctx.toml file.",
     flags: [
-      ["--schema", "Also install the spec-driven-ids schema and add its rules to openspec/config.yaml."],
-      ["--skills", "Also install the three skills in .claude/skills and .agents/skills."],
+      ["--schema", "Also install the ID templates and add the spec-ctx rules to openspec/config.yaml."],
+      ["--skills", "Also install the specctx-run skill and its aliases in .claude/skills and .agents/skills."],
       ["--all", "Do all three."],
       ["--force", "Replace the files that have other content. spec-ctx.toml stays."],
     ],

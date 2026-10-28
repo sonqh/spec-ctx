@@ -14,7 +14,13 @@ describe("SCN-SCH-004-1 Both paths", () => {
     expect(at("init --schema")).toBeGreaterThan(at("copy"));
   });
 
-  test("the README names the OpenSpec version of the fork", () => {
+  test("the README names the OpenSpec version the templates come from", () => {
     expect(text).toContain("1.14.3");
+  });
+
+  test("the README names the templates path and the stock schema, and no schema.yaml (025/D3)", () => {
+    expect(text).toContain("openspec/templates/spec-driven-ids/");
+    expect(text).toContain("schema: spec-driven");
+    expect(text).not.toContain("schema.yaml");
   });
 });

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T13:46:36.396Z",
+  "bundle_chars": 8471,
+  "files": {
+    "src/init/init.ts": "5914006abf88194a2796a6b4800f16465d35c5bd81207bda7c577b4483e1bd2e",
+    "tests/init/init.test.ts": "56f7c3dd7324dfc532dc0be0cfcd1d6afa0801976b8f2775ced5a90c35d20e99",
+    "tests/paths/rules-only.sh": "daa34c60fd110c28d7dc3f57093ef1d32fb829516c1efdf2d2a338f266208cb7",
+    "tests/schema/roundtrip.sh": "5b1647b6be67e9eb9c07a202526e1ed75260495441376ee84a274c5eac0b0e7a",
+    "tests/schema/strings.test.ts": "d4ed365e427b667e7a89e797293ef684a12063a8008df51cd5cf03f0b3213212",
+    "tests/schema/validate.sh": "ad4d00fbca80ef234affa10d660b1a3f2331310c6d28f4a70caac111b049f553"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-002",
+    "REQ-SCH-003",
+    "REQ-SCH-005"
+  ],
+  "started_at": "2026-10-28T13:43:20.570Z",
+  "task": "025/2.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh && bash tests/paths/fresh.sh && bash tests/paths/rules-only.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt",
+    "stdout_sha256": "00a3cf5ad4671652f254ebf226c9a18f9c136e57396b80afbee65e002093704a"
+  }
+}

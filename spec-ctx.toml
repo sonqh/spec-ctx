@@ -16,7 +16,7 @@ ignore = ["tests/fixtures/**"]
 
 [ids]
 # Capability codes from ADR-002.
-caps = ["IDX", "QRY", "CHK", "IDS", "TASK", "VER", "HND", "CLI", "SCH", "SKL", "DIST", "GOV", "ADOPT", "STAT", "LINT"]
+caps = ["IDX", "QRY", "CHK", "IDS", "TASK", "VER", "HND", "CLI", "SCH", "SKL", "DIST", "GOV", "ADOPT", "STAT", "LINT", "LOOP"]
 # Pattern of the task number in a tasks.md checkbox.
 task_pattern = '\d+\.\d+'
 

@@ -7,7 +7,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 ### Changed
 
 - `spec-ctx.toml` gets `[gate] openspec`, the command that `gate` runs for `openspec validate`. The default is `npx -y @fission-ai/openspec@latest`. Set it to `openspec` for a global install or a fork of OpenSpec. The env var `SPECCTX_OPENSPEC` still overrides it for one run. `init` writes the key with a comment.
-- `init --schema` and `init --all` print one `templates:` line before `next:`. It names `openspec/schemas/spec-driven-ids/templates/` and the two files that hold the ID placeholders.
+- `init --schema` and `init --all` print one `templates:` line before `next:`. It names `openspec/templates/spec-driven-ids/` and the two files that hold the ID placeholders.
 - The README fresh path shows `openspec init --tools <tool>`, so the command runs without a prompt, and names `--no-animation` for clean logs. The existing path names `[gate] openspec`.
 - `task done <t> --manual` exits 2 when the task line has a Verify code span. The message names `specctx task done <t>`. A manual note stays allowed only for a task with no Verify command.
 - `task done <t>` on a `[x]` task with no evidence file runs the Verify command. Exit 0 writes the evidence and keeps the box. A failure leaves the box as it is, so `check --strict` keeps its `done-without-evidence` finding. The exit 2 with `task <t> is done` stays only when evidence exists.
@@ -17,8 +17,13 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 - `check` gets the hard rule `retitle-needs-renamed`. It fires on a MODIFIED or REMOVED header of an active change whose ID exists in main with another title. The delta must lack a RENAMED pair whose TO line carries the new header. The finding line reads `<file>:<line>  retitle-needs-renamed  <ID>  "<old>" -> "<new>"`, and `--json` adds a `detail` field. The hint prints the RENAMED block to paste. Upstream OpenSpec matches delta headers by text and refuses such a header at archive. ADR-006 item 7.
 - `check` reads the first ID of a row in `decisions/retired-ids.md` as the retired one, also when that ID is a scenario. Before, a retired scenario row whose reason named an ADR made that ADR a `reused-id` finding.
 
+- One skill, `specctx-run`. It runs `specctx next --json`, acts on the action, runs `specctx handoff write`, and repeats until `stop` or a human stop. It names the exact commands for `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, and `stop`. It calls the upstream `openspec-propose` and `openspec-archive-change` skills by name and never `/opsx:apply`. `specctx-bootstrap`, `specctx-next`, and `specctx-done` are six line aliases for one release. `init --skills` installs all four folders. ADR-006 item 3.
+- `init --schema` installs only the four templates with ID placeholders, into `openspec/templates/spec-driven-ids/`, and merges the config fragment. It no longer installs a schema folder and no longer writes `schema: spec-driven-ids`. The project keeps the stock `spec-driven` schema. A config that still says `schema: spec-driven-ids` gets a note and keeps its line. The `apply` guidance now says: close each task only with `specctx task done <id>`, never edit a checkbox, never run `/opsx:apply`, run the `specctx-run` skill. A new rule names the templates path. ADR-006 item 8.
+- `openspec/config.yaml` of this repository says `schema: spec-driven`, so upstream `openspec status` and `openspec instructions` resolve the schema again.
+
 ### Removed
 
+- `schemas/spec-driven-ids/schema.yaml`, the 301 line copy of the upstream `spec-driven` schema. REQ-SCH-001 is removed. The text `mark complete as you go` is gone with it.
 - `task backfill` and REQ-TASK-006. The baseline rule `done-without-evidence` records every ticked task without evidence, so `baseline write` covers legacy tasks on day one. ADR-006 item 11.
 - The default of `[gate] markdown` is `[]`. A project without the key lints no markdown in `gate`. `init` writes `markdown = []` with a comment that names the globs to set. This repository passes `--markdown` in CI.
 - `init` pins OpenSpec. It runs `npx -y @fission-ai/openspec@latest --version` once and writes `openspec = "npx -y @fission-ai/openspec@<version>"`. When the command fails or takes over 60 seconds, it writes `@latest` and prints `note: could not read the OpenSpec version. [gate] openspec uses @latest.` The env var `SPECCTX_OPENSPEC` at init time is written as it is.

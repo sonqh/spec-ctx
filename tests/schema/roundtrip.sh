@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Covers: REQ-SCH-002
-# SCN-SCH-002-1 a change written with the bundle archives and its IDs survive into openspec/specs/.
+# SCN-SCH-002-1 a change written from the templates on the stock spec-driven schema archives and its IDs survive into openspec/specs/.
 set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
 openspec="npx -y @fission-ai/openspec@1.14.3"
@@ -9,9 +9,8 @@ specctx="node $here/dist/cli.js"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 cp -R "$here/tests/fixtures/schema-project/." "$work/"
-mkdir -p "$work/openspec/schemas"
-cp -R "$here/schemas/spec-driven-ids" "$work/openspec/schemas/"
 cd "$work"
+grep -q '^schema: spec-driven$' openspec/config.yaml || { echo "the fixture must use the stock schema"; exit 1; }
 
 reqs=$(grep -ohE '^### Requirement: REQ-[A-Z]+-[0-9]{3}' openspec/changes/001-export/specs -r | awk '{print $3}' | sort -u)
 [ -n "$reqs" ] || { echo "no REQ IDs in the fixture change"; exit 1; }

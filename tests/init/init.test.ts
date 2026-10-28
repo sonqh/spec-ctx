@@ -53,16 +53,22 @@ describe("init", () => {
     const r = await p.run("init", "--all");
     expect(r.code, r.err).toBe(0);
     expect(existsSync(p.path("spec-ctx.toml"))).toBe(true);
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/schema.yaml"))).toBe(true);
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/templates/spec.md"))).toBe(true);
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/config-fragment.yaml"))).toBe(false);
+    // SCN-SCH-003-7 the templates only, on the stock schema
+    expect(existsSync(p.path("openspec/schemas"))).toBe(false);
+    expect(filesUnder(p.path("openspec/templates/spec-driven-ids"))).toEqual(["design.md", "proposal.md", "spec.md", "tasks.md"]);
+    expect(existsSync(p.path("openspec/templates/spec-driven-ids/config-fragment.yaml"))).toBe(false);
     for (const d of [".claude/skills", ".agents/skills"]) {
-      for (const s of ["specctx-bootstrap", "specctx-next", "specctx-done"]) expect(existsSync(p.path(`${d}/${s}/SKILL.md`))).toBe(true);
+      for (const s of ["specctx-run", "specctx-bootstrap", "specctx-next", "specctx-done"]) expect(existsSync(p.path(`${d}/${s}/SKILL.md`))).toBe(true);
     }
     const cfg = p.read("openspec/config.yaml");
-    expect(cfg.startsWith("schema: spec-driven-ids\n")).toBe(true);
+    expect(cfg.startsWith("schema: spec-driven\n")).toBe(true);
+    expect(cfg).not.toContain("spec-driven-ids\n");
     expect(cfg).toContain("\nrules:\n");
     expect(cfg).toContain("\noperations:\n");
+    expect(cfg).toContain("Close each task only with `specctx task done <id>`. Never edit a checkbox. Never run `/opsx:apply`; run the `specctx-run` skill.");
+    expect(cfg).toContain("openspec/templates/spec-driven-ids/");
+    expect(cfg).not.toContain("mark complete as you go");
+    expect(r.out).not.toContain("note:");
     const s = await p.run("status");
     expect(s.code).toBe(0);
     expect(s.out).toContain("no active change");
@@ -82,10 +88,10 @@ describe("init", () => {
 
   test("merge adds the lists of an existing key and adds nothing twice (022/D4)", () => {
     const frag = readFileSync(join(REPO, "schemas/spec-driven-ids/config-fragment.yaml"), "utf8");
-    const own = "schema: spec-driven-ids\nrules:\n  proposal:\n    - Mine.\n";
+    const own = "schema: spec-driven\nrules:\n  proposal:\n    - Mine.\n";
     const m = mergeConfig(own, frag);
     expect(m.kept).toEqual([]);
-    expect(m.merged).toEqual([{ key: "rules", added: 7 }]);
+    expect(m.merged).toEqual([{ key: "rules", added: 8 }]);
     expect(m.added).toEqual(["operations"]);
     expect(m.text.startsWith(own)).toBe(true);
     // the three lists of the fragment follow the own list, in fragment order
@@ -98,9 +104,13 @@ describe("init", () => {
     expect(again.merged).toEqual([]);
     expect(again.kept).toEqual(["rules", "operations"]);
     expect(again.text).toBe(m.text);
+    // no schema line is written. The project owns that key (025/D5)
     const none = mergeConfig(null, frag);
-    expect(none.text.startsWith("schema: spec-driven-ids\n")).toBe(true);
-    expect(none.added).toEqual(["schema", "rules", "operations"]);
+    expect(none.text.startsWith("rules:\n")).toBe(true);
+    expect(none.added).toEqual(["rules", "operations"]);
+    const legacy = mergeConfig("schema: spec-driven-ids\n", frag);
+    expect(legacy.text.startsWith("schema: spec-driven-ids\n")).toBe(true);
+    expect(legacy.added).toEqual(["rules", "operations"]);
   });
 
   test("SCN-SCH-003-6 init --schema merges rules items into an existing key and skips an item that exists (022/D4)", async () => {
@@ -125,7 +135,7 @@ describe("init", () => {
     p.write("openspec/config.yaml", own);
     const r = await p.run("init", "--schema");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("merged openspec/config.yaml rules (6 added)\n");
+    expect(r.out).toContain("merged openspec/config.yaml rules (7 added)\n");
     expect(r.out).toContain("merged openspec/config.yaml operations (5 added)\n");
     const cfg = p.read("openspec/config.yaml");
     const lines = cfg.split("\n");
@@ -136,6 +146,7 @@ describe("init", () => {
     expect(lines[specs + 3]).toContain("Every requirement header starts with its ID");
     expect(lines[specs + 4]).toContain("Refs:");
     expect(lines[specs + 5]).toContain("under 500 characters");
+    expect(lines[specs + 6]).toContain("openspec/templates/spec-driven-ids/");
     expect(lines.filter((l) => l.includes("Every scenario header starts with its ID"))).toHaveLength(1);
     // the lists the own file lacked come after, and the context of operations stays
     expect(cfg).toContain("\n  design:\n    - 'Each decision is one bullet");
@@ -143,7 +154,7 @@ describe("init", () => {
     expect(cfg).toContain("      - 'Run the tests.'\n      - 'Start each task with `specctx task start <id>`");
     expect(lines.filter((l) => l.includes("Both must pass before archive"))).toHaveLength(1);
     expect(cfg).toContain("      - 'Run `openspec validate --all --strict` again after archive and before push.'\n");
-    expect(cfg.startsWith("schema: spec-driven-ids\n")).toBe(true);
+    expect(cfg.startsWith("schema: spec-driven\n")).toBe(true);
     // a second run adds nothing
     const again = await p.run("init", "--schema");
     expect(again.out).toContain("nothing to do\n");
@@ -171,8 +182,12 @@ describe("init", () => {
       "",
     ].join("\n");
     p.write("openspec/config.yaml", broken);
-    expect((await p.run("init", "--schema")).code).toBe(0);
+    const first = await p.run("init", "--schema");
+    expect(first.code).toBe(0);
     const cfg = p.read("openspec/config.yaml");
+    // SCN-SCH-003-8 a legacy schema value gets the note and stays
+    expect(first.out).toContain("note: schema spec-driven-ids is no longer installed. Set schema: spec-driven in openspec/config.yaml. The rules now carry the ID instructions.\n");
+    expect(cfg.startsWith("schema: spec-driven-ids\n")).toBe(true);
     expect(cfg).toContain("    - 'Every header starts with its ID, e.g. \"### Requirement: REQ-ABC-001 Name\".'\n");
     expect(cfg).toContain("    - 'It''s a rule: with a quote.'\n");
     expect(cfg).toContain("      - 'Run `specctx check`: then stop.'\n");
@@ -188,14 +203,14 @@ describe("init", () => {
     expect((await p.run("init", "--skills")).code).toBe(0);
     const src = join(REPO, "skills");
     for (const d of [".claude/skills", ".agents/skills"]) {
-      for (const s of ["specctx-bootstrap", "specctx-next", "specctx-done"]) {
+      for (const s of ["specctx-run", "specctx-bootstrap", "specctx-next", "specctx-done"]) {
         expect(filesUnder(p.path(`${d}/${s}`))).toEqual(filesUnder(join(src, s)));
         for (const f of filesUnder(join(src, s))) {
           expect(readFileSync(p.path(`${d}/${s}/${f}`)).equals(readFileSync(join(src, s, f))), `${d}/${s}/${f}`).toBe(true);
         }
       }
     }
-    expect(existsSync(p.path("openspec/schemas"))).toBe(false);
+    expect(existsSync(p.path("openspec/templates"))).toBe(false);
   });
 
   test("an existing spec-ctx.toml stays with or without --force", async () => {
@@ -227,7 +242,7 @@ describe("init", () => {
     expect(r.out).toContain("kept spec-ctx.toml\n");
     expect(r.out).toContain("kept .claude/skills/specctx-done/SKILL.md (other content)\n");
     expect(existsSync(p.path(".claude/skills/specctx-next/SKILL.md"))).toBe(true);
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/schema.yaml"))).toBe(true);
+    expect(existsSync(p.path("openspec/templates/spec-driven-ids/spec.md"))).toBe(true);
     expect(r.out.trimEnd().split("\n").at(-1)).toBe("next: specctx init --all --force");
     const j = JSON.parse((await p.run("init", "--skills", "--json")).out);
     expect(j.changed).toEqual([".claude/skills/specctx-done/SKILL.md"]);
@@ -287,7 +302,7 @@ describe("init", () => {
 
   test("SCN-SCH-003-5 init --all prints the templates line before next: and init --skills does not (018/D5)", async () => {
     p = freshOpenspec();
-    const line = "templates: openspec/schemas/spec-driven-ids/templates/ (spec.md, tasks.md hold the ID placeholders)";
+    const line = "templates: openspec/templates/spec-driven-ids/ (spec.md, tasks.md hold the ID placeholders)";
     const r = await p.run("init", "--all");
     expect(r.code, r.err).toBe(0);
     const lines = r.out.trimEnd().split("\n");
@@ -295,8 +310,8 @@ describe("init", () => {
     expect(lines.indexOf(line)).toBe(lines.length - 2);
     expect(lines.at(-1)).toBe("next: specctx status");
     // the line names a folder that exists after init
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/templates/spec.md"))).toBe(true);
-    expect(existsSync(p.path("openspec/schemas/spec-driven-ids/templates/tasks.md"))).toBe(true);
+    expect(existsSync(p.path("openspec/templates/spec-driven-ids/spec.md"))).toBe(true);
+    expect(existsSync(p.path("openspec/templates/spec-driven-ids/tasks.md"))).toBe(true);
     // a second run with nothing to do still says where the templates are
     const again = await p.run("init", "--schema");
     expect(again.out).toContain("nothing to do\n");
@@ -378,5 +393,13 @@ describe("init", () => {
     expect(r.code, r.err).toBe(0);
     expect(p.read("openspec/config.yaml")).toContain("    - 'Header: starts with the ID.'\n");
     expect(p.read("spec-ctx.toml")).toBe("# mine\n");
+    // SCN-SCH-003-8 the legacy value stays, the note prints on the write run, on nothing to do, and in the JSON
+    expect(p.read("openspec/config.yaml").startsWith("schema: spec-driven-ids\n")).toBe(true);
+    const note = "note: schema spec-driven-ids is no longer installed. Set schema: spec-driven in openspec/config.yaml. The rules now carry the ID instructions.";
+    expect(r.out).toContain(note + "\n");
+    const again = await p.run("init", "--schema", "--json");
+    expect(again.code).toBe(0);
+    expect(JSON.parse(again.out).notes).toContain(note);
+    expect(p.read("openspec/config.yaml").startsWith("schema: spec-driven-ids\n")).toBe(true);
   });
 });
