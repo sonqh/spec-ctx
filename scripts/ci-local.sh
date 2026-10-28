@@ -17,7 +17,7 @@ steps=(
   'bash tests/parity/run.sh'
   'bash tests/schema/validate.sh && bash tests/schema/roundtrip.sh'
   'bash tests/action/selftest.sh'
-  'bash tests/paths/fresh.sh && bash tests/paths/existing.sh'
+  'bash tests/paths/fresh.sh && bash tests/paths/existing.sh && bash tests/paths/rules-only.sh'
   'bash tests/install/ci.sh'
   'bash tests/gov/version-guard.sh && bash tests/release/skip.sh && bash tests/release/published.sh && bash tests/dogfood/agentrc.sh'
   'bun run build:bin && ./build/specctx --version'

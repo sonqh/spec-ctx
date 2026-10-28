@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-28T12:40:17.683Z",
+  "bundle_chars": 8187,
+  "files": {
+    "src/init/init.ts": "68cbc3744717ad3919623ed01a0c092f71121ff4c27b2c141b2f8d021e1226f3",
+    "tests/init/init.test.ts": "515c8552b5efed8b0cd10089b7d3f96e632474aa23cf4c9fcb511d12850db75d",
+    "tests/schema/strings.test.ts": "7f0b43a3f0ffbf3a99401e6007b56290d681f67ffe20b858e590549380193a77",
+    "tests/schema/validate.sh": "b30b819c9a3e4b9a64f187f48d1c14bff82f485080483cea7f13672d25efc171"
+  },
+  "kind": "command",
+  "reason": "init.ts and its test changed in 2.2 and 3.1",
+  "reqs": [
+    "REQ-SCH-003"
+  ],
+  "started_at": "2026-10-28T12:36:51.746Z",
+  "task": "022/2.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/init",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 16 pass\n 0 fail\n 159 expect() calls\nRan 16 tests across 2 files. [269.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

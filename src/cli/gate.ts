@@ -6,7 +6,6 @@ import type { Io } from "../main.ts";
 import { anyMatch, globRe } from "../util/glob.ts";
 import { cmpStr } from "../util/pystr.ts";
 
-export const DEFAULT_MARKDOWN = "openspec/**/*.md decisions/*.md docs/**/*.md *.md";
 const SKIP = new Set(["node_modules", ".git", ".ctx", "dist", "build"]);
 
 export function markdownFiles(root: string, globs: string): string[] {

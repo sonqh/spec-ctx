@@ -1,28 +1,16 @@
-// REQ-CLI-001 status reads the index, the handoff file, and the .openspec.yaml of each archive folder.
+// REQ-CLI-001 status reads the index, the handoff file, questions.json, and the .openspec.yaml of each archive folder.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { changeOf } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
+import { readQuestions, renderQuestions } from "../handoff/questions.ts";
 import { cmpStr, pyStrip, splitLines } from "../util/pystr.ts";
 
 export const HANDOFF_PATH = ".ctx/handoff.md";
 
-/** First line of each open_questions item in the handoff file. */
+/** REQ-HND-003 the open questions as handoff.md renders them, read from .ctx/questions.json (022/D7). */
 export function openQuestions(root: string): string[] {
-  const p = join(root, HANDOFF_PATH);
-  if (!existsSync(p)) return [];
-  const items: string[] = [];
-  let inside = false;
-  for (const line of splitLines(readFileSync(p).toString("utf8"))) {
-    if (line.startsWith("open_questions:")) {
-      inside = true;
-      continue;
-    }
-    if (!inside) continue;
-    if (line.startsWith("- ")) items.push(pyStrip(line.slice(2)));
-    else if (pyStrip(line) && !line.startsWith(" ") && !line.startsWith("\t")) break;
-  }
-  return items;
+  return renderQuestions(readQuestions(root)).open_questions;
 }
 
 export interface StatusReport {
@@ -84,7 +72,7 @@ export function statusReport(root: string, entries: Entry[]): StatusReport {
     uncovered: uncovered.length,
     handoff,
     current: handoff ? handoffCurrent(root) : null,
-    open_questions: handoff ? openQuestions(root) : [],
+    open_questions: openQuestions(root),
   };
 }
 

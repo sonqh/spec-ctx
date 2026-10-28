@@ -92,6 +92,8 @@ describe("baseline", () => {
     p = new Project(NO_ID_FIXTURE);
     p.write("docs/notes.md", "# Notes\n\nOne thing \u2014 another; a third.\n");
     expect((await p.run("init")).code).toBe(0);
+    // the gate lints nothing by default (022/D1), so the test opts in
+    p.write("spec-ctx.toml", p.read("spec-ctx.toml").replace("markdown = []", 'markdown = ["docs/*.md"]'));
     expect((await p.run("adopt")).code).toBe(0);
     expect((await p.run("baseline", "write")).code).toBe(0);
     const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
@@ -108,6 +110,7 @@ describe("baseline", () => {
     p = new Project(NO_ID_FIXTURE);
     p.write("docs/notes.md", "# Notes\n\nOne \u2014 two \u2014 three; four.\n");
     await p.run("init");
+    p.write("spec-ctx.toml", p.read("spec-ctx.toml").replace("markdown = []", 'markdown = ["docs/*.md"]'));
     await p.run("adopt");
     await p.run("baseline", "write");
     expect(JSON.parse(p.read(".ctx/baseline.json"))).toContain("lint docs/notes.md tells:dash 2");

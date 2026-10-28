@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-28T12:52:56.243Z",
+  "bundle_chars": 8068,
+  "files": {
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-10-28T12:46:03.682Z",
+  "task": "022/4.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 0,
+    "stderr_tail": "$ bash scripts/ci-local.sh",
+    "stdout_sha256": "194f55456a763d741774b8d26a5cbee7a43b03c1d66f6bec8556f586a2fa9fe4"
+  }
+}

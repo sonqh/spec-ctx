@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-28T13:03:48.226Z",
+  "bundle_chars": 6498,
+  "files": {
+    "tests/paths/existing.sh": "a35af0348ece768d454dcf460c515f5bac3405ffbd97143c877849458838961a",
+    "tests/paths/fresh.sh": "4d8c51eec8d13e521906cabc271affb4222d74d328f2bba044ff3bfc098732a3",
+    "tests/paths/rules-only.sh": "ac86d922f1f574a33a4511313e02a91767935afc5c0905e8db5f38d56c14d048"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-008"
+  ],
+  "started_at": "2026-10-28T13:01:33.676Z",
+  "task": "023/2.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && grep -q 'docs/getting-started.md' README.md && node dist/cli.js lint tells --baseline 0 docs/getting-started.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/getting-started.md && bun test tests/gov/readme.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 5 pass\n 0 fail\n 73 expect() calls\nRan 5 tests across 1 file. [13.00ms]",
+    "stdout_sha256": "032e7a54abf322d28de32cd193b815bb64d88b31a96d121d8bcec0e801bdfa96"
+  }
+}

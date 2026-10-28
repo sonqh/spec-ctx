@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-28T13:00:19.403Z",
+  "bundle_chars": 6233,
+  "files": {
+    "tests/paths/existing.sh": "a35af0348ece768d454dcf460c515f5bac3405ffbd97143c877849458838961a",
+    "tests/paths/fresh.sh": "70c0c7ecd9a52aa1a8c9552250a74af438fbcc5e9953620035cb60c6fd10faa1"
+  },
+  "kind": "command",
+  "reason": "fresh.sh purpose text changed in 2.1",
+  "reqs": [
+    "REQ-ADOPT-008"
+  ],
+  "started_at": "2026-10-28T12:57:58.637Z",
+  "task": "023/1.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bash tests/paths/fresh.sh && bash tests/paths/existing.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt",
+    "stdout_sha256": "ea5c70bedb31770c42c379cc41d270b31a717bd322498c93413cd7f36a1f297a"
+  }
+}

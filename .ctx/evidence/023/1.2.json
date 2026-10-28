@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-28T13:05:51.638Z",
+  "files": {
+    "tests/paths/existing.sh": "a35af0348ece768d454dcf460c515f5bac3405ffbd97143c877849458838961a",
+    "tests/paths/fresh.sh": "4d8c51eec8d13e521906cabc271affb4222d74d328f2bba044ff3bfc098732a3",
+    "tests/paths/rules-only.sh": "ac86d922f1f574a33a4511313e02a91767935afc5c0905e8db5f38d56c14d048"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-005",
+    "REQ-ADOPT-008"
+  ],
+  "task": "023/1.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bash tests/paths/rules-only.sh && bun test tests/gov/ci-parity.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 5 pass\n 0 fail\n 29 expect() calls\nRan 5 tests across 1 file. [646.00ms]",
+    "stdout_sha256": "b3a6a77ed2ca710fbb0e7d086001ed58f026805e3556526313cf60a7c15a4330"
+  }
+}

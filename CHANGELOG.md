@@ -20,6 +20,13 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 ### Removed
 
 - `task backfill` and REQ-TASK-006. The baseline rule `done-without-evidence` records every ticked task without evidence, so `baseline write` covers legacy tasks on day one. ADR-006 item 11.
+- The default of `[gate] markdown` is `[]`. A project without the key lints no markdown in `gate`. `init` writes `markdown = []` with a comment that names the globs to set. This repository passes `--markdown` in CI.
+- `init` pins OpenSpec. It runs `npx -y @fission-ai/openspec@latest --version` once and writes `openspec = "npx -y @fission-ai/openspec@<version>"`. When the command fails or takes over 60 seconds, it writes `@latest` and prints `note: could not read the OpenSpec version. [gate] openspec uses @latest.` The env var `SPECCTX_OPENSPEC` at init time is written as it is.
+- `init --schema` merges the `rules` and `operations` items of the fragment into an existing key, item by item. An item that exists is not added twice. The output line is `merged openspec/config.yaml rules (<n> added)`.
+- `init` writes four `.gitignore` lines: `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, `.ctx/gate-log.jsonl`.
+- Open questions live in `.ctx/questions.json`, a sorted JSON list of `{n, asked_at, task, text, status, answer?, resolved_at?}`. `handoff ask` appends and prints the `n`. `handoff resolve <n> <answer>` resolves question `n`. `handoff write` and `status` read the file. `handoff.md` renders each question as `Q<n> <text> (task <task>, <date>)` and shows the last 10 resolved entries with one line `and <n> more in .ctx/questions.json`. The first `handoff write` on an old `handoff.md` migrates its questions once and prints `migrated <n> question(s) to .ctx/questions.json`.
+- The path tests run on upstream `@fission-ai/openspec@latest` with no fork. `tests/paths/fresh.sh` creates a change with `openspec new change`, writes the artifacts from the templates, closes both tasks, and ends with `gate --strict` exit 0 with no config edit after `init --all`. `tests/paths/rules-only.sh` shows that the `rules` of `openspec/config.yaml` reach the instructions of the stock `spec-driven` schema.
+- `docs/getting-started.md` walks the fresh path on upstream OpenSpec for a developer who knows OpenSpec. The README links it. The README existing path reads `init --all`, `adopt --dry-run`, `adopt`, `baseline write`, `gate --strict`.
 
 ## 0.1.2
 

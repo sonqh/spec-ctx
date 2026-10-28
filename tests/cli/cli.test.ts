@@ -51,12 +51,17 @@ describe("commands and flags", () => {
     mkdirSync(p.path("openspec/changes/archive"));
     renameSync(p.path("openspec/changes/001-x"), p.path("openspec/changes/archive/2026-10-23-001-x"));
     p.write("openspec/changes/archive/2026-10-24-002-y/tasks.md", "# Tasks\n\n- [x] 1.1 Y. [REQ-AAA-001] Verify: a test.\n");
-    p.write(".ctx/handoff.md", "# Handoff\nchange: none\nopen_questions:\n- Should apply keep order?\n  It changes the golden files.\n- Add a rules section?\n");
+    p.write(".ctx/handoff.md", "# Handoff\nchange: none\n");
+    // REQ-HND-003 the questions come from questions.json (022/D7)
+    p.write(".ctx/questions.json", JSON.stringify([
+      { n: 1, asked_at: "2026-10-24T10:00:00.000Z", task: "none", text: "Should apply keep order? It changes the golden files.", status: "open" },
+      { n: 2, asked_at: "2026-10-24T11:00:00.000Z", task: "001/1.1", text: "Add a rules section?", status: "open" },
+    ]));
     const lines = (await p.run("status")).out.split("\n");
     expect(lines).toContain("no active change");
     expect(lines).toContain("last archived: 002-y");
     const i = lines.indexOf("open_questions: 2");
-    expect(lines.slice(i + 1, i + 3)).toEqual(["- Should apply keep order?", "- Add a rules section?"]);
+    expect(lines.slice(i + 1, i + 3)).toEqual(["- Q1 Should apply keep order? It changes the golden files. (task none, 2026-10-24)", "- Q2 Add a rules section? (task 001/1.1, 2026-10-24)"]);
     const j = JSON.parse((await p.run("status", "--json")).out);
     expect(j.last_archived).toBe("002-y");
     expect(j.open_questions).toHaveLength(2);

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T12:44:05.994Z",
+  "bundle_chars": 7927,
+  "files": {
+    "src/cli/status.ts": "83ce44e0297ba9b6821f38e6f58e9c27db61d6266ab62b95b195dfae1c706e7b",
+    "src/cli/workflow.ts": "ad9aadc37635fcc9eff0965927ba816bf0ddc33804d23dce041665a250775234",
+    "src/handoff/handoff.ts": "db59a9b766542e9ee51489c3eec1ef72524b9b6484da2733b46fddc2ec6aa1c1",
+    "src/handoff/questions.ts": "934312d36a81dc547103eb10d1707f710c2d720e8ceeca659db3a96e5aff4a7c",
+    "tests/cli/cli.test.ts": "4974a441cfe067ef2abc4550b6e24598cdb160f95566d7a3b608d6bc821f57e4",
+    "tests/handoff/handoff.test.ts": "4e7f8d2eae747c0d141f42cd6e0d1cca9df3465ed3701004b7fa58347b75e55e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-HND-001",
+    "REQ-HND-002",
+    "REQ-HND-003"
+  ],
+  "started_at": "2026-10-28T12:40:34.103Z",
+  "task": "022/3.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/handoff tests/cli/status-archived.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 13 pass\n 0 fail\n 51 expect() calls\nRan 13 tests across 2 files. [188.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

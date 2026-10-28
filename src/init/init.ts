@@ -1,9 +1,10 @@
 // REQ-DIST-002 REQ-SCH-003 REQ-SKL-002 specctx init: config file, schema bundle, skills.
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
-import { CONFIG_FILE, INIT_TEXT } from "../config.ts";
+import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
 
 export const SCHEMA = "spec-driven-ids";
 export const SKILL_DIRS = [".claude/skills", ".agents/skills"];
@@ -19,6 +20,8 @@ export interface InitResult {
   kept: string[];
   /** REQ-DIST-002 files that exist with other content and stay, because --force is absent */
   changed: string[];
+  /** REQ-SCH-003 keys of openspec/config.yaml that gained fragment items (022/D4) */
+  merged: string[];
   /** REQ-CLI-007 true when every file is present and equal */
   nothing?: boolean;
   notes: string[];
@@ -30,21 +33,42 @@ function asset(rel: string): Buffer {
   return Buffer.from(b64, "base64");
 }
 
+/** REQ-DIST-002 the note when the OpenSpec version is unknown (022/D2). Strict mode. */
+export const OPENSPEC_NOTE = "note: could not read the OpenSpec version. [gate] openspec uses @latest.";
+export const DETECT_TIMEOUT_MS = 60_000;
+
+/**
+ * REQ-DIST-002 the OpenSpec command that init writes into [gate] openspec (022/D2, ADR-006 item 10).
+ * The env var SPECCTX_OPENSPEC wins. Else `npx -y @fission-ai/openspec@latest --version` gives the pin.
+ * A failure, a timeout, or output without a version keeps @latest and adds the note.
+ */
+export function detectOpenspec(timeoutMs = DETECT_TIMEOUT_MS): { command: string; note?: string } {
+  const env = process.env.SPECCTX_OPENSPEC;
+  if (env !== undefined && env.trim()) return { command: env };
+  const [cmd, ...args] = DEFAULT_OPENSPEC.split(" ");
+  const r = spawnSync(cmd!, [...args, "--version"], { encoding: "utf8", timeout: timeoutMs, stdio: ["ignore", "pipe", "ignore"] });
+  const m = r.status === 0 && !r.error ? /\d+\.\d+\.\d+/.exec(r.stdout ?? "") : null;
+  if (!m) return { command: DEFAULT_OPENSPEC, note: OPENSPEC_NOTE };
+  return { command: `npx -y @fission-ai/openspec@${m[0]}` };
+}
+
 /**
  * REQ-DIST-002 the config text for one project (017/D4). `tests/**` becomes `test/**` when only `test/`
  * exists at the root. `src/**` becomes `lib/**` when only `lib/` exists. The comments stay.
+ * `openspec` replaces the default command on the `openspec = ` line (022/D2).
  */
-export function configText(root: string): string {
+export function configText(root: string, openspec = DEFAULT_OPENSPEC): string {
   const isDir = (d: string): boolean => existsSync(join(root, d)) && statSync(join(root, d)).isDirectory();
   let text = INIT_TEXT;
   if (!isDir("tests") && isDir("test")) text = text.replace('\ntests = ["tests/**"]\n', '\ntests = ["test/**"]\n');
   if (!isDir("src") && isDir("lib")) text = text.replace('\ncode = ["src/**"]\n', '\ncode = ["lib/**"]\n');
+  if (openspec !== DEFAULT_OPENSPEC) text = text.replace(`\nopenspec = "${DEFAULT_OPENSPEC}"\n`, `\nopenspec = ${JSON.stringify(openspec)}\n`);
   return text;
 }
 
 /** Target path relative to the project root for every file that init installs, with its bytes. */
-export function plan(o: InitOpts, root: string): [string, Buffer][] {
-  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root))]];
+export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC): [string, Buffer][] {
+  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root, openspec))]];
   for (const rel of Object.keys(ASSETS).sort()) {
     if (o.schema && rel.startsWith(`schemas/${SCHEMA}/`) && !rel.endsWith("/config-fragment.yaml")) {
       out.push([`openspec/${rel}`, asset(rel)]);
@@ -114,14 +138,134 @@ export function repairItems(text: string): { text: string; fixed: number } {
   return { text: out.join("\n"), fixed };
 }
 
+const indentOf = (line: string): number => /^[ \t]*/.exec(line)![0].length;
+
+/** The value of a YAML list item without its single or double quotes, so two spellings of one rule compare equal. */
+function itemValue(line: string): string {
+  const v = line.replace(/^\s*- /, "").trim();
+  const m = /^'(.*)'$/s.exec(v);
+  if (m) return m[1]!.replace(/''/g, "'");
+  const d = /^"(.*)"$/s.exec(v);
+  return d ? d[1]! : v;
+}
+
+/**
+ * The line range of a nested key inside `lines[start, end)`, where every line has an indent above `parent`.
+ * Returns the key line, the end of its range, and its indent. Null when the key is absent.
+ */
+function findChild(lines: string[], start: number, end: number, parent: number, key: string): { at: number; end: number; indent: number } | null {
+  for (let i = start; i < end; i++) {
+    const line = lines[i]!;
+    if (!line.trim()) continue;
+    const ind = indentOf(line);
+    if (ind <= parent) break;
+    const m = new RegExp(`^[ \\t]*${key.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}:\\s*$`).exec(line);
+    if (m) {
+      let j = i + 1;
+      while (j < end && (!lines[j]!.trim() || indentOf(lines[j]!) > ind)) j++;
+      // trailing blank lines belong to the next block
+      while (j > i + 1 && !lines[j - 1]!.trim()) j--;
+      return { at: i, end: j, indent: ind };
+    }
+  }
+  return null;
+}
+
+/** Lists of a fragment block: path segments under the top key and the item lines of each list, in order. */
+function fragmentLists(block: string): { path: string[]; items: string[] }[] {
+  const out: { path: string[]; items: string[] }[] = [];
+  const stack: { indent: number; key: string }[] = [];
+  let cur: { path: string[]; items: string[] } | null = null;
+  for (const line of block.split("\n").slice(1)) {
+    if (!line.trim()) continue;
+    const ind = indentOf(line);
+    const key = /^[ \t]*([\w-]+):\s*$/.exec(line);
+    if (key) {
+      while (stack.length && stack[stack.length - 1]!.indent >= ind) stack.pop();
+      stack.push({ indent: ind, key: key[1]! });
+      cur = null;
+    } else if (/^[ \t]*- /.test(line)) {
+      if (!cur) {
+        cur = { path: stack.map((s) => s.key), items: [] };
+        out.push(cur);
+      }
+      cur.items.push(line);
+    }
+  }
+  return out;
+}
+
+/**
+ * REQ-SCH-003 merge the lists of one fragment block into the same top key of the project text, item by item (022/D4).
+ * An item whose value exists is skipped. A missing nested key is added with its items. Returns the count of items added.
+ */
+export function mergeItems(lines: string[], key: string, block: string): number {
+  const top = lines.findIndex((l) => new RegExp(`^${key}:`).test(l));
+  if (top < 0) return 0;
+  let topEnd = top + 1;
+  while (topEnd < lines.length && (!lines[topEnd]!.trim() || /^[ \t]/.test(lines[topEnd]!) || lines[topEnd]!.startsWith("#"))) topEnd++;
+  while (topEnd > top + 1 && !lines[topEnd - 1]!.trim()) topEnd--;
+  let added = 0;
+  for (const list of fragmentLists(block)) {
+    // walk the path. A step that is absent is appended under its parent with the items that follow it.
+    let start = top + 1;
+    let end = topEnd;
+    let parent = 0;
+    let missingFrom = -1;
+    for (let d = 0; d < list.path.length; d++) {
+      const c = findChild(lines, start, end, parent, list.path[d]!);
+      if (!c) {
+        missingFrom = d;
+        break;
+      }
+      start = c.at + 1;
+      end = c.end;
+      parent = c.indent;
+    }
+    if (missingFrom >= 0) {
+      // the indent of the siblings at this level, or two more than the parent
+      let child = parent + 2;
+      for (let i = start; i < end; i++) if (lines[i]!.trim() && !/^[ \t]*- /.test(lines[i]!)) { child = indentOf(lines[i]!); break; }
+      const ins: string[] = [];
+      let ind = child;
+      for (let d = missingFrom; d < list.path.length; d++) {
+        ins.push(" ".repeat(ind) + list.path[d] + ":");
+        ind += 2;
+      }
+      for (const item of list.items) ins.push(" ".repeat(ind) + item.trim());
+      lines.splice(end, 0, ...ins);
+      topEnd += ins.length;
+      added += list.items.length;
+      continue;
+    }
+    const have = new Set<string>();
+    let last = start - 1;
+    let itemIndent = parent + 2;
+    for (let i = start; i < end; i++) {
+      if (/^[ \t]*- /.test(lines[i]!)) {
+        have.add(itemValue(lines[i]!));
+        last = i;
+        itemIndent = indentOf(lines[i]!);
+      }
+    }
+    const ins = list.items.filter((it) => !have.has(itemValue(it))).map((it) => " ".repeat(itemIndent) + it.trim());
+    if (!ins.length) continue;
+    lines.splice(last + 1, 0, ...ins);
+    topEnd += ins.length;
+    added += ins.length;
+  }
+  return added;
+}
+
 /**
  * REQ-SCH-003 add each top-level key of the fragment that the project config lacks.
- * Keys that exist stay as they are. The schema key names the installed bundle.
+ * A key that exists gets the fragment items it lacks (022/D4). The schema key names the installed bundle.
  */
-export function mergeConfig(current: string | null, fragment: string): { text: string; added: string[]; kept: string[] } {
+export function mergeConfig(current: string | null, fragment: string): { text: string; added: string[]; kept: string[]; merged: { key: string; added: number }[] } {
   let text = current ?? "";
   const added: string[] = [];
   const kept: string[] = [];
+  const merged: { key: string; added: number }[] = [];
   const schemaLine = `schema: ${SCHEMA}`;
   if (/^schema:.*$/m.test(text)) {
     if (!new RegExp(`^${schemaLine}\\s*$`, "m").test(text)) {
@@ -135,7 +279,12 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
   const have = topKeys(text);
   for (const [key, block] of topBlocks(fragment)) {
     if (have.has(key)) {
-      kept.push(key);
+      const lines = text.split("\n");
+      const n = mergeItems(lines, key, block);
+      if (n) {
+        text = lines.join("\n");
+        merged.push({ key, added: n });
+      } else kept.push(key);
       continue;
     }
     text = text.replace(/\n*$/, "\n\n") + block;
@@ -146,11 +295,11 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
     text = r.text;
     added.push("repaired items");
   }
-  return { text, added, kept };
+  return { text, added, kept, merged };
 }
 
-/** REQ-DIST-002 the two lines init owns in .gitignore (017/D2). */
-export const GITIGNORE_LINES = [".ctx/index.json", "adopt-report.md"];
+/** REQ-DIST-002 the four lines init owns in .gitignore (017/D2, 022/D5). current.json and gate-log.jsonl are per session. */
+export const GITIGNORE_LINES = [".ctx/index.json", "adopt-report.md", ".ctx/current.json", ".ctx/gate-log.jsonl"];
 const GITIGNORE = ".gitignore";
 
 /** The lines of a .gitignore, trimmed, with a leading slash dropped, so `/x` and `x` compare equal. */
@@ -160,7 +309,7 @@ function ignoreLines(text: string): Set<string> {
 
 /**
  * REQ-DIST-002 add the absent lines under a `# spec-ctx` comment. Create the file when it is missing.
- * Returns the number of lines added, 0 when both are present.
+ * Returns the number of lines added, 0 when all four are present.
  */
 export function writeGitignore(root: string): number {
   const p = join(root, GITIGNORE);
@@ -190,8 +339,15 @@ export const TEMPLATES_NOTE = `templates: openspec/schemas/${SCHEMA}/templates/ 
 export const CLAUDE_NOTE = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
 
 export function runInit(root: string, o: InitOpts): InitResult {
-  const res: InitResult = { written: [], kept: [], changed: [], notes: [] };
-  let files = plan(o, root);
+  const res: InitResult = { written: [], kept: [], changed: [], merged: [], notes: [] };
+  // REQ-DIST-002 the detection runs only when init writes spec-ctx.toml. An existing file stays (022/D2).
+  let openspec = DEFAULT_OPENSPEC;
+  if (!existsSync(join(root, CONFIG_FILE))) {
+    const d = detectOpenspec();
+    openspec = d.command;
+    if (d.note) res.notes.push(d.note);
+  }
+  let files = plan(o, root, openspec);
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
   // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
   const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));
@@ -199,7 +355,8 @@ export function runInit(root: string, o: InitOpts): InitResult {
   if (same && ignoreDone && !o.force) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
-    if (!o.schema || !mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")).added.length) {
+    const m = o.schema ? mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")) : null;
+    if (!m || (!m.added.length && !m.merged.length)) {
       res.nothing = true;
       if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
       if (o.schema) res.notes.push(TEMPLATES_NOTE);
@@ -227,14 +384,16 @@ export function runInit(root: string, o: InitOpts): InitResult {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
     const m = mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8"));
-    if (m.added.length) {
+    if (m.added.length || m.merged.length) {
       mkdirSync(dirname(cfgPath), { recursive: true });
       writeFileSync(cfgPath, m.text);
-      res.written.push(`openspec/config.yaml (${m.added.join(", ")})`);
+      if (m.added.length) res.written.push(`openspec/config.yaml (${m.added.join(", ")})`);
     }
+    // REQ-SCH-003 one line per key that gained items (022/D4)
+    for (const x of m.merged) res.merged.push(`openspec/config.yaml ${x.key} (${x.added} added)`);
     for (const k of m.kept) res.kept.push(`openspec/config.yaml ${k}`);
   }
-  // REQ-DIST-002 the two .gitignore lines (017/D2)
+  // REQ-DIST-002 the four .gitignore lines (017/D2, 022/D5)
   const added = writeGitignore(root);
   if (added) res.written.push(`${GITIGNORE} (${added} line${added === 1 ? "" : "s"})`);
   else res.kept.push(GITIGNORE);

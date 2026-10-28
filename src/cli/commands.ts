@@ -244,6 +244,7 @@ async function init(p: Parsed, io: Io): Promise<number> {
   else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + paint("dim", "next: specctx status\n", io.tty));
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
+    io.out(r.merged.map((m) => `merged ${m}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
     io.out(r.notes.map((n) => `${n}\n`).join(""));
     // REQ-CLI-007 init ends with the next step. REQ-DIST-002 a kept changed file points to --force (014/D2).

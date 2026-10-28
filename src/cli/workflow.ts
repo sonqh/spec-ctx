@@ -198,14 +198,18 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { writeHandoff, HANDOFF_PATH } = await import("../handoff/handoff.ts");
       const h = writeHandoff(c.root, entries);
       if (c.json) print(c, h);
-      else c.io.out(`wrote ${HANDOFF_PATH}\n`);
+      else {
+        // REQ-HND-002 the one time move of old questions into questions.json (022/D8)
+        if (h.migrated) c.io.out(`migrated ${h.migrated} question(s) to .ctx/questions.json\n`);
+        c.io.out(`wrote ${HANDOFF_PATH}\n`);
+      }
       return 0;
     }
     case "handoff ask": {
       const { ask } = await import("../handoff/handoff.ts");
       const h = ask(c.root, entries, c.p.positional.join(" "));
       if (c.json) print(c, { open_questions: h.open_questions });
-      else c.io.out(`open question ${h.open_questions.length} added\n`);
+      else c.io.out(`open question ${h.asked ?? h.open_questions.length} added\n`);
       return 0;
     }
     case "handoff resolve": {

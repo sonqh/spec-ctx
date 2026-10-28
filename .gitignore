@@ -1,4 +1,5 @@
 .ctx/index.json
+.ctx/current.json
 node_modules/
 __pycache__/
 *.pyc

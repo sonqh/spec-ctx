@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-28T12:44:23.174Z",
+  "bundle_chars": 7124,
+  "files": {
+    "src/cli/workflow.ts": "ad9aadc37635fcc9eff0965927ba816bf0ddc33804d23dce041665a250775234",
+    "src/handoff/handoff.ts": "db59a9b766542e9ee51489c3eec1ef72524b9b6484da2733b46fddc2ec6aa1c1",
+    "src/handoff/questions.ts": "934312d36a81dc547103eb10d1707f710c2d720e8ceeca659db3a96e5aff4a7c",
+    "tests/handoff/handoff.test.ts": "4e7f8d2eae747c0d141f42cd6e0d1cca9df3465ed3701004b7fa58347b75e55e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-HND-001",
+    "REQ-HND-002"
+  ],
+  "started_at": "2026-10-28T12:44:06.154Z",
+  "task": "022/3.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/handoff && test -f .ctx/questions.json",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 10 pass\n 0 fail\n 47 expect() calls\nRan 10 tests across 1 file. [158.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

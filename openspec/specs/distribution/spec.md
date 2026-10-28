@@ -19,9 +19,9 @@ Refs: ADR-001
 - **THEN** there are no matches outside `scripts/`
 
 ### Requirement: REQ-DIST-002 Config file and init
-`spec-ctx.toml` SHALL hold `scan`, `ids.caps`, `ids.task_pattern`, `bundle.budget`, `bundle.depth`, `verify.timeout_s`, `gate.markdown`, `gate.openspec`. Absent keys default. `init` SHALL write a commented default, `test/**` or `lib/**` if only that dir exists, and add its two `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It keeps `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
+`spec-ctx.toml` SHALL hold `scan`, `ids`, `bundle`, `verify`, `gate.markdown` (default `[]`), `gate.openspec`. Absent keys default. `init` SHALL write a commented default, `test/**` or `lib/**` if only that dir exists, the detected OpenSpec version, and its four `.gitignore` lines if absent. `--schema` adds the schema, `--skills` the skills, `--all` both. It keeps `spec-ctx.toml`. Without `--force` it keeps and lists changed files.
 
-Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
+Refs: ADR-001, ADR-006, REQ-SCH-003, REQ-SKL-002
 
 #### Scenario: SCN-DIST-002-1 Defaults
 - **WHEN** no `spec-ctx.toml` exists
@@ -41,11 +41,11 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 
 #### Scenario: SCN-DIST-002-5 Gate globs
 - **WHEN** `spec-ctx.toml` sets `[gate] markdown = ["docs/*.md"]`
-- **THEN** `gate` lints only the files under `docs/`, and a project without the key lints `openspec/**/*.md decisions/*.md docs/**/*.md *.md`
+- **THEN** `gate` lints only the files under `docs/`, and a project without the key lints no file. `init` writes `markdown = []` with a comment that says how to turn the lint on
 
 #### Scenario: SCN-DIST-002-6 Gitignore lines
-- **WHEN** `init` runs in a project whose `.gitignore` lacks `.ctx/index.json` and `adopt-report.md`, or has no `.gitignore`
-- **THEN** the file ends with a `# spec-ctx` comment and both lines, the output has `wrote .gitignore (2 lines)`, and a second run prints `kept .gitignore` and leaves the file byte-identical
+- **WHEN** `init` runs in a project whose `.gitignore` lacks `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`, or has no `.gitignore`
+- **THEN** the file ends with a `# spec-ctx` comment and the four lines, the output has `wrote .gitignore (4 lines)`, and a second run prints `kept .gitignore` and leaves the file byte-identical
 
 #### Scenario: SCN-DIST-002-7 Ignored skills dir
 - **WHEN** `.gitignore` has a line `.claude/` and `init --skills` writes the skills
@@ -56,8 +56,12 @@ Refs: ADR-001, REQ-SCH-003, REQ-SKL-002
 - **THEN** `spec-ctx.toml` has `tests = ["test/**"]` and `code = ["lib/**"]`, each with its comment above, and a project with `tests/` and `src/` gets `tests/**` and `src/**`
 
 #### Scenario: SCN-DIST-002-9 OpenSpec command
-- **WHEN** `spec-ctx.toml` has no `[gate] openspec` key, or `init` writes the file
+- **WHEN** `spec-ctx.toml` has no `[gate] openspec` key
 - **THEN** the key reads `npx -y @fission-ai/openspec@latest` with a comment above it, `gate` runs that command for `openspec validate`, and a value that is not a string exits 2 with `gate.openspec`
+
+#### Scenario: SCN-DIST-002-10 Pinned OpenSpec version
+- **WHEN** `init` writes `spec-ctx.toml` and `npx -y @fission-ai/openspec@latest --version` prints `1.15.0`
+- **THEN** the file has `openspec = "npx -y @fission-ai/openspec@1.15.0"`, a failed or timed out command writes `@latest` and prints `note: could not read the OpenSpec version. [gate] openspec uses @latest.`, and the env var `SPECCTX_OPENSPEC` at init time is written as it is
 
 ### Requirement: REQ-DIST-003 Golden harness
 `tests/parity/run.sh` SHALL run the TypeScript engine on `tests/fixtures/parity-repo/` for `build`, `status`, `query push main`, `related REQ-APPLY-005`, `bundle REQ-APPLY-001 --budget 3000`, `check`, `check --strict`. It SHALL diff each output and the index against the recorded goldens under `tests/fixtures/parity-golden/` and exit 1 on any difference. `run.sh --record` SHALL rewrite the goldens. The goldens were recorded from the Python engine before its removal.
