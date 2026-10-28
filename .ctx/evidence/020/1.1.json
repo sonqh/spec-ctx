@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-28T12:49:28.407Z",
+  "bundle_chars": 6083,
+  "files": {
+    "src/baseline/ratchet.ts": "bb1b0142d9c1df93b563364a17ca18e9efb2d0d9849b5d49c79401857f5637eb",
+    "tests/baseline/ratchet.test.ts": "613936f27b412e24f6b2332c6a0539cb9354e1a39e326a4412a06d5491e054ba"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-008"
+  ],
+  "started_at": "2026-10-28T12:47:55.457Z",
+  "task": "020/1.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/baseline/ratchet.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 10 pass\n 0 fail\n 21 expect() calls\nRan 10 tests across 1 file. [443.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

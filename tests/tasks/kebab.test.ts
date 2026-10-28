@@ -48,7 +48,7 @@ describe("tasks in kebab-case changes", () => {
     expect(existsSync(p.path(".ctx/evidence/003/3.3.json"))).toBe(true);
   });
 
-  test("SCN-IDX-005-2 stats and backfill take a kebab-case change", async () => {
+  test("SCN-IDX-005-2 stats and id new take a kebab-case change", async () => {
     p = new Project(KEBAB_FIXTURE);
     await p.run("task", "done", "add-mfa/1.1");
     const s = await p.run("stats", "--change", "add-mfa");

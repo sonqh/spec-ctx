@@ -6,7 +6,7 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 ## Requirements
 
 ### Requirement: REQ-CLI-001 Commands and flags
-`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `task backfill`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
+`specctx` SHALL expose `build`, `status`, `query`, `related`, `bundle`, `check`, `id new`, `id retire`, `task next`, `task start`, `task verify`, `task done`, `task reopen`, `handoff write`, `handoff ask`, `handoff resolve`, `init`, `adopt`, `baseline write`, `baseline prune`, `stats`. Global flags: `--root <path>`, `--json`, `--help`, `--version`. Help SHALL group them under `Read`, `Write`, and `Setup`.
 
 #### Scenario: SCN-CLI-001-1 Version
 - **WHEN** `specctx --version` runs
@@ -26,7 +26,7 @@ One binary, `specctx`, with short help in Strict STE and stable exit codes.
 
 #### Scenario: SCN-CLI-001-5 Adopt commands in Setup
 - **WHEN** `specctx --help` runs
-- **THEN** `adopt`, `baseline write`, `baseline prune`, and `task backfill` appear under `Setup`
+- **THEN** `adopt`, `baseline write`, and `baseline prune` appear under `Setup`, and no line names `task backfill`
 
 #### Scenario: SCN-CLI-001-6 Stats under Read
 - **WHEN** `specctx --help` runs
@@ -106,13 +106,13 @@ Every command except `init`, `--help`, and `--version` SHALL exit 2 with `not an
 - **THEN** it prints `nothing to adopt`, exits 0, and no `adopt-report.md` exists
 
 ### Requirement: REQ-CLI-004 gate command
-`specctx gate [--strict] [--markdown <globs>]` SHALL run in order: `check` after `build`, `lint tells` and `lint ste` on `[gate] markdown` (`--markdown` overrides), `openspec validate --all` with the command in `[gate] openspec` (env `SPECCTX_OPENSPEC` wins). The lint step fails only when a hard count per file and rule rises above its line in `.ctx/baseline.json`. One `ok` or `fail` line per step. Stop at the first failure, exit 1. No `python3`.
+`specctx gate [--strict] [--markdown <globs>]` SHALL run in order: `check` after `build`, `baseline` against the merge base, `lint tells` and `lint ste` on `[gate] markdown` (`--markdown` overrides), `openspec validate --all` with the command in `[gate] openspec`, and the length check. The lint step fails only when a count rises above its baseline line. One `ok`, `skipped`, or `fail` line per step. Stop at the first failure, exit 1. No `python3`.
 
-Refs: REQ-CHK-001, REQ-GOV-003, REQ-ADOPT-007
+Refs: REQ-CHK-001, REQ-ADOPT-008
 
 #### Scenario: SCN-CLI-004-1 Clean tree
 - **WHEN** `specctx gate --strict` runs on this repository
-- **THEN** it prints three `ok` lines and exits 0
+- **THEN** it prints one `ok` line per step and exits 0
 
 #### Scenario: SCN-CLI-004-2 Stops at first failure
 - **WHEN** a spec has a dangling ref
@@ -120,7 +120,7 @@ Refs: REQ-CHK-001, REQ-GOV-003, REQ-ADOPT-007
 
 #### Scenario: SCN-CLI-004-3 No python
 - **WHEN** `python3` is not on PATH
-- **THEN** `gate --strict` runs both linters and the output has no `skipped` line
+- **THEN** `gate --strict` runs both linters and the output has no `skipped` line for them
 
 #### Scenario: SCN-CLI-004-4 Lint summary and cap
 - **WHEN** 60 files each gain one new dash and `gate` runs
@@ -133,6 +133,10 @@ Refs: REQ-CHK-001, REQ-GOV-003, REQ-ADOPT-007
 #### Scenario: SCN-CLI-004-6 OpenSpec command from config
 - **WHEN** `spec-ctx.toml` sets `[gate] openspec = "/bin/false"` and `SPECCTX_OPENSPEC` is not set
 - **THEN** `gate` prints `validate: fail` and exits 1, and the same run with `SPECCTX_OPENSPEC=/bin/true` prints `validate: ok` and exits 0
+
+#### Scenario: SCN-CLI-004-7 Step order with the baseline
+- **WHEN** `gate` runs on a project with no `.git` and passes
+- **THEN** stdout reads `check: ok`, `baseline: skipped (no git repository)`, `linters: ok (...)`, `validate: ok`, `spec-length: ok` in that order, and the gate log line has `steps` equal to `check`, `baseline`, `lint tells`, `lint ste`, `validate`, `spec-length`
 
 ### Requirement: REQ-CLI-008 Color on a TTY
 Human output SHALL use color only when stdout is a TTY, `NO_COLOR` is unset, and `TERM` is not `dumb`, or when `FORCE_COLOR` is set. Green marks a `done <task>` line. Red marks `Verify failed`, every hard finding of `check`, and `stale-evidence`. Dim marks `next:` lines and the summary line of `check`. Without color the bytes SHALL equal the output of today. `--json` SHALL never carry an escape code.

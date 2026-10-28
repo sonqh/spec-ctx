@@ -14,6 +14,9 @@ reopened:
 - 017/2.1 init.ts and its test changed in 2.2 (at 2026-10-27T07:00:15.610Z)
 - 018/1.1 init.ts and its test changed in 2.1 (at 2026-10-27T08:29:15.538Z)
 - 018/1.2 init.ts and its test changed in 2.1 (at 2026-10-27T08:29:19.469Z)
+- 019/1.1 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:27.269Z)
+- 019/1.2 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:30.441Z)
+- 019/1.3 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:33.730Z)
 open_questions:
 resolved:
 - Engines accept REQ-[A-Z]+ (SCN-CHK-002-1 uses REQ-X-003). The 001 design says [A-Z]{2,6}. Keep the wider pattern? (task none, 2026-10-24) answer: keep [A-Z]{2,6}. SCN-CHK-002-1 now uses REQ-XX-003 (003/3.5)

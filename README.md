@@ -174,7 +174,6 @@ specctx gate --strict
 npx spec-ctx init --all
 specctx adopt --dry-run                 # the ID that each header gets. Writes nothing.
 specctx adopt                           # writes the IDs into main specs and active deltas
-specctx task backfill --manual "adopted"
 specctx baseline write
 specctx gate --strict
 ```
@@ -182,8 +181,8 @@ specctx gate --strict
 - `adopt` gives an ID to every requirement and scenario header without one, in `openspec/specs/` and in the deltas of active changes. A delta header gets the main ID by its text or through its RENAMED line. A delta header that matches neither keeps its text and goes into `adopt-report.md`.
 - `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
 - `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
-- `task backfill` writes manual evidence for every ticked task that has none.
 - `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Untested requirements and scenarios. Tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
+- `gate` compares `.ctx/baseline.json` with the copy at the merge base of `HEAD` and `[gate] base`, default `origin/main`. A new entry fails the `baseline` step. Commit a grown baseline with a subject that starts with `baseline:` to pass once. In CI, check out with `fetch-depth: 0`, so the merge base exists. Without git or a merge base the step prints `skipped`.
 - `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. Narrow it when a folder is not yours to fix.
 - `gate` runs the command in `[gate] openspec` for `openspec validate`. Set it to `openspec` for a global install or a fork.
 - Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
@@ -199,15 +198,14 @@ Both paths have an end to end test: `tests/paths/fresh.sh` and `tests/paths/exis
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
 | `related <ID>` | Linked entries with the reason for each link. Flags: `--depth`, `--all`. |
 | `bundle <ID...>` | Spec text of the IDs, their scenarios, decisions, and neighbors. Flags: `--budget`, `--depth`, `--all`. |
-| `check` | ID and link integrity. `--strict` adds test coverage and evidence. |
+| `check` | ID and link integrity. `--strict` adds test coverage and evidence. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
 | `handoff write`, `ask`, `resolve` | The session handoff and its open questions. |
 | `init` | Config file, schema bundle, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
 | `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
-| `task backfill` | Manual evidence for ticked tasks without it. |
-| `gate` | `check`, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
+| `gate` | `check`, the baseline against the merge base, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
 | `lint tells`, `lint ste` | The two markdown linters. Flags: `--baseline`, `--disable`, `--json`, `--selftest`. |
 | `help <command>` | The page of one command. `specctx <command> --help` prints the same page. |
 
@@ -243,13 +241,15 @@ timeout_s = 600
 [gate]
 markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]  # globs that gate lints
 openspec = "npx -y @fission-ai/openspec@latest"  # the command that runs OpenSpec
+base = "origin/main"  # the ref whose merge base holds the baseline that gate compares with
 ```
 
-One environment variable changes the engine:
+Two environment variables change the engine:
 
 | Variable | Effect |
 | --- | --- |
 | `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate`. It overrides `[gate] openspec` for one run. Tests and offline machines set it. |
+| `SPECCTX_BASELINE_SUBJECT` | The commit subject that the `baseline` step of `gate` tests for `baseline:`. It replaces the subject of `HEAD`. Tests set it. |
 
 ## Markdown linters
 
@@ -278,17 +278,17 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 018. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 021. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
 ## Measured
 
-`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-27.md`. Its total row:
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-28.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0430 (n=54) | 0.87 (110/126) | 36 (of 70 reopens) | 71 (n=54) | 0 (0 baselined + 0 new) |
+| total | 0.0411 (n=61) | 0.88 (120/136) | 36 (of 73 reopens) | 87 (n=61) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

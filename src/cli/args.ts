@@ -23,7 +23,6 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   "task verify": {},
   "task done": { manual: "string" },
   "task reopen": {},
-  "task backfill": { manual: "string", change: "string" },
   "handoff write": {},
   "handoff ask": {},
   "handoff resolve": {},

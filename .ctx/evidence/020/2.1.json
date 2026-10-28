@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-28T12:55:13.442Z",
+  "bundle_chars": 8427,
+  "files": {
+    "src/cli/gate.ts": "07c16487d080d2d6eb0bf84dd5024522c347f3ff04bbff4b874baf2c5c232e2c",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001",
+    "REQ-CLI-004"
+  ],
+  "started_at": "2026-10-28T12:52:12.476Z",
+  "task": "020/2.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 0,
+    "stderr_tail": "$ bash scripts/ci-local.sh",
+    "stdout_sha256": "194f55456a763d741774b8d26a5cbee7a43b03c1d66f6bec8556f586a2fa9fe4"
+  }
+}

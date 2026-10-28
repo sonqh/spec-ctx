@@ -105,7 +105,7 @@ Example:
   `specctx check --strict`
 
 == gate
-specctx gate: Run `check`, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
+specctx gate: Run `check`, the baseline against the merge base of [gate] base, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
 
 Usage:
   `specctx gate [flags]`
@@ -448,27 +448,6 @@ Exit codes:
 
 Example:
   `specctx adopt --dry-run`
-
-== task backfill
-specctx task backfill: Write manual evidence for every ticked task of an active change that has none.
-
-Usage:
-  `specctx task backfill --manual <note> [flags]`
-
-Flags:
-  `--manual <note>`            The note for the evidence. The flag is required.
-  `--change <name>`            Look only in this change.
-  `--root <path>`              Use this project root.
-  `--json`                     Print one JSON document.
-  `--help`                     Show this help.
-
-Exit codes:
-  `0` Success.
-  `2` A usage error.
-  `3` An internal error.
-
-Example:
-  `specctx task backfill --manual "done before spec-ctx"`
 
 == baseline write
 specctx baseline write: Record the current debt in .ctx/baseline.json. `check` then hides it.

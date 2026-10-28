@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-28T13:05:58.416Z",
+  "bundle_chars": 8375,
+  "files": {
+    "src/check/check.ts": "1fade5a5e4cf4bdc86b515b27a12e04bcb22a89c112d25d34865b490dfbf58a8",
+    "src/check/hints.ts": "fb257a68e3691d7491c6ae32c1094524b627b2fd791743b026f92a3a9eb2971c",
+    "src/cli/commands.ts": "3a0a61a688ab166ea1f7798d6f97b77e1b961aabeb6ba9a27f0d5f364d9a3620",
+    "src/index/scan.ts": "3b0c10268300c38d486d49d6a1544a61eb486d074b5617e43d07c7aef20a410c",
+    "tests/check/base.test.ts": "7cf1958790c0f677f5fa41102277d4a365558b6ca67dd3b54dee4742834f0b9d",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001",
+    "REQ-CHK-001"
+  ],
+  "started_at": "2026-10-28T13:02:23.196Z",
+  "task": "021/2.1",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 0,
+    "stderr_tail": "$ bash scripts/ci-local.sh",
+    "stdout_sha256": "194f55456a763d741774b8d26a5cbee7a43b03c1d66f6bec8556f586a2fa9fe4"
+  }
+}

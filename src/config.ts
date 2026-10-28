@@ -15,7 +15,7 @@ export interface Config {
   ids: { caps: string[]; task_pattern: string; paths: Record<string, string> };
   bundle: { budget: number; depth: number };
   verify: { timeout_s: number };
-  gate: { markdown: string[]; openspec: string };
+  gate: { markdown: string[]; openspec: string; base: string };
 }
 
 /** REQ-DIST-002 the command that gate runs for openspec validate (018/D1). */
@@ -36,7 +36,7 @@ export function defaults(): Config {
     ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {} },
     bundle: { budget: 8000, depth: 1 },
     verify: { timeout_s: 600 },
-    gate: { markdown: ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"], openspec: DEFAULT_OPENSPEC },
+    gate: { markdown: ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"], openspec: DEFAULT_OPENSPEC, base: "origin/main" },
   };
 }
 
@@ -104,6 +104,11 @@ export function loadConfig(root: string): Config {
     if (typeof gate.openspec !== "string" || !gate.openspec.trim()) throw new ConfigError(`${CONFIG_FILE}: gate.openspec must be a string that is not empty.`);
     cfg.gate.openspec = gate.openspec;
   }
+  // REQ-ADOPT-008 the ref whose merge base with HEAD holds the baseline that gate compares with (020/D5)
+  if ("base" in gate) {
+    if (typeof gate.base !== "string" || !gate.base.trim()) throw new ConfigError(`${CONFIG_FILE}: gate.base must be a string that is not empty.`);
+    cfg.gate.base = gate.base;
+  }
   return cfg;
 }
 
@@ -147,4 +152,6 @@ markdown = ["openspec/**/*.md", "decisions/*.md", "docs/**/*.md", "*.md"]
 # The command that gate runs for openspec validate. Set it to "openspec" for a global install or a fork,
 # or pin a version. The env var SPECCTX_OPENSPEC overrides it for one run.
 openspec = "npx -y @fission-ai/openspec@latest"
+# The ref whose merge base with HEAD holds the baseline that gate compares with. New entries fail the gate.
+base = "origin/main"
 `;

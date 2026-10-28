@@ -25,9 +25,10 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
  * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
  * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
  */
-export function checkText(r: { findings: { file: string; line: number; rule: string; id: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
   // REQ-CLI-008 every finding of check is hard, so every finding line is red. stale-evidence is one of them.
-  const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}\n`, tty)).join("")
+  // REQ-CHK-001 a finding with a detail, such as a retitle, carries it after the ID (021/D2)
+  const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}${x.detail ? `  ${x.detail}` : ""}\n`, tty)).join("")
     + r.warnings.map((w) => `warning: ${w}\n`).join("");
   const base = r.baselined ? `baselined: ${r.baselined}\n` : "";
   const n = r.findings.length + r.warnings.length;
@@ -120,6 +121,9 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       markdown: (f.markdown as string | undefined) ?? cfg.gate.markdown.join(" "),
       // REQ-DIST-002 the env var wins over [gate] openspec, for tests and one-off runs (018/D2)
       openspec: process.env.SPECCTX_OPENSPEC ?? cfg.gate.openspec,
+      // REQ-ADOPT-008 the ref for the merge base, and the subject override for tests (020/D4)
+      base: cfg.gate.base,
+      baselineSubject: process.env.SPECCTX_BASELINE_SUBJECT,
       json,
       check: async () => {
         const { buildIndex } = await import("../index/build.ts");

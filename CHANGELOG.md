@@ -9,6 +9,17 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 - `spec-ctx.toml` gets `[gate] openspec`, the command that `gate` runs for `openspec validate`. The default is `npx -y @fission-ai/openspec@latest`. Set it to `openspec` for a global install or a fork of OpenSpec. The env var `SPECCTX_OPENSPEC` still overrides it for one run. `init` writes the key with a comment.
 - `init --schema` and `init --all` print one `templates:` line before `next:`. It names `openspec/schemas/spec-driven-ids/templates/` and the two files that hold the ID placeholders.
 - The README fresh path shows `openspec init --tools <tool>`, so the command runs without a prompt, and names `--no-animation` for clean logs. The existing path names `[gate] openspec`.
+- `task done <t> --manual` exits 2 when the task line has a Verify code span. The message names `specctx task done <t>`. A manual note stays allowed only for a task with no Verify command.
+- `task done <t>` on a `[x]` task with no evidence file runs the Verify command. Exit 0 writes the evidence and keeps the box. A failure leaves the box as it is, so `check --strict` keeps its `done-without-evidence` finding. The exit 2 with `task <t> is done` stays only when evidence exists.
+- `task start` writes `verify` into `.ctx/current.json`. `task done <t>` exits 2 when the Verify command on the task line differs from that value, and names `specctx task start <t>` as the fix.
+
+- `gate` gets a `baseline` step after `check`. It reads `.ctx/baseline.json` at the merge base of `HEAD` and `[gate] base` (default `origin/main`) and fails on a new entry or a risen lint count with `baseline: fail, <n> new entr(y|ies)`. A commit whose subject starts with `baseline:` passes the step. Without git, a merge base, or the file at the merge base the step prints `baseline: skipped (<reason>)`. The env var `SPECCTX_BASELINE_SUBJECT` replaces the subject for tests. The `specs` job of this repository checks out with `fetch-depth: 0`.
+- `check` gets the hard rule `retitle-needs-renamed`. It fires on a MODIFIED or REMOVED header of an active change whose ID exists in main with another title. The delta must lack a RENAMED pair whose TO line carries the new header. The finding line reads `<file>:<line>  retitle-needs-renamed  <ID>  "<old>" -> "<new>"`, and `--json` adds a `detail` field. The hint prints the RENAMED block to paste. Upstream OpenSpec matches delta headers by text and refuses such a header at archive. ADR-006 item 7.
+- `check` reads the first ID of a row in `decisions/retired-ids.md` as the retired one, also when that ID is a scenario. Before, a retired scenario row whose reason named an ADR made that ADR a `reused-id` finding.
+
+### Removed
+
+- `task backfill` and REQ-TASK-006. The baseline rule `done-without-evidence` records every ticked task without evidence, so `baseline write` covers legacy tasks on day one. ADR-006 item 11.
 
 ## 0.1.2
 

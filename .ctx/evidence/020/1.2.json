@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T12:52:12.259Z",
+  "bundle_chars": 8253,
+  "files": {
+    "src/baseline/ratchet.ts": "bb1b0142d9c1df93b563364a17ca18e9efb2d0d9849b5d49c79401857f5637eb",
+    "src/cli/commands.ts": "e0663860069d4f2d79ac40a90fcf8d064189e9f2fcf1ef6751350e174675e1c4",
+    "src/cli/gate.ts": "07c16487d080d2d6eb0bf84dd5024522c347f3ff04bbff4b874baf2c5c232e2c",
+    "src/config.ts": "61fcf1fee698ee026fde498f5875c053c54601edfc0f88bddfd1358ded680c2c",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9",
+    "tests/baseline/ratchet.test.ts": "613936f27b412e24f6b2332c6a0539cb9354e1a39e326a4412a06d5491e054ba",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-008",
+    "REQ-CLI-004"
+  ],
+  "started_at": "2026-10-28T12:49:28.661Z",
+  "task": "020/1.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/cli tests/config.test.ts tests/baseline",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 91 pass\n 0 fail\n 488 expect() calls\nRan 91 tests across 12 files. [5.94s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

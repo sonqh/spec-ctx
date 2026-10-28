@@ -1,4 +1,4 @@
-// REQ-CLI-004 specctx gate: check, both linters, openspec validate, spec length. Stops at the first failure.
+// REQ-CLI-004 specctx gate: check, the baseline against the merge base, both linters, openspec validate, spec length. Stops at the first failure.
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -44,6 +44,10 @@ export interface GateOpts {
   json?: boolean;
   /** REQ-DIST-002 the command that runs OpenSpec, from [gate] openspec or SPECCTX_OPENSPEC (018/D2). */
   openspec: string;
+  /** REQ-ADOPT-008 the ref whose merge base with HEAD holds the baseline to compare with, from [gate] base (020/D2). */
+  base: string;
+  /** REQ-ADOPT-008 the commit subject to test for `baseline:`. Absent, the step reads git (020/D4). */
+  baselineSubject?: string;
   check: () => Promise<{ code: number; out: string }>;
 }
 
@@ -53,7 +57,7 @@ export const GATE_LOG = ".ctx/gate-log.jsonl";
 /** REQ-CLI-004 the lint detail stops here unless --json asks for every line. */
 export const LINT_DETAIL_CAP = 50;
 
-export const GATE_STEPS = ["check", "lint tells", "lint ste", "validate", "spec-length"] as const;
+export const GATE_STEPS = ["check", "baseline", "lint tells", "lint ste", "validate", "spec-length"] as const;
 type Step = (typeof GATE_STEPS)[number];
 
 /** REQ-STAT-005 one JSON line per gate run, after the last step or at the first failure. */
@@ -83,7 +87,13 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   }
   io.out(`check: ok${o.strict ? " (strict)" : ""}\n`);
 
-  // gate 2: REQ-LINT-003 both linters of this package on the markdown globs. No python3.
+  // gate 2: REQ-ADOPT-008 the baseline may not gain entries against the merge base (020/D1 to D4)
+  ran.push("baseline");
+  const b = await baselineStep(root, o);
+  io.out(b.text);
+  if (!b.ok) return "baseline";
+
+  // gate 3: REQ-LINT-003 both linters of this package on the markdown globs. No python3.
   // REQ-ADOPT-007 the step fails only on a count above its baseline line.
   const { lintCounts, lintRises } = await import("../lint/counts.ts");
   const { readBaseline } = await import("../baseline/baseline.ts");
@@ -104,7 +114,7 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   io.out(`linters: ok (${files} file(s)${baselined ? `, ${baselined} baselined` : ""})\n`);
 
   ran.push("validate");
-  // gate 3: openspec validate with the command the caller resolved (018/D2)
+  // gate 4: openspec validate with the command the caller resolved (018/D2)
   const v = spawnSync("/bin/sh", ["-c", `${o.openspec} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8" });
   if (v.status !== 0) {
     io.out("validate: fail\n" + (v.stdout ?? "") + (v.stderr ?? ""));
@@ -113,7 +123,7 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   io.out(`validate: ok${o.strict ? " (strict)" : ""}\n`);
 
   ran.push("spec-length");
-  // gate 4: the length of every requirement in the deltas of active changes
+  // gate 5: the length of every requirement in the deltas of active changes
   const long = longRequirements(root);
   if (long.length) {
     io.out(long.map((l) => `spec-length: fail ${l.id} ${l.chars} chars\n`).join(""));
@@ -121,6 +131,25 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
   }
   io.out("spec-length: ok\n");
   return null;
+}
+
+/** REQ-ADOPT-008 the baseline step: skipped, ok, or fail with the new entries (020/D3). */
+async function baselineStep(root: string, o: GateOpts): Promise<{ ok: boolean; text: string }> {
+  const { baseAtMergeBase, headSubjects, isBaselineSubject, newEntries } = await import("../baseline/ratchet.ts");
+  const { readBaseline } = await import("../baseline/baseline.ts");
+  const subjects = o.baselineSubject !== undefined ? [o.baselineSubject] : headSubjects(root);
+  if (subjects.some(isBaselineSubject)) return { ok: true, text: "baseline: ok (baseline: commit)\n" };
+  const base = baseAtMergeBase(root, o.base);
+  if ("skip" in base) return { ok: true, text: `baseline: skipped (${base.skip})\n` };
+  const current = [...readBaseline(root) ?? []];
+  const fresh = newEntries(current, base.lines);
+  if (!fresh.length) return { ok: true, text: "baseline: ok\n" };
+  const shown = o.json ? fresh : fresh.slice(0, LINT_DETAIL_CAP);
+  const more = fresh.length - shown.length;
+  return {
+    ok: false,
+    text: `baseline: fail, ${fresh.length} new entr${fresh.length === 1 ? "y" : "ies"}\n` + shown.map((l) => l + "\n").join("") + (more ? `... ${more} more line(s)\n` : ""),
+  };
 }
 
 // REQ-CLI-005 the limit strict validate applies to a requirement after archive

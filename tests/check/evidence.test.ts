@@ -52,6 +52,8 @@ describe("evidence rules", () => {
 
   test("SCN-CHK-003-4 manual evidence in an active change warns and exits 0", async () => {
     p = setup();
+    // --manual needs a task with no Verify code span (REQ-TASK-003)
+    p.write(TASKS, p.read(TASKS).replace("2.1 Do. [REQ-AAA-001] Verify: `true`", "2.1 Do. [REQ-AAA-001] Verify: read the log"));
     expect((await p.run("task", "done", "002/2.1", "--manual", "checked by eye")).code).toBe(0);
     const r = await p.run("check", "--strict");
     expect(r.code).toBe(0);

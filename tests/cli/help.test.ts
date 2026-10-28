@@ -18,15 +18,16 @@ function section(help: string, name: string): string[] {
 }
 
 describe("help", () => {
-  test("SCN-CLI-001-5 adopt, baseline, and backfill appear under Setup", async () => {
+  test("SCN-CLI-001-5 adopt and baseline appear under Setup, and task backfill is gone", async () => {
     const p = new Project(null);
     try {
       const help = (await p.run("--help")).out;
       const setup = section(help, "Setup");
-      for (const c of ["adopt", "baseline write", "baseline prune", "task backfill"]) {
+      for (const c of ["adopt", "baseline write", "baseline prune"]) {
         expect(setup.some((l) => l.startsWith(`  \`${c}`)), c).toBe(true);
       }
-      for (const c of ["adopt", "baseline write", "baseline prune", "task backfill"]) {
+      expect(help).not.toContain("task backfill");
+      for (const c of ["adopt", "baseline write", "baseline prune"]) {
         expect(section(help, "Read").some((l) => l.startsWith(`  \`${c}`)), c).toBe(false);
       }
     } finally {

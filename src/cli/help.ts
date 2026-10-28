@@ -76,7 +76,7 @@ export const TABLE: CommandHelp[] = [
   },
   {
     name: "gate", group: "Read", args: "",
-    summary: "Run `check`, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.",
+    summary: "Run `check`, the baseline against the merge base of [gate] base, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.",
     flags: [
       ["--strict", "Run `check` and `openspec validate` in strict mode."],
       ["--markdown <globs>", "Lint these markdown globs instead of [gate] markdown. Separate them with spaces."],
@@ -154,11 +154,6 @@ export const TABLE: CommandHelp[] = [
     flags: [["--dry-run", "Show the ID that each header without an ID gets. Write nothing."]],
     exit: [["0", "The IDs are written, or nothing is left to adopt."], ["1", "The dry run found headers to adopt, or a new finding undid the write."], USAGE, INTERNAL],
     example: "specctx adopt --dry-run",
-  },
-  {
-    name: "task backfill", group: "Setup", args: "--manual <note>", summary: "Write manual evidence for every ticked task of an active change that has none.",
-    flags: [["--manual <note>", "The note for the evidence. The flag is required."], ["--change <name>", "Look only in this change."]],
-    exit: PLAIN, example: "specctx task backfill --manual \"done before spec-ctx\"",
   },
   {
     name: "baseline write", group: "Setup", args: "", summary: "Record the current debt in .ctx/baseline.json. `check` then hides it.",

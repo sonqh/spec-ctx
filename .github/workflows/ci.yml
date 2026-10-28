@@ -23,7 +23,9 @@ jobs:
   specs:
     runs-on: ubuntu-latest
     steps:
+      # REQ-ADOPT-008 the gate compares .ctx/baseline.json with the merge base, so origin/main must exist on a pull request
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - uses: oven-sh/setup-bun@v2

@@ -8,7 +8,6 @@ afterEach(() => p?.cleanup());
 async function adopted(): Promise<Project> {
   const pr = new Project(NO_ID_FIXTURE);
   expect((await pr.run("adopt")).code).toBe(0);
-  expect((await pr.run("task", "backfill", "--manual", "adopted")).code).toBe(0);
   return pr;
 }
 
@@ -23,7 +22,10 @@ describe("baseline", () => {
     for (const id of ["REQ-UA-001", "REQ-UA-002", "REQ-UA-003", "REQ-PS-001", "REQ-PS-002"]) expect(list).toContain(`uncovered ${id}`);
     expect(list).toContain("task-without-req add-mfa/1.1");
     expect(list).toContain("task-without-verify add-mfa/1.3");
-    expect(list).toContain("manual-evidence add-mfa/1.1");
+    // the fixture ticks 1.1 and 1.2 by hand. The baseline holds them as done-without-evidence (ADR-006 item 11).
+    expect(list).toContain("done-without-evidence add-mfa/1.1");
+    expect(list).toContain("done-without-evidence add-mfa/1.2");
+    expect(list.some((e) => e.startsWith("manual-evidence"))).toBe(false);
     const r = await p.run("check", "--strict");
     expect(r.code, r.out).toBe(0);
     expect(r.out).toBe(`0 findings\nbaselined: ${list.length}\n`);
@@ -64,7 +66,6 @@ describe("baseline", () => {
     const DELTA = "openspec/changes/add-mfa/specs/user-auth/spec.md";
     p.append(DELTA, "\n### Requirement: Lockout policy\nThe system SHALL lock an account after five failures.\n\n#### Scenario: Five failures\n- **WHEN** a user fails five times\n- **THEN** the account locks\n");
     expect((await p.run("adopt")).code).toBe(0);
-    expect((await p.run("task", "backfill", "--manual", "adopted")).code).toBe(0);
     expect((await p.run("check")).out).toContain("missing-id  Lockout policy");
     expect((await p.run("baseline", "write")).code).toBe(0);
     const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
@@ -92,7 +93,6 @@ describe("baseline", () => {
     p.write("docs/notes.md", "# Notes\n\nOne thing \u2014 another; a third.\n");
     expect((await p.run("init")).code).toBe(0);
     expect((await p.run("adopt")).code).toBe(0);
-    expect((await p.run("task", "backfill", "--manual", "adopted")).code).toBe(0);
     expect((await p.run("baseline", "write")).code).toBe(0);
     const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
     expect(list).toContain("lint docs/notes.md tells:dash 1");
@@ -109,7 +109,6 @@ describe("baseline", () => {
     p.write("docs/notes.md", "# Notes\n\nOne \u2014 two \u2014 three; four.\n");
     await p.run("init");
     await p.run("adopt");
-    await p.run("task", "backfill", "--manual", "adopted");
     await p.run("baseline", "write");
     expect(JSON.parse(p.read(".ctx/baseline.json"))).toContain("lint docs/notes.md tells:dash 2");
     p.write("docs/notes.md", "# Notes\n\nOne \u2014 two three. Four.\n");

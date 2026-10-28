@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-28T12:33:48.521Z",
+  "bundle_chars": 8132,
+  "files": {
+    "src/cli/workflow.ts": "31d7ae7211caafd817b911439579e3b203089d741e2efb523221581bc091bfe7",
+    "tests/tasks/done.test.ts": "4f23657bceac9eee48c58e1553220f5d8bd1355fdc2b9d560cd5bdbe3200e71b"
+  },
+  "kind": "command",
+  "reason": "workflow.ts and the task tests changed in 2.1",
+  "reqs": [
+    "REQ-TASK-003"
+  ],
+  "started_at": "2026-10-28T12:32:31.131Z",
+  "task": "019/1.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/done.test.ts tests/check/evidence.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 16 pass\n 0 fail\n 70 expect() calls\nRan 16 tests across 2 files. [219.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

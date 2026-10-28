@@ -95,7 +95,8 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       mkdirSync(join(c.root, ".ctx"), { recursive: true });
       const { cpLen } = await import("../util/pystr.ts");
       // REQ-STAT-002 the bundle size goes next to the current task, so stats can compute the context ratio
-      writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id }) + "\n");
+      // REQ-TASK-002 the Verify command is frozen here, so task done can refuse a changed one (019/D3)
+      writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id, verify: t.verify.command }) + "\n");
       // REQ-TASK-002 a task that cites no REQ gets one hint line, so the agent knows what to add
       const hint = t.reqs.length ? null : `task ${t.id} cites no REQ. Run specctx query --change ${t.change} --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.`;
       if (c.json) print(c, { bundle: b, hint, task: t.id });
@@ -111,19 +112,28 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const manual = f.manual as string | undefined;
       if (!dry && manual !== undefined) {
         if (!manual.trim()) throw new UsageExit("--manual needs a note");
+        // REQ-TASK-003 a task with a Verify command gets no manual note (019/D1, ADR-004)
+        if (t.verify.command !== null) throw new UsageExit(`task ${t.id} has a Verify command. Run it with specctx task done ${t.id}.`);
         if (t.done && hasEvidence(c.root, t)) throw new UsageExit(`task ${t.id} is done`);
-        // a manual note records evidence without a run. On a task done by hand it backfills the evidence.
         const { writeEvidence } = await import("../tasks/evidence.ts");
-        const rel = writeEvidence(c.root, t, entries, { command: t.verify.command, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", manual.trim());
+        const rel = writeEvidence(c.root, t, entries, { command: null, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", manual.trim());
         if (!t.done) setBox(c.root, t, true);
         clearCurrent(c.root, t.id);
         if (c.json) print(c, { evidence: rel, kind: "manual", task: t.id });
         else c.io.out(paint("ok", `done ${t.id} (manual). Evidence: ${rel}\n`, c.io.tty));
         return 0;
       }
-      if (!dry && t.done) throw new UsageExit(`task ${t.id} is done`);
+      // REQ-TASK-003 a ticked task with evidence is done. One without evidence gets the repair run (019/D2).
+      if (!dry && t.done && hasEvidence(c.root, t)) throw new UsageExit(`task ${t.id} is done`);
       if (t.verify.command === null) {
         throw new UsageExit(`task ${t.id} has no Verify command. ${dry ? "Nothing to run" : 'A --manual "<note>" is required'}`);
+      }
+      // REQ-TASK-003 the Verify command that task start froze must still be the one on the task line (019/D3)
+      if (!dry) {
+        const frozen = readCurrent(c.root);
+        if (frozen && frozen.task === t.id && typeof frozen.verify === "string" && frozen.verify !== t.verify.command) {
+          throw new UsageExit(`task ${t.id}: the Verify command changed since task start. Run specctx task start ${t.id} again.`);
+        }
       }
       const { runVerify, tail } = await import("../verify/run.ts");
       const { resolve: resolvePath, relative, isAbsolute } = await import("node:path");
@@ -165,32 +175,6 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       clearCurrent(c.root, t.id);
       if (c.json) print(c, { evidence: rel, kind: "command", task: t.id });
       else c.io.out(paint("ok", `done ${t.id}. Evidence: ${rel}\n`, c.io.tty)); // REQ-CLI-008
-      return 0;
-    }
-    case "task backfill": {
-      // REQ-TASK-006 manual evidence for every ticked task of an active change that has none, through the task done --manual path.
-      // Archived changes stay untouched (017/D1).
-      noMore(c, 0);
-      const note = (f.manual as string | undefined)?.trim();
-      if (!note) throw new UsageExit('task backfill needs --manual "<note>"');
-      const { tasksOf, toTask, hasEvidence } = await import("../tasks/tasks.ts");
-      const { matchesChange } = await import("../index/scan.ts");
-      const { writeEvidence } = await import("../tasks/evidence.ts");
-      const want = f.change as string | undefined;
-      const counts = new Map<string, number>();
-      for (const e of tasksOf(entries)) {
-        if (e.status !== "done" || e.file.includes("/archive/")) continue;
-        if (want && !matchesChange(e.change, want)) continue;
-        if (hasEvidence(c.root, e)) continue;
-        const t = toTask(c.root, e);
-        writeEvidence(c.root, t, entries, { command: t.verify.command, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", note);
-        counts.set(e.change, (counts.get(e.change) ?? 0) + 1);
-      }
-      const { cmpStr } = await import("../util/pystr.ts");
-      const rows = [...counts.keys()].sort(cmpStr).map((k) => ({ change: k, count: counts.get(k)! }));
-      const total = rows.reduce((n, r) => n + r.count, 0);
-      if (c.json) print(c, { changes: rows, total });
-      else c.io.out(rows.map((r) => `${r.change}: ${r.count}\n`).join("") + `backfilled ${total} task(s)\n`);
       return 0;
     }
     case "task reopen": {
@@ -235,6 +219,17 @@ export async function runWorkflow(c: Ctx): Promise<number> {
     }
   }
   throw new UsageExit(`unknown command: ${c.p.command}`);
+}
+
+/** The current task file, or null when it is absent or damaged. */
+function readCurrent(root: string): { task?: string; verify?: unknown } | null {
+  const p = join(root, ".ctx/current.json");
+  if (!existsSync(p)) return null;
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as { task?: string; verify?: unknown };
+  } catch {
+    return null;
+  }
 }
 
 function clearCurrent(root: string, task: string): void {

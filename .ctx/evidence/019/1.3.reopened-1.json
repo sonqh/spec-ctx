@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-28T12:34:32.488Z",
+  "bundle_chars": 8400,
+  "files": {
+    "src/cli/workflow.ts": "31d7ae7211caafd817b911439579e3b203089d741e2efb523221581bc091bfe7",
+    "tests/tasks/done.test.ts": "8429198d1899ae0588d8e239f925b998078f18a270a852215784d4b22e17a0c0",
+    "tests/tasks/kebab.test.ts": "c9a833ecdd3249268fbda6bf48d137a1a35ce07dd21856b76576885efd565dad",
+    "tests/tasks/start.test.ts": "7cd9ff1388a0baf5822c1a7299f8ad23dab1ae0eee856f3a14a226361854bea7"
+  },
+  "kind": "command",
+  "reason": "workflow.ts and the task tests changed in 2.1",
+  "reqs": [
+    "REQ-TASK-002",
+    "REQ-TASK-003"
+  ],
+  "started_at": "2026-10-28T12:33:48.727Z",
+  "task": "019/1.3",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 38 pass\n 0 fail\n 173 expect() calls\nRan 38 tests across 7 files. [1036.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

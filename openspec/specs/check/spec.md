@@ -6,7 +6,7 @@
 ## Requirements
 
 ### Requirement: REQ-CHK-001 Base rules
-`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id` (two canonical entries), `reused-id` (the first ID of a retired row with a non-archived entry), `dangling-ref`, `req-without-scn`, `code-tag-no-canonical`, `unknown-cap` (code not in config). `missing-id` and `req-without-scn` skip archived entries. Each finding SHALL print `file:line  rule  id`. Exit 1 on any finding, else print `0 findings`.
+`specctx check` SHALL report: `missing-id`, `scenario-id-mismatch`, `bad-ref`, `task-without-req`, `task-without-verify`, `duplicate-id`, `reused-id` (the first ID of a retired row), `dangling-ref`, `req-without-scn`, `code-tag-no-canonical`, `unknown-cap`, `retitle-needs-renamed` (a delta ID in main with another title and no RENAMED TO line). `missing-id` and `req-without-scn` skip archived entries. A finding prints `file:line  rule  id`. Exit 1 on a finding, else `0 findings`.
 
 Refs: ADR-002
 
@@ -33,6 +33,10 @@ Refs: ADR-002
 #### Scenario: SCN-CHK-001-6 Archived header without an ID
 - **WHEN** an archived change holds `### Requirement: Old header` and `#### Scenario: Old case` with no ID
 - **THEN** `check` reports no `missing-id` for either line and `adopt --dry-run` does not list them
+
+#### Scenario: SCN-CHK-001-7 Retitle needs a RENAMED pair
+- **WHEN** the no-ID fixture after `adopt` changes the MODIFIED header `REQ-UA-001 Session timeout` to `REQ-UA-001 Idle timeout`
+- **THEN** `check` prints `openspec/changes/add-mfa/specs/user-auth/spec.md:<line>  retitle-needs-renamed  REQ-UA-001  "Session timeout" -> "Idle timeout"` and the hint with the RENAMED block, and after a RENAMED pair whose TO line reads `### Requirement: REQ-UA-001 Idle timeout` it prints `0 findings`
 
 ### Requirement: REQ-CHK-002 Strict rules
 `specctx check --strict` SHALL add three rules. `unknown-task-req`: a task cites an ID that does not exist. `uncovered`: a canonical active REQ with no `Covers:` test. An ID named by a `## REMOVED` block of an active change SHALL be exempt from `uncovered` and `scenario-untested` until archive. A finding in `.ctx/baseline.json` SHALL be dropped in strict and non-strict mode and counted in a final line `baselined: <n>`.

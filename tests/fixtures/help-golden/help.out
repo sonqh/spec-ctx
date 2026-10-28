@@ -8,7 +8,7 @@ Read:
   `related <ID>`               Show the entries that link to an ID.
   `bundle <ID...>`             Print the spec text for the IDs and their links.
   `check`                      Find ID and link errors.
-  `gate`                       Run `check`, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
+  `gate`                       Run `check`, the baseline against the merge base of [gate] base, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
   `task next`                  Show the next open task.
   `task verify <task>`         Run the `Verify:` command of a task. Write nothing.
   `stats`                      Show five metrics for each change and the gate runs.
@@ -30,8 +30,6 @@ Write:
 Setup:
   `init`                       Write a default spec-ctx.toml file.
   `adopt`                      Write IDs into the headers of the main specs and the active deltas. Undo on a new finding.
-  `task backfill --manual <note>`
-                               Write manual evidence for every ticked task of an active change that has none.
   `baseline write`             Record the current debt in .ctx/baseline.json. `check` then hides it.
   `baseline prune`             Remove the entries that no longer apply.
   `help <command>`             Show the help page of one command.
@@ -60,10 +58,6 @@ Command flags:
   `init --all`                 Do all three.
   `init --force`               Replace the files that have other content. spec-ctx.toml stays.
   `adopt --dry-run`            Show the ID that each header without an ID gets. Write nothing.
-  `task backfill --manual <note>`
-                               The note for the evidence. The flag is required.
-  `task backfill --change <name>`
-                               Look only in this change.
   `lint --baseline <n>`        Exit 0 when the hard findings are n or fewer. The default is 0.
   `lint --disable <rules>`     Ignore these rules. Separate them with commas.
   `lint --json`                Print the findings as JSON.

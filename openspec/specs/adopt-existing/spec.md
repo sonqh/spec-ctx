@@ -93,7 +93,7 @@ Refs: REQ-CHK-002
 - **THEN** `check` reports `missing-id` for it and for nothing in the baseline
 
 ### Requirement: REQ-ADOPT-006 Two documented paths
-The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`specctx init --all`, `adopt --dry-run`, `adopt`, `task backfill`, `baseline write`). The existing path section SHALL say that legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a Verify code span. `baseline prune` then drops them. Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.
+The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`specctx init --all`, `adopt --dry-run`, `adopt`, `baseline write`). The existing path section SHALL say that legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a Verify code span. `baseline prune` then drops them. Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.
 
 #### Scenario: SCN-ADOPT-006-1 Existing path end to end
 - **WHEN** `tests/paths/existing.sh` runs on the no-ID fixture
@@ -119,3 +119,20 @@ Refs: REQ-ADOPT-005, REQ-CLI-004
 #### Scenario: SCN-ADOPT-007-3 Prune lowers and drops
 - **WHEN** the semicolon leaves `docs/notes.md` and one of two baselined dashes leaves, and `baseline prune` runs
 - **THEN** it prints `pruned 2`, the `ste:semicolon` line is gone, and the `tells:dash` line reads `1`
+
+### Requirement: REQ-ADOPT-008 Baseline against the merge base
+`gate` SHALL run a `baseline` step after `check`. It reads `.ctx/baseline.json` at the merge base of HEAD and `[gate] base` (default `origin/main`). A line that the merge base lacks, or a `lint` line with a higher count, is new debt. New debt fails the step with `baseline: fail, <n> new entr(y|ies)` and one line per entry, at most 50. A `baseline:` HEAD subject passes. Without git, a merge base, or the file there, the step prints `baseline: skipped (<reason>)`.
+
+Refs: REQ-GOV-007
+
+#### Scenario: SCN-ADOPT-008-1 A new entry fails the gate
+- **WHEN** the merge base holds `["uncovered REQ-UA-001"]` and the working file holds that line and `uncovered REQ-UA-002`
+- **THEN** `gate` prints `baseline: fail, 1 new entry`, then `uncovered REQ-UA-002`, runs no linter, and exits 1
+
+#### Scenario: SCN-ADOPT-008-2 A baseline commit passes
+- **WHEN** the same two files exist and the subject of HEAD is `baseline: adopt day one`, or `SPECCTX_BASELINE_SUBJECT` holds that text
+- **THEN** `gate` prints `baseline: ok (baseline: commit)` and goes on to the linters
+
+#### Scenario: SCN-ADOPT-008-3 No base skips the step
+- **WHEN** the project has no `.git`, or `[gate] base` names a ref with no merge base, or the merge base has no `.ctx/baseline.json`
+- **THEN** `gate` prints one `baseline: skipped (<reason>)` line with `no git repository`, `no merge base with <base>`, or `no .ctx/baseline.json at <sha>`, and goes on to the linters

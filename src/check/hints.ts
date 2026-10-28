@@ -17,10 +17,15 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "unknown-cap": { level: "hard", hint: "Add the code to caps under [ids] in spec-ctx.toml." },
   uncovered: { level: "hard", hint: "Add a test with a Covers tag for the requirement." },
   "scenario-untested": { level: "hard", hint: "Name the scenario ID in a test." },
-  "done-without-evidence": { level: "hard", hint: "Run specctx task done, or specctx task backfill for old tasks." },
+  "done-without-evidence": { level: "hard", hint: "Run specctx task done. It runs the Verify command and writes the evidence." },
   "stale-evidence": { level: "hard", hint: "Run specctx task reopen and then specctx task done." },
   "evidence-without-done": { level: "hard", hint: "Run specctx task done, or remove the evidence file." },
   "manual-evidence": { level: "advisory", hint: "Give the task a Verify command and run specctx task done again." },
+  // REQ-CHK-001 the hint is the block to paste. The finding line carries the ID and both titles (021/D3).
+  "retitle-needs-renamed": {
+    level: "hard",
+    hint: "Add to the delta before the MODIFIED block:\n## RENAMED Requirements\n- FROM: `### Requirement: <ID> <old title>`\n- TO: `### Requirement: <ID> <new title>`",
+  },
 };
 
 export function hintOf(rule: string): string {

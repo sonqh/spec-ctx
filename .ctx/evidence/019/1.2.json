@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-28T12:37:33.596Z",
+  "files": {
+    "src/cli/workflow.ts": "c5d196a2e15cdabed2945391d9178eb3b3c7354cee6c3282343ee5bf483c2d0f",
+    "tests/tasks/done.test.ts": "8429198d1899ae0588d8e239f925b998078f18a270a852215784d4b22e17a0c0"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-003"
+  ],
+  "task": "019/1.2",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/done.test.ts tests/check/evidence.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 17 pass\n 0 fail\n 77 expect() calls\nRan 17 tests across 2 files. [225.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

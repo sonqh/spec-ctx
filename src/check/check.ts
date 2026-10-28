@@ -4,12 +4,13 @@ import { join } from "node:path";
 import type { Config } from "../config.ts";
 import { canon, SPEC_KINDS } from "../index/canonical.ts";
 import { changeKey } from "../index/scan.ts";
-import type { Index, Problem } from "../index/types.ts";
+import type { Entry, Index, Problem } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
 import { evidenceFindings } from "./evidence.ts";
 
-const RETIRED_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|ADR-\d{3})\b/g;
+// the first ID of a retired row can be a scenario. Only a REQ or ADR can be reused, but the SCN still counts as the row ID.
+const RETIRED_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
 const REQ_CAP = /^REQ-([A-Z]{2,6})-/;
 
 export function retiredIds(root: string): Set<string> {
@@ -53,6 +54,47 @@ export interface Finding {
   line: number;
   rule: string;
   id: string;
+  /** REQ-CHK-001 trailing text of the line, such as the old and new title of a retitle (021/D2). */
+  detail?: string;
+}
+
+const TO_LINE = /^-\s*TO:\s*`###\s+Requirement:\s*(REQ-[A-Z]{2,6}-\d{3})?\s*(.*?)`\s*$/;
+
+/** The headers that the TO lines of the RENAMED blocks of one delta file name: [id or null, title]. */
+function renamedTargets(root: string, file: string): [string | null, string][] {
+  const out: [string | null, string][] = [];
+  let section = "";
+  for (const line of readFileSync(join(root, file), "utf8").split(/\r?\n/)) {
+    if (line.startsWith("## ")) {
+      section = line.slice(3).trim().split(" ")[0]!.toUpperCase();
+      continue;
+    }
+    if (section !== "RENAMED") continue;
+    const m = TO_LINE.exec(line.trim());
+    if (m) out.push([m[1] ?? null, m[2]!.trim()]);
+  }
+  return out;
+}
+
+/**
+ * REQ-CHK-001 retitle-needs-renamed: a MODIFIED or REMOVED header of an active change whose ID exists in main
+ * with another title, and whose delta file has no RENAMED TO line with that header. Upstream OpenSpec matches
+ * delta headers by text, so the archive needs the RENAMED pair (021/D1, ADR-006 item 7).
+ */
+export function retitleFindings(root: string, entries: Entry[]): Finding[] {
+  const main = new Map<string, Entry>();
+  for (const e of entries) if (e.kind === "req" && e.change === "main" && e.status === "active") main.set(e.id, e);
+  const targets = new Map<string, [string | null, string][]>();
+  const out: Finding[] = [];
+  for (const e of entries) {
+    if (e.kind !== "req" || (e.status !== "modified" && e.status !== "removed") || e.file.includes("/archive/")) continue;
+    const m = main.get(e.id);
+    if (!m || m.title === e.title) continue;
+    if (!targets.has(e.file)) targets.set(e.file, renamedTargets(root, e.file));
+    if (targets.get(e.file)!.some(([id, title]) => title === e.title && (id === null || id === e.id))) continue;
+    out.push({ file: e.file, line: e.line, rule: "retitle-needs-renamed", id: e.id, detail: `"${m.title}" -> "${e.title}"` });
+  }
+  return out;
 }
 
 /** Sorted, unique findings. The scan never reads .ctx/, so evidence adds no index entry. */
@@ -115,5 +157,7 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
   }
   const uniq = new Map<string, Problem>();
   for (const f of findings) uniq.set(JSON.stringify(f), f);
-  return [...uniq.values()].sort((a, b) => cmpTuple(a, b)).map(([file, line, rule, id]) => ({ file, line, rule, id }));
+  const plain: Finding[] = [...uniq.values()].map(([file, line, rule, id]) => ({ file, line, rule, id }));
+  const all = [...plain, ...retitleFindings(root, entries)];
+  return all.sort((a, b) => cmpTuple([a.file, a.line, a.rule, a.id], [b.file, b.line, b.rule, b.id]));
 }

@@ -35,11 +35,23 @@ describe("task start", () => {
       expect(r.out.startsWith("-- REQ-TASK-001 |")).toBe(true);
       expect(r.out).toContain("#### Scenario: SCN-TASK-001-1 Pick");
       const n = [...bundleOf(r.out)].length;
-      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: n, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1" });
-      expect(p.read(".ctx/current.json")).toBe(`{\n  "bundle_chars": ${n},\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1"\n}\n`);
+      expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: n, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1", verify: "true" });
+      expect(p.read(".ctx/current.json")).toBe(`{\n  "bundle_chars": ${n},\n  "started_at": "2026-10-24T09:00:00.000Z",\n  "task": "002/2.1",\n  "verify": "true"\n}\n`);
     } finally {
       delete process.env.SPECCTX_NOW;
     }
+  });
+
+  test("SCN-TASK-002-5 start freezes the Verify command in current.json", async () => {
+    p = setup();
+    p.append("openspec/changes/002-t/tasks.md", "- [ ] 2.3 Prose. [REQ-TASK-001] Verify: read the log\n");
+    await p.run("task", "start", "002/2.1");
+    expect(JSON.parse(p.read(".ctx/current.json")).verify).toBe("true");
+    await p.run("task", "start", "002/2.3");
+    const cur = JSON.parse(p.read(".ctx/current.json"));
+    expect(cur.task).toBe("002/2.3");
+    expect(cur.verify).toBeNull();
+    expect(Object.keys(cur)).toEqual(["bundle_chars", "started_at", "task", "verify"]);
   });
 
   test("SCN-STAT-002-1 start records the size of the bundle it printed", async () => {

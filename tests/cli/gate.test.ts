@@ -1,14 +1,16 @@
-// Covers: REQ-CLI-004, REQ-LINT-003, REQ-ADOPT-007, REQ-DIST-002
+// Covers: REQ-CLI-004, REQ-LINT-003, REQ-ADOPT-007, REQ-ADOPT-008, REQ-DIST-002
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Project, REPO } from "../helpers.ts";
+import { git, gitRepo } from "../baseline/ratchet.test.ts";
 
 let p: Project;
 afterEach(() => {
   p?.cleanup();
   delete process.env.SPECCTX_OPENSPEC;
+  delete process.env.SPECCTX_BASELINE_SUBJECT;
 });
 
 const CLI = join(REPO, "dist/cli.js");
@@ -18,7 +20,7 @@ describe("gate", () => {
     p = new Project();
     process.env.SPECCTX_OPENSPEC = "/bin/true";
     const r = await p.run("gate", "--strict", "--markdown", "openspec/**/*.md decisions/*.md");
-    expect(r.out).toMatch(/^check: ok \(strict\)\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok \(strict\)\nspec-length: ok\n$/);
+    expect(r.out).toMatch(/^check: ok \(strict\)\nbaseline: skipped \(no git repository\)\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok \(strict\)\nspec-length: ok\n$/);
     expect(r.code).toBe(0);
   });
 
@@ -58,12 +60,12 @@ describe("gate", () => {
     const r = await p.run("gate", "--markdown", "docs/*.md");
     expect(r.code).toBe(1);
     const lines = r.out.trimEnd().split("\n");
-    expect(lines[1]).toBe("linters: fail, 60 new finding(s) in 60 file(s)");
-    expect(lines[2]).toBe("docs/f00.md  tells:dash  1 (baseline 0)");
+    expect(lines[2]).toBe("linters: fail, 60 new finding(s) in 60 file(s)");
+    expect(lines[3]).toBe("docs/f00.md  tells:dash  1 (baseline 0)");
     expect(lines.at(-1)).toBe("... 10 more line(s)");
-    expect(lines).toHaveLength(53);
+    expect(lines).toHaveLength(54);
     const j = await p.run("gate", "--markdown", "docs/*.md", "--json");
-    expect(j.out.trimEnd().split("\n")).toHaveLength(62);
+    expect(j.out.trimEnd().split("\n")).toHaveLength(63);
     expect(j.out).not.toContain("more line(s)");
   });
 
@@ -123,8 +125,8 @@ describe("gate", () => {
       encoding: "utf8",
       env: { PATH: "/nonexistent", SPECCTX_OPENSPEC: "/bin/true", HOME: p.root },
     });
-    expect(r.stdout).toMatch(/^check: ok\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok\nspec-length: ok\n$/);
-    expect(r.stdout).not.toContain("skipped");
+    expect(r.stdout).toMatch(/^check: ok\nbaseline: skipped \(no git repository\)\nlinters: ok \(\d+ file\(s\)\)\nvalidate: ok\nspec-length: ok\n$/);
+    expect(r.stdout.split("\n").filter((l) => l.includes("skipped"))).toEqual(["baseline: skipped (no git repository)"]);
     expect(r.status).toBe(0);
   });
 
@@ -146,11 +148,111 @@ describe("gate", () => {
   }, 60000);
 });
 
+describe("gate baseline step", () => {
+  const BASE = ["uncovered REQ-UA-001"];
+  /** A repo whose merge base holds BASE and whose working file holds BASE plus one new entry. */
+  function withNewEntry(): Project {
+    const pr = new Project();
+    gitRepo(pr, BASE);
+    pr.write(".ctx/baseline.json", JSON.stringify([...BASE, "uncovered REQ-UA-002"], null, 2) + "\n");
+    return pr;
+  }
+
+  test("SCN-ADOPT-008-1 a new entry fails the gate before the linters", async () => {
+    p = withNewEntry();
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const r = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(r.code).toBe(1);
+    expect(r.out).toBe("check: ok\nbaseline: fail, 1 new entry\nuncovered REQ-UA-002\n");
+    expect(r.out).not.toContain("linters:");
+    const log = JSON.parse(p.read(".ctx/gate-log.jsonl").trim().split("\n").at(-1)!);
+    expect(log).toMatchObject({ ok: false, failed_step: "baseline", steps: ["check", "baseline"] });
+    // a committed new entry fails too, because the merge base is the first commit
+    git(p.root, "checkout", "-q", "-b", "feature");
+    git(p.root, "add", "-A");
+    git(p.root, "commit", "-q", "-m", "feat: hide debt");
+    const c = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(c.code).toBe(1);
+    expect(c.out).toContain("baseline: fail, 1 new entry\n");
+  });
+
+  test("a risen lint count is a new entry, and the detail stops at 50 lines", async () => {
+    p = new Project();
+    gitRepo(p, ["lint docs/a.md tells:dash 1"]);
+    const many = Array.from({ length: 60 }, (_, i) => `uncovered REQ-ZZ-${String(i).padStart(3, "0")}`);
+    p.write(".ctx/baseline.json", JSON.stringify(["lint docs/a.md tells:dash 2", ...many], null, 2) + "\n");
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const r = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(r.code).toBe(1);
+    const lines = r.out.trimEnd().split("\n");
+    expect(lines[1]).toBe("baseline: fail, 61 new entries");
+    expect(lines[2]).toBe("lint docs/a.md tells:dash 2 (base 1)");
+    expect(lines.at(-1)).toBe("... 11 more line(s)");
+    expect(lines).toHaveLength(53);
+    const j = await p.run("gate", "--markdown", "openspec/**/*.md", "--json");
+    expect(j.out.trimEnd().split("\n")).toHaveLength(63);
+  });
+
+  test("SCN-ADOPT-008-2 a baseline: subject passes, from the commit or from the env var", async () => {
+    p = withNewEntry();
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_BASELINE_SUBJECT = "baseline: adopt day one";
+    const e = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(e.code, e.out).toBe(0);
+    expect(e.out).toContain("check: ok\nbaseline: ok (baseline: commit)\nlinters: ok");
+    delete process.env.SPECCTX_BASELINE_SUBJECT;
+    git(p.root, "checkout", "-q", "-b", "feature");
+    git(p.root, "add", "-A");
+    git(p.root, "commit", "-q", "-m", "baseline: adopt day one");
+    const c = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(c.code, c.out).toBe(0);
+    expect(c.out).toContain("baseline: ok (baseline: commit)\n");
+    // the env var does not help a subject that lacks the prefix
+    process.env.SPECCTX_BASELINE_SUBJECT = "feat: hide debt";
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(1);
+  });
+
+  test("SCN-ADOPT-008-3 no merge base or no file at the merge base skips the step", async () => {
+    p = new Project();
+    gitRepo(p, BASE);
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    p.write("spec-ctx.toml", '[gate]\nbase = "origin/nope"\n');
+    const r = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(r.code, r.out).toBe(0);
+    expect(r.out).toContain("check: ok\nbaseline: skipped (no merge base with origin/nope)\nlinters: ok");
+    p.write("spec-ctx.toml", '[gate]\nbase = "main"\n');
+    git(p.root, "rm", "-q", "--cached", ".ctx/baseline.json");
+    git(p.root, "commit", "-q", "-m", "drop");
+    const d = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(d.code, d.out).toBe(0);
+    expect(d.out).toMatch(/\nbaseline: skipped \(no \.ctx\/baseline\.json at [0-9a-f]{7}\)\n/);
+  });
+
+  test("an unchanged or smaller baseline passes with baseline: ok", async () => {
+    p = new Project();
+    gitRepo(p, [...BASE, "uncovered REQ-UA-002"]);
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    const same = await p.run("gate", "--markdown", "openspec/**/*.md");
+    expect(same.code, same.out).toBe(0);
+    expect(same.out).toContain("check: ok\nbaseline: ok\nlinters: ok");
+    p.write(".ctx/baseline.json", JSON.stringify(BASE) + "\n");
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).out).toContain("baseline: ok\n");
+  });
+
+  test("gate.base must be a string that is not empty", async () => {
+    p = new Project();
+    p.write("spec-ctx.toml", "[gate]\nbase = 3\n");
+    const r = await p.run("gate");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("gate.base must be a string that is not empty.");
+  });
+});
+
 describe("gate log", () => {
   const log = (): Record<string, unknown>[] => readFileSync(p.path(".ctx/gate-log.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
 
   // Covers: REQ-STAT-005
-  test("SCN-STAT-005-4 two gate runs append two lines", async () => {
+  test("SCN-STAT-005-4 SCN-CLI-004-7 two gate runs append two lines with the six steps in order", async () => {
     p = new Project();
     process.env.SPECCTX_OPENSPEC = "/bin/true";
     expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(0);
@@ -158,7 +260,7 @@ describe("gate log", () => {
     const lines = log();
     expect(lines).toHaveLength(2);
     expect(Object.keys(lines[0]!).sort()).toEqual(["at", "duration_s", "failed_step", "ok", "steps"]);
-    expect(lines[0]).toMatchObject({ ok: true, failed_step: null, steps: ["check", "lint tells", "lint ste", "validate", "spec-length"] });
+    expect(lines[0]).toMatchObject({ ok: true, failed_step: null, steps: ["check", "baseline", "lint tells", "lint ste", "validate", "spec-length"] });
     expect(typeof lines[0]!.at).toBe("string");
     expect(typeof lines[0]!.duration_s).toBe("number");
   });
@@ -168,7 +270,7 @@ describe("gate log", () => {
     p.write("decisions/bad.md", "# Bad\n\nThe tool reads; it writes — fast.\n");
     process.env.SPECCTX_OPENSPEC = "/bin/true";
     expect((await p.run("gate", "--markdown", "decisions/*.md")).code).toBe(1);
-    expect(log().at(-1)).toMatchObject({ ok: false, failed_step: "lint tells", steps: ["check", "lint tells", "lint ste"] });
+    expect(log().at(-1)).toMatchObject({ ok: false, failed_step: "lint tells", steps: ["check", "baseline", "lint tells", "lint ste"] });
   });
 
   test("a failure at check or validate names that step", async () => {
