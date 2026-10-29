@@ -1,4 +1,4 @@
-// Covers: REQ-IDS-001, REQ-IDS-002
+// Covers: REQ-IDS-001, REQ-IDS-002, REQ-IDS-004
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -94,5 +94,45 @@ describe("id new", () => {
     expect((await p.run("id", "new", "DEC", "042")).code).toBe(2);
     expect((await p.run("id", "new", "XYZ", "IDX")).code).toBe(2);
     expect((await p.run("id")).code).toBe(2);
+  });
+});
+
+describe("id new with [ids] brackets (027/D5)", () => {
+  const UA = "# user-auth\n\n## Requirements\n\n### Requirement: [REQ-UA-001] Session timeout\nText.\n\n#### Scenario: [SCN-UA-001-1] Idle user\n- a\n";
+  const setup = (brackets: boolean | null): void => {
+    p.write("spec-ctx.toml", `[ids]\ncaps = ["UA"]\n${brackets === null ? "" : `brackets = ${brackets}\n`}`);
+    p.write("openspec/specs/user-auth/spec.md", UA);
+  };
+
+  test("SCN-IDS-004-1 the default prints the bare form", async () => {
+    setup(null);
+    expect(await p.run("id", "new", "REQ", "UA")).toMatchObject({ code: 0, out: "REQ-UA-002\n" });
+    expect(await p.run("id", "new", "SCN", "UA", "--for", "REQ-UA-001")).toMatchObject({ code: 0, out: "SCN-UA-001-2\n" });
+    setup(false);
+    expect((await p.run("id", "new", "REQ", "UA")).out).toBe("REQ-UA-002\n");
+  });
+
+  test("SCN-IDS-004-2 true prints the bracketed form, also with --json", async () => {
+    setup(true);
+    expect(await p.run("id", "new", "REQ", "UA")).toMatchObject({ code: 0, out: "[REQ-UA-002]\n" });
+    expect(await p.run("id", "new", "SCN", "UA", "--for", "REQ-UA-001")).toMatchObject({ code: 0, out: "[SCN-UA-001-2]\n" });
+    expect(JSON.parse((await p.run("id", "new", "REQ", "UA", "--json")).out)).toEqual(["[REQ-UA-002]"]);
+    // ADR and DEC IDs never take brackets
+    expect((await p.run("id", "new", "ADR")).out).toMatch(/^ADR-\d{3}\n$/);
+  });
+
+  test("SCN-IDS-004-3 --count 3 prints three bracketed IDs", async () => {
+    setup(true);
+    expect(await p.run("id", "new", "REQ", "UA", "--count", "3")).toMatchObject({ code: 0, out: "[REQ-UA-002]\n[REQ-UA-003]\n[REQ-UA-004]\n" });
+  });
+
+  test("SCN-IDS-004-4 --for accepts the bracketed form", async () => {
+    setup(null);
+    expect(await p.run("id", "new", "SCN", "UA", "--for", "[REQ-UA-001]")).toMatchObject({ code: 0, out: "SCN-UA-001-2\n" });
+    setup(true);
+    expect((await p.run("id", "new", "SCN", "UA", "--for", "[REQ-UA-001]")).out).toBe("[SCN-UA-001-2]\n");
+    const bad = await p.run("id", "new", "SCN", "UA", "--for", "[REQ-UA-001");
+    expect(bad.code).toBe(2);
+    expect(bad.err).toContain("--for [REQ-UA-001 is not a REQ ID of UA");
   });
 });

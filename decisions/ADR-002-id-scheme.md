@@ -48,6 +48,7 @@ Capability codes for spec-ctx:
 
 ## Consequences
 
+- A requirement or scenario header carries its ID bare or in square brackets, `[REQ-IDX-003]`. OpenSpec reads the bracketed form since PR #1979. `[ids] brackets` in `spec-ctx.toml` picks the form that spec-ctx writes.
 - Renaming a requirement keeps its ID. Removing one retires the ID in `decisions/retired-ids.md`.
 - `specctx check` fails on a duplicated canonical ID, a reused retired ID, or a `Refs:` target that does not exist.
 

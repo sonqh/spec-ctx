@@ -11,8 +11,10 @@ const S = "[ \\t\\n\\r\\f\\v]";
 export const ID_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
 const ID_FULL = /^(?:REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})$/;
 const SCN_RE = /\bSCN-[A-Z]{2,6}-\d{3}-\d+\b/g;
-const REQ_HDR = new RegExp(`^### Requirement:${S}*(REQ-[A-Z]{2,6}-\\d{3})?${S}*(.*)$`, "s");
-const SCN_HDR = new RegExp(`^#### Scenario:${S}*(SCN-[A-Z]{2,6}-\\d{3}-\\d+)?${S}*(.*)$`, "s");
+// REQ-IDX-006 the ID is bare or in square brackets, the form OpenSpec reads since PR #1979 (027/D1).
+// Group 1 is the bare ID, group 2 the bracketed ID, group 3 the title.
+const REQ_HDR = new RegExp(`^### Requirement:${S}*(?:(REQ-[A-Z]{2,6}-\\d{3})|\\[(REQ-[A-Z]{2,6}-\\d{3})\\](?=${S}|$))?${S}*(.*)$`, "s");
+const SCN_HDR = new RegExp(`^#### Scenario:${S}*(?:(SCN-[A-Z]{2,6}-\\d{3}-\\d+)|\\[(SCN-[A-Z]{2,6}-\\d{3}-\\d+)\\](?=${S}|$))?${S}*(.*)$`, "s");
 const ADR_HDR = new RegExp(`^# (ADR-\\d{3})${S}+(.*)$`, "s");
 const REFS_RE = new RegExp(`^Refs:${S}*(.+)$`, "s");
 const TASK_REQ = new RegExp(`\\[(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)\\]`, "g");
@@ -238,8 +240,8 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
     }
     let m = REQ_HDR.exec(line);
     if (m) {
-      const rid = m[1];
-      const title = pyStrip(m[2]!);
+      const rid = m[1] ?? m[2];
+      const title = pyStrip(m[3]!);
       if (!rid) {
         // REQ-CHK-001 an archived header without an ID is history. adopt never writes it.
         if (status !== "archived") problems.push([rpath, i, "missing-id", title]);
@@ -261,8 +263,8 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
     }
     m = SCN_HDR.exec(line);
     if (m) {
-      const sid = m[1];
-      const title = pyStrip(m[2]!);
+      const sid = m[1] ?? m[2];
+      const title = pyStrip(m[3]!);
       if (!sid) {
         if (status !== "archived") problems.push([rpath, i, "missing-id", title]);
         continue;

@@ -12,7 +12,8 @@ export interface Config {
     tests: string[];
     ignore: string[];
   };
-  ids: { caps: string[]; task_pattern: string; paths: Record<string, string> };
+  /** REQ-ADOPT-010 `brackets` picks the header form that adopt and id new write (027/D2). */
+  ids: { caps: string[]; task_pattern: string; paths: Record<string, string>; brackets: boolean };
   bundle: { budget: number; depth: number };
   verify: { timeout_s: number };
   gate: { markdown: string[]; openspec: string; base: string };
@@ -35,7 +36,7 @@ export function defaults(): Config {
       tests: ["tests/**"],
       ignore: [],
     },
-    ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {} },
+    ids: { caps: [], task_pattern: "\\d+\\.\\d+", paths: {}, brackets: false },
     bundle: { budget: 8000, depth: 1 },
     verify: { timeout_s: 600 },
     // REQ-DIST-002 the gate lints nothing unless the project opts in (022/D1, ADR-006 item 9)
@@ -83,6 +84,11 @@ export function loadConfig(root: string): Config {
       throw new ConfigError(`${CONFIG_FILE}: ids.paths must be a table of code = "capability path".`);
     }
     cfg.ids.paths = { ...(v as Record<string, string>) };
+  }
+  // REQ-ADOPT-010 the header form that adopt and id new write (027/D2)
+  if ("brackets" in ids) {
+    if (typeof ids.brackets !== "boolean") throw new ConfigError(`${CONFIG_FILE}: ids.brackets must be true or false.`);
+    cfg.ids.brackets = ids.brackets;
   }
   const bundle = sec("bundle");
   for (const k of ["budget", "depth"] as const) {
@@ -151,6 +157,9 @@ ignore = []
 caps = []
 # Pattern of the task number in a tasks.md checkbox.
 task_pattern = '\\d+\\.\\d+'
+# true makes adopt and id new write the ID in square brackets, [REQ-UA-001], as OpenSpec PR #1979 reads it.
+# false writes the bare form, REQ-UA-001. The scan reads both forms.
+brackets = false
 
 [bundle]
 # Default character budget of a bundle.

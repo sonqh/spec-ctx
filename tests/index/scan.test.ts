@@ -1,4 +1,4 @@
-// Covers: REQ-IDX-001
+// Covers: REQ-IDX-001, REQ-IDX-006
 import { afterEach, describe, expect, test } from "vitest";
 import { Project, COVERS, TAG } from "../helpers.ts";
 
@@ -88,5 +88,67 @@ describe("scan", () => {
     const by = new Map(idx.entries.map((e: any) => [e.id, e]));
     expect((by.get("001/1.1") as any).change).toBe("001-x");
     expect((by.get("REQ-BBB-001") as any).status).toBe("archived");
+  });
+});
+
+describe("bracketed IDs (027/D1)", () => {
+  const MAIN = "openspec/specs/user-auth/spec.md";
+  const DELTA = "openspec/changes/002-y/specs/user-auth/spec.md";
+  const reqText = (hdr: string, scn: string): string => `# user-auth\n\n## Requirements\n\n### Requirement: ${hdr}\nThe system SHALL end idle sessions.\n\n#### Scenario: ${scn}\n- a\n`;
+  const check = async (): Promise<string> => (await p.run("check")).out;
+
+  test("SCN-IDX-006-1 a bracketed main header gives the ID and the title without brackets", async () => {
+    p = new Project(null);
+    p.write(MAIN, reqText("[REQ-UA-001] Session timeout", "[SCN-UA-001-1] Idle user"));
+    const idx = await p.build();
+    const req = idx.entries.find((e: any) => e.id === "REQ-UA-001");
+    expect(req).toMatchObject({ kind: "req", title: "Session timeout", status: "active", scenarios: ["SCN-UA-001-1"] });
+    expect(idx.entries.find((e: any) => e.id === "SCN-UA-001-1")).toMatchObject({ title: "Idle user", refs: ["REQ-UA-001"] });
+    expect(await check()).not.toContain("missing-id");
+    // a bare header gives the same title
+    p.write(MAIN, reqText("REQ-UA-001 Session timeout", "SCN-UA-001-1 Idle user"));
+    p.touchForward(MAIN);
+    expect((await p.build()).entries.find((e: any) => e.id === "REQ-UA-001").title).toBe("Session timeout");
+  });
+
+  test("SCN-IDX-006-2 a bracketed MODIFIED delta of a bare main header is one ID", async () => {
+    p = new Project(null);
+    p.write(MAIN, reqText("REQ-UA-001 Session timeout", "SCN-UA-001-1 Idle user"));
+    p.write(DELTA, "## MODIFIED Requirements\n\n" + reqText("[REQ-UA-001] Session timeout", "[SCN-UA-001-1] Idle user").split("## Requirements\n\n")[1]);
+    const r = await p.run("check");
+    expect(r.out).not.toContain("duplicate-id");
+    expect(r.out).not.toContain("missing-id");
+    expect(r.out).not.toContain("retitle-needs-renamed");
+    const q = await p.run("query", "REQ-UA-001", "--json");
+    const rows = JSON.parse(q.out);
+    const canon = (Array.isArray(rows) ? rows : rows.entries ?? rows.results).find((e: any) => e.id === "REQ-UA-001");
+    expect(canon).toMatchObject({ file: DELTA, status: "modified", title: "Session timeout" });
+    const idx = await p.build();
+    expect(idx.entries.filter((e: any) => e.id === "REQ-UA-001")).toHaveLength(2);
+  });
+
+  test("SCN-IDX-006-3 a bracketed scenario under a bracketed requirement links to it", async () => {
+    p = new Project(null);
+    p.write(MAIN, reqText("[REQ-UA-001] Session timeout", "[SCN-UA-001-1] Idle user"));
+    const out = await check();
+    expect(out).not.toContain("scenario-id-mismatch");
+    expect(out).not.toContain("req-without-scn");
+    // a bracketed scenario of another requirement still mismatches
+    p.write(MAIN, reqText("[REQ-UA-001] Session timeout", "[SCN-UA-002-1] Idle user"));
+    p.touchForward(MAIN);
+    expect(await check()).toContain("scenario-id-mismatch  SCN-UA-002-1 under REQ-UA-001");
+  });
+
+  test("SCN-IDX-006-4 a bracket that holds no spec-ctx ID is not an ID", async () => {
+    p = new Project(null);
+    let ms = 5000;
+    for (const hdr of ["[AUTH-3] Users sign in", "[draft] Name", "[REQ-UA-001]Name", "[REQ-UA-01] Name"]) {
+      p.write(MAIN, reqText(hdr, "SCN-UA-001-1 Idle user"));
+      // each write gets a later mtime, so the index rebuilds
+      p.touchForward(MAIN, (ms += 5000));
+      const out = await check();
+      expect(out, hdr).toContain(`${MAIN}:5  missing-id  ${hdr}`);
+      expect((await p.build()).entries.some((e: any) => e.kind === "req"), hdr).toBe(false);
+    }
   });
 });

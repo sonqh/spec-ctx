@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-29T22:22:57.383Z",
+  "bundle_chars": 5395,
+  "files": {
+    "src/adopt/plan.ts": "da37dbe415b27a2100d739b4df10a6b4ab0569ccc8b430e68ee10eb7a6fac78b",
+    "src/check/check.ts": "324ea9a8ccad05fc2db47eacd12acd67a968317ce2f48a835339731ec7d14a95",
+    "src/check/hints.ts": "195a554acd402f2b6afd5497237bd1f2787aff1bd91643b6f91dc454338351bc",
+    "src/config.ts": "4b0dad35f80f718157596e5d3b39ce7214b4dd609054479444927e46f6927f2e",
+    "tests/adopt/brackets.test.ts": "7e77353fe30840ce0707040ab284ea792e6a65fbe05370968790607cdfcbbc71"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-010"
+  ],
+  "started_at": "2026-10-29T22:21:01.080Z",
+  "task": "027/1.2",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/adopt tests/check tests/config.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 79 pass\n 0 fail\n 394 expect() calls\nRan 79 tests across 10 files. [2.74s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

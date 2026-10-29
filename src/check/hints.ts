@@ -22,9 +22,10 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "evidence-without-done": { level: "hard", hint: "Run specctx task done, or remove the evidence file." },
   "manual-evidence": { level: "advisory", hint: "Give the task a Verify command and run specctx task done again." },
   // REQ-CHK-001 the hint is the block to paste. The finding line carries the ID and both titles (021/D3).
+  // REQ-ADOPT-010 FROM copies the main header and TO copies the delta header, each in its own form (027/D4).
   "retitle-needs-renamed": {
     level: "hard",
-    hint: "Add to the delta before the MODIFIED block:\n## RENAMED Requirements\n- FROM: `### Requirement: <ID> <old title>`\n- TO: `### Requirement: <ID> <new title>`",
+    hint: "Add to the delta before the MODIFIED block. Write each ID as its header writes it, bare or in brackets:\n## RENAMED Requirements\n- FROM: `### Requirement: <ID> <old title>`\n- TO: `### Requirement: <ID> <new title>`",
   },
 };
 

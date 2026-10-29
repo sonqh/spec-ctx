@@ -229,6 +229,7 @@ ignore = []                             # globs that the scan skips
 [ids]
 caps = []                               # capability codes. Empty means any code is valid.
 task_pattern = '\d+\.\d+'               # the task number in a tasks.md checkbox
+brackets = false                        # true: adopt and id new write [REQ-UA-001]. The scan reads both forms.
 
 [ids.paths]
 UA = "user-auth"                        # capability path of each code. adopt writes the derived ones.
@@ -284,17 +285,17 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.1.2` on npm, with tags `v0.1.2` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, and 027. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
 ## Measured
 
-`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-28.md`. Its total row:
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-29.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0341 (n=72) | 0.90 (139/155) | 36 (of 81 reopens) | 94 (n=72) | 0 (0 baselined + 0 new) |
+| total | 0.0327 (n=76) | 0.90 (143/159) | 36 (of 81 reopens) | 98 (n=76) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

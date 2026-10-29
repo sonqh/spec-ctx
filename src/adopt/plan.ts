@@ -10,6 +10,9 @@ const REQ_HDR = /^### Requirement:[ \t]*(.*)$/s;
 const SCN_HDR = /^#### Scenario:[ \t]*(.*)$/s;
 const HAS_REQ = /^REQ-([A-Z]{2,6})-(\d{3})(?:[ \t]|$)/;
 const HAS_SCN = /^SCN-([A-Z]{2,6})-(\d{3})-(\d+)(?:[ \t]|$)/;
+// REQ-ADOPT-010 an ID in square brackets, the form of OpenSpec PR #1979 (027/D3)
+const BR_REQ = /^\[(REQ-[A-Z]{2,6}-\d{3})\](?:[ \t]|$)/;
+const BR_SCN = /^\[(SCN-[A-Z]{2,6}-\d{3}-\d+)\](?:[ \t]|$)/;
 const RENAME = /^- (FROM|TO):[ \t]*`### Requirement:[ \t]*(.*)`[ \t]*$/s;
 
 export interface Edit {
@@ -32,8 +35,18 @@ interface Block {
   /** header text after the keyword, without an ID */
   name: string;
   id: string | null;
+  /** the existing ID sits in square brackets */
+  bracketed: boolean;
   req?: Block;
   section: string;
+}
+
+interface RenameItem {
+  line: number;
+  name: string;
+  id: string | null;
+  bracketed: boolean;
+  raw: string;
 }
 
 interface SpecFile {
@@ -41,7 +54,7 @@ interface SpecFile {
   cap: string;
   lines: string[];
   blocks: Block[];
-  renames: { from: { line: number; name: string; id: string | null; raw: string }; to: { line: number; name: string; id: string | null; raw: string } }[];
+  renames: { from: RenameItem; to: RenameItem }[];
 }
 
 function listSpecs(root: string, base: string): string[] {
@@ -59,11 +72,13 @@ function listSpecs(root: string, base: string): string[] {
   return out;
 }
 
-function splitId(text: string, re: RegExp): { id: string | null; name: string } {
+/** REQ-ADOPT-010 the ID at the start of a header text, bare or in square brackets, and the name after it. */
+function splitId(text: string, re: RegExp, br: RegExp): { id: string | null; name: string; bracketed: boolean } {
   const m = re.exec(text);
-  if (!m) return { id: null, name: text.trim() };
-  const id = m[0].trim();
-  return { id, name: text.slice(m[0].length).trim() };
+  if (m) return { id: m[0].trim(), name: text.slice(m[0].length).trim(), bracketed: false };
+  const b = br.exec(text);
+  if (b) return { id: b[1]!, name: text.slice(b[0].length).trim(), bracketed: true };
+  return { id: null, name: text.trim(), bracketed: false };
 }
 
 function parse(root: string, rel: string, cap: string): SpecFile {
@@ -73,7 +88,7 @@ function parse(root: string, rel: string, cap: string): SpecFile {
   let section = "";
   let fence = false;
   let req: Block | undefined;
-  let from: SpecFile["renames"][number]["from"] | null = null;
+  let from: RenameItem | null = null;
   lines.forEach((line, i) => {
     const t = line.trim();
     if (t.startsWith("```") || t.startsWith("~~~")) fence = !fence;
@@ -84,21 +99,21 @@ function parse(root: string, rel: string, cap: string): SpecFile {
     }
     let m = REQ_HDR.exec(line);
     if (m) {
-      const { id, name } = splitId(m[1]!, HAS_REQ);
-      req = { kind: "req", line: i + 1, raw: line, name, id, section };
+      const { id, name, bracketed } = splitId(m[1]!, HAS_REQ, BR_REQ);
+      req = { kind: "req", line: i + 1, raw: line, name, id, bracketed, section };
       blocks.push(req);
       return;
     }
     m = SCN_HDR.exec(line);
     if (m) {
-      const { id, name } = splitId(m[1]!, HAS_SCN);
-      blocks.push({ kind: "scn", line: i + 1, raw: line, name, id, req, section });
+      const { id, name, bracketed } = splitId(m[1]!, HAS_SCN, BR_SCN);
+      blocks.push({ kind: "scn", line: i + 1, raw: line, name, id, bracketed, req, section });
       return;
     }
     m = RENAME.exec(line);
     if (m && section === "RENAMED") {
-      const { id, name } = splitId(m[2]!, HAS_REQ);
-      const item = { line: i + 1, name, id, raw: line };
+      const { id, name, bracketed } = splitId(m[2]!, HAS_REQ, BR_REQ);
+      const item = { line: i + 1, name, id, bracketed, raw: line };
       if (m[1] === "FROM") from = item;
       else if (from) {
         renames.push({ from, to: item });
@@ -210,11 +225,15 @@ export function planAdopt(root: string, cfg: Config): Plan {
 
   const edits: Edit[] = [];
   const unmatched: Plan["unmatched"] = [];
-  const reqHeader = (id: string, name: string): string => `### Requirement: ${id} ${name}`;
-  const scnHeader = (id: string, name: string): string => `#### Scenario: ${id} ${name}`;
+  // REQ-ADOPT-010 the configured form of a new ID: bare, or in square brackets (027/D3)
+  const form = (id: string, br = cfg.ids.brackets): string => (br ? `[${id}]` : id);
+  const reqHeader = (id: string, name: string, br?: boolean): string => `### Requirement: ${form(id, br)} ${name}`;
+  const scnHeader = (id: string, name: string): string => `#### Scenario: ${form(id)} ${name}`;
   // main spec: requirement id by name, and scenario id by requirement and name
   const mainReq = new Map<string, string>();
   const mainScn = new Map<string, string>();
+  // the form of each main header after adopt: its own form when it had an ID, else the configured form
+  const mainBr = new Map<string, boolean>();
   for (const f of mainFiles) {
     const code = codeFor.get(f.cap)!;
     const seen = new Set<string>();
@@ -228,6 +247,7 @@ export function planAdopt(root: string, cfg: Config): Plan {
         const id = b.id ?? nextReq(code);
         if (!b.id) edits.push({ file: f.rel, line: b.line, old: b.raw, new: reqHeader(id, b.name) });
         mainReq.set(`${f.cap}\u0000${b.name}`, id);
+        mainBr.set(`${f.cap}\u0000${b.name}`, b.id ? b.bracketed : cfg.ids.brackets);
         b.id = id;
       } else if (b.req?.id) {
         const id = b.id ?? nextScn(b.req.id);
@@ -248,7 +268,8 @@ export function planAdopt(root: string, cfg: Config): Plan {
         continue;
       }
       renamedTo.set(r.to.name, id);
-      if (!r.from.id) edits.push({ file: f.rel, line: r.from.line, old: r.from.raw, new: `- FROM: \`${reqHeader(id, r.from.name)}\`` });
+      // REQ-ADOPT-010 the FROM line names the main header, so it takes the form of that header (027/D3)
+      if (!r.from.id) edits.push({ file: f.rel, line: r.from.line, old: r.from.raw, new: `- FROM: \`${reqHeader(id, r.from.name, mainBr.get(`${f.cap}\u0000${r.from.name}`))}\`` });
       if (!r.to.id) edits.push({ file: f.rel, line: r.to.line, old: r.to.raw, new: `- TO: \`${reqHeader(id, r.to.name)}\`` });
     }
     for (const b of f.blocks) {

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-29T22:20:55.926Z",
+  "bundle_chars": 7344,
+  "files": {
+    "src/index/scan.ts": "2888cbdad13da6c0ce8ecaa1ab05bffbe5be73d8e460bb228d0a9fc5a96f38d2",
+    "tests/index/scan.test.ts": "1e2536bf880371ba49519e51826777de3a6e9bbaeb3b9953da00579877f4ed1e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDX-006"
+  ],
+  "started_at": "2026-10-29T22:19:09.324Z",
+  "task": "027/1.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/index && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 32 pass\n 0 fail\n 293 expect() calls\nRan 32 tests across 6 files. [3.85s]",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

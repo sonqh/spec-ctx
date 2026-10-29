@@ -58,7 +58,8 @@ export interface Finding {
   detail?: string;
 }
 
-const TO_LINE = /^-\s*TO:\s*`###\s+Requirement:\s*(REQ-[A-Z]{2,6}-\d{3})?\s*(.*?)`\s*$/;
+// REQ-ADOPT-010 the ID of a TO line is bare or in square brackets (027/D4)
+const TO_LINE = /^-\s*TO:\s*`###\s+Requirement:\s*(?:(REQ-[A-Z]{2,6}-\d{3})|\[(REQ-[A-Z]{2,6}-\d{3})\](?=\s|`))?\s*(.*?)`\s*$/;
 
 /** The headers that the TO lines of the RENAMED blocks of one delta file name: [id or null, title]. */
 function renamedTargets(root: string, file: string): [string | null, string][] {
@@ -71,7 +72,7 @@ function renamedTargets(root: string, file: string): [string | null, string][] {
     }
     if (section !== "RENAMED") continue;
     const m = TO_LINE.exec(line.trim());
-    if (m) out.push([m[1] ?? null, m[2]!.trim()]);
+    if (m) out.push([m[1] ?? m[2] ?? null, m[3]!.trim()]);
   }
   return out;
 }

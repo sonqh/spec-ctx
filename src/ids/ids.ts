@@ -1,4 +1,4 @@
-// REQ-IDS-001 REQ-IDS-002 REQ-IDS-003 ID allocation and retirement.
+// REQ-IDS-001 REQ-IDS-002 REQ-IDS-003 REQ-IDS-004 ID allocation and retirement.
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
@@ -56,20 +56,25 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
   };
   const seq = (start: number, fmt: (n: number) => string): string[] =>
     Array.from({ length: o.count }, (_, i) => fmt(start + i));
+  // REQ-IDS-004 a REQ or SCN ID goes into a header, so it takes the configured form (027/D5)
+  const form = (ids: string[]): string[] => (cfg.ids.brackets ? ids.map((id) => `[${id}]`) : ids);
   switch (kind) {
     case "REQ": {
       const cap = checkCap(o.cap);
       const start = next(new RegExp(`^REQ-${cap}-(\\d{3})$`));
       if (start + o.count - 1 > 999) throw new UsageExit(`no free REQ number for ${cap}`);
-      return seq(start, (n) => `REQ-${cap}-${pad(n)}`);
+      return form(seq(start, (n) => `REQ-${cap}-${pad(n)}`));
     }
     case "SCN": {
       const cap = checkCap(o.cap);
       if (!o.forReq) throw new UsageExit("id new SCN needs --for <REQ-ID>");
-      const m = /^REQ-([A-Z]{2,6})-(\d{3})$/.exec(o.forReq);
-      if (!m || m[1] !== cap) throw new UsageExit(`--for ${o.forReq} is not a REQ ID of ${cap}`);
-      const start = next(new RegExp(`^SCN-${cap}-${m[2]}-(\\d+)$`));
-      return seq(start, (n) => `SCN-${cap}-${m[2]}-${n}`);
+      // REQ-IDS-004 --for takes the bare or the bracketed form
+      const m = /^(?:REQ-([A-Z]{2,6})-(\d{3})|\[REQ-([A-Z]{2,6})-(\d{3})\])$/.exec(o.forReq);
+      const forCap = m?.[1] ?? m?.[3];
+      const forNum = m?.[2] ?? m?.[4];
+      if (!m || forCap !== cap) throw new UsageExit(`--for ${o.forReq} is not a REQ ID of ${cap}`);
+      const start = next(new RegExp(`^SCN-${cap}-${forNum}-(\\d+)$`));
+      return form(seq(start, (n) => `SCN-${cap}-${forNum}-${n}`));
     }
     case "ADR": {
       const start = next(/^ADR-(\d{3})$/);
