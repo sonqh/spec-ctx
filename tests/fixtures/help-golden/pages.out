@@ -394,6 +394,7 @@ Usage:
   `specctx handoff ask <question> [flags]`
 
 Flags:
+  `--change <name>`            Give the question to this change, not to the current task. The key or the full folder name works.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
   `--help`                     Show this help.
@@ -404,7 +405,7 @@ Exit codes:
   `3` An internal error.
 
 Example:
-  `specctx handoff ask "Keep the old flag?"`
+  `specctx handoff ask --change 008 "plan ready for 008-tasks. Approve to start the tasks?"`
 
 == handoff resolve
 specctx handoff resolve: Move open question n to the resolved list.

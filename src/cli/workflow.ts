@@ -217,7 +217,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
     }
     case "handoff ask": {
       const { ask } = await import("../handoff/handoff.ts");
-      const h = ask(c.root, entries, c.p.positional.join(" "));
+      const h = ask(c.root, entries, c.p.positional.join(" "), c.p.flags.change as string | undefined);
       if (c.json) print(c, { open_questions: h.open_questions });
       else c.io.out(`open question ${h.asked ?? h.open_questions.length} added\n`);
       return 0;

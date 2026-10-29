@@ -10,7 +10,7 @@ import type { Entry, Index } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { hasEvidence, nextTask, tasksOf } from "../tasks/tasks.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
-import { capQuestion, failsInWindow, openQuestionFor } from "./fails.ts";
+import { capQuestion, failLine, failsInWindow, openQuestionFor } from "./fails.ts";
 import { openspecCommand, openspecStatus } from "./openspec.ts";
 
 /** The closed action list. A skill stops on any value outside it. */
@@ -155,7 +155,8 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   if (current) {
     const fails = failsInWindow(root, current.id, qs);
     const last = fails.at(-1);
-    const reason = last ? `Verify failed (exit ${last.file.verify.exit ?? "timeout"}): ${last.file.stderr_tail.split("\n")[0]?.trim() || "no output"}` : null;
+    // REQ-LOOP-006 the reason names the last fail line of the tail (029/D3)
+    const reason = last ? `Verify failed (exit ${last.file.verify.exit ?? "timeout"}): ${failLine(last.file.stderr_tail)}` : null;
     if (fails.length >= cfg.loop.max_attempts && !openQuestionFor(root, current.id, qs)) {
       const q = capQuestion(current.id, fails.length, last?.file.stderr_tail ?? "");
       return done({ action: "ask", attempt: fails.length, command: `specctx handoff ask "${q}"`, human: true, reason, state: "attempts_exhausted", task: current.id });

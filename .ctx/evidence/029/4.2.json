@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-29T23:41:57.936Z",
+  "bundle_chars": 8299,
+  "files": {
+    "tests/gov/ci-parity.test.ts": "8125f18ca404058d19af09ac6b957413d7aac5774083fe86bc246b644cfe7c0c",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001",
+    "REQ-GOV-004"
+  ],
+  "started_at": "2026-10-29T23:37:58.776Z",
+  "task": "029/4.2",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run ci:local",
+    "exit": 0,
+    "stderr_tail": "$ bash scripts/ci-local.sh",
+    "stdout_sha256": "1b684b0a3a23ac47740fcc0087b5e73555c951e10cb4eb69498972f318b3658d"
+  }
+}

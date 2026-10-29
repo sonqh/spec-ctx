@@ -210,4 +210,5 @@ All six exit 0. `openspec/specs/greeting/spec.md` carries `REQ-GRT-001` with its
 - `openspec status --change <name>` after archive says `No changes exist.` The change is under `openspec/changes/archive/`.
 - Upstream `validate --all --strict` exits 0 with an INFO line when archive would refuse a MODIFIED header. `specctx check` catches the retitle case with `retitle-needs-renamed`.
 - Open questions live in `.ctx/questions.json`. `specctx handoff ask "<text>"` adds one and `specctx handoff resolve <n> "<answer>"` closes it. `handoff.md` shows both lists.
+- `specctx handoff ask --change <c> "<text>"` gives the question to change `<c>`. `specctx next` then returns `ask` with `human: true` for that change until a human resolves the question. The `specctx-run` skill uses it for the plan stop.
 - Commit `.ctx/evidence/`, `.ctx/handoff.md`, `.ctx/questions.json`, and `.ctx/baseline.json`. `init` puts the per session files in `.gitignore`.

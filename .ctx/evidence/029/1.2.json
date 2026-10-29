@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-29T23:35:48.175Z",
+  "bundle_chars": 8189,
+  "files": {
+    "src/cli/commands.ts": "28507794ff31c652a222fb19ca6f0e9f9ab3cbf28ed0dff154cf5929217103e6",
+    "src/loop/fails.ts": "cb402bc9015de7952ce44984d968bdd93e0f3d0786e6e9018fa089f00e20083d",
+    "src/loop/next.ts": "1e8bd2588a2ce33dc7d3d853b99665aff2e972f3dbbc937847fe494f8f2dbedb",
+    "src/loop/openspec.ts": "259881e88398779bf9a3a2e358fd057ad6c831747a496b5a895532b93dac074d",
+    "tests/loop/fail-reason.test.ts": "f1b3fb307de52b36cc750c311905af630c905fd8a1bbe86176fe6962fe8c31ca",
+    "tests/loop/next.test.ts": "df43fee7d9427a7dd7b17908fe2ee76f48409af6f76ff64704f915fac20d6020"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-006",
+    "REQ-LOOP-001"
+  ],
+  "started_at": "2026-10-29T23:35:16.931Z",
+  "task": "029/1.2",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 21 pass\n 0 fail\n 321 expect() calls\nRan 21 tests across 4 files. [970.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

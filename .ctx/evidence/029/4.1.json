@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-29T23:37:23.108Z",
+  "bundle_chars": 8112,
+  "files": {
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-10-29T23:37:22.299Z",
+  "task": "029/4.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "grep -Fqx '| LOOP | loop |' decisions/ADR-002-id-scheme.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation decisions/ADR-002-id-scheme.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "a52e290c0be25179a21109f103ca601ea518e10c385c78f3f50733dc4d0daab3"
+  }
+}

@@ -1,4 +1,4 @@
-// Covers: REQ-SKL-001
+// Covers: REQ-SKL-001, REQ-SKL-003
 import { describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
@@ -36,13 +36,12 @@ describe("skills", () => {
     }
   });
 
-  test("SCN-SKL-001-3 the run skill names the loop, every action, the upstream skills, and the commands", () => {
+  test("SCN-SKL-001-3 the run skill names the loop, every action, the upstream propose skill, and the commands", () => {
     const text = readFileSync(file(RUN), "utf8");
     const need = [
       "specctx next --json",
       "specctx handoff write",
       "openspec-propose",
-      "openspec-archive-change",
       "specctx task start <t>",
       "specctx task done <t>",
       "specctx gate --strict",
@@ -55,6 +54,17 @@ describe("skills", () => {
       expect(text, a).toMatch(new RegExp(`^- \`${a}\``, "m"));
     }
     for (const t of ['"run"', '"continue"', '"next task"', '"build this"', '"carry on"']) expect(text, t).toContain(t);
+  });
+
+  test("SCN-SKL-003-1 the plan action takes a kebab case name, reads through specctx, and ends with the plan stop question", () => {
+    const text = readFileSync(file(RUN), "utf8");
+    for (const c of ["kebab case", "specctx bundle", "specctx query", "never `openspec show`", 'specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"']) expect(text, c).toContain(c);
+  });
+
+  test("SCN-SKL-003-2 the archive action runs the guidance and the command field, with the default OpenSpec command", () => {
+    const text = readFileSync(file(RUN), "utf8");
+    for (const c of ["operations.archive.guidance", "the command in the `command` field", "npx -y @fission-ai/openspec@latest"]) expect(text, c).toContain(c);
+    expect(text).not.toContain("openspec-archive-change");
   });
 
   test("SCN-SKL-001-4 each old skill is a six line alias that names specctx-run", () => {

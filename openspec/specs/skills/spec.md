@@ -21,7 +21,7 @@ Refs: ADR-006
 #### Scenario: SCN-SKL-001-3 Every action has its commands
 - **WHEN** the test reads `skills/specctx-run/SKILL.md`
 - **THEN** it names `specctx next --json`, `specctx handoff write`, and each of `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, `stop`
-- **THEN** it names the skills `openspec-propose` and `openspec-archive-change`
+- **THEN** it names the skill `openspec-propose`
 - **THEN** it names `specctx task start <t>`, `specctx task done <t>`, `specctx gate --strict`, `specctx query --change <c> --kind req`, and `specctx check --strict`
 
 #### Scenario: SCN-SKL-001-4 Aliases
@@ -39,3 +39,16 @@ Refs: ADR-006
 #### Scenario: SCN-SKL-002-1 Copies match
 - **WHEN** `init --skills` runs
 - **THEN** `diff -r skills/ .claude/skills/` for every folder under `skills/` is empty
+
+### Requirement: REQ-SKL-003 Plan and archive steps
+`specctx-run` SHALL take the change name of `plan` from the request in kebab case and read requirements with `specctx bundle` or `specctx query`, never `openspec show`. The plan stop SHALL run `specctx handoff ask --change <c>`. `archive` SHALL run the steps of `operations.archive.guidance`, then the `command` field, then the post-archive checks. The skill SHALL name `npx -y @fission-ai/openspec@latest` for an absent `[gate] openspec`.
+
+Refs: REQ-SKL-001, REQ-LOOP-005
+
+#### Scenario: SCN-SKL-003-1 Plan steps
+- **WHEN** the test reads `skills/specctx-run/SKILL.md`
+- **THEN** it names `kebab case`, `specctx bundle`, `specctx query`, `openspec show`, and `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`
+
+#### Scenario: SCN-SKL-003-2 Archive steps
+- **WHEN** the test reads `skills/specctx-run/SKILL.md`
+- **THEN** it names `operations.archive.guidance`, the `command` field, and `npx -y @fission-ai/openspec@latest`, and it does not name `openspec-archive-change`

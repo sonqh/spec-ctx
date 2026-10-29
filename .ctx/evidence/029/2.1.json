@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-29T23:36:35.223Z",
+  "bundle_chars": 4101,
+  "files": {
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "tests/stats/metrics.test.ts": "a0658da64cc1f3f2ca6fb18759126eb51fabce2c83c5a0f558c3b60d0007abb8"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-004"
+  ],
+  "started_at": "2026-10-29T23:35:56.495Z",
+  "task": "029/2.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/stats",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 16 pass\n 0 fail\n 70 expect() calls\nRan 16 tests across 2 files. [737.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

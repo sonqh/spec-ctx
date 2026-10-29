@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-29T23:37:06.359Z",
+  "bundle_chars": 7563,
+  "files": {
+    "tests/skills/lint.test.ts": "72836a6f8bf79a6d697cfe263a1806fc5d8e76a78b0e29d00cc98ef3bde9a199"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SKL-001",
+    "REQ-SKL-003"
+  ],
+  "started_at": "2026-10-29T23:36:37.786Z",
+  "task": "029/3.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/skills tests/init && node dist/cli.js lint tells --baseline 0 skills/specctx-run/SKILL.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation skills/specctx-run/SKILL.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 24 pass\n 0 fail\n 246 expect() calls\nRan 24 tests across 3 files. [818.00ms]",
+    "stdout_sha256": "5d209674e63f7ee3e0bc693d99ad45add7d789c41b5d41bc72c8954ab1002dec"
+  }
+}

@@ -55,6 +55,8 @@ Command flags:
   `id new --for <REQ-ID>`      Give the requirement of a new scenario.
   `id new --count <n>`         Print n IDs in sequence.
   `task done --manual <note>`  Record a manual note. A task with no `Verify:` command needs this flag.
+  `handoff ask --change <name>`
+                               Give the question to this change, not to the current task. The key or the full folder name works.
   `init --schema`              Also install the ID templates and add the spec-ctx rules to openspec/config.yaml.
   `init --skills`              Also install the specctx-run skill and its aliases in .claude/skills and .agents/skills.
   `init --all`                 Do all three.

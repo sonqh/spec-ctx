@@ -20,7 +20,7 @@ Tick no checkbox by hand. Allocate IDs with `node dist/cli.js id new`. Do not op
 
 ## Workflow
 
-- One OpenSpec change at a time, in order: 001, 002, 003. Plan with the upstream `openspec-propose` skill and archive with `openspec-archive-change`. Never run `/opsx:apply`. The `specctx-run` skill replaces it.
+- One OpenSpec change at a time, in order: 001, 002, 003. Plan with the upstream `openspec-propose` skill, but read specs with `specctx bundle` or `specctx query`, never `openspec show`. Archive with the command that `specctx next` prints, which runs the OpenSpec CLI archive. Never run `/opsx:apply`. The `specctx-run` skill replaces it.
 - Tag code with its REQ: `// REQ-IDX-001`. Tag tests: `// Covers: REQ-IDX-001`.
 - A task closes when `task done` ran its `Verify:` command with exit 0 and wrote the evidence under `.ctx/evidence/`.
 - Before archive: `check --strict` and `npx -y @fission-ai/openspec@latest validate --all --strict` must both exit 0. Run validate again after archive, before push.

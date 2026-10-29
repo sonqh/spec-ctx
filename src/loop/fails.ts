@@ -96,3 +96,14 @@ export function capQuestion(task: string, attempts: number, tail: string): strin
 export function blockedLine(n: number): string {
   return `blocked: question ${n} written. Run specctx handoff resolve ${n} "<answer>" to continue.`;
 }
+
+/**
+ * REQ-LOOP-006 the reason line of a Verify tail (029/D3): the last line that starts with `fail:` or `FAIL` after
+ * leading spaces, else the last non-empty line, else `no output`. The match is case sensitive.
+ */
+export function failLine(tail: string): string {
+  const lines = tail.split("\n").map((l) => l.trimEnd());
+  const hit = lines.filter((l) => /^\s*(?:fail:|FAIL)/.test(l)).at(-1);
+  if (hit !== undefined) return hit.trim();
+  return lines.filter((l) => l.trim()).at(-1)?.trim() ?? "no output";
+}

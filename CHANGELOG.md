@@ -7,6 +7,14 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 ### Added
 
 - `check` gets the rule `weak-verify`. It fires on a task line of an active change whose Verify command is only `true`, `:`, `exit 0`, or one `echo` with no `;`, `&`, or `|`. Whitespace around the command does not matter. Plain `check` prints `warning: weak-verify <task> <file>:<line>` and keeps exit 0. `check --strict` and `gate --strict` report a hard finding. The hint reads `Name a test file or a command whose exit code proves the task.` `baseline write` records it like `task-without-verify`. `specctx next` returns `cite` for it before the task starts. REQ-CHK-005, REQ-LOOP-004, REQ-ADOPT-005.
+- `handoff ask --change <c> "<text>"` gives the question to the active change `<c>`. The key or the full folder name works. An unknown change exits 2. `specctx next` then returns `ask` with `human: true` for that change until `handoff resolve` runs. The plan stop of `specctx-run` now holds in the engine. REQ-LOOP-005.
+
+### Changed
+
+- The `fix` reason of `specctx next` names the last line of the Verify tail that starts with `fail:` or `FAIL`. With no such line it names the last non-empty line. It used to name the first line. REQ-LOOP-006.
+- `specctx-run` takes the change name of `plan` from the request in kebab case. It reads requirements with `specctx bundle` or `specctx query`, never `openspec show`. The plan stop runs `specctx handoff ask --change <c>`. `archive` runs the steps under `operations.archive.guidance`, then the command in the `command` field. It no longer names `openspec-archive-change`. The skill names `npx -y @fission-ai/openspec@latest` when `[gate] openspec` is absent. REQ-SKL-001, REQ-SKL-003.
+- `stats` debt also counts `task-without-verify` and `weak-verify`, in the total and in each change row. REQ-STAT-004.
+- ADR-002 lists the capability code `LOOP` with the path `loop`.
 
 ## 0.2.0
 

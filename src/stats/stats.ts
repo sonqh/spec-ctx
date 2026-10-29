@@ -8,7 +8,10 @@ import type { Entry } from "../index/types.ts";
 import { isFailFile } from "../tasks/evidence.ts";
 import { cmpStr, cpLen } from "../util/pystr.ts";
 
-export const DEBT_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence"];
+// REQ-STAT-004 the two Verify rules count as debt too, the same rules the baseline can hold (029/D5)
+export const DEBT_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence", "task-without-verify", "weak-verify"];
+/** The debt rules whose ID is a task. A change row counts them. */
+const TASK_DEBT_RULES = ["done-without-evidence", "manual-evidence", "task-without-verify", "weak-verify"];
 
 interface Ev {
   task: string;
@@ -159,11 +162,11 @@ export function computeStats(root: string, entries: Entry[], strictFindings: Fin
   ];
   const fresh = [...new Set(current)].filter((k) => !base.has(k));
   const debtAll: Metric = { value: base.size + fresh.length, n: base.size + fresh.length, text: `${base.size + fresh.length} (${base.size} baselined + ${fresh.length} new)` };
-  // a change row counts the task scoped debt: tasks without evidence and tasks with manual evidence
+  // a change row counts the task scoped debt: no evidence, manual evidence, no Verify, and a weak Verify (029/D5)
   const taskDebt = (change: string): Metric => {
     const keys = [...base, ...fresh].filter((k) => {
       const [rule, id] = k.split(" ");
-      return (rule === "done-without-evidence" || rule === "manual-evidence") && nameOf(id ?? "") === change;
+      return TASK_DEBT_RULES.includes(rule ?? "") && nameOf(id ?? "") === change;
     });
     return { value: keys.length, n: keys.length, text: String(keys.length) };
   };

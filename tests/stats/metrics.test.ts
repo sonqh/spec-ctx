@@ -100,4 +100,16 @@ describe("stats metrics", () => {
     const s = await json(p);
     expect(s.total.debt).toMatchObject({ value: 21, text: "21 (19 baselined + 2 new)" });
   });
+  test("SCN-STAT-004-3 debt counts task-without-verify and weak-verify, in the total and in the change row", async () => {
+    p = new Project();
+    // the base fixture also holds manual evidence for the active task 001/1.1
+    p.write(".ctx/evidence/001/1.1.json", p.read(".ctx/evidence/001/1.1.json").replace('"manual"', '"command"'));
+    const before = (await json(p)).total.debt.value as number;
+    evidence(p, 2, () => ({}));
+    // 1.1 keeps the weak Verify `true`. 1.2 loses its Verify.
+    p.write(TASKS, p.read(TASKS).replace("- [x] 1.2 T. [REQ-AAA-001] Verify: `true`", "- [x] 1.2 T. [REQ-AAA-001]"));
+    const s = await json(p);
+    expect(row(s, "007-m").debt).toMatchObject({ value: 2, text: "2" });
+    expect(s.total.debt.value).toBe(before + 2);
+  });
 });

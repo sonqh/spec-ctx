@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-29T23:34:58.412Z",
+  "bundle_chars": 8774,
+  "files": {
+    "src/cli.ts": "0895f1edc853ae9462716e1256bc09ebcbc583c0376c00c1565c27c24bc80839",
+    "src/cli/args.ts": "be5ea65213c12c93203f29277d499a925466ff67b2d1b2bd662ed14985c179c5",
+    "src/cli/commands.ts": "28507794ff31c652a222fb19ca6f0e9f9ab3cbf28ed0dff154cf5929217103e6",
+    "src/cli/help.ts": "0bf571102581bfae2b4ccf8f4a704e06909f7e97ba9e3c2d035a632721066d59",
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "83ce44e0297ba9b6821f38e6f58e9c27db61d6266ab62b95b195dfae1c706e7b",
+    "src/cli/workflow.ts": "f097562a9aef297072a4138ecc9296b5e250b365a5db7ed2ee1b8e88085293a3",
+    "src/handoff/handoff.ts": "190a10da7ddf44f78e6295c003e1de3833f7c82df3344c310a96ebf39346e227",
+    "src/handoff/questions.ts": "934312d36a81dc547103eb10d1707f710c2d720e8ceeca659db3a96e5aff4a7c",
+    "src/main.ts": "185beabfc7f50afe5f98296631a95c42f0f5e6dd1034857d12b9f864b20d7019",
+    "src/version.ts": "6cd78a25f67710f48e7b13e44ec28aac84978852cfc60cf22f0168a47a223f99",
+    "tests/cli/cli.test.ts": "4974a441cfe067ef2abc4550b6e24598cdb160f95566d7a3b608d6bc821f57e4",
+    "tests/cli/help.test.ts": "8bae9727a8b540a9ade992c63ea8f88b58b77c5f73889379d54a7a76b817b04a",
+    "tests/cli/status-archived.test.ts": "d8ddef2f245c9cf59876b710f1ed182e515c3e8c315e26a3c6f216cd520511c0",
+    "tests/handoff/handoff.test.ts": "4e7f8d2eae747c0d141f42cd6e0d1cca9df3465ed3701004b7fa58347b75e55e",
+    "tests/loop/fails.test.ts": "12431ec222ae0363b00db1b745889a6abe44b3c00005afba6532571205fdc5c1",
+    "tests/loop/plan-stop.test.ts": "3d8609fd0f9e80c3a09d9d7f02f4d569e41ee4301180495a30f095e06452e84b",
+    "tests/stats/cli.test.ts": "914f55184df473f3488488066f09ba13e3b77a47787078061a9efefc0ecf92f3"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-005",
+    "REQ-HND-002",
+    "REQ-CLI-001"
+  ],
+  "started_at": "2026-10-29T23:33:49.345Z",
+  "task": "029/1.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/handoff tests/cli",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 102 pass\n 0 fail\n 759 expect() calls\nRan 102 tests across 13 files. [5.70s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

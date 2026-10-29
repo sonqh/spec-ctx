@@ -137,7 +137,8 @@ export const TABLE: CommandHelp[] = [
   { name: "handoff write", group: "Write", args: "", summary: "Write .ctx/handoff.md from the index and the evidence.", flags: [], exit: PLAIN, example: "specctx handoff write" },
   {
     name: "handoff ask", group: "Write", args: "<question>", summary: "Add an open question to the handoff.",
-    flags: [], exit: PLAIN, example: "specctx handoff ask \"Keep the old flag?\"",
+    flags: [["--change <name>", "Give the question to this change, not to the current task. The key or the full folder name works."]],
+    exit: PLAIN, example: "specctx handoff ask --change 008 \"plan ready for 008-tasks. Approve to start the tasks?\"",
   },
   {
     name: "handoff resolve", group: "Write", args: "<n> <answer>", summary: "Move open question n to the resolved list.",

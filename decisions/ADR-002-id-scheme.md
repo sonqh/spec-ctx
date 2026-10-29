@@ -38,6 +38,7 @@ Capability codes for spec-ctx:
 | ADOPT | adopt-existing |
 | STAT | metrics |
 | LINT | linters |
+| LOOP | loop |
 | GOV | spec-governance |
 
 ## Why

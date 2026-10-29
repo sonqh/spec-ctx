@@ -2,7 +2,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
-import { changeKey } from "../index/scan.ts";
+import { changeKey, matchesChange } from "../index/scan.ts";
+import { activeFolders } from "../loop/next.ts";
 import type { Entry } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { activeChanges, nextTask } from "../tasks/tasks.ts";
@@ -171,9 +172,18 @@ function refresh(root: string, entries: Entry[]): Handoff {
   return h;
 }
 
-/** REQ-HND-002 append an open question to questions.json and render the handoff again (022/D6). */
-export function ask(root: string, entries: Entry[], text: string): Handoff {
-  const q = addQuestion(root, currentTask(root), text);
+/**
+ * REQ-HND-002 append an open question to questions.json and render the handoff again (022/D6).
+ * REQ-LOOP-005 with a change, the question carries the active change folder, so next blocks the change (029/D1).
+ */
+export function ask(root: string, entries: Entry[], text: string, change?: string): Handoff {
+  let task = currentTask(root);
+  if (change !== undefined) {
+    const folder = activeFolders(root).find((f) => matchesChange(f, change));
+    if (folder === undefined) throw new UsageExit(`no active change ${change}`);
+    task = folder;
+  }
+  const q = addQuestion(root, task, text);
   const h = refresh(root, entries);
   h.asked = q.n;
   return h;
