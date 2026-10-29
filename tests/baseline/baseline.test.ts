@@ -73,7 +73,10 @@ describe("baseline", () => {
     expect(list).toContain(`missing-id ${DELTA} Five failures`);
     const r = await p.run("check", "--strict");
     expect(r.code, r.out).toBe(0);
+    // the gate must not reach the network: parallel npx installs race in CI
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
     const g = await p.run("gate", "--strict");
+    delete process.env.SPECCTX_OPENSPEC;
     expect(g.code, g.out).toBe(0);
   });
 
