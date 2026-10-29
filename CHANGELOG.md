@@ -6,12 +6,17 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Added
 
+- `check` gets the rule `weak-verify`. It fires on a task line of an active change whose Verify command is only `true`, `:`, `exit 0`, or one `echo` with no `;`, `&`, or `|`. Whitespace around the command does not matter. Plain `check` prints `warning: weak-verify <task> <file>:<line>` and keeps exit 0. `check --strict` and `gate --strict` report a hard finding. The hint reads `Name a test file or a command whose exit code proves the task.` `baseline write` records it like `task-without-verify`. `specctx next` returns `cite` for it before the task starts. REQ-CHK-005, REQ-LOOP-004, REQ-ADOPT-005.
+
+## 0.2.0
+
+### Added
+
 - `specctx next [--json] [--change <c>]`. One read command names the next action of the loop from the files on disk. The `action` is one of `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, `stop`. The object has nine sorted keys: `action`, `attempt`, `change`, `command`, `human`, `max_attempts`, `reason`, `state`, `task`. The human form prints `action:` first and ends with `next: <command>`. Planning state comes from `<openspec> status --change <c> --json`, with the command from `[gate] openspec` or `SPECCTX_OPENSPEC`. ADR-006 item 2.
 - `task done` on a failed Verify writes `.ctx/evidence/<c>/<t>.fail-<n>.json` with `at`, `attempt`, `stderr_tail`, `task`, `verify`. The attempt counts the fail files since `task start`, and a resolved question for the task resets it. At `[loop] max_attempts` it appends a question to `.ctx/questions.json` and prints `blocked: question <k> written. Run specctx handoff resolve <k> "<answer>" to continue.` `check`, `stats`, and `handoff` skip fail files. ADR-006 item 4.
 - The scan reads a requirement or scenario ID in square brackets too: `### Requirement: [REQ-UA-001] Session timeout`. That is the form of upstream OpenSpec PR #1979. Both forms give the same ID and title, and a delta in one form matches a main entry in the other. A bracket without a spec-ctx ID, such as `[AUTH-3]`, still gives `missing-id`. REQ-IDX-006.
 - `spec-ctx.toml` gets `[ids] brackets`, a boolean with the default false. When it is true, `adopt` and `id new REQ` or `id new SCN` write the bracketed form. `adopt` never rewrites a header that has an ID in either form. `id new --for` accepts both forms. `init` writes the key with a comment. REQ-ADOPT-010, REQ-IDS-004.
 - `retitle-needs-renamed` reads bracketed RENAMED lines. Its hint says to write each ID as its header writes it.
-- `check` gets the rule `weak-verify`. It fires on a task line of an active change whose Verify command is only `true`, `:`, `exit 0`, or one `echo` with no `;`, `&`, or `|`. Whitespace around the command does not matter. Plain `check` prints `warning: weak-verify <task> <file>:<line>` and keeps exit 0. `check --strict` and `gate --strict` report a hard finding. The hint reads `Name a test file or a command whose exit code proves the task.` `baseline write` records it like `task-without-verify`. `specctx next` returns `cite` for it before the task starts. REQ-CHK-005, REQ-LOOP-004, REQ-ADOPT-005.
 - `spec-ctx.toml` gets `[loop] max_attempts` (an integer of 1 or more, default 3) and `[loop] archive` (`"ask"` or `"auto"`, default `"ask"`). `init` writes both with comments.
 
 ### Changed
