@@ -67,3 +67,16 @@ Refs: ADR-006, REQ-DIST-002, REQ-LOOP-001, REQ-LOOP-002
 #### Scenario: SCN-LOOP-003-4 Init writes the section
 - **WHEN** `specctx init` writes `spec-ctx.toml`
 - **THEN** the file has `[loop]`, `max_attempts = 3`, and `archive = "ask"`, each key with a comment line above it, and the file parses to the defaults
+
+### Requirement: REQ-LOOP-004 Weak Verify needs a citation
+`specctx next` SHALL treat a `weak-verify` finding in the files of the change as a citation gap. It SHALL return `cite` with that task in `task` and the reason `weak-verify <task> at <file>:<line>`, before it returns `start` or `work` for any task.
+
+Refs: REQ-LOOP-001, REQ-CHK-005
+
+#### Scenario: SCN-LOOP-004-1 Cite before start
+- **WHEN** planning is complete and the first open task of the change has Verify: `true`
+- **THEN** `next --json` prints `action: cite`, the task ID in `task`, and a reason that starts with `weak-verify`
+
+#### Scenario: SCN-LOOP-004-2 A real command clears the gap
+- **WHEN** the same task line gets Verify: `bun test tests/a.test.ts`
+- **THEN** `next --json` prints `action: start` for that task

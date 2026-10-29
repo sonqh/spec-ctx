@@ -59,3 +59,11 @@ export function parseVerify(taskLine: string): VerifySpec {
   }
   return { kind: "command", command: spans.join(" && ") };
 }
+
+// REQ-CHK-005 a Verify command that always exits 0: `true`, `:`, `exit 0`, or one `echo` with no `;`, `&`, `|` (028/D1)
+const WEAK_VERIFY = /^(?:true|:|exit\s+0|echo(?:\s[^;&|\n]*)?)$/;
+
+/** REQ-CHK-005 true when the command, trimmed, is one of the weak forms. */
+export function isWeakVerify(command: string): boolean {
+  return WEAK_VERIFY.test(command.trim());
+}

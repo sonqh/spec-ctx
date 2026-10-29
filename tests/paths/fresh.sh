@@ -55,13 +55,13 @@ sed -e "s|^### Requirement: REQ-<CAP>-NNN .*|### Requirement: $req Greet by name
 printf '\n#### Scenario: %s No name\n- **WHEN** the caller passes nothing\n- **THEN** the result is `Hello, world`\n' "$scn2" >> "$chg/specs/greeting/spec.md"
 # the tasks: two tasks that cite the REQ and name a Verify command
 sed -e 's|^## 1\. <!-- Task group name -->|## 1. Greeting|' \
-    -e "s|^- \[ \] 1.1 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.1 Add \`greet(name)\` [$req] Verify: \`true\`|" \
-    -e "s|^- \[ \] 1.2 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.2 Cover both scenarios [$req] Verify: \`true\`|" \
+    -e "s|^- \[ \] 1.1 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.1 Add \`greet(name)\` [$req] Verify: \`node -e 0\`|" \
+    -e "s|^- \[ \] 1.2 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.2 Cover both scenarios [$req] Verify: \`node -e 0\`|" \
     -e '/^## 2\./,$d' "$tpl/tasks.md" | sed -e '${/^$/d}' > "$chg/tasks.md"
 grep -q "^### Requirement: $req Greet by name" "$chg/specs/greeting/spec.md"
 grep -q "^#### Scenario: $scn1 " "$chg/specs/greeting/spec.md"
 grep -q "^#### Scenario: $scn2 " "$chg/specs/greeting/spec.md"
-grep -q "\[$req\] Verify: \`true\`" "$chg/tasks.md"
+grep -q "\[$req\] Verify: \`node -e 0\`" "$chg/tasks.md"
 ! grep -q '<!--' "$chg/proposal.md" "$chg/design.md" "$chg/specs/greeting/spec.md" "$chg/tasks.md" || { echo "a template comment is left"; grep -n '<!--' "$chg"/*.md "$chg"/specs/*/*.md; exit 1; }
 # a code tag and a test tag, so check --strict sees the REQ covered
 mkdir -p src tests

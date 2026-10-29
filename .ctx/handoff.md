@@ -1,23 +1,10 @@
 # Handoff
 change: none
 current: none
-base: 2026-10-26T08:46:23.500Z
+base: 2026-10-29T23:14:20.958Z
 as_of: none
 done:
 reopened:
-- 013/1.1 init.ts and its test changed in 1.2 (at 2026-10-26T13:29:07.371Z)
-- 014/1.1 tests/config.test.ts still expected exit 2 for an existing spec-ctx.toml (at 2026-10-27T02:15:44.490Z)
-- 014/1.2 tests/config.test.ts still expected exit 2 for an existing spec-ctx.toml (at 2026-10-27T02:15:47.465Z)
-- 016/1.1 test files changed in 2.2 (at 2026-10-27T06:25:41.361Z)
-- 016/2.1 test files changed in 2.2 (at 2026-10-27T06:25:45.334Z)
-- 017/1.1 src/cli/workflow.ts changed in 3.2 (the task start hint) (at 2026-10-27T07:00:11.752Z)
-- 017/2.1 init.ts and its test changed in 2.2 (at 2026-10-27T07:00:15.610Z)
-- 018/1.1 init.ts and its test changed in 2.1 (at 2026-10-27T08:29:15.538Z)
-- 018/1.2 init.ts and its test changed in 2.1 (at 2026-10-27T08:29:19.469Z)
-- 019/1.1 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:27.269Z)
-- 019/1.2 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:30.441Z)
-- 019/1.3 workflow.ts and the task tests changed in 2.1 (at 2026-10-28T12:37:33.730Z)
-- 024/1.1 commands.ts changed in 2.1 (at 2026-10-28T16:16:43.170Z)
 open_questions:
 resolved:
 - Q18 BLOCKER 006/1.2: gate step 4 fails on this repo: spec-length: fail REQ-CHK-003 504 chars. REQ-CHK-003 is a MODIFIED block in the 003 check delta. Strict validate skips MODIFIED text, but the main spec check after the 003 archive would fail. Proposed edit, 499 chars, same meaning: 'a warning line' becomes 'a warning'. A trial with that edit passed all 13 ci-local steps. I reverted it. No 006 commit is pushed. 003/3.6 reopened on stale evidence and stays open until the fix. 006/3.1 waits too. (task none, 2026-10-24) answer: 29623bc: REQ-CHK-003 under 500 chars. 003/3.6 redone

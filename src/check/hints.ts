@@ -20,6 +20,8 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "done-without-evidence": { level: "hard", hint: "Run specctx task done. It runs the Verify command and writes the evidence." },
   "stale-evidence": { level: "hard", hint: "Run specctx task reopen and then specctx task done." },
   "evidence-without-done": { level: "hard", hint: "Run specctx task done, or remove the evidence file." },
+  // REQ-CHK-005 advisory in plain check. check --strict reports it as a hard finding (028/D5).
+  "weak-verify": { level: "advisory", hint: "Name a test file or a command whose exit code proves the task." },
   "manual-evidence": { level: "advisory", hint: "Give the task a Verify command and run specctx task done again." },
   // REQ-CHK-001 the hint is the block to paste. The finding line carries the ID and both titles (021/D3).
   // REQ-ADOPT-010 FROM copies the main header and TO copies the delta header, each in its own form (027/D4).

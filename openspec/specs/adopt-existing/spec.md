@@ -68,7 +68,7 @@ Refs: ADR-002
 - **THEN** the code is `TEL`
 
 ### Requirement: REQ-ADOPT-005 Baseline ratchet
-`specctx baseline write` SHALL record every current finding of `uncovered`, `scenario-untested`, `done-without-evidence`, `manual-evidence`, `task-without-req`, `task-without-verify`, and `missing-id` as sorted `rule id` pairs in `.ctx/baseline.json`. A `missing-id` pair has `<file> <title>` as id. `check` and `check --strict` SHALL hide a finding in the baseline. `baseline prune` SHALL drop entries that no longer fire and print the count. No command SHALL add a single entry.
+`specctx baseline write` SHALL record each current finding of `uncovered`, `scenario-untested`, `done-without-evidence`, `manual-evidence`, `task-without-req`, `task-without-verify`, `weak-verify`, and `missing-id` as sorted `rule id` pairs in `.ctx/baseline.json`. A `missing-id` pair has `<file> <title>` as id. `check` SHALL hide a baselined finding in both modes. `baseline prune` SHALL drop entries that no longer fire and print the count. No command SHALL add a single entry.
 
 Refs: REQ-CHK-002
 

@@ -13,7 +13,11 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
   const { applyBaseline } = await import("../baseline/baseline.ts");
   const findings = check(root, cfg, data, strict);
   let warnings: string[] = [];
-  if (strict) {
+  if (!strict) {
+    // REQ-CHK-005 plain check prints weak-verify as an advisory warning (028/D3)
+    const { weakVerifyWarnings } = await import("../check/check.ts");
+    warnings = weakVerifyWarnings(data.entries);
+  } else {
     const { manualWarnings } = await import("../check/evidence.ts");
     const { listEvidence } = await import("../tasks/evidence.ts");
     warnings = manualWarnings(root, data.entries, listEvidence(root));
@@ -37,10 +41,12 @@ export function checkText(r: { findings: { file: string; line: number; rule: str
   const count = new Map<string, number>();
   for (const x of r.findings) count.set(x.rule, (count.get(x.rule) ?? 0) + 1);
   for (const w of r.warnings) {
-    const [rule, task] = w.split(" ");
+    const [rule, task, at] = w.split(" ");
     count.set(rule!, (count.get(rule!) ?? 0) + 1);
+    // REQ-CHK-005 a weak-verify warning ends with <file>:<line> of the task line (028/D4)
+    if (rule === "weak-verify" && at) files.add(at.replace(/:\d+$/, ""));
     // a manual-evidence warning names a task. Its file is the evidence file of the task.
-    if (task?.includes("/")) files.add(`.ctx/evidence/${task}.json`);
+    else if (task?.includes("/")) files.add(`.ctx/evidence/${task}.json`);
   }
   const rules = [...count.keys()].sort();
   return body

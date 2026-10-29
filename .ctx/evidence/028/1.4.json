@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-29T23:06:44.001Z",
+  "bundle_chars": 8217,
+  "files": {
+    "src/check/check.ts": "68bdc311a6f5a61f0c344831474768bdf594cef6af2ba73244d9cf95b1d3ed3a",
+    "src/check/hints.ts": "9316c2f7c695f48263a11122f63a7b3ebf5fbda540ec41d5791c4df4027e389d",
+    "src/cli/commands.ts": "28507794ff31c652a222fb19ca6f0e9f9ab3cbf28ed0dff154cf5929217103e6",
+    "src/verify/parse.ts": "14bdf798c0639ee2c0aabb3de7760c80a82433b592291268f572ac4bcaf5d43e",
+    "tests/check/weak.test.ts": "fd531d1dcdb117f27a10e06f22aa8fa1116503d06297165ff1f4a9d8091153d1"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-005"
+  ],
+  "started_at": "2026-10-29T23:05:42.173Z",
+  "task": "028/1.4",
+  "tool_version": "0.1.2",
+  "verify": {
+    "command": "bun run build && bun test && node dist/cli.js check --strict",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 413 pass\n 0 fail\n 2582 expect() calls\nRan 413 tests across 62 files. [25.39s]",
+    "stdout_sha256": "904011827176b9238f54765b0b2854229dce2bdd04a05883e8197f1205a65ba1"
+  }
+}

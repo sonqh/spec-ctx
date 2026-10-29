@@ -11,7 +11,7 @@ const TASKS = "openspec/changes/005-ux/tasks.md";
 describe("task reopen", () => {
   test("SCN-TASK-005-1 reopen keeps the old evidence and lists the reason in the handoff", async () => {
     p = new Project();
-    p.write(TASKS, "# Tasks\n\n- [ ] 1.1 Do. [REQ-AAA-002] Verify: `true`\n");
+    p.write(TASKS, "# Tasks\n\n- [ ] 1.1 Do. [REQ-AAA-002] Verify: `node -e 0`\n");
     expect((await p.run("task", "done", "005/1.1")).code).toBe(0);
     const r = await p.run("task", "reopen", "005/1.1", "REQ-APPLY-002 changed");
     expect(r.code, r.err).toBe(0);

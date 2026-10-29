@@ -33,8 +33,9 @@ export interface Decision {
 }
 
 /** The rules of check whose finding means a task or a header lacks its citation (024/D2 step 4). */
-const CITE_RULES = new Set(["missing-id", "task-without-req", "task-without-verify", "unknown-task-req"]);
-const TASK_RULES = new Set(["task-without-req", "task-without-verify", "unknown-task-req"]);
+// REQ-LOOP-004 a weak Verify command is a citation gap too (028/D7)
+const CITE_RULES = new Set(["missing-id", "task-without-req", "task-without-verify", "unknown-task-req", "weak-verify"]);
+const TASK_RULES = new Set(["task-without-req", "task-without-verify", "unknown-task-req", "weak-verify"]);
 
 /** The active change folders under openspec/changes/, sorted. The file system decides, so a change with no tasks.md counts. */
 export function activeFolders(root: string): string[] {

@@ -1,4 +1,4 @@
-// Covers: REQ-LOOP-001, REQ-LOOP-003, REQ-CLI-007
+// Covers: REQ-LOOP-001, REQ-LOOP-003, REQ-CLI-007, REQ-LOOP-004
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -137,7 +137,17 @@ describe("specctx next walks the decision order", () => {
     const r = await next();
     expect(r.action).toBe("cite");
     expect(r.reason).toBe(`task-without-req ${CHANGE}/1.1 at ${TASKS}:5`);
-    p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [x] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `true`\n- [x] 1.2 Shorten the session timeout [REQ-UA-001] Verify: `true`\n- [ ] 1.3 Add the TOTP prompt to the login form [REQ-UA-001] Verify: `echo boom && exit 1`\n");
+    // SCN-LOOP-004-1 a weak Verify on the first open task is a citation gap
+    p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [ ] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `true`\n- [ ] 1.2 Shorten the session timeout [REQ-UA-001] Verify: `node -e 0`\n");
+    p.touchForward(TASKS);
+    expect(await next()).toEqual(base({
+      action: "cite", command: `specctx query --change ${CHANGE} --kind req`, reason: `weak-verify ${CHANGE}/1.1 at ${TASKS}:5`, state: "citation_missing", task: `${CHANGE}/1.1`,
+    }));
+    // SCN-LOOP-004-2 a real command clears the gap
+    p.write(TASKS, p.read(TASKS).replace("Verify: `true`", "Verify: `bun test tests/a.test.ts`"));
+    p.touchForward(TASKS, 6000);
+    expect(await next()).toEqual(base({ action: "start", command: `specctx task start ${CHANGE}/1.1`, state: "task_open", task: `${CHANGE}/1.1` }));
+    p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [x] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `node -e 0`\n- [x] 1.2 Shorten the session timeout [REQ-UA-001] Verify: `node -e 0`\n- [ ] 1.3 Add the TOTP prompt to the login form [REQ-UA-001] Verify: `echo boom && exit 1`\n");
     p.touchForward(TASKS);
   });
 
@@ -187,7 +197,7 @@ describe("specctx next walks the decision order", () => {
   });
 
   test("SCN-LOOP-001-4 gate, then archive with the human flag from [loop] archive", async () => {
-    p.write(TASKS, p.read(TASKS).replace("Verify: `echo boom && exit 1`", "Verify: `true`"));
+    p.write(TASKS, p.read(TASKS).replace("Verify: `echo boom && exit 1`", "Verify: `node -e 0`"));
     p.touchForward(TASKS);
     process.env.SPECCTX_NOW = "2026-10-28T10:20:00.000Z";
     expect((await p.run("task", "done", `${CHANGE}/1.3`)).code).toBe(0);

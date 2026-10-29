@@ -6,12 +6,15 @@ import { lintLine, parseLintLine } from "../lint/counts.ts";
 import { cmpStr } from "../util/pystr.ts";
 
 export const BASELINE_PATH = ".ctx/baseline.json";
-export const BASELINE_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence", "task-without-req", "task-without-verify", "missing-id"];
+export const BASELINE_RULES = ["uncovered", "scenario-untested", "done-without-evidence", "manual-evidence", "task-without-req", "task-without-verify", "weak-verify", "missing-id"];
 
 /** REQ-ADOPT-005 a missing-id finding has no ID. Its key carries the file and the header title. */
 const key = (f: Pick<Finding, "rule" | "id" | "file">): string => (f.rule === "missing-id" ? `${f.rule} ${f.file} ${f.id}` : `${f.rule} ${f.id}`);
-/** A warning line reads "manual-evidence <task>". */
-const warningKey = (w: string): string => w;
+/**
+ * A warning line reads "manual-evidence <task>" or "weak-verify <task> <file>:<line>".
+ * REQ-ADOPT-005 the key keeps the rule and the task, so a weak-verify warning matches its strict finding (028/D10).
+ */
+const warningKey = (w: string): string => w.split(" ").slice(0, 2).join(" ");
 
 export function readBaseline(root: string): Set<string> | null {
   const p = join(root, BASELINE_PATH);

@@ -8,6 +8,7 @@ import type { Entry, Index, Problem } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
 import { evidenceFindings } from "./evidence.ts";
+import { isWeakVerify, parseVerify } from "../verify/parse.ts";
 
 // the first ID of a retired row can be a scenario. Only a REQ or ADR can be reused, but the SCN still counts as the row ID.
 const RETIRED_RE = /\b(REQ-[A-Z]{2,6}-\d{3}|SCN-[A-Z]{2,6}-\d{3}-\d+|ADR-\d{3})\b/g;
@@ -98,6 +99,25 @@ export function retitleFindings(root: string, entries: Entry[]): Finding[] {
   return out;
 }
 
+/**
+ * REQ-CHK-005 weak-verify: a task of an active change whose Verify command always exits 0 (028/D2).
+ * A task with no Verify command has task-without-verify already, so it gets no second finding.
+ */
+export function weakVerifyFindings(entries: Entry[]): Finding[] {
+  const out: Finding[] = [];
+  for (const e of entries) {
+    if (e.kind !== "task" || e.change === "main" || e.file.includes("/archive/")) continue;
+    const v = parseVerify(e.title);
+    if (v.command !== null && isWeakVerify(v.command)) out.push({ file: e.file, line: e.line, rule: "weak-verify", id: e.id });
+  }
+  return out;
+}
+
+/** REQ-CHK-005 the plain-mode form of weak-verify: one warning "weak-verify <task> <file>:<line>" per task (028/D3). */
+export function weakVerifyWarnings(entries: Entry[]): string[] {
+  return weakVerifyFindings(entries).map((f) => `weak-verify ${f.id} ${f.file}:${f.line}`);
+}
+
 /** Sorted, unique findings. The scan never reads .ctx/, so evidence adds no index entry. */
 export function check(root: string, cfg: Config, data: Index, strict: boolean): Finding[] {
   const entries = data.entries;
@@ -159,6 +179,7 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
   const uniq = new Map<string, Problem>();
   for (const f of findings) uniq.set(JSON.stringify(f), f);
   const plain: Finding[] = [...uniq.values()].map(([file, line, rule, id]) => ({ file, line, rule, id }));
-  const all = [...plain, ...retitleFindings(root, entries)];
+  // REQ-CHK-005 weak-verify is hard only in strict mode. Plain mode prints it as a warning (028/D3).
+  const all = [...plain, ...retitleFindings(root, entries), ...(strict ? weakVerifyFindings(entries) : [])];
   return all.sort((a, b) => cmpTuple([a.file, a.line, a.rule, a.id], [b.file, b.line, b.rule, b.id]));
 }
