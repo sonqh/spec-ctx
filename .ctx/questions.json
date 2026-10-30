@@ -382,5 +382,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after review of the 3.1 fix. Run the archive guidance, then the archive command next prints, then check --strict, build, validate, and gate --rerun --base 0934b1a.",
     "resolved_at": "2026-10-30T03:51:37.343Z"
+  },
+  {
+    "n": 45,
+    "asked_at": "2026-10-30T03:57:40.827Z",
+    "task": "039-fail-line-delta-reqs",
+    "text": "plan ready for 039-fail-line-delta-reqs. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. REQ-CHK-009 as a new requirement is fine.",
+    "resolved_at": "2026-10-30T03:58:00.557Z"
+  },
+  {
+    "n": 46,
+    "asked_at": "2026-10-30T03:59:03.080Z",
+    "task": "039-fail-line-delta-reqs",
+    "text": "archive 039-fail-line-delta-reqs?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review.",
+    "resolved_at": "2026-10-30T03:59:18.432Z"
   }
 ]

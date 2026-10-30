@@ -15,6 +15,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 - `specctx gate --rerun [--base <ref>] [--json]` runs only the rerun step. It finds the tasks that the range closed by ID, from the merge base and HEAD. It runs the frozen Verify command of each one in the evidence cwd and compares the exit code with the evidence. Manual evidence warns. Missing evidence, drift between `tasks.md` and the evidence, and a different exit code or a timeout fail. A weak Verify fails under `--strict`. Tasks with the same command and cwd run once, in ID order, with `CI=1` and `SPECCTX_RERUN=1`. A set `SPECCTX_RERUN` makes the command print one line and exit 0. A failure prints the file and line, the evidence path, both exit codes, the last 20 lines, and a line to reproduce it. The rerun writes no evidence and appends one gate log line with `rerun` in `steps`. A missing merge base fails. REQ-CLI-009, REQ-VER-005, REQ-VER-006, REQ-VER-007.
 
+- `check --strict` reports `uncovered` for a requirement in an ADDED or MODIFIED block of an active change. This holds when the change has a task, no task is open, and no `Covers:` tag names it. A pending REMOVED block gets no finding. The finding no longer waits for the archive. REQ-CHK-009.
+
 ### Changed
 
 - The `reproduce:` line of a rerun mismatch quotes the cwd, so a path with spaces still pastes. REQ-VER-007.
@@ -23,6 +25,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 - `specctx next --json` has a tenth key `tasks`. It lists every task the action names, and `task` stays the first. For `repair` it lists all stale tasks. The `reason` joins `stale-evidence <t> <file>` per task with a comma. The `command` chains the reopen and done pair of each task with `&&`, so one turn repairs all. The action list does not change. REQ-LOOP-001, REQ-LOOP-008.
 - The question that `task done` writes at the attempt cap quotes the failing line of the tail, the same line as the `fix` reason. REQ-LOOP-002.
+- `failLine` also matches a line that starts with `(fail)` after trimming. `bun test` prints that line for a failed test. The `fix` reason and the attempt-cap question quote it. The order and the fallback stay. REQ-LOOP-006.
 - A `spec-ctx.toml` that is not valid TOML gives one line on stderr with the file path and the parse error, and exit 2, in every command. `init` and `adopt` used to print a stack. REQ-DIST-009.
 - The `dangling-ref` hint names the likely cause, a tag inside a string literal or fixture text, and the fix. The scan is the same. REQ-CHK-007.
 - `stats --write` names its file by the UTC date. The requirement says so now. REQ-STAT-005.

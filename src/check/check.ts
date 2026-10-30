@@ -194,10 +194,12 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
       tasksOf.set(e.change, t);
     }
     for (const e of entries) {
-      if (e.kind !== "scn" || e.change === "main" || (e.status !== "active" && e.status !== "modified")) continue;
+      if ((e.kind !== "scn" && e.kind !== "req") || e.change === "main" || (e.status !== "active" && e.status !== "modified")) continue;
       const t = tasksOf.get(e.change);
-      if (!t || t.open > 0 || pending.has(e.id) || named.has(e.id)) continue;
-      findings.push([e.file, e.line, "scenario-untested", e.id]);
+      if (!t || t.open > 0 || pending.has(e.id)) continue;
+      // REQ-CHK-009 a delta requirement needs a Covers tag on the same terms (039/D2)
+      if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
+      if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
     }
     findings.push(...evidenceFindings(root, entries, listEvidence(root)));
   }

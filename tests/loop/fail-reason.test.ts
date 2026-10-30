@@ -1,7 +1,7 @@
 // Covers: REQ-LOOP-006, REQ-LOOP-001
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync } from "node:fs";
-import { failLine } from "../../src/loop/fails.ts";
+import { capQuestion, failLine } from "../../src/loop/fails.ts";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
 
 // The fix reason of 029/D3. One run through task done and next, then the line rule on its own.
@@ -52,5 +52,34 @@ describe("the fix reason", () => {
   test("SCN-LOOP-006-3 an empty tail gives no output", () => {
     expect(failLine("")).toBe("no output");
     expect(failLine("   \n \n")).toBe("no output");
+  });
+
+  test("SCN-LOOP-006-4 a bun test failure tail names the (fail) line", () => {
+    const tail = [
+      "$ bun test tests/x.test.ts",
+      "bun test v1.3.0 (abc123)",
+      "",
+      "tests/x.test.ts:",
+      "error: expect(received).toBe(expected)",
+      "",
+      "Expected: 2",
+      "Received: 3",
+      "",
+      "(fail) adds [0.12ms]",
+      "",
+      " 27 pass",
+      " 1 fail",
+      " 28 expect() calls",
+      "Ran 28 tests across 4 files. [30.00ms]",
+      "",
+    ].join("\n");
+    expect(failLine(tail)).toBe("(fail) adds [0.12ms]");
+    expect(capQuestion("039/1.1", 3, tail)).toBe("task 039/1.1 failed Verify 3 times. Last: (fail) adds [0.12ms]. What should change?");
+  });
+
+  test("SCN-LOOP-006-5 the last line of any of the three prefixes wins, after trimming", () => {
+    expect(failLine("FAIL one\n  (fail) two\nfail: three\nok\n")).toBe("fail: three");
+    expect(failLine("fail: one\nFAIL two\n  (fail) three  \nok\n")).toBe("(fail) three");
+    expect(failLine("a (fail) b\nlast\n")).toBe("last");
   });
 });

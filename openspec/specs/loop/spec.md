@@ -99,7 +99,7 @@ Refs: REQ-HND-002, REQ-LOOP-001, ADR-006
 - **THEN** `next --json` prints the action of the next rule, such as `start`, and the unknown change exits 2 with no question written
 
 ### Requirement: REQ-LOOP-006 Fix reason
-The reason of `next` for a failed Verify SHALL be `Verify failed (exit <e>): <line>`. `<line>` SHALL be the last line of the stderr tail that starts with `fail:` or `FAIL` after leading spaces. With no such line, it SHALL be the last non-empty line. With no non-empty line, it SHALL be `no output`.
+The reason of `next` for a failed Verify SHALL be `Verify failed (exit <e>): <line>`. `<line>` SHALL be the last line of the stderr tail that starts with `fail:`, `FAIL`, or `(fail)` after trimming. With no such line, it SHALL be the last non-empty line. With no non-empty line, it SHALL be `no output`.
 
 Refs: REQ-LOOP-001, REQ-LOOP-002
 
@@ -114,6 +114,14 @@ Refs: REQ-LOOP-001, REQ-LOOP-002
 #### Scenario: SCN-LOOP-006-3 Empty tail
 - **WHEN** the tail is empty or holds only spaces
 - **THEN** the reason ends with `: no output`
+
+#### Scenario: SCN-LOOP-006-4 Bun failure tail
+- **WHEN** the tail is a `bun test` failure: `(fail) adds [0.12ms]`, an `error:` line, ` 1 fail`, and `Ran 28 tests across 4 files.`
+- **THEN** the reason ends with `: (fail) adds [0.12ms]`, and the attempt-cap question quotes the same line
+
+#### Scenario: SCN-LOOP-006-5 Last of mixed prefixes
+- **WHEN** the tail holds `FAIL one`, then `  (fail) two`, then `fail: three`, then `ok`
+- **THEN** the reason ends with `: fail: three`
 
 ### Requirement: REQ-LOOP-007 Archive stop in the engine
 `handoff ask --change <c>` SHALL store `stage: archive` when every task of the change is `[x]`, and `stage: plan` otherwise. At the archive stop `next` SHALL return the command `specctx handoff ask --change <c> "archive <c>?"`. A resolved question with `stage: archive` for the change, resolved after its newest evidence, SHALL turn the stop into `archive` with `human: false`. No new state file. No match on question text.
