@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T06:15:51.554Z",
+  "files": {
+    "src/cli/gate.ts": "d308fa8e8454a28d1d327b18596e7447002b51cccaef0cbfa3c41ac2f444891f",
+    "src/gate/rerun.ts": "a38ddc2de07af8ec24081713e631e6013932dfb8bec0d6d50e5602fa3cc662e2",
+    "tests/gate/rerun-head.test.ts": "c4f41086f3e34333cf37dca89022393adfe8656b93c75f5d214fc089f2d0b3ff"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-010"
+  ],
+  "task": "041/2.2",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate/rerun-head.test.ts tests/gate/rerun-cli.test.ts tests/gate/closed.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 26 pass\n 0 fail\n 76 expect() calls\nRan 26 tests across 3 files. [3.15s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

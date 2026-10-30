@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-30T06:11:02.559Z",
+  "bundle_chars": 3929,
+  "files": {
+    "src/loop/next.ts": "b511c2169511a56c2d1ea9284d95386994fd493f5ede3c2d07f2a40a096307c6",
+    "tests/loop/human-tasks.test.ts": "018fb19240ce639b77c583ef973ca0cf25155fb3b969b13322ef6e2ad6cba55f"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/loop/next.ts",
+  "reqs": [
+    "REQ-LOOP-012"
+  ],
+  "started_at": "2026-10-30T06:10:47.912Z",
+  "task": "041/1.2",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/human-tasks.test.ts tests/cli/nextstep.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 9 pass\n 0 fail\n 36 expect() calls\nRan 9 tests across 2 files. [228.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

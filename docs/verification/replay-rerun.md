@@ -34,7 +34,7 @@ scripts/replay-rerun.sh ../other-repo --since 2026-10-16 --runs 3 --setup "npm c
 
 ## Options
 
-- You must give `--since <date>`. Any date that `git log --since` accepts works.
+- You must give `--since <date>`. Any date that `git log --since` accepts works. A bare `YYYY-MM-DD` means midnight of that day.
 - `--runs N` sets the runs per commit. The default is 3.
 - `--setup <command>` runs once per worktree. A failed setup is an error for that commit.
 - `--out <dir>` sets the output folder. The default is a temp dir. The script prints it at the end.
@@ -54,3 +54,5 @@ scripts/replay-rerun.sh ../other-repo --since 2026-10-16 --runs 3 --setup "npm c
 - `0`: no task is flaky. A mismatch alone is data.
 - `1`: at least one task is flaky.
 - `2`: a usage error.
+
+When no commit matches `--since`, the script prints `replay: 0 commits since <date>` to stderr. It still exits 0.

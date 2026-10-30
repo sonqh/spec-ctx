@@ -124,7 +124,7 @@ Refs: REQ-LOOP-001, REQ-LOOP-002
 - **THEN** the reason ends with `: fail: three`
 
 ### Requirement: REQ-LOOP-007 Archive stop in the engine
-`handoff ask --change <c>` SHALL store `stage: archive` when every task of the change is `[x]`, and `stage: plan` otherwise. At the archive stop `next` SHALL return the command `specctx handoff ask --change <c> "archive <c>?"`. A resolved question with `stage: archive` for the change, resolved after its newest evidence, SHALL turn the stop into `archive` with `human: false`. No new state file. No match on question text.
+`handoff ask --change <c>` SHALL store `stage: archive` when every task of the change is `[x]`. Otherwise it SHALL store `stage: plan` with `--plan`, else `stage: design`. At the archive stop `next` SHALL return the command `specctx handoff ask --change <c> "archive <c>?"`. A question with `stage: archive`, resolved after the newest evidence of the change, SHALL turn the stop into `archive` with `human: false`. No match on question text.
 
 Refs: REQ-LOOP-001, REQ-LOOP-005, REQ-HND-002, ADR-006
 
@@ -139,6 +139,10 @@ Refs: REQ-LOOP-001, REQ-LOOP-005, REQ-HND-002, ADR-006
 #### Scenario: SCN-LOOP-007-3 Resolve approves the archive
 - **WHEN** a human resolves the question of SCN-LOOP-007-2 with `handoff resolve <n> "yes"`. Then a second project has only a resolved question with `stage: plan` for the change
 - **THEN** `next --json` prints `action: archive`, `human: false`, and `<openspec> archive 002-ids -y` for the first project, and `human: true` for the second
+
+#### Scenario: SCN-LOOP-007-4 Stage by flag
+- **WHEN** `002-ids` has an open task and `handoff ask --change 002 "q"` runs, then `handoff ask --change 002 --plan "p"` runs
+- **THEN** the first question has `stage: design` and the second has `stage: plan`
 
 ### Requirement: REQ-LOOP-008 Stale evidence in next
 `next` SHALL return `repair` when a `[x]` task has evidence that names a changed file. It comes after the current task rule and before the open task rule. `task` SHALL be the earliest stale task and `tasks` SHALL list all of them. `reason` SHALL join `stale-evidence <t> <file>` per task with `, `. `command` SHALL join `specctx task reopen <t> "stale evidence: <file>" && specctx task done <t>` per task with ` && `. A current task keeps `work` or `fix`.
@@ -158,13 +162,13 @@ Refs: REQ-LOOP-001, REQ-CHK-003, ADR-004
 - **THEN** `next --json` prints `task: 002/1.2`, `tasks: ["002/1.2"]`, the reason `stale-evidence 002/1.2 src/a.ts`, and the command of that one task with no ` && `
 
 ### Requirement: REQ-LOOP-009 Plan stop in next
-Take a change with planning complete, no `[x]` task, no current task, and no question with `stage: plan`, open or resolved. `next` SHALL return `ask` with `human: true`, state `plan_stop`, and the command `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. `<c>` is the folder name. The rule comes after the citation rule. No config switch.
+Take a change with planning complete, no `[x]` task, no current task, and no question with `stage: plan`, open or resolved. `next` SHALL return `ask` with `human: true`, state `plan_stop`, and the command `specctx handoff ask --change <c> --plan "plan ready for <c>. Approve to start the tasks?"`. A question without `--plan` SHALL not end the stop. `<c>` is the folder name. The rule comes after the citation rule. No config switch.
 
 Refs: REQ-LOOP-005, REQ-LOOP-007, ADR-006
 
 #### Scenario: SCN-LOOP-009-1 Plan question due
 - **WHEN** planning of `002-ids` is complete, every task has a citation, and the change has no question
-- **THEN** `next --json` prints `action: ask`, `human: true`, `state: plan_stop`, `task: null`, and the command `specctx handoff ask --change 002-ids "plan ready for 002-ids. Approve to start the tasks?"`
+- **THEN** `next --json` prints `action: ask`, `human: true`, `state: plan_stop`, `task: null`, and the command `specctx handoff ask --change 002-ids --plan "plan ready for 002-ids. Approve to start the tasks?"`
 
 #### Scenario: SCN-LOOP-009-2 The printed command ends the rule
 - **WHEN** the command of SCN-LOOP-009-1 runs, then `handoff resolve <n> "yes"` runs
@@ -173,6 +177,10 @@ Refs: REQ-LOOP-005, REQ-LOOP-007, ADR-006
 #### Scenario: SCN-LOOP-009-3 No stop after the start
 - **WHEN** a task of `002-ids` has `[x]`, or a current task of the change exists, or a resolved question has `stage: plan`
 - **THEN** `next --json` does not print `state: plan_stop`
+
+#### Scenario: SCN-LOOP-009-4 Design question keeps the stop
+- **WHEN** `handoff ask --change 002-ids "which cache?"` runs during planning, then `handoff resolve <n> "redis"` runs
+- **THEN** `next --json` prints `state: plan_stop` with the `--plan` command
 
 ### Requirement: REQ-LOOP-010 Stale tasks named under a current task
 When a current task makes `next` return `work`, `fix`, or the attempt cap `ask`, and `[x]` tasks have stale evidence, `reason` SHALL end with `stale waiting: <t>, <t>`. A fail reason comes first, then a period and a space. `action`, `task`, `tasks`, and `command` SHALL not change.
@@ -186,3 +194,29 @@ Refs: REQ-LOOP-008, REQ-LOOP-006
 #### Scenario: SCN-LOOP-010-2 Fix keeps its reason first
 - **WHEN** task 1.1 has stale evidence and task 2.1 is current with a failed Verify that ends in `FAIL two`
 - **THEN** the reason is `Verify failed (exit 1): FAIL two. stale waiting: 002/1.1`
+
+### Requirement: REQ-LOOP-011 Rerun line is not the gate
+`next` SHALL judge the gate from the last line of `.ctx/gate-log.jsonl` whose `steps` is not exactly `["rerun"]`. A line from `gate --rerun` SHALL never count as a passing gate.
+
+Refs: REQ-LOOP-001, REQ-CLI-009
+
+#### Scenario: SCN-LOOP-011-1 Rerun after a failed gate
+- **WHEN** every task has `[x]` and evidence, the last gate line has `ok: false`, and a later `rerun` line has `ok: true`
+- **THEN** `next --json` prints `action: gate`
+
+#### Scenario: SCN-LOOP-011-2 Rerun after a passing gate
+- **WHEN** a passing gate line follows the newest evidence and a later `rerun` line has `ok: false`
+- **THEN** `next --json` does not print `action: gate`
+
+### Requirement: REQ-LOOP-012 Human tasks line
+The human form of `next` SHALL print `tasks: none` for an empty list. Otherwise it SHALL print the IDs joined with a comma and a space. The JSON form SHALL not change.
+
+Refs: REQ-LOOP-001
+
+#### Scenario: SCN-LOOP-012-1 Empty list
+- **WHEN** `next` runs without `--json` and no task is named
+- **THEN** the output holds the line `tasks: none` and no line ends in a space
+
+#### Scenario: SCN-LOOP-012-2 Several tasks
+- **WHEN** `next` names the stale tasks `001/1.1` and `001/1.2`
+- **THEN** the output holds the line `tasks: 001/1.1, 001/1.2`

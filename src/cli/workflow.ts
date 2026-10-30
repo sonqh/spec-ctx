@@ -217,7 +217,9 @@ export async function runWorkflow(c: Ctx): Promise<number> {
     }
     case "handoff ask": {
       const { ask } = await import("../handoff/handoff.ts");
-      const h = ask(c.root, entries, c.p.positional.join(" "), c.p.flags.change as string | undefined);
+      const plan = c.p.flags.plan === true;
+      if (plan && c.p.flags.change === undefined) throw new UsageExit("--plan needs --change");
+      const h = ask(c.root, entries, c.p.positional.join(" "), c.p.flags.change as string | undefined, plan);
       if (c.json) print(c, { open_questions: h.open_questions });
       else c.io.out(`open question ${h.asked ?? h.open_questions.length} added\n`);
       return 0;

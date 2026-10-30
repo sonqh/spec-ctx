@@ -268,6 +268,12 @@ export async function runRerun(root: string, cfg: import("../config.ts").Config,
     io.out(o.json ? dumps({ base: o.base, error: closed.line, merge_base: null, ok: false, tasks: [] }) + "\n" : closed.line + "\n");
     return finish(false);
   }
+  // REQ-VER-010 a merge base at HEAD compares nothing. Say so and pass (041/D4).
+  const { headSha, HEAD_BASE_LINE } = await import("../gate/rerun.ts");
+  if (closed.mergeBase === headSha(root)) {
+    io.out(o.json ? dumps({ base: o.base, merge_base: closed.mergeBase, ok: true, tasks: [], warning: HEAD_BASE_LINE }) + "\n" : HEAD_BASE_LINE + "\n");
+    return finish(true);
+  }
   const lines: RerunLine[] = [];
   const pending: { id: string; command: string; cwd: string; expected: number | null; line: RerunLine }[] = [];
   for (const e of closed.tasks) {
@@ -297,9 +303,15 @@ export async function runRerun(root: string, cfg: import("../config.ts").Config,
     const dir = resolve(root, g.cwd);
     let out: { exit: number | null; timedOut: boolean; output: string };
     if (dir !== resolve(root) && !dir.startsWith(resolve(root) + sep)) out = { exit: null, timedOut: false, output: `cwd ${g.cwd} is outside the project root\n` };
+    // REQ-VER-009 a missing cwd and a spawn error are a mismatch of the group, not a crash (041/D3)
+    else if (!existsSync(dir)) out = { exit: null, timedOut: false, output: `cwd does not exist: ${g.cwd}\n` };
     else {
-      const r = await runVerify(g.command, dir, cfg.verify.timeout_s, env);
-      out = { exit: r.exit, timedOut: r.timedOut, output: r.output };
+      try {
+        const r = await runVerify(g.command, dir, cfg.verify.timeout_s, env);
+        out = { exit: r.exit, timedOut: r.timedOut, output: r.output };
+      } catch (e) {
+        out = { exit: null, timedOut: false, output: `spawn failed: ${e instanceof Error ? e.message : String(e)}\n` };
+      }
     }
     for (const m of g.members) {
       if (judge(m.expected, out) === "ok") continue;
@@ -308,6 +320,7 @@ export async function runRerun(root: string, cfg: import("../config.ts").Config,
       m.line.expected_exit = m.expected;
       m.line.actual_exit = out.exit;
       m.line.timed_out = out.timedOut;
+      if (out.exit === null && !out.timedOut) m.line.detail = out.output.trim().split("\n")[0] ?? "";
       m.line.report = formatMismatch({ id: m.id, file: m.line.file, line: m.line.line, evidence: m.line.evidence, expected: m.expected, outcome: out, command: g.command, cwd: g.cwd, timeoutS: cfg.verify.timeout_s });
     }
   }

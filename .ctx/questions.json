@@ -422,5 +422,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after review.",
     "resolved_at": "2026-10-30T05:53:40.512Z"
+  },
+  {
+    "n": 49,
+    "asked_at": "2026-10-30T06:09:23.964Z",
+    "task": "041-release-review-fixes",
+    "text": "plan ready for 041-release-review-fixes. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. Stage design for plain asks, JSON warning key, empty event refused, new REQ-VER-012: all fine.",
+    "resolved_at": "2026-10-30T06:09:52.159Z"
+  },
+  {
+    "n": 50,
+    "asked_at": "2026-10-30T06:18:45.277Z",
+    "task": "041-release-review-fixes",
+    "text": "archive 041-release-review-fixes?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead.",
+    "resolved_at": "2026-10-30T06:24:18.037Z"
   }
 ]

@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 # REQ-DIST-005 the action only picks the specctx command. specctx gate holds the gate logic.
 set -euo pipefail
-# REQ-DIST-011 a Verify command is code from the pull request, so a rerun never runs on pull_request_target
-if [ "${INPUT_RERUN:-false}" = "true" ] && [ "${GITHUB_EVENT_NAME:-}" = "pull_request_target" ]; then
-  echo "spec-ctx: rerun refused on pull_request_target, use pull_request or push" >&2
-  exit 1
+# REQ-DIST-011 a Verify command is code from the pull request, so a rerun runs only on pull_request and push
+if [ "${INPUT_RERUN:-false}" = "true" ]; then
+  case "${GITHUB_EVENT_NAME:-}" in
+    pull_request | push) ;;
+    *)
+      echo "spec-ctx: rerun refused on event '${GITHUB_EVENT_NAME:-}', use pull_request or push" >&2
+      exit 1
+      ;;
+  esac
 fi
 specctx=${INPUT_SPECCTX:-}
 if [ -z "$specctx" ]; then

@@ -1,4 +1,5 @@
 // Covers: REQ-VER-008, SCN-VER-008-1, SCN-VER-008-2, SCN-VER-008-3, SCN-VER-008-4, SCN-VER-008-5, SCN-VER-008-6
+// Covers: REQ-VER-012, SCN-VER-012-1, SCN-VER-012-2
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -200,5 +201,43 @@ describe("replay-rerun.sh", () => {
     expect(r.status).toBe(2);
     expect(r.stderr).toContain("usage:");
     expect(existsSync(out)).toBe(false);
+  });
+
+  /** A repo whose second commit has the committer date `when`. */
+  function dated(when: string): Project {
+    const p = gitProject();
+    projects.push(p);
+    p.write("README.md", "root\n");
+    commitAll(p, "root");
+    p.write("openspec/changes/100-x/tasks.md", "# Tasks\n\n- [x] 1.1 Do it. [REQ-AA-001] Verify: `exit 0`\n");
+    p.write(".ctx/evidence/100/1.1.json", JSON.stringify({ kind: "command", task: "100/1.1", verify: { command: "exit 0", exit: 0 } }) + "\n");
+    process.env.GIT_COMMITTER_DATE = when;
+    try {
+      commitAll(p, "dated");
+    } finally {
+      delete process.env.GIT_COMMITTER_DATE;
+    }
+    return p;
+  }
+
+  test("SCN-VER-012-1 a bare date means midnight and a commit at 00:30 that day is visited", () => {
+    const p = dated("2026-01-15T00:30:00+0000");
+    const out = join(tmp(), "out");
+    const env: NodeJS.ProcessEnv = { ...process.env, TZ: "UTC" };
+    delete env.SPECCTX_RERUN;
+    const r = spawnSync("bash", [SCRIPT, p.root, "--since", "2026-01-15", "--runs", "1", "--out", out], { encoding: "utf8", env });
+    expect(r.status, r.stdout + r.stderr).toBe(0);
+    expect(jsonl(out)).toHaveLength(1);
+    expect(r.stderr).not.toContain("replay: 0 commits");
+    expect(readFileSync(join(out, "summary.md"), "utf8")).toContain("- Since: 2026-01-15\n");
+  });
+
+  test("SCN-VER-012-2 an empty range prints one line to stderr and exits 0", () => {
+    const { p } = repoOf(["ok"]);
+    const out = join(tmp(), "out");
+    const r = replay(p, "--since", "2099-01-01", "--runs", "1", "--out", out);
+    expect(r.code, r.out + r.err).toBe(0);
+    expect(r.err.trim().split("\n")).toEqual(["replay: 0 commits since 2099-01-01"]);
+    expect(count(out, "commits")).toBe(0);
   });
 });

@@ -41,7 +41,7 @@ afterAll(() => {
 
 describe("the archive stop lives in the engine", () => {
   test("SCN-LOOP-007-2 a question with an open task gets stage plan", async () => {
-    const a = await p.run("handoff", "ask", "--change", CHANGE, "plan ready?");
+    const a = await p.run("handoff", "ask", "--change", CHANGE, "--plan", "plan ready?");
     expect(a.code, a.err).toBe(0);
     expect(questions()[0]).toMatchObject({ n: 1, task: CHANGE, stage: "plan", status: "open" });
     expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);

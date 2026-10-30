@@ -214,7 +214,9 @@ describe("gate --rerun", () => {
 
   test("no closed task prints one line and exits 0", async () => {
     const p = setup([{ num: "1.1", command: "exit 0" }]);
-    const r = await p.run("gate", "--rerun", "--base", "HEAD");
+    // an empty commit on top, so the merge base is HEAD~1 and not HEAD (041/D4)
+    git(p, "commit", "-q", "--allow-empty", "-m", "empty");
+    const r = await p.run("gate", "--rerun", "--base", "HEAD~1");
     expect(r.code).toBe(0);
     expect(lines(r.out)).toEqual(["rerun: no closed tasks"]);
   });

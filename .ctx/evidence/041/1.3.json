@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T06:12:15.919Z",
+  "bundle_chars": 8357,
+  "files": {
+    "src/handoff/handoff.ts": "52e0e04b5f8236f3468f1e22b3ec3533b49e73282d03274381d3673d4de09ec8",
+    "src/handoff/questions.ts": "dd2268599c5feab7b3d3b3a6b6e07e20b6901804d7beee87a3608919a70fad9d",
+    "src/loop/next.ts": "0e76453643550bf7e9d708689b89db103273f144f5563c4b6169bcf7b15b972c",
+    "tests/cli/nextstep.test.ts": "c3b4ecc691a8588772e9a870d3289176783a1c04d89b1c1bceb0c316f412e7e3",
+    "tests/loop/archive-stop.test.ts": "a485b8b12fc8a4d1666ed93316183dacccbe2257bfcc503ae49dd2d293b2cbec",
+    "tests/loop/next.test.ts": "4f99b07a1ef5cb37a3557a07480b7dd3697d60cb30d01f526e7f9faa6f56302d",
+    "tests/loop/plan-flag.test.ts": "fd96d8035820a2ea42476223f51569c776a92daf5819971faf8ea84d6933dde3",
+    "tests/loop/plan-stop.test.ts": "d6f189d8a5acb541a3bea8a9ef220f57a1796f6445b47765dbd6b8d3d10cb615"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-007",
+    "REQ-LOOP-009"
+  ],
+  "started_at": "2026-10-30T06:11:10.332Z",
+  "task": "041/1.3",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/handoff tests/cli tests/skills && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 145 pass\n 0 fail\n 980 expect() calls\nRan 145 tests across 21 files. [6.93s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

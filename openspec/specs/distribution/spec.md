@@ -168,7 +168,7 @@ Refs: REQ-DIST-005, REQ-CLI-009
 - **THEN** the recorded call is the default gate with `--markdown`, and it has no `--rerun` and no `--base`
 
 ### Requirement: REQ-DIST-011 Event guard
-`action/run.sh` SHALL exit 1 with one line and run no `specctx` command when `GITHUB_EVENT_NAME` is `pull_request_target` and `rerun` is `true`. A Verify command is code from the pull request. Other events and `rerun` set to `false` SHALL not change.
+`action/run.sh` SHALL exit 1 with one line and run no `specctx` command when `rerun` is `true` and `GITHUB_EVENT_NAME` is not `pull_request` or `push`. A Verify command is code from the pull request. `rerun` set to `false` SHALL not change for any event.
 
 Refs: REQ-DIST-010
 
@@ -179,6 +179,10 @@ Refs: REQ-DIST-010
 #### Scenario: SCN-DIST-011-2 Allowed events
 - **WHEN** `run.sh` runs with `INPUT_RERUN=true` and the event is `pull_request` or `push`, then with the event `pull_request_target` and `INPUT_RERUN=false`
 - **THEN** each run calls `specctx` and exits 0
+
+#### Scenario: SCN-DIST-011-3 Other events refused
+- **WHEN** `run.sh` runs with `INPUT_RERUN=true` and the event is `workflow_run`, `schedule`, or empty
+- **THEN** each run exits 1, prints one line, and calls no `specctx` command
 
 ### Requirement: REQ-DIST-012 Rerun security boundary
 The action section of the README SHALL state the security boundary of `rerun` as bullets. Use the `pull_request` and `push` events only. Never use `pull_request_target` or `workflow_run` with code from a pull request. Use read-only permissions and no secrets. A fork pull request needs the repository setting that asks for approval before a workflow runs. The job needs `fetch-depth: 0`.

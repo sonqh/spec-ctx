@@ -61,10 +61,10 @@ export function mergeStates(states: readonly TaskState[]): Map<string, TaskState
 
 /** REQ-VER-005 the state of every task in the tasks.md files at a commit. */
 export function tasksAt(root: string, sha: string, taskRe: RegExp): Map<string, TaskState> {
-  const ls = git(root, ["ls-tree", "-r", "--name-only", sha, "--", "openspec/changes"]);
+  const ls = git(root, ["ls-tree", "-z", "-r", "--name-only", sha, "--", "openspec/changes"]);
   const all: TaskState[] = [];
   if (!ls.ok) return new Map();
-  for (const p of ls.out.split("\n").filter((x) => x.endsWith("/tasks.md")).sort(cmpStr)) {
+  for (const p of ls.out.split("\0").filter((x) => x.endsWith("/tasks.md")).sort(cmpStr)) {
     const show = spawnSync("git", ["show", `${sha}:${p}`], { cwd: root, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
     if (show.status === 0) all.push(...parseTasksFile(p, show.stdout, taskRe));
   }
@@ -82,6 +82,15 @@ export function headStates(entries: readonly Entry[]): Map<string, { state: Task
   }
   return out;
 }
+
+/** REQ-VER-010 the commit that HEAD names, or "" when git fails. */
+export function headSha(root: string): string {
+  const h = git(root, ["rev-parse", "HEAD"]);
+  return h.ok ? h.out : "";
+}
+
+/** REQ-VER-010 the line for a merge base equal to HEAD. */
+export const HEAD_BASE_LINE = "rerun: merge base is HEAD, nothing to compare. On push, pass --base <the commit before the push>";
 
 export type ClosedResult = { ok: true; mergeBase: string; tasks: Entry[] } | { ok: false; line: string };
 

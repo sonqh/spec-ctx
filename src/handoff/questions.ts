@@ -14,11 +14,11 @@ export interface Question {
   status: "open" | "resolved";
   answer?: string;
   resolved_at?: string;
-  /** REQ-LOOP-007 the stage of the change when handoff ask --change ran: plan or archive (031/D1). */
+  /** REQ-LOOP-007 the stage when handoff ask --change ran: plan with --plan, design without it, archive with every task done (041/D2). */
   stage?: QuestionStage;
 }
 
-export type QuestionStage = "plan" | "archive";
+export type QuestionStage = "plan" | "archive" | "design";
 
 /** The questions sorted by n. An absent file is an empty list. A damaged file is a usage error, not a crash. */
 export function readQuestions(root: string): Question[] {

@@ -150,9 +150,9 @@ describe("specctx next walks the decision order", () => {
     // REQ-LOOP-009 SCN-LOOP-009-1 the plan stop comes first. SCN-LOOP-009-2 the printed command with a resolve ends it.
     const text = `plan ready for ${CHANGE}. Approve to start the tasks?`;
     expect(await next()).toEqual(base({
-      action: "ask", command: `specctx handoff ask --change ${CHANGE} "${text}"`, human: true, reason: text, state: "plan_stop",
+      action: "ask", command: `specctx handoff ask --change ${CHANGE} --plan "${text}"`, human: true, reason: text, state: "plan_stop",
     }));
-    expect((await p.run("handoff", "ask", "--change", CHANGE, text)).code).toBe(0);
+    expect((await p.run("handoff", "ask", "--change", CHANGE, "--plan", text)).code).toBe(0);
     expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
     expect(await next()).toEqual(base({ action: "start", command: `specctx task start ${CHANGE}/1.1`, state: "task_open", task: `${CHANGE}/1.1` }));
     rmSync(p.path(".ctx/questions.json"));

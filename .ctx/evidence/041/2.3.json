@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T06:15:18.060Z",
+  "bundle_chars": 2328,
+  "files": {
+    "tests/gate/rerun-nonascii.test.ts": "f5f7c3e6832555bcb97bfb74c1e875a9e7b1b90700f42a9f898989c0e95c5a02"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-011"
+  ],
+  "started_at": "2026-10-30T06:14:39.086Z",
+  "task": "041/2.3",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate/rerun-nonascii.test.ts tests/gate/closed.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 7 pass\n 0 fail\n 16 expect() calls\nRan 7 tests across 2 files. [731.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

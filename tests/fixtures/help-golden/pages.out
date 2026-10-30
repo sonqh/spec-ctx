@@ -398,6 +398,7 @@ Usage:
 
 Flags:
   `--change <name>`            Give the question to this change, not to the current task. The key or the full folder name works.
+  `--plan`                     Mark the question as the plan approval. Only this mark ends the plan stop. It needs --change.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
   `--help`                     Show this help.
@@ -408,7 +409,7 @@ Exit codes:
   `3` An internal error.
 
 Example:
-  `specctx handoff ask --change 008 "plan ready for 008-tasks. Approve to start the tasks?"`
+  `specctx handoff ask --change 008 --plan "plan ready for 008-tasks. Approve to start the tasks?"`
 
 == handoff resolve
 specctx handoff resolve: Move open question n to the resolved list.

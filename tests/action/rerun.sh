@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Covers: REQ-DIST-005, REQ-DIST-010, REQ-DIST-011
+# Covers: REQ-DIST-005, REQ-DIST-010, REQ-DIST-011, SCN-DIST-011-1, SCN-DIST-011-2, SCN-DIST-011-3
 # Runs action/run.sh in a temp git repo. A recording script stands in for specctx. No network.
 set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
@@ -19,9 +19,9 @@ export INPUT_MARKDOWN="docs/*.md"
 run() { : > "$FAKE_LOG"; (cd "$work" && bash "$here/action/run.sh" 2>"$work/err"); }
 
 # SCN-DIST-010-1 the rerun command line
-INPUT_RERUN=true INPUT_BASE=origin/main run
+GITHUB_EVENT_NAME=pull_request INPUT_RERUN=true INPUT_BASE=origin/main run
 [ "$(cat "$FAKE_LOG")" = "gate --strict --rerun --base origin/main" ] || { cat "$FAKE_LOG"; exit 1; }
-INPUT_RERUN=true INPUT_BASE="" run
+GITHUB_EVENT_NAME=push INPUT_RERUN=true INPUT_BASE="" run
 [ "$(cat "$FAKE_LOG")" = "gate --strict --rerun" ] || { cat "$FAKE_LOG"; exit 1; }
 echo "ok: rerun builds gate --strict --rerun --base <ref>"
 
@@ -48,3 +48,15 @@ done
 GITHUB_EVENT_NAME=pull_request_target INPUT_RERUN=false run
 grep -q "^gate --strict --markdown" "$FAKE_LOG" || { cat "$FAKE_LOG"; exit 1; }
 echo "ok: pull_request, push, and a default gate on pull_request_target run"
+
+# SCN-DIST-011-3 every other event, and an empty one, is refused with one line
+for ev in workflow_run schedule workflow_dispatch ""; do
+  set +e
+  GITHUB_EVENT_NAME=$ev INPUT_RERUN=true run
+  code=$?
+  set -e
+  [ "$code" = 1 ] || { echo "guard exit was $code on '$ev'"; exit 1; }
+  [ ! -s "$FAKE_LOG" ] || { echo "the guard still called specctx on '$ev'"; exit 1; }
+  [ "$(wc -l < "$work/err")" = 1 ] || { cat "$work/err"; exit 1; }
+done
+echo "ok: other events are refused with one line"

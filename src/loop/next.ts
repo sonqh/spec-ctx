@@ -64,19 +64,22 @@ function questions(root: string): Question[] {
   }
 }
 
-/** The last line of the gate log, or null. */
+/** REQ-LOOP-011 the last line of the gate log that is not a rerun line, or null. A line with steps exactly ["rerun"] never counts (041/D1). */
 function lastGate(root: string): { at: string; ok: boolean } | null {
   const p = join(root, ".ctx/gate-log.jsonl");
   if (!existsSync(p)) return null;
   const lines = readFileSync(p, "utf8").split("\n").filter((l) => l.trim());
-  const last = lines.at(-1);
-  if (!last) return null;
-  try {
-    const o = JSON.parse(last) as { at?: unknown; ok?: unknown };
-    return { at: typeof o.at === "string" ? o.at : "", ok: o.ok === true };
-  } catch {
-    return null;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    try {
+      const o = JSON.parse(lines[i]!) as { at?: unknown; ok?: unknown; steps?: unknown };
+      const rerun = Array.isArray(o.steps) && o.steps.length === 1 && o.steps[0] === "rerun";
+      if (rerun) continue;
+      return { at: typeof o.at === "string" ? o.at : "", ok: o.ok === true };
+    } catch {
+      return null;
+    }
   }
+  return null;
 }
 
 /** The `at` of the newest live evidence file of a change key, or "" with none. */
@@ -154,12 +157,12 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   // step 5: a hand tick without evidence gets the repair run
   const tasks = tasksOf(entries).filter(ofChange).sort((a, b) => cmpTuple([a.file, a.line], [b.file, b.line]));
 
-  // REQ-LOOP-009 step 4b: the plan stop. It needs no [x] task, no current task, and no plan question, open or resolved (034/D1).
+  // REQ-LOOP-009 step 4b: the plan stop. It needs no [x] task, no current task, and no question with stage plan, open or resolved. Only --plan sets that stage (034/D1, 041/D2).
   const cur0 = readCurrent(root);
   const started = tasks.some((t) => t.status === "done") || (cur0?.task !== undefined && cur0.task.split("/")[0] === key);
   if (!started && !qs.some((q) => q.stage === "plan" && q.task === folder)) {
     const text = `plan ready for ${folder}. Approve to start the tasks?`;
-    return done({ action: "ask", command: `specctx handoff ask --change ${folder} "${text}"`, human: true, reason: text, state: "plan_stop" });
+    return done({ action: "ask", command: `specctx handoff ask --change ${folder} --plan "${text}"`, human: true, reason: text, state: "plan_stop" });
   }
   const ticked = tasks.find((t) => t.status === "done" && !hasEvidence(root, t));
   if (ticked) return done({ action: "repair", command: `specctx task done ${ticked.id}`, state: "done_without_evidence", task: ticked.id });
@@ -225,7 +228,8 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
 
 /** REQ-LOOP-001 REQ-CLI-007 the human form: action first, one line per key, next last (024/D1). Strict mode. */
 export function renderNext(d: Decision): string {
-  const show = (v: unknown): string => (v === null ? "none" : String(v));
+  // REQ-LOOP-012 an empty list prints none, a list joins with a comma and a space
+  const show = (v: unknown): string => (v === null ? "none" : Array.isArray(v) ? (v.length ? v.join(", ") : "none") : String(v));
   const lines = [`action: ${d.action}`];
   for (const k of KEYS) {
     if (k === "action" || k === "command") continue;

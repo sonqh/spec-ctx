@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T06:17:33.775Z",
+  "bundle_chars": 3644,
+  "files": {
+    "tests/replay/replay.test.ts": "73b8cea0e68d1c0885de05e2d428920618f1ba2b8633f6b7297c7af677fde343"
+  },
+  "kind": "command",
+  "reason": "stale evidence: tests/replay/replay.test.ts",
+  "reqs": [
+    "REQ-VER-012"
+  ],
+  "started_at": "2026-10-30T06:16:30.866Z",
+  "task": "041/3.2",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/replay && node dist/cli.js lint tells --baseline 0 docs/verification/replay-rerun.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/replay-rerun.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 10 pass\n 0 fail\n 73 expect() calls\nRan 10 tests across 1 file. [6.96s]",
+    "stdout_sha256": "060b234e4662d525de7fd3f46b0568528b5812bb1e36ed68c40a9659b82e42c6"
+  }
+}

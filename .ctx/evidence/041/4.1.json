@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-30T06:17:55.593Z",
+  "bundle_chars": 8071,
+  "files": {
+    "src/cli/gate.ts": "d308fa8e8454a28d1d327b18596e7447002b51cccaef0cbfa3c41ac2f444891f",
+    "src/gate/rerun.ts": "a38ddc2de07af8ec24081713e631e6013932dfb8bec0d6d50e5602fa3cc662e2",
+    "tests/action/rerun.sh": "0ec2bbe94e9d47dc1761ee1caabae119b5c77ad23a76f9eb838e970d01d71c19",
+    "tests/gate/rerun-head.test.ts": "c4f41086f3e34333cf37dca89022393adfe8656b93c75f5d214fc089f2d0b3ff"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-011",
+    "REQ-VER-010"
+  ],
+  "started_at": "2026-10-30T06:17:40.687Z",
+  "task": "041/4.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bash tests/action/rerun-docs.sh && grep -q 'github.event.before' action.yml && grep -q 'github.event.before' README.md && grep -q -- '--plan' CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "b2eb899fc7c1ed5bf392f7e8b775baf15d9c76906b0f293c66dfe3f512d49459"
+  }
+}

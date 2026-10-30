@@ -20,6 +20,14 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Changed
 
+- `next` ignores a gate log line whose `steps` is exactly `["rerun"]`. A passing `gate --rerun` after a failed `gate --strict` no longer makes `next` return `archive`. REQ-LOOP-011.
+- Behavior change: the plan stop ends only on a question that `handoff ask --change <c> --plan` recorded. The plan stop command that `next` prints carries `--plan`. A plain `handoff ask --change` before all tasks are done stores `stage: design` and no longer ends the stop. An older `questions.json` with `stage: plan` still counts. REQ-LOOP-007, REQ-LOOP-009.
+- The human form of `next` prints `tasks: none` for an empty list and joins IDs with a comma and a space. The JSON form stays. REQ-LOOP-012.
+- `gate --rerun` reports a missing Verify cwd as a `mismatch` with `cwd does not exist: <dir>`, and a spawn error as a `mismatch`. It no longer crashes without a report. REQ-VER-009.
+- `gate --rerun` prints `rerun: merge base is HEAD, nothing to compare. On push, pass --base <the commit before the push>` and exits 0 when the merge base is HEAD. The action text and the README say to pass `base: ${{ github.event.before }}` on push. REQ-VER-010.
+- The rerun reads the merge base tree with `git ls-tree -z`, so a change folder with a non-ASCII name counts. REQ-VER-011.
+- `action/run.sh` with `rerun: true` allows only `pull_request` and `push`. It exits 1 with one line on every other event. REQ-DIST-011.
+- `scripts/replay-rerun.sh` reads a bare `YYYY-MM-DD` as midnight. It prints `replay: 0 commits since <date>` to stderr when nothing matches. REQ-VER-012.
 - The `reproduce:` line of a rerun mismatch quotes the cwd, so a path with spaces still pastes. REQ-VER-007.
 - `specctx next` names the stale tasks when a current task keeps `work`, `fix`, or the cap `ask`. The `reason` ends with `stale waiting: <t>, <t>`. `action`, `task`, `tasks`, and `command` stay. REQ-LOOP-010.
 - `specctx-run` runs the command that `next` prints at the plan stop. It names `bundle --block` and says that a MODIFIED block keeps every scenario title. It names the command that refreshes the skill copies, `bun run build && node dist/cli.js init --skills --force`. It warns that `gate` counts the Refs line, and that the CHANGELOG entry goes under `## Unreleased`. REQ-SKL-003, REQ-SKL-006.

@@ -39,14 +39,14 @@ describe("the plan stop lives in the engine", () => {
   test("SCN-LOOP-005-1 handoff ask --change blocks the change with ask and human true", async () => {
     // SCN-LOOP-009-1 the engine asks for the plan stop and prints the command
     expect(await next()).toEqual({
-      action: "ask", attempt: 0, change: CHANGE, command: `specctx handoff ask --change ${CHANGE} "${Q}"`, human: true, max_attempts: 3, reason: Q, state: "plan_stop", task: null, tasks: [],
+      action: "ask", attempt: 0, change: CHANGE, command: `specctx handoff ask --change ${CHANGE} --plan "${Q}"`, human: true, max_attempts: 3, reason: Q, state: "plan_stop", task: null, tasks: [],
     });
-    const a = await p.run("handoff", "ask", "--change", CHANGE, Q);
+    const a = await p.run("handoff", "ask", "--change", CHANGE, "--plan", Q);
     expect(a.code, a.err).toBe(0);
     expect(a.out).toBe("open question 1 added\n");
     const qs = JSON.parse(p.read(".ctx/questions.json")) as Record<string, unknown>[];
     expect(qs).toHaveLength(1);
-    expect(qs[0]).toMatchObject({ n: 1, task: CHANGE, text: Q, status: "open" });
+    expect(qs[0]).toMatchObject({ n: 1, task: CHANGE, text: Q, status: "open", stage: "plan" });
     expect(await next()).toEqual({
       action: "ask", attempt: 0, change: CHANGE, command: 'specctx handoff resolve 1 "<answer>"', human: true, max_attempts: 3, reason: Q, state: "question_open", task: null, tasks: [],
     });

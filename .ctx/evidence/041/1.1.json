@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-30T06:12:35.419Z",
+  "files": {
+    "src/loop/next.ts": "0e76453643550bf7e9d708689b89db103273f144f5563c4b6169bcf7b15b972c",
+    "tests/loop/gate-rerun-line.test.ts": "f7af17a054ed0b32ba9ffbdcf23b6a3153f101d748449287d8c9e8002d10dc86"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-011"
+  ],
+  "task": "041/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/gate-rerun-line.test.ts tests/loop/next.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 13 pass\n 0 fail\n 270 expect() calls\nRan 13 tests across 2 files. [996.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

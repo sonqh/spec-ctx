@@ -23,6 +23,10 @@ while [ $# -gt 0 ]; do
   esac
 done
 [ -n "$repo" ] && [ -n "$since" ] || usage
+# REQ-VER-012 a bare date means midnight. Git would read it at the current time of day.
+since_arg=$since
+if [[ "$since" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then since="$since 00:00"; fi
+matched=0
 [[ "$runs" =~ ^[1-9][0-9]*$ ]] || usage
 git -C "$repo" rev-parse --git-dir > /dev/null 2>&1 || usage
 repo=$(cd "$repo" && pwd)
@@ -77,6 +81,7 @@ process.stdout.write(JSON.stringify(line) + "\n");
 # oldest first, first-parent only, on the current branch
 while IFS='|' read -r c parents date; do
   [ -n "$c" ] || continue
+  matched=$((matched + 1))
   [ -n "$parents" ] || continue # a root commit has no base
   short=${c:0:12}
   rd="$tmp/runs"
@@ -99,6 +104,9 @@ while IFS='|' read -r c parents date; do
   git -C "$repo" worktree remove --force "$wt" > /dev/null 2>&1
   git -C "$repo" worktree prune > /dev/null 2>&1
 done < <(git -C "$repo" log --first-parent --reverse --since="$since" --format='%H|%P|%cI')
+
+# REQ-VER-012 an empty range is not an error, but it needs a word
+[ "$matched" -gt 0 ] || echo "replay: 0 commits since $since_arg" >&2
 
 # summary.md and the exit code
 node -e '
@@ -123,7 +131,7 @@ const flaky = lines.flatMap((l) => (l.tasks || []).filter((t) => t.flaky).map((t
 if (flaky.length) md.push("## Flaky tasks", "", ...flaky, "");
 fs.writeFileSync(summary, md.join("\n"));
 process.exit(c.flaky > 0 ? 1 : 0);
-' "$out/replay.jsonl" "$out/summary.md" "$repo" "$since" "$runs"
+' "$out/replay.jsonl" "$out/summary.md" "$repo" "$since_arg" "$runs"
 rc=$?
 echo "replay-rerun: output in $out"
 exit $rc
