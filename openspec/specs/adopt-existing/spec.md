@@ -23,7 +23,7 @@ Refs: ADR-002
 - **THEN** it exits 1 and the last line is `exit 1: <n> headers need an ID. Next: specctx adopt`, where `<n>` is the count of `->` lines
 
 ### Requirement: REQ-ADOPT-002 Atomic assignment
-`specctx adopt` SHALL write the dry run IDs into main spec headers and into every matching active delta header in one operation. Matching uses exact header text, or the delta `RENAMED` mapping. It SHALL run `check` before and after. A finding the write introduced SHALL restore every file and exit 1. Findings that existed before SHALL not block. It SHALL add derived CAP codes to `spec-ctx.toml` and write `adopt-report.md`.
+`specctx adopt` SHALL write the dry run IDs into main headers and matching active delta headers in one step. Matching uses exact text or `RENAMED`. It SHALL run `check` before and after. A new finding SHALL restore every file and exit 1. Old findings SHALL not block. It SHALL add derived CAP codes to `spec-ctx.toml` and write `adopt-report.md`. It SHALL NOT write the baseline. After IDs it SHALL print a `baseline:` commit note and `next: <run> baseline write`.
 
 Refs: REQ-ADOPT-001, REQ-CHK-001
 
@@ -42,6 +42,14 @@ Refs: REQ-ADOPT-001, REQ-CHK-001
 #### Scenario: SCN-ADOPT-002-3 Unmatched delta reported
 - **WHEN** a delta header matches no main header and no RENAMED mapping
 - **THEN** that header is unchanged and the report lists it under `unmatched`
+
+#### Scenario: SCN-ADOPT-002-5 Baseline step after adopt
+- **WHEN** `adopt` writes IDs on the no-ID fixture
+- **THEN** it writes no `.ctx/baseline.json`, the last line is `next: specctx baseline write`, and the line before it says to commit the baseline with a subject that starts with `baseline:`
+
+#### Scenario: SCN-ADOPT-002-6 No step when nothing was written
+- **WHEN** `adopt` runs where no header needs an ID, or runs with `--dry-run`
+- **THEN** the output has no `baseline:` line and no `baseline write` line
 
 ### Requirement: REQ-ADOPT-003 Idempotent
 A second `specctx adopt` on a tree that the first one processed SHALL change no file and print `nothing to adopt`. A header that already starts with a valid ID SHALL never be rewritten.

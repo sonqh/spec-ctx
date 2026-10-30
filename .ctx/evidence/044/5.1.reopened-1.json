@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-30T07:54:40.783Z",
+  "bundle_chars": 8766,
+  "files": {
+    "src/adopt/write.ts": "ecf7272babea731e2fd09dc01eaa3d1f3abdbfd7eefa3084597a232dd0f92c97",
+    "src/check/check.ts": "19421258ed06eb9ac88694c45c5d2139852b47ffaa8d8c79b45b5448fcb1a283",
+    "src/check/hints.ts": "fe7d93c8ed0d5bbc8b1a348a16a5db1794da89e192b9235e05d81f76dd8b8799",
+    "src/cli/commands.ts": "55018067858bae0d8d6470ce970bd249019f0e7189db2dc817895634abd709fb",
+    "src/cli/workflow.ts": "1c476641a0144a91be8c7d53f12505d60ef495fe41a0f89f673fc65d068e5c1d",
+    "src/handoff/questions.ts": "0a6a56cbbe5ac1e0bfb9f8cce1bfa972d5ce669db07642580dc133de271a8ecf",
+    "src/index/scan.ts": "e51c4a74ff6da428d16ed9482ea45e2b5b631eba287b3d4d8a5d4300b040237a",
+    "src/loop/fails.ts": "d2001171eaa844cae7d2bbdd0adb5b9602b75d819fb44615c236b6875c95d0c4",
+    "src/loop/next.ts": "b4a20d6886783dcd698beff2aca33c2d81c6a21b9fc718d0341f2c747fb40b48",
+    "tests/adopt/baseline-hint.test.ts": "03f6c7cea043ea5cc4c7c5121472902c9a2c980fc34efb6c2a4d958db1933d79",
+    "tests/adopt/write.test.ts": "855aa63f959c21d7249989e690200aadfaeeffa9b65e653332fa1801177ae6a2",
+    "tests/check/archived-tasks.test.ts": "0ce8019c1124d10c05c592820b87b86d8c36bd3d661012ed83824e6ad47bdbf4",
+    "tests/check/base.test.ts": "58f79e24a7a7444bd17a55994886d5eeb489f4592795ae672379ab80561bfd13",
+    "tests/loop/cap-resolve.test.ts": "bfdb196cd62463e74a747cc45561d705a961497d8ea06263d6547ca71288d67c",
+    "tests/loop/repair-verify.test.ts": "aead65389224f658715aa661b35fbbbf6cafade39b2851f1036d35ba6111b334"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/loop/fails.ts",
+  "reqs": [
+    "REQ-CHK-001",
+    "REQ-LOOP-013",
+    "REQ-LOOP-014",
+    "REQ-ADOPT-002"
+  ],
+  "started_at": "2026-10-30T07:54:22.125Z",
+  "task": "044/5.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/044.md CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/044.md CHANGELOG.md && grep -q \"044\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "ba72bd39f63e78e1060474e4a3d781a86ad87848d33c261b3c86cbabc2667e5c"
+  }
+}

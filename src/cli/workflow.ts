@@ -165,7 +165,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         const fail = writeFail(c.root, t.id, { command: t.verify.command, exit: r.timedOut ? null : r.exit }, outTail);
         let question: number | null = openQuestionFor(c.root, t.id)?.n ?? null;
         if (question === null && fail.file.attempt >= c.cfg.loop.max_attempts) {
-          question = addQuestion(c.root, t.id, capQuestion(t.id, fail.file.attempt, outTail)).n;
+          question = addQuestion(c.root, t.id, capQuestion(t.id, fail.file.attempt, outTail), "cap").n;
         }
         if (c.json) print(c, { attempt: fail.file.attempt, command: t.verify.command, error: msg, exit: r.exit, fail: fail.rel, question, tail: outTail, task: t.id });
         else c.io.out(outTail ? outTail + "\n" : "");
@@ -187,6 +187,12 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       }, "command", undefined, t.verify.cwd);
       setBox(c.root, t, true);
       clearCurrent(c.root, t.id);
+      // REQ-LOOP-014 a pass closes the attempt-cap question of the task. Plan, design, and archive questions stay (044/D3).
+      const { isCapQuestion } = await import("../loop/fails.ts");
+      const { readQuestions, resolveQuestion } = await import("../handoff/questions.ts");
+      for (const q of readQuestions(c.root)) {
+        if (isCapQuestion(q, t.id)) resolveQuestion(c.root, q.n, "Verify passed. Resolved by task done.");
+      }
       if (c.json) print(c, { evidence: rel, kind: "command", task: t.id });
       else c.io.out(paint("ok", `done ${t.id}. Evidence: ${rel}\n`, c.io.tty)); // REQ-CLI-008
       return 0;

@@ -15,6 +15,18 @@ Change 043-stranger-commands.
 
 - Every link and image in `README.md` that points into the repository is an absolute GitHub URL, so the page that npm shows works. A test fails on a relative target. The README says that `adopt --dry-run` exits 1 when headers need IDs. The exit code stays. REQ-GOV-011.
 
+Change 044-day-one-noise.
+
+### Changed
+
+- `check` and `index.json` report no `task-without-req` and no `task-without-verify` for a task under `openspec/changes/archive/`. Every other task rule already skipped the archive. REQ-CHK-001.
+- `next` returns `repair` for a ticked task without evidence only when the task has a Verify command. A baselined task without one is skipped. An unbaselined one gets `cite`. REQ-LOOP-013.
+- After `adopt` wrote IDs, the output ends with a note to commit the baseline with a `baseline:` subject and a `next:` line for `baseline write`. `adopt` still writes no baseline. REQ-ADOPT-002.
+
+### Fixed
+
+- A passing `task done` resolves the open attempt-cap question of its task, so `next` stops returning `ask`. `task done` now writes that question with `stage: "cap"`. A question with no stage stays open. Plan, design, and archive questions stay open. REQ-LOOP-014.
+
 ## 0.4.0
 
 ### Added

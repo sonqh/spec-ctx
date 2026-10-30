@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-30T07:51:43.013Z",
+  "bundle_chars": 8273,
+  "files": {
+    "src/check/check.ts": "19421258ed06eb9ac88694c45c5d2139852b47ffaa8d8c79b45b5448fcb1a283",
+    "src/check/hints.ts": "fe7d93c8ed0d5bbc8b1a348a16a5db1794da89e192b9235e05d81f76dd8b8799",
+    "src/cli/commands.ts": "55018067858bae0d8d6470ce970bd249019f0e7189db2dc817895634abd709fb",
+    "src/index/scan.ts": "e51c4a74ff6da428d16ed9482ea45e2b5b631eba287b3d4d8a5d4300b040237a",
+    "tests/check/archived-tasks.test.ts": "0ce8019c1124d10c05c592820b87b86d8c36bd3d661012ed83824e6ad47bdbf4",
+    "tests/check/base.test.ts": "58f79e24a7a7444bd17a55994886d5eeb489f4592795ae672379ab80561bfd13"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-001"
+  ],
+  "started_at": "2026-10-30T07:51:06.143Z",
+  "task": "044/1.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/check tests/baseline tests/stats tests/adopt tests/index && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 162 pass\n 0 fail\n 846 expect() calls\nRan 162 tests across 25 files. [7.17s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

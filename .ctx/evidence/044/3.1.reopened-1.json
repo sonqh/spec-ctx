@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-30T07:53:29.196Z",
+  "bundle_chars": 8288,
+  "files": {
+    "src/cli/workflow.ts": "1c476641a0144a91be8c7d53f12505d60ef495fe41a0f89f673fc65d068e5c1d",
+    "src/handoff/questions.ts": "0a6a56cbbe5ac1e0bfb9f8cce1bfa972d5ce669db07642580dc133de271a8ecf",
+    "src/loop/fails.ts": "d2001171eaa844cae7d2bbdd0adb5b9602b75d819fb44615c236b6875c95d0c4",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/evidence.ts": "608afb6c43ba4467ea7e81f40af912108dfb19cde84d3a548927963f15bdf612",
+    "tests/loop/cap-resolve.test.ts": "bfdb196cd62463e74a747cc45561d705a961497d8ea06263d6547ca71288d67c",
+    "tests/loop/fails.test.ts": "8b66e89937310880f40a57ebfb8260eee6f4a10793cc12e19eaf292f7f20a896",
+    "tests/tasks/done.test.ts": "a7396a93102e1776eed23b5b6d8672fafd070ea4c3572117877a98caa372bf26"
+  },
+  "kind": "command",
+  "reason": "lead review: the no-stage fallback closes human questions",
+  "reqs": [
+    "REQ-LOOP-014",
+    "REQ-LOOP-002"
+  ],
+  "started_at": "2026-10-30T07:52:41.251Z",
+  "task": "044/3.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/handoff tests/tasks && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 100 pass\n 0 fail\n 668 expect() calls\nRan 100 tests across 19 files. [2.67s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

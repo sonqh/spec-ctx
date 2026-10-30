@@ -73,6 +73,14 @@ export function openQuestionFor(root: string, task: string, questions?: Question
   return (questions ?? safeQuestions(root)).find((q) => q.task === task && q.status === "open");
 }
 
+/**
+ * REQ-LOOP-014 an open attempt-cap question of the task: stage cap only. A question with no stage is a person's (044/D3).
+ * The text plays no part (044/D3).
+ */
+export function isCapQuestion(q: Question, task: string): boolean {
+  return q.status === "open" && q.task === task && q.stage === "cap";
+}
+
 /** Write the next fail file of a task. The attempt counts the window, the file number counts every fail file. */
 export function writeFail(root: string, task: string, verify: FailFile["verify"], tail: string): { rel: string; file: FailFile } {
   const attempt = failsInWindow(root, task).length + 1;

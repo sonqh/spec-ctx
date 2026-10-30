@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-30T07:54:17.281Z",
+  "bundle_chars": 8057,
+  "files": {
+    "src/adopt/write.ts": "ecf7272babea731e2fd09dc01eaa3d1f3abdbfd7eefa3084597a232dd0f92c97",
+    "tests/adopt/baseline-hint.test.ts": "03f6c7cea043ea5cc4c7c5121472902c9a2c980fc34efb6c2a4d958db1933d79",
+    "tests/adopt/write.test.ts": "855aa63f959c21d7249989e690200aadfaeeffa9b65e653332fa1801177ae6a2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-002"
+  ],
+  "started_at": "2026-10-30T07:53:35.000Z",
+  "task": "044/4.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/adopt tests/cli tests/paths && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 124 pass\n 0 fail\n 683 expect() calls\nRan 124 tests across 19 files. [7.84s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -306,8 +306,11 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       const tid = `${changeKey(change)}/${num}`;
       const reqs: string[] = [];
       for (const g of body.matchAll(TASK_REQ)) reqs.push(...g[1]!.split(COMMA));
-      if (reqs.length === 0) problems.push([rpath, i, "task-without-req", tid]);
-      if (!body.includes("Verify:")) problems.push([rpath, i, "task-without-verify", tid]);
+      // REQ-CHK-001 an archived task is history: no citation finding
+      if (status !== "archived") {
+        if (reqs.length === 0) problems.push([rpath, i, "task-without-req", tid]);
+        if (!body.includes("Verify:")) problems.push([rpath, i, "task-without-verify", tid]);
+      }
       // the full task body is the title, so query output shows the Verify clause
       entries.push(entry({
         id: tid, kind: "task", file: rpath, line: i, title: pyStrip(body), change,

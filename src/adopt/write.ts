@@ -5,6 +5,7 @@ import { UsageExit } from "../cli/errors.ts";
 import { CONFIG_FILE, type Config } from "../config.ts";
 import { loadConfigOrExit } from "../cli/config.ts";
 import type { Io } from "../main.ts";
+import { runCommand } from "../runcmd.ts";
 import { dumps } from "../util/json.ts";
 import { configText, withCaps } from "./config-write.ts";
 import type { Plan } from "./plan.ts";
@@ -58,7 +59,7 @@ export function reportText(plan: Plan): string {
   return out.join("\n") + "\n";
 }
 
-export async function applyAdopt(root: string, _cfg: Config, plan: Plan, io: Io, json: boolean): Promise<number> {
+export async function applyAdopt(root: string, cfg: Config, plan: Plan, io: Io, json: boolean): Promise<number> {
   const cfgPath = join(root, CONFIG_FILE);
   const cfgBefore = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
   const cfgAfter = withCaps(configText(root), plan.caps);
@@ -110,7 +111,11 @@ export async function applyAdopt(root: string, _cfg: Config, plan: Plan, io: Io,
     io.out(plan.unmatched.map((u) => `unmatched: ${u.file}:${u.line}  ${u.header}\n`).join(""));
     // REQ-CLI-007 only the codes in spec-ctx.toml changed: no header, no report
     if (!report) io.out(`wrote the codes to ${CONFIG_FILE}\nnothing to adopt\n`);
-    else io.out(`adopted ${plan.edits.length} header(s) in ${files} file(s). Report: ${REPORT_FILE}\n`);
+    else {
+      io.out(`adopted ${plan.edits.length} header(s) in ${files} file(s). Report: ${REPORT_FILE}\n`);
+      // REQ-ADOPT-002 adopt writes no baseline. The next step is a separate commit (044/D4, ADR-006 item 6).
+      io.out(`Commit the baseline with a subject that starts with baseline:.\nnext: ${runCommand(cfg.cli.run, "baseline write")}\n`);
+    }
   }
   return 0;
 }

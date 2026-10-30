@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T07:52:35.986Z",
+  "bundle_chars": 7015,
+  "files": {
+    "src/loop/next.ts": "b4a20d6886783dcd698beff2aca33c2d81c6a21b9fc718d0341f2c747fb40b48",
+    "tests/loop/repair-verify.test.ts": "aead65389224f658715aa661b35fbbbf6cafade39b2851f1036d35ba6111b334"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-013"
+  ],
+  "started_at": "2026-10-30T07:51:48.601Z",
+  "task": "044/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/cli tests/baseline && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 154 pass\n 0 fail\n 998 expect() calls\nRan 154 tests across 26 files. [8.58s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

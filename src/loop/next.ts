@@ -13,6 +13,7 @@ import { hasEvidence, nextTask, tasksOf } from "../tasks/tasks.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
 import { capQuestion, failLine, failsInWindow, openQuestionFor } from "./fails.ts";
 import { runCommand } from "../runcmd.ts";
+import { parseVerify } from "../verify/parse.ts";
 import { openspecCommand, openspecStatus } from "./openspec.ts";
 
 /** The closed action list. A skill stops on any value outside it. */
@@ -167,7 +168,8 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     const text = `plan ready for ${folder}. Approve to start the tasks?`;
     return done({ action: "ask", command: rc(`handoff ask --change ${folder} --plan "${text}"`), human: true, reason: text, state: "plan_stop" });
   }
-  const ticked = tasks.find((t) => t.status === "done" && !hasEvidence(root, t));
+  // REQ-LOOP-013 repair runs Verify, so a ticked task with no Verify command never gets it (044/D2)
+  const ticked = tasks.find((t) => t.status === "done" && parseVerify(t.title).command !== null && !hasEvidence(root, t));
   if (ticked) return done({ action: "repair", command: rc(`task done ${ticked.id}`), state: "done_without_evidence", task: ticked.id });
 
   // REQ-LOOP-008 the done tasks whose evidence went stale, earliest first (031/D4, 031/D5)

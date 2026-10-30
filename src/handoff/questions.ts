@@ -18,7 +18,8 @@ export interface Question {
   stage?: QuestionStage;
 }
 
-export type QuestionStage = "plan" | "archive" | "design";
+/** REQ-LOOP-014 cap marks the question that task done writes at the attempt cap (044/D3). */
+export type QuestionStage = "plan" | "archive" | "design" | "cap";
 
 /** The questions sorted by n. An absent file is an empty list. A damaged file is a usage error, not a crash. */
 export function readQuestions(root: string): Question[] {

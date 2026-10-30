@@ -501,5 +501,35 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review. Keep the CHANGELOG line.",
     "resolved_at": "2026-10-30T07:40:29.655Z"
+  },
+  {
+    "n": 57,
+    "asked_at": "2026-10-30T07:49:54.490Z",
+    "task": "044-day-one-noise",
+    "text": "plan ready for 044-day-one-noise. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead with one change to D3: no text matching. The cap question gets an explicit stage cap when task done writes it, and isCapQuestion matches stage cap, or for an old question task equal to the task ID with no stage. Answers 1 to 3: fine as planned.",
+    "resolved_at": "2026-10-30T07:50:21.831Z"
+  },
+  {
+    "n": 58,
+    "asked_at": "2026-10-30T07:59:49.948Z",
+    "task": "044-day-one-noise",
+    "text": "archive 044-day-one-noise?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Not yet. The lead found a bug in isCapQuestion: a plain handoff ask during a task writes task equal to the current task and no stage, so the no-stage fallback would auto-resolve a human question. Reopen 044/3.1 and match only stage cap.",
+    "resolved_at": "2026-10-30T08:00:20.622Z"
+  },
+  {
+    "n": 59,
+    "asked_at": "2026-10-30T08:01:46.072Z",
+    "task": "044-day-one-noise",
+    "text": "archive 044-day-one-noise?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after review of the 3.1 fix.",
+    "resolved_at": "2026-10-30T08:01:59.492Z"
   }
 ]
