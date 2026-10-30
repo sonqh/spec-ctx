@@ -243,5 +243,25 @@
     "stage": "archive",
     "answer": "archive approved by the lead. The REQ-CLI-007 delta added after plan approval is accepted, it follows from REQ-LOOP-007.",
     "resolved_at": "2026-10-30T00:28:38.059Z"
+  },
+  {
+    "n": 31,
+    "asked_at": "2026-10-30T00:41:27.798Z",
+    "task": "032-bracketed-templates",
+    "text": "plan ready for 032-bracketed-templates. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "approved by the lead.",
+    "resolved_at": "2026-10-30T00:42:00.244Z"
+  },
+  {
+    "n": 32,
+    "asked_at": "2026-10-30T00:48:01.969Z",
+    "task": "032-bracketed-templates",
+    "text": "archive 032-bracketed-templates?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "archive approved by the lead. fresh-brackets.sh passed on upstream 1.15.0.",
+    "resolved_at": "2026-10-30T00:49:05.410Z"
   }
 ]

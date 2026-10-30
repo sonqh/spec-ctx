@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-30T00:47:13.759Z",
+  "files": {
+    "src/cli/commands.ts": "97161711f960fc26e44c458cb86aeb951b1ed80883183015011d06b4ac27547c",
+    "src/cli/gate.ts": "2a051b690499781d9543ecf83c9e0cfe40af5ba2ec0bf5f271e645a228334914",
+    "src/config.ts": "4b0dad35f80f718157596e5d3b39ce7214b4dd609054479444927e46f6927f2e",
+    "src/init/init.ts": "157c5bc2bde5cd9a0d91343fa84bb740a70114c0f3a2f8b3152376d3c504d0f9",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6",
+    "tests/config.test.ts": "d3620b715387e0afe0684cf9bf02173348cac658e10ae1405e82eee8fb7b05ae",
+    "tests/init/brackets.test.ts": "ff9ad3b61c2a0030d292d9a0af2cf23481d0bc18a5a304c045564e39e5480a3c",
+    "tests/init/init.test.ts": "56f7c3dd7324dfc532dc0be0cfcd1d6afa0801976b8f2775ced5a90c35d20e99"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SCH-007",
+    "REQ-DIST-002"
+  ],
+  "task": "032/2.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/init tests/schema tests/cli",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 109 pass\n 0 fail\n 744 expect() calls\nRan 109 tests across 14 files. [5.07s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

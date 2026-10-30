@@ -1,14 +1,12 @@
 # Handoff
 change: none
 current: none
-base: 2026-10-30T00:27:07.680Z
+base: 2026-10-30T00:47:43.347Z
 as_of: none
 done:
 reopened:
 open_questions:
 resolved:
-- Q21 003/5.1 and 003/5.2 Verify commands call python3 scripts/*-lint.py. I redid both before the scripts left. A later reopen cannot pass. Change both to specctx lint? (task none, 2026-10-24) answer: 003/5.1 and 5.2 Verify now call specctx lint. Both redone
-- Q22 REQ-LINT-002 asks for test lines from the Python selftest. The tells selftest has no line for 8 rules (not-x-but-y, emoji-heading, sales-word, title-case-heading, stacked-qualifier, serves-as, closer, repeated-closer). Those tests use my lines, which the Python script flagged and passed. Confirm. (task none, 2026-10-24) answer: confirmed. Noted in docs/verification/006.md
 - Q23 Python bugs kept, per the rules: tells reports repeated-closer at the first substring match, so the line can be wrong. tells blanks every token with a slash (and/or) as a URL. tells rejects 'a.md --json b.md' with exit 2. tells accepts a negative --baseline. Stderr text of usage errors names specctx lint and is not byte identical to argparse. Stdout and exit codes match. (task none, 2026-10-24) answer: kept as documented behavior in docs/verification/006.md. A later change fixes them
 - Q24 OpenSpec does not write archived: into .openspec.yaml (the 005 archive has schema and created only). The 006 design says it does. status reads archived when present, else the folder date, then the folder name. Confirm. (task none, 2026-10-24) answer: fallback to the folder date stays. Noted in docs/verification/006.md
 - Q25 BLOCKER 008/3.2 and 008/3.4: the parity goldens cannot stay unchanged. tests/fixtures/parity-golden/check.out and check-strict.out end with 'N finding(s)'. REQ-CHK-004 (008/D6) replaces that line with '<n> findings in <m> files (<h> hard, <a> advisory)' and per rule hint lines. status.out ends with 'uncovered active REQs in main: 104'. 008/D7 adds a 'next: ...' line to status. So bash tests/parity/run.sh fails on check, check --strict, and status, while the brief says goldens must not change and the proposal says the parity goldens do not change. Options: A) allow one re-record of those three goldens with run.sh --record and a note in docs/verification/008.md, B) keep the old check and status output when stdout is not a TTY or under a flag (adds a mode the design does not name), C) drop the summary and the status next line from 008. 3.2, 3.3, 3.4, 4.1, 4.2 and the archive wait on this. Also open: does 'advisory' in the summary count the manual-evidence warnings? (task none, 2026-10-25) answer: Option A. Re-record check.out, check-strict.out, and status.out once with tests/parity/run.sh --record. The parity rule protects the index and bundle output. D6 and D7 change check and status output on purpose. index.json and the bundle goldens stay. Advisory counts every warning-level finding, manual-evidence included. Hard counts only the rules that set exit 1.
@@ -17,6 +15,8 @@ resolved:
 - Q28 plan ready for 030-status-next. Approve to start the tasks? (task 030-status-next, 2026-10-29) answer: approved by the lead. Accept the status slowdown: status and next must agree (ADR-006). D6 is right, keep all three lines.
 - Q29 plan ready for 031-archive-stop. Approve to start the tasks? (task 031-archive-stop, 2026-10-30) answer: approved by the lead. Gate on the plan artifacts passed, spec-length ok.
 - Q30 archive 031-archive-stop? (task 031-archive-stop, 2026-10-30) answer: archive approved by the lead. The REQ-CLI-007 delta added after plan approval is accepted, it follows from REQ-LOOP-007.
-- and 20 more in .ctx/questions.json
+- Q31 plan ready for 032-bracketed-templates. Approve to start the tasks? (task 032-bracketed-templates, 2026-10-30) answer: approved by the lead.
+- Q32 archive 032-bracketed-templates? (task 032-bracketed-templates, 2026-10-30) answer: archive approved by the lead. fresh-brackets.sh passed on upstream 1.15.0.
+- and 22 more in .ctx/questions.json
 next: no open task
 evidence: 0 task(s), 0 command, 0 manual

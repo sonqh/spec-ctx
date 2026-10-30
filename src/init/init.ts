@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "no
 import { dirname, join } from "node:path";
 import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
-import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
+import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT, loadConfig } from "../config.ts";
 
 export const SCHEMA = "spec-driven-ids";
 /** REQ-SCH-003 where the templates land in a project. Upstream reads no project override for the stock templates, so this is a reference path (025/D4). */
@@ -69,13 +69,38 @@ export function configText(root: string, openspec = DEFAULT_OPENSPEC): string {
   return text;
 }
 
+/**
+ * REQ-SCH-006 wrap the ID after a requirement or scenario header prefix in square brackets (032/D1).
+ * An ID in brackets already stays. Task citations, Refs lines, and tags have no header prefix, so they stay bare.
+ */
+export function bracketForm(text: string): string {
+  return text.replace(/(### Requirement: |#### Scenario: )((?:REQ|SCN)-[^\s\]"'`]+)/g, "$1[$2]");
+}
+
+/** REQ-SCH-006 the bytes of one template in the form that `brackets` names (032/D1). */
+export function templateBytes(rel: string, brackets: boolean): Buffer {
+  const b = asset(rel);
+  return brackets ? Buffer.from(bracketForm(b.toString("utf8"))) : b;
+}
+
+/** REQ-SCH-006 the config fragment in the form that `brackets` names (032/D1). */
+export function fragmentText(brackets: boolean): string {
+  const t = asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8");
+  return brackets ? bracketForm(t) : t;
+}
+
+/** REQ-SCH-006 the value of [ids] brackets, false when spec-ctx.toml is absent (032/D2). */
+export function bracketsOf(root: string): boolean {
+  return existsSync(join(root, CONFIG_FILE)) ? loadConfig(root).ids.brackets : false;
+}
+
 /** Target path relative to the project root for every file that init installs, with its bytes. */
-export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC): [string, Buffer][] {
+export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC, brackets = false): [string, Buffer][] {
   const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root, openspec))]];
   for (const rel of Object.keys(ASSETS).sort()) {
     // REQ-SCH-003 only the four templates land in the project. The fragment merges into config.yaml. No schema folder (025/D3)
     if (o.schema && rel.startsWith(TEMPLATES_SRC)) {
-      out.push([`${TEMPLATES_DIR}/${rel.slice(TEMPLATES_SRC.length)}`, asset(rel)]);
+      out.push([`${TEMPLATES_DIR}/${rel.slice(TEMPLATES_SRC.length)}`, templateBytes(rel, brackets)]);
     }
     if (o.skills && rel.startsWith("skills/")) {
       for (const d of SKILL_DIRS) out.push([`${d}/${rel.slice("skills/".length)}`, asset(rel)]);
@@ -273,20 +298,28 @@ export const LEGACY_SCHEMA_NOTE = `note: schema ${SCHEMA} is no longer installed
  * REQ-SCH-003 add each top-level key of the fragment that the project config lacks.
  * A key that exists gets the fragment items it lacks (022/D4). The schema key stays as the project wrote it (025/D5).
  */
-export function mergeConfig(current: string | null, fragment: string): { text: string; added: string[]; kept: string[]; merged: { key: string; added: number }[] } {
+export function mergeConfig(
+  current: string | null,
+  fragment: string,
+  other?: string,
+): { text: string; added: string[]; kept: string[]; merged: { key: string; added: number; replaced?: number }[] } {
   let text = current ?? "";
   const added: string[] = [];
   const kept: string[] = [];
-  const merged: { key: string; added: number }[] = [];
+  const merged: { key: string; added: number; replaced?: number }[] = [];
   const have = topKeys(text);
-  for (const [key, block] of topBlocks(fragment)) {
+  const blocks = topBlocks(fragment);
+  // REQ-SCH-007 an item that holds the other bracket form gets the current form in place (032/D4)
+  const swapped = other === undefined ? { text, size: 0, get: (_k: string): number | undefined => undefined } : swapItems(text, blocks, topBlocks(other));
+  if (swapped.size) text = swapped.text;
+  for (const [key, block] of blocks) {
     if (have.has(key)) {
       const lines = text.split("\n");
       const n = mergeItems(lines, key, block);
-      if (n) {
-        text = lines.join("\n");
-        merged.push({ key, added: n });
-      } else kept.push(key);
+      const r = swapped.get(key) ?? 0;
+      if (n) text = lines.join("\n");
+      if (n || r) merged.push(r ? { key, added: n, replaced: r } : { key, added: n });
+      else kept.push(key);
       continue;
     }
     text = text.trim() ? text.replace(/\n*$/, "\n\n") + block : block;
@@ -298,6 +331,44 @@ export function mergeConfig(current: string | null, fragment: string): { text: s
     added.push("repaired items");
   }
   return { text, added, kept, merged };
+}
+
+/**
+ * REQ-SCH-007 replace each project item whose value equals an item of the other form with the line of the current form (032/D4).
+ * The two fragments have the same lists in the same order, so items pair by position. The indent of the project line stays.
+ * Returns the new text and the count per top key.
+ */
+function swapItems(text: string, cur: Map<string, string>, other: Map<string, string>): { text: string; size: number; get(key: string): number | undefined } {
+  const swap = new Map<string, string>();
+  for (const [key, block] of cur) {
+    const a = fragmentLists(block);
+    const b = fragmentLists(other.get(key) ?? "");
+    a.forEach((list, i) =>
+      list.items.forEach((item, j) => {
+        const o = b[i]?.items[j];
+        if (o !== undefined && itemValue(o) !== itemValue(item)) swap.set(`${key}\0${itemValue(o)}`, item.trim());
+      }),
+    );
+  }
+  const counts = new Map<string, number>();
+  if (!swap.size) return { text, size: 0, get: (k) => counts.get(k) };
+  let top: string | null = null;
+  const lines = text.split("\n").map((line) => {
+    const m = TOP_KEY.exec(line);
+    if (m) top = m[1]!;
+    if (!top || !/^[ \t]+- /.test(line)) return line;
+    const to = swap.get(`${top}\0${itemValue(line)}`);
+    if (to === undefined) return line;
+    counts.set(top, (counts.get(top) ?? 0) + 1);
+    return " ".repeat(indentOf(line)) + to;
+  });
+  return { text: lines.join("\n"), size: counts.size, get: (k) => counts.get(k) };
+}
+
+/** REQ-SCH-007 the text of the `merged` count: added, replaced, or both (032/D4). */
+export function mergedCount(x: { added: number; replaced?: number }): string {
+  if (!x.replaced) return `${x.added} added`;
+  return x.added ? `${x.added} added, ${x.replaced} replaced` : `${x.replaced} replaced`;
 }
 
 /** REQ-DIST-002 the four lines init owns in .gitignore (017/D2, 022/D5). current.json and gate-log.jsonl are per session. */
@@ -349,7 +420,11 @@ export function runInit(root: string, o: InitOpts): InitResult {
     openspec = d.command;
     if (d.note) res.notes.push(d.note);
   }
-  let files = plan(o, root, openspec);
+  // REQ-SCH-006 the form of the templates and the rules follows [ids] brackets (032/D2)
+  const brackets = bracketsOf(root);
+  const fragment = fragmentText(brackets);
+  const otherFragment = fragmentText(!brackets);
+  let files = plan(o, root, openspec, brackets);
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
   // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
   const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));
@@ -357,7 +432,7 @@ export function runInit(root: string, o: InitOpts): InitResult {
   if (same && ignoreDone && !o.force) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
-    const m = o.schema ? mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8")) : null;
+    const m = o.schema ? mergeConfig(cur, fragment, otherFragment) : null;
     if (!m || (!m.added.length && !m.merged.length)) {
       res.nothing = true;
       if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
@@ -372,10 +447,15 @@ export function runInit(root: string, o: InitOpts): InitResult {
     res.kept.push(CONFIG_FILE);
   }
   if (!o.force) {
-    const differs = (rel: string, data: Buffer): boolean => !readFileSync(join(root, rel)).equals(data);
+    // REQ-SCH-007 a template that holds the other bracket form is unchanged, so it gets the current form (032/D3)
+    const other = new Map(plan(o, root, openspec, !brackets).filter(([rel]) => rel.startsWith(`${TEMPLATES_DIR}/`)));
+    const differs = (rel: string, data: Buffer): boolean => {
+      const have = readFileSync(join(root, rel));
+      return !have.equals(data) && !(other.get(rel)?.equals(have) ?? false);
+    };
     res.changed = files.filter(([rel, data]) => existsSync(join(root, rel)) && differs(rel, data)).map(([rel]) => rel);
     for (const rel of res.changed) res.kept.push(`${rel} (other content)`);
-    files = files.filter(([rel]) => !existsSync(join(root, rel)));
+    files = files.filter(([rel, data]) => !existsSync(join(root, rel)) || (!readFileSync(join(root, rel)).equals(data) && !differs(rel, data)));
   }
   for (const [rel, data] of files) {
     const p = join(root, rel);
@@ -386,14 +466,14 @@ export function runInit(root: string, o: InitOpts): InitResult {
   if (o.schema) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
-    const m = mergeConfig(cur, asset(`schemas/${SCHEMA}/config-fragment.yaml`).toString("utf8"));
+    const m = mergeConfig(cur, fragment, otherFragment);
     if (m.added.length || m.merged.length) {
       mkdirSync(dirname(cfgPath), { recursive: true });
       writeFileSync(cfgPath, m.text);
       if (m.added.length) res.written.push(`openspec/config.yaml (${m.added.join(", ")})`);
     }
     // REQ-SCH-003 one line per key that gained items (022/D4)
-    for (const x of m.merged) res.merged.push(`openspec/config.yaml ${x.key} (${x.added} added)`);
+    for (const x of m.merged) res.merged.push(`openspec/config.yaml ${x.key} (${mergedCount(x)})`);
     for (const k of m.kept) res.kept.push(`openspec/config.yaml ${k}`);
     // REQ-SCH-003 the schema line is the user's. A legacy value gets a note and stays (025/D5)
     if (hasLegacySchema(cur)) res.notes.push(LEGACY_SCHEMA_NOTE);

@@ -58,7 +58,7 @@ jobs:
       - run: bash tests/action/selftest.sh
         if: matrix.runtime == 'bun'
       # REQ-ADOPT-006 REQ-ADOPT-008 REQ-SCH-005 the fresh, the existing, and the rules-only path end to end, on upstream OpenSpec
-      - run: bash tests/paths/fresh.sh && bash tests/paths/existing.sh && bash tests/paths/rules-only.sh
+      - run: bash tests/paths/fresh.sh && bash tests/paths/fresh-brackets.sh && bash tests/paths/existing.sh && bash tests/paths/rules-only.sh
         if: matrix.runtime == 'bun'
       - run: bash tests/install/ci.sh
         if: matrix.runtime == 'node'

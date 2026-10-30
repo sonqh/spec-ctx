@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-30T00:46:18.862Z",
+  "bundle_chars": 8228,
+  "files": {
+    "src/init/init.ts": "157c5bc2bde5cd9a0d91343fa84bb740a70114c0f3a2f8b3152376d3c504d0f9",
+    "tests/gov/ci-parity.test.ts": "8125f18ca404058d19af09ac6b957413d7aac5774083fe86bc246b644cfe7c0c",
+    "tests/init/brackets.test.ts": "51fd876ffff077db618a396bea71ce0aab8a4eda4037ca684ac89359dba7edf8",
+    "tests/paths/fresh-brackets.sh": "adb4bd35ec573831bbe056d6ea8fc69df552bf18ad15f376896eaf14c92e148e"
+  },
+  "kind": "command",
+  "reason": "stale evidence: tests/init/brackets.test.ts",
+  "reqs": [
+    "REQ-SCH-006",
+    "REQ-GOV-004"
+  ],
+  "started_at": "2026-10-30T00:44:47.352Z",
+  "task": "032/3.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bash tests/paths/fresh-brackets.sh && bash tests/paths/fresh.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt",
+    "stdout_sha256": "e6d89e494ddb21b106c03aee65a018864005675be90067352232dd0f369941b0"
+  }
+}

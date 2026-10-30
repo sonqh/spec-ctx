@@ -229,7 +229,7 @@ ignore = []                             # globs that the scan skips
 [ids]
 caps = []                               # capability codes. Empty means any code is valid.
 task_pattern = '\d+\.\d+'               # the task number in a tasks.md checkbox
-brackets = false                        # true: adopt and id new write [REQ-UA-001]. The scan reads both forms.
+brackets = false                        # true: adopt, id new, and init --schema write [REQ-UA-001] in headers. The scan reads both forms.
 
 [ids.paths]
 UA = "user-auth"                        # capability path of each code. adopt writes the derived ones.
@@ -250,6 +250,8 @@ base = "origin/main"  # the ref whose merge base holds the baseline that gate co
 max_attempts = 3                        # Verify failures on one task before task done writes a question
 archive = "ask"                         # "ask" stops before archive for a human. "auto" lets the loop archive.
 ```
+
+With `brackets = true`, `init --schema` installs templates with `[REQ-<CAP>-NNN]` and `[SCN-<CAP>-NNN-N]` in the headers. The merged rules show the same form. Task citations, `Refs:` lines, and tags stay bare. After you change the value, run `specctx init --schema` again. It switches each template and rule that you did not edit. It keeps the ones you edited, unless you add `--force`.
 
 Two environment variables change the engine:
 
@@ -285,7 +287,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 ## Status
 
 - Published: `spec-ctx@0.2.0` on npm, with tags `v0.2.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025 and 027 to 031. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025 and 027 to 032. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -295,7 +297,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0292 (n=93) | 0.91 (163/179) | 39 (of 86 reopens) | 76 (n=93) | 0 (0 baselined + 0 new) |
+| total | 0.0281 (n=93) | 0.91 (166/182) | 43 (of 90 reopens) | 76 (n=93) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
