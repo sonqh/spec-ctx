@@ -1,10 +1,10 @@
-# ADR-007 Query first: a light script over the IDs
+# ADR-007 Query first, then the skills
 
 Status: accepted. Date: 2026-10-30. It replaces the goal and the order of work of ADR-006.
 
 ## Context
 
-The owner's goal for spec-ctx: query the specs and the context that relate to each other in a repository built with OpenSpec. An agent or a developer asks what relates to a task, a requirement, a file, or a change. spec-ctx answers with the linked requirements, scenarios, decisions, tasks, code, and tests. It follows the IDs that `init` and `adopt` wrote. It does not dump text by similarity.
+The owner's goal for spec-ctx has two layers, in this order. Layer 1 is a smart, light retrieval of IDs. Layer 2 is the prebuilt skills that automate programming on top of layer 1. For layer 1, an agent queries the specs and the context that relate to each other in a repository built with OpenSpec. An agent or a developer asks what relates to a task, a requirement, a file, or a change. spec-ctx answers with the linked requirements, scenarios, decisions, tasks, code, and tests. It follows the IDs that `init` and `adopt` wrote. It does not dump text by similarity.
 
 ADR-006 set a closed loop as the goal. None of its decision items and none of its phases is about query. The product review of 2026-10-28 said that users do not hire spec-ctx for IDs or bundles. The work from 0.2.0 to 0.4.0 followed ADR-006. On 2026-10-30 the team archived 12 changes. One item made query better (`bundle --block`). The rest went to the loop, Verify, the gate, and the GitHub Action.
 
@@ -19,9 +19,9 @@ A product review on 2026-10-30 measured the query surface.
 ## Decision
 
 1. spec-ctx is a light query script over the IDs in an OpenSpec repository. It is a CLI that reads files and `.ctx/index.json`. No MCP server and no server of any kind. No LLM call and no embeddings. ADR-003 stays in force.
-2. The headline is query: `query`, `related`, `bundle`, and the planned `context <task|ID|file|change>`. The README and the docs lead with them.
-3. Tasks, Verify, evidence, and `check` keep the links true. They stay as support for query, not as the headline.
-4. The loop (`next`, the `specctx-run` skill), the gate, the baseline, the Action rerun, and the replay script are frozen. They get bug fixes only.
+2. Layer 1 is the foundation and has priority: `query`, `related`, `bundle`, and the planned `context <task|ID|file|change>`. The README and the docs lead with them. New work goes to layer 1 until the benchmark meets its targets (item 6).
+3. Layer 2 is the skills that automate programming: `specctx-run`, `next`, `task start`, `task done`, and the plan and archive stops. Layer 2 stays in the product. A layer 2 change is in scope when it makes the skills use layer 1 better, or when it fixes a bug.
+4. Tasks, Verify, evidence, `check`, the gate, and the Action keep the links true. They support both layers. They are not the headline.
 5. The team adjusts the work of 0.2.0 to 0.4.0 to serve query. It does not remove it.
    - Evidence files keep the proof that the code and test tags of a task held when its Verify passed. They list the files tagged with the task's requirements, not the files the run touched. So they give no new edge from a file to a task (change 045).
    - The ID diff of `gate --rerun` between a base and HEAD becomes a query of what changed since a ref.
@@ -32,7 +32,7 @@ A product review on 2026-10-30 measured the query surface.
    - recall 0.95 on this repository within 8,000 characters
    - recall 0.9 on the external repository with no hand tags
    - p95 under 200 ms
-7. Every change says in its proposal how it makes query better or how it keeps the links true.
+7. Every proposal names its layer. It says how it makes retrieval better, how the skills use retrieval better, or how it keeps the links true. The product manager and the architect agents check this at the plan stop (`.claude/agents/`).
 
 ## Order of work
 

@@ -1,17 +1,18 @@
 # spec-ctx
 
-spec-ctx is a light query script over the IDs in an OpenSpec repository. The CLI is `specctx`. Specs live in `openspec/`. Decisions live in `decisions/`. Every requirement has an ID. Read `decisions/ADR-002-id-scheme.md` once.
+spec-ctx is a light ID retrieval script for OpenSpec repositories, plus prebuilt skills that automate programming on top of it. The CLI is `specctx`. Specs live in `openspec/`. Decisions live in `decisions/`. Every requirement has an ID. Read `decisions/ADR-002-id-scheme.md` once.
 
 ## Direction
 
-Read `decisions/ADR-007-query-first.md` before you plan any change. The owner set this direction. It binds every agent.
+The owner set this direction in `decisions/ADR-007-query-first.md`. It binds every agent. Two layers, in this order:
 
-- spec-ctx answers one question: what relates to this task, requirement, file, or change? It returns only the linked specs, decisions, code, and tests, through the IDs that `init` and `adopt` wrote.
-- It is a CLI that reads files. No MCP server, no server of any kind, no LLM call, no embeddings.
-- Tasks, Verify, evidence, and `check` keep the links true. They support query. They are not the headline.
-- The loop (`next`, `specctx-run`), the gate, the Action rerun, and the replay script are frozen. Bug fixes only.
-- Every proposal says how the change makes query better or keeps the links true. A change that does neither waits for the owner.
-- Adjust existing work to serve query. Do not remove it.
+1. Layer 1, retrieval. An agent asks what relates to a task, requirement, file, or change. spec-ctx returns only the linked specs, decisions, code, and tests, through the IDs. Commands: `query`, `related`, `bundle`, and the planned `context`. Layer 1 has priority.
+2. Layer 2, the skills. `specctx-run`, `next`, `task start`, and `task done` automate programming on top of layer 1. A layer 2 change is in scope when it makes the skills use layer 1 better, or fixes a bug.
+
+- A CLI that reads files. No MCP server, no server of any kind, no LLM call, no embeddings.
+- Tasks, Verify, evidence, `check`, the gate, and the Action keep the links true. They are not the headline.
+- Every proposal names its layer and its benefit. The product manager and the architect agents in `.claude/agents/` review each plan stop against this section before the lead approves.
+- Adjust existing work to serve the two layers. Do not remove it.
 
 ## First thing in every session
 
