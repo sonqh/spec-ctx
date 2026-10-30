@@ -5,7 +5,7 @@ set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
 [ -f "$here/dist/cli.js" ] || (cd "$here" && bun run build >/dev/null)
 grep -q 'using: composite' "$here/action.yml"
-for input in version strict; do grep -q "^  $input:" "$here/action.yml"; done
+for input in version strict rerun base; do grep -q "^  $input:" "$here/action.yml"; done
 grep -q 'default: latest' "$here/action.yml"
 
 export INPUT_SPECCTX="node $here/dist/cli.js"
@@ -45,4 +45,8 @@ grep -q "^npx -y github:sonqh/spec-ctx#main gate --strict --markdown " "$NPX_LOG
 (cd "$work" && PATH="$fake:$PATH" INPUT_SPECCTX="" INPUT_VERSION="0.1.0" INPUT_MARKDOWN="openspec/specs/**/*.md" bash "$here/action/run.sh" >/dev/null)
 grep -q "^npx -y spec-ctx@0.1.0 gate --strict --markdown " "$NPX_LOG" || { cat "$NPX_LOG"; exit 1; }
 echo "ok: the version input takes an npm version or a github: spec"
+bash "$here/tests/action/rerun.sh" >/dev/null
+bash "$here/tests/action/rerun-job.sh" >/dev/null
+bash "$here/tests/action/rerun-docs.sh" >/dev/null
+echo "ok: the rerun input, the CI job, and the docs"
 echo "selftest: the action passes clean and fails on a lint error"

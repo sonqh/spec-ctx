@@ -284,10 +284,39 @@ npx spec-ctx lint ste --baseline 0 --disable synonym-rotation README.md
 
 The action runs `specctx gate`: `check --strict`, both markdown linters, `openspec validate --all --strict`, and the length check.
 
+### Rerun
+
+```yaml
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: sonqh/spec-ctx@v0
+        with:
+          rerun: true
+          base: origin/${{ github.base_ref }}
+```
+
+With `rerun: true` the action runs `specctx gate --rerun` and no other step. It runs the Verify command of each task that the pull request closed and compares the exit code with the evidence. `base` is the ref for the merge base. Without `rerun`, the action ignores `base`.
+
+A Verify command is code from the pull request. The boundary:
+
+- Use the `pull_request` and `push` events only.
+- Never use `pull_request_target` or `workflow_run` with code from a pull request. The action exits 1 on `pull_request_target`.
+- Set `permissions: contents: read`.
+- Give the job no secrets.
+- For fork pull requests, turn on the repository setting that asks for approval before a workflow runs.
+- Check out with `fetch-depth: 0`. The merge base needs full history.
+
 ## Status
 
 - Published: `spec-ctx@0.3.0` on npm, with tags `v0.3.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, 036, and 037. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -297,7 +326,7 @@ The action runs `specctx gate`: `check --strict`, both markdown linters, `opensp
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0258 (n=102) | 0.92 (179/195) | 47 (of 94 reopens) | 65 (n=102) | 0 (0 baselined + 0 new) |
+| total | 0.0252 (n=105) | 0.92 (183/199) | 47 (of 95 reopens) | 64 (n=105) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

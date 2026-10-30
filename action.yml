@@ -16,6 +16,12 @@ inputs:
   specctx:
     description: Command that runs specctx. Empty means npx with the version input.
     default: ""
+  rerun:
+    description: Run only gate --rerun. It reruns the Verify command of each task that the pull request closed. Use it on pull_request or push, never on pull_request_target.
+    default: "false"
+  base:
+    description: With rerun, the ref for the merge base, such as origin/main. Empty uses the default of spec-ctx.toml. Without rerun, the action ignores it.
+    default: ""
 runs:
   using: composite
   steps:
@@ -30,4 +36,6 @@ runs:
         INPUT_STRICT: ${{ inputs.strict }}
         INPUT_MARKDOWN: ${{ inputs.markdown }}
         INPUT_SPECCTX: ${{ inputs.specctx }}
+        INPUT_RERUN: ${{ inputs.rerun }}
+        INPUT_BASE: ${{ inputs.base }}
         SPECCTX_ACTION_PATH: ${{ github.action_path }}

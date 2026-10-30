@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T03:38:26.245Z",
+  "attempt": 1,
+  "stderr_tail": "ok: the action section states the rerun boundary",
+  "task": "037/4.1",
+  "verify": {
+    "command": "bash tests/action/rerun-docs.sh && bash tests/action/selftest.sh",
+    "exit": 1
+  }
+}

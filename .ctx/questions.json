@@ -323,5 +323,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review. Archive with the command next prints, then validate, check --strict, build.",
     "resolved_at": "2026-10-30T03:27:59.501Z"
+  },
+  {
+    "n": 39,
+    "asked_at": "2026-10-30T03:34:31.755Z",
+    "task": "037-action-rerun",
+    "text": "plan ready for 037-action-rerun. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. Keep --strict in rerun mode. Ignoring base when rerun is false is fine; say so in the input description.",
+    "resolved_at": "2026-10-30T03:34:54.571Z"
+  },
+  {
+    "n": 40,
+    "asked_at": "2026-10-30T03:42:28.257Z",
+    "task": "037-action-rerun",
+    "text": "archive 037-action-rerun?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review. Archive with the command next prints, then build, validate, check --strict, handoff write, and gate --rerun --base a007225.",
+    "resolved_at": "2026-10-30T03:43:01.356Z"
   }
 ]

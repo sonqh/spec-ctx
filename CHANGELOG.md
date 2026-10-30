@@ -6,6 +6,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Added
 
+- The action takes the inputs `rerun` and `base`. With `rerun: true`, `action/run.sh` runs `gate --strict --rerun` and adds `--base <value>` when `base` has a value. It runs no other gate step. The script exits 1 with one line on `pull_request_target` when `rerun` is true. `ci.yml` has a job `rerun` for `pull_request` with `contents: read` and `fetch-depth: 0`. The README states the security boundary. REQ-DIST-010, REQ-DIST-011, REQ-DIST-012, REQ-GOV-010.
 - `specctx bundle <REQ...> --block` prints each requirement block as it sits in the spec file. It prints the header, the body, the Refs line, and every scenario. It prints no provenance line, no related entry, and no trailer. An ID that is not a requirement exits 2. An agent can write a MODIFIED delta from it. REQ-QRY-004.
 - `specctx next` owns the plan stop. When planning is complete, no task is `[x]`, no task is current, and no question has `stage: plan`, it returns `ask` with `human: true`, the state `plan_stop`, and the command `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. REQ-LOOP-009.
 
@@ -13,6 +14,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Changed
 
+- The `reproduce:` line of a rerun mismatch quotes the cwd, so a path with spaces still pastes. REQ-VER-007.
 - `specctx next` names the stale tasks when a current task keeps `work`, `fix`, or the cap `ask`. The `reason` ends with `stale waiting: <t>, <t>`. `action`, `task`, `tasks`, and `command` stay. REQ-LOOP-010.
 - `specctx-run` runs the command that `next` prints at the plan stop. It names `bundle --block` and says that a MODIFIED block keeps every scenario title. It names the command that refreshes the skill copies, `bun run build && node dist/cli.js init --skills --force`. It warns that `gate` counts the Refs line, and that the CHANGELOG entry goes under `## Unreleased`. REQ-SKL-003, REQ-SKL-006.
 

@@ -73,7 +73,12 @@ describe("groups and report", () => {
     expect(text).toContain("    line 30\n");
     expect(text).toContain("    line 11\n");
     expect(text).not.toContain("line 10\n");
-    expect(text).toContain("  reproduce: cd sub && env CI=1 SPECCTX_RERUN=1 sh -c 'it'\\''s'\n");
+    expect(text).toContain("  reproduce: cd 'sub' && env CI=1 SPECCTX_RERUN=1 sh -c 'it'\\''s'\n");
+  });
+
+  test("SCN-VER-007-3 a cwd with a space is quoted", () => {
+    const text = formatMismatch({ id: "a/1.1", file: "f", line: 1, evidence: "e", expected: 0, outcome: { exit: 3, timedOut: false, output: "" }, command: "x", cwd: "my dir/it's", timeoutS: 5 });
+    expect(text).toContain("  reproduce: cd 'my dir/it'\\''s' && env CI=1 SPECCTX_RERUN=1 sh -c 'x'\n");
   });
 
   test("a timeout reads as a timeout", () => {

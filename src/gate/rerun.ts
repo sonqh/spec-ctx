@@ -173,7 +173,7 @@ const shq = (s: string): string => `'${s.replace(/'/g, `'\\''`)}'`;
 
 /** REQ-VER-007 the line that runs the frozen command on a developer machine as the rerun runs it. */
 export function reproduceLine(command: string, cwd: string): string {
-  return `reproduce: cd ${cwd} && env CI=1 SPECCTX_RERUN=1 sh -c ${shq(command)}`;
+  return `reproduce: cd ${shq(cwd)} && env CI=1 SPECCTX_RERUN=1 sh -c ${shq(command)}`;
 }
 
 export interface MismatchInfo {

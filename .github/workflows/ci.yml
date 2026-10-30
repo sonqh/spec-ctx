@@ -68,3 +68,23 @@ jobs:
         if: matrix.runtime == 'bun'
       - run: bun run build:bin && ./build/specctx --version
         if: matrix.runtime == 'bun'
+  # REQ-GOV-010 ADR-006 phase 2: reruns the Verify command of each task that the pull request closed.
+  # pull_request only. A fork pull request needs the approval setting for workflows. See the README.
+  rerun:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - uses: ./
+        with:
+          rerun: true
+          base: origin/${{ github.base_ref }}
+          specctx: node dist/cli.js

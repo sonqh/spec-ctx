@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T03:38:12.578Z",
+  "bundle_chars": 3551,
+  "files": {
+    "tests/action/rerun-job.sh": "1d2e25f1e4d1a01f4b9003750cd0da9dfb64cfd14ef69da67c74b9091fa3c55f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-010"
+  ],
+  "started_at": "2026-10-30T03:38:01.670Z",
+  "task": "037/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bash tests/action/rerun-job.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "c5ac9999f660d041566af0bed87b6b184990eab29e4b5a7f4299682177c1e89e"
+  }
+}

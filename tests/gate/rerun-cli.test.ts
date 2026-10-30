@@ -151,7 +151,7 @@ describe("gate --rerun", () => {
     expect(r.out).toContain("  evidence .ctx/evidence/036/1.1.json\n");
     expect(r.out).toContain("  expected exit 0\n  actual exit 3\n");
     expect(r.out).toContain("    boom\n");
-    expect(r.out).toContain("  reproduce: cd . && env CI=1 SPECCTX_RERUN=1 sh -c 'echo boom; exit 3'\n");
+    expect(r.out).toContain("  reproduce: cd '.' && env CI=1 SPECCTX_RERUN=1 sh -c 'echo boom; exit 3'\n");
     const log = JSON.parse(lines(readFileSync(p.path(".ctx/gate-log.jsonl"), "utf8")).pop()!);
     expect(log).toMatchObject({ ok: false, failed_step: "rerun", steps: ["rerun"] });
   });

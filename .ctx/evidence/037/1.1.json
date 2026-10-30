@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T03:38:51.252Z",
+  "files": {
+    "tests/action/rerun.sh": "4934d2da1a8b3a1ee6e1a5b03afd9f6108addee2acc76cb9ac593c62bc9538d8",
+    "tests/action/selftest.sh": "b9bebe318ba9e5163ed3e137461e58bc92b28e826556ce0c91b18f2c5ebd4c32"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-005",
+    "REQ-DIST-010",
+    "REQ-DIST-011"
+  ],
+  "task": "037/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bash tests/action/rerun.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "b8e5e0fe509097b63c23d204aa8b76f0c5da3450aaae4b347a9ff5e091a0b755"
+  }
+}

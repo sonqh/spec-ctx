@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-30T03:37:57.278Z",
+  "bundle_chars": 5978,
+  "files": {
+    "src/cli/gate.ts": "4225ac9a85fc26d30f7fd2e3f463e87eea6f152e539246cc3f18b7a11aac7031",
+    "src/gate/rerun.ts": "f9190ae4dea262b15a23e6d46cd4a416119563831e11292ff878e2d53da29a27",
+    "src/verify/run.ts": "5adf131a6fe06e60f8059fe37bb9db0d593396175cca4f8d89c2efff79c66eb8",
+    "tests/gate/compare.test.ts": "c9c7b5da085d31790a6454482f91a6d231578510c44747b3362c93f55b04f846",
+    "tests/gate/rerun-cli.test.ts": "7746c6bef750162defc2ff9c91680db5c88f2af1689c81c3cf6ecf8eebd815b3"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-007"
+  ],
+  "started_at": "2026-10-30T03:35:34.229Z",
+  "task": "037/2.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 36 pass\n 0 fail\n 91 expect() calls\nRan 36 tests across 3 files. [2.13s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

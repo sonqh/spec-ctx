@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-30T03:38:55.358Z",
+  "bundle_chars": 7924,
+  "files": {
+    "tests/action/rerun-docs.sh": "8dcd6934322e315a2ea66662a495197d61812f4d3ec447c1a10634b0dbf6cdb0",
+    "tests/action/rerun.sh": "4934d2da1a8b3a1ee6e1a5b03afd9f6108addee2acc76cb9ac593c62bc9538d8",
+    "tests/action/selftest.sh": "b9bebe318ba9e5163ed3e137461e58bc92b28e826556ce0c91b18f2c5ebd4c32"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-012",
+    "REQ-DIST-005"
+  ],
+  "started_at": "2026-10-30T03:38:25.211Z",
+  "task": "037/4.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bash tests/action/rerun-docs.sh && bash tests/action/selftest.sh",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "b9c6a9cbfb48c2e32bd2cd34c53ece0627d76fcbb476b218ce393470b29e6f2d"
+  }
+}
