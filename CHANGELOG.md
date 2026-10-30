@@ -15,6 +15,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 - `specctx-run` takes the change name of `plan` from the request in kebab case. It reads requirements with `specctx bundle` or `specctx query`, never `openspec show`. The plan stop runs `specctx handoff ask --change <c>`. `archive` runs the steps under `operations.archive.guidance`, then the command in the `command` field. It no longer names `openspec-archive-change`. The skill names `npx -y @fission-ai/openspec@latest` when `[gate] openspec` is absent. REQ-SKL-001, REQ-SKL-003.
 - `stats` debt also counts `task-without-verify` and `weak-verify`, in the total and in each change row. REQ-STAT-004.
 - ADR-002 lists the capability code `LOOP` with the path `loop`.
+- `status` always ends with one line `next: <command>`. The command is the `command` field of `specctx next`, so the two commands never disagree. A decision with no command prints `next: none`. That covers no active change, every task done, and a failed OpenSpec command. With an active change `status` now runs the OpenSpec status command once, like `next`. REQ-CLI-007.
+- `operations.archive.guidance` in `openspec/config.yaml` of this repository lists every step that runs before an archive: `stats --write`, the README `## Measured` total row, the README `Archived:` line, `## Unreleased` in `CHANGELOG.md`, `docs/verification/<NNN>.md`, and `bun run ci:local`. The `specctx-run` skill runs them. REQ-GOV-009.
 
 ## 0.2.0
 

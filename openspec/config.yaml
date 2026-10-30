@@ -35,5 +35,11 @@ operations:
   archive:
     guidance:
       - 'Run `node dist/cli.js check --strict` and `openspec validate --all --strict`. Both must pass before archive.'
+      - 'Run `node dist/cli.js stats --write`.'
+      - 'Update the total row under `## Measured` in README.md from the newest file under `docs/metrics/`.'
+      - 'Update the `Archived:` line in README.md.'
+      - 'Add the change to `## Unreleased` in CHANGELOG.md.'
+      - 'Write `docs/verification/<NNN>.md` like the verification record of the last change.'
+      - 'Run `bun run ci:local`. It must exit 0.'
       - 'Rebuild the index after archive.'
       - 'Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.'

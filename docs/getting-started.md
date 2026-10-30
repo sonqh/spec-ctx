@@ -94,7 +94,7 @@ $ specctx check --strict
 ```bash
 $ specctx status
 add-greeting  done 0  open 2
-next: specctx task next
+next: specctx task start add-greeting/1.1
 
 $ specctx task next
 add-greeting/1.1  Add `greet(name)` in `src/greeting.js`

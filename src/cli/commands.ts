@@ -166,8 +166,13 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { statusReport, statusLines } = await import("./status.ts");
       const r = statusReport(root, entries);
       if (json) print(r);
-      // REQ-CLI-008 the next: line is dim
-      else io.out(statusLines(r).map((l) => (l.startsWith("next: ") ? paint("dim", l, io.tty) : l) + "\n").join(""));
+      else {
+        // REQ-CLI-007 the next: line is the command of the decision of specctx next, so the two never disagree (030/D1)
+        const { decideNext } = await import("../loop/next.ts");
+        const d = decideNext(root, cfg, data);
+        // REQ-CLI-008 the next: line is dim
+        io.out(statusLines(r, d.command).map((l) => (l.startsWith("next: ") ? paint("dim", l, io.tty) : l) + "\n").join(""));
+      }
       return 0;
     }
     case "next": {

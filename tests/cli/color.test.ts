@@ -3,7 +3,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 import { colorOn, paint } from "../../src/cli/color.ts";
-import { Project, REPO } from "../helpers.ts";
+import { OPENSPEC_STUB, Project, REPO } from "../helpers.ts";
 
 const SPEC = "openspec/specs/alpha/spec.md";
 const CLI = join(REPO, "dist/cli.js");
@@ -13,7 +13,8 @@ afterEach(() => p?.cleanup());
 
 /** Run the built CLI with stdout in a pipe and a clean color environment plus `extra`. */
 function cli(cwd: string, args: string[], extra: Record<string, string> = {}): { code: number; out: string } {
-  const env: NodeJS.ProcessEnv = { ...process.env };
+  // status runs the OpenSpec status command, so the child gets the stand-in (030/D4)
+  const env: NodeJS.ProcessEnv = { SPECCTX_OPENSPEC: OPENSPEC_STUB, ...process.env };
   delete env.FORCE_COLOR;
   delete env.NO_COLOR;
   const r = spawnSync("node", [CLI, ...args], { cwd, env: { ...env, ...extra }, encoding: "utf8" });

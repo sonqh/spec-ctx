@@ -76,7 +76,11 @@ export function statusReport(root: string, entries: Entry[]): StatusReport {
   };
 }
 
-export function statusLines(r: StatusReport): string[] {
+/**
+ * REQ-CLI-007 the status lines. The last line is always `next: ` and the command of the decision
+ * of `specctx next`, or `none` when the decision has no command (030/D1, 030/D2).
+ */
+export function statusLines(r: StatusReport, next: string | null): string[] {
   const out = r.changes.map((c) => `${c.change}  done ${c.done}  open ${c.open}`);
   if (!r.changes.length) {
     out.push("no active change");
@@ -90,16 +94,6 @@ export function statusLines(r: StatusReport): string[] {
     // with no active change the questions are the agenda, so status prints them
     if (!r.changes.length) for (const q of r.open_questions) out.push(`- ${q}`);
   }
-  const next = nextStep(r);
-  if (next) out.push(`next: ${next}`);
+  out.push(`next: ${next ?? "none"}`);
   return out;
-}
-
-/** REQ-CLI-007 the next step by state: an open task, then a change with every task done, then uncovered REQs. */
-export function nextStep(r: StatusReport): string | null {
-  if (r.changes.some((c) => c.open > 0)) return "specctx task next";
-  const ready = r.changes.find((c) => c.done > 0 && c.open === 0);
-  if (ready) return `archive ${ready.change}`;
-  if (r.uncovered > 0) return "specctx check";
-  return null;
 }

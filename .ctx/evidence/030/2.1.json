@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T00:01:30.445Z",
+  "bundle_chars": 3914,
+  "files": {
+    "tests/gov/archive-guidance.test.ts": "08a786b4a2fb3480484e96fd76c011d0a7c5d44105ddbf67aed06c51b69667f0"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-009"
+  ],
+  "started_at": "2026-10-30T00:01:12.230Z",
+  "task": "030/2.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun test tests/gov/archive-guidance.test.ts",
+    "exit": 0,
+    "stderr_tail": "\n 1 pass\n 0 fail\n 13 expect() calls\nRan 1 test across 1 file. [32.00ms]",
+    "stdout_sha256": "bbe6a94c29cc8d3ff5a1792a5abae1f1122aed0642111b52036ab7e0b2b2ca47"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T00:01:04.502Z",
+  "bundle_chars": 8403,
+  "files": {
+    "src/adopt/write.ts": "b01666523358657d1ee27d2169b1089b3b4c7788b27a0713dd59b7e5b6b341ce",
+    "src/cli/commands.ts": "9938aa28bc65003e6e097f2d763efcce390e01563c4b7844eb62205195ee344d",
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "309b482520e6e25b75cd9fb026bfffa708a3b2a5a5cba798d0f82f4ae9771985",
+    "src/init/init.ts": "5914006abf88194a2796a6b4800f16465d35c5bd81207bda7c577b4483e1bd2e",
+    "tests/cli/cli.test.ts": "4974a441cfe067ef2abc4550b6e24598cdb160f95566d7a3b608d6bc821f57e4",
+    "tests/cli/nextstep.test.ts": "941e35a5948fe3624f9c2c291f289313569317d8dc47808aa7f1071bbace790f",
+    "tests/cli/root.test.ts": "b243ad4dd5da5eec9452b0c362812ebf2f3ec5db343be18ff7d8204a892fc960",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c",
+    "tests/helpers.ts": "c4c3c458cc1d2cc25bc67d9cba2853afb93804341d2ba9faf79d2178d3f7ef8f",
+    "tests/loop/next.test.ts": "df43fee7d9427a7dd7b17908fe2ee76f48409af6f76ff64704f915fac20d6020"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-003",
+    "REQ-CLI-007"
+  ],
+  "started_at": "2026-10-30T00:00:42.217Z",
+  "task": "030/1.3",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bash tests/parity/run.sh && bun test tests/gov/getting-started.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 1 pass\n 0 fail\n 10 expect() calls\nRan 1 test across 1 file. [16.00ms]",
+    "stdout_sha256": "88ec45b9fb93f1ad70e66a0e468888b605d7f60343e9174042180dc05b75e9a1"
+  }
+}

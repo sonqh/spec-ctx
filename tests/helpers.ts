@@ -11,6 +11,8 @@ export const PARITY_FIXTURE = join(REPO, "tests/fixtures/parity-repo");
 export const NO_ID_FIXTURE = join(REPO, "tests/fixtures/no-id-repo");
 export const KEBAB_FIXTURE = join(REPO, "tests/fixtures/kebab-repo");
 export const DUP_KEY_FIXTURE = join(REPO, "tests/fixtures/dup-key-repo");
+/** REQ-CLI-007 a stand-in OpenSpec command that reports a complete plan, so status never reaches the network (030/D4). */
+export const OPENSPEC_STUB = "sh " + JSON.stringify(join(REPO, "tests/fixtures/openspec-stub.sh"));
 
 /** Tag text built at run time, so the index of this repo does not read test data as tags. */
 export const TAG = "// " + "REQ-";
@@ -58,8 +60,9 @@ export class Project {
     let err = "";
     // init detects the OpenSpec version with npx (022/D3). Tests never hit the network, so the default
     // command stands in when a test did not set SPECCTX_OPENSPEC itself.
-    const stub = args[0] === "init" && process.env.SPECCTX_OPENSPEC === undefined;
-    if (stub) process.env.SPECCTX_OPENSPEC = "npx -y @fission-ai/openspec@latest";
+    // status runs the decision of next, so it gets the stand-in OpenSpec command (030/D4).
+    const stub = (args[0] === "init" || args[0] === "status") && process.env.SPECCTX_OPENSPEC === undefined;
+    if (stub) process.env.SPECCTX_OPENSPEC = args[0] === "init" ? "npx -y @fission-ai/openspec@latest" : OPENSPEC_STUB;
     try {
       const code = await main(args, { cwd, out: (s) => (out += s), err: (s) => (err += s) });
       return { code, out, err };

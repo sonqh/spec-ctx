@@ -9,6 +9,9 @@ here=$(cd "$(dirname "$0")/../.." && pwd)
 fixture="$here/tests/fixtures/parity-repo"
 golden="${SPECCTX_GOLDEN:-$here/tests/fixtures/parity-golden}"
 ts="node $here/dist/cli.js"
+# status runs the decision of next, which runs the OpenSpec status command. The stand-in answers it
+# with a complete plan, so the harness never reaches the network (030/D5).
+export SPECCTX_OPENSPEC="sh $here/tests/fixtures/openspec-stub.sh"
 record=0
 [ "${1:-}" = "--record" ] && record=1
 

@@ -4,14 +4,15 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { REPO } from "../helpers.ts";
+import { OPENSPEC_STUB, REPO } from "../helpers.ts";
 
 function loaded(entry: string, args: string[]): string[] {
   const dir = mkdtempSync(join(tmpdir(), "specctx-trace-"));
   const file = join(dir, "trace.txt");
   try {
     execFileSync("node", ["--import", join(REPO, "tests/cli/trace-hooks.mjs"), entry, ...args], {
-      env: { ...process.env, SPECCTX_TRACE_FILE: file },
+      // status runs the OpenSpec status command, so the child gets the stand-in (030/D4)
+      env: { SPECCTX_OPENSPEC: OPENSPEC_STUB, ...process.env, SPECCTX_TRACE_FILE: file },
     });
     return readFileSync(file, "utf8").trim().split("\n");
   } finally {
