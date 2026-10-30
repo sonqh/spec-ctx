@@ -153,7 +153,7 @@ describe("specctx next walks the decision order", () => {
       action: "ask", command: `specctx handoff ask --change ${CHANGE} --plan "${text}"`, human: true, reason: text, state: "plan_stop",
     }));
     expect((await p.run("handoff", "ask", "--change", CHANGE, "--plan", text)).code).toBe(0);
-    expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "1", "--approve", "yes")).code).toBe(0);
     expect(await next()).toEqual(base({ action: "start", command: `specctx task start ${CHANGE}/1.1`, state: "task_open", task: `${CHANGE}/1.1` }));
     rmSync(p.path(".ctx/questions.json"));
     p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [x] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `node -e 0`\n- [x] 1.2 Shorten the session timeout [REQ-UA-001] Verify: `node -e 0`\n- [ ] 1.3 Add the TOTP prompt to the login form [REQ-UA-001] Verify: `echo boom && exit 1`\n");

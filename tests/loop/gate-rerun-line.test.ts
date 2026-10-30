@@ -26,7 +26,7 @@ beforeAll(async () => {
   p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [ ] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `node -e 0`\n");
   p.touchForward(SPEC);
   p.touchForward(TASKS);
-  p.write(".ctx/questions.json", JSON.stringify([{ n: 1, asked_at: "2026-10-28", task: CHANGE, text: "plan?", status: "resolved", answer: "y", resolved_at: "2026-10-28", stage: "plan" }]) + "\n");
+  p.write(".ctx/questions.json", JSON.stringify([{ n: 1, asked_at: "2026-10-28", task: CHANGE, text: "plan?", status: "resolved", answer: "y", resolved_at: "2026-10-28", stage: "plan", verdict: "approved" }]) + "\n");
   expect((await p.run("task", "start", `${CHANGE}/1.1`)).code).toBe(0);
   expect((await p.run("task", "done", `${CHANGE}/1.1`)).code).toBe(0);
 });

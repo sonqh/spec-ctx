@@ -30,7 +30,7 @@ async function next(): Promise<Record<string, any>> {
 }
 async function approvePlan(): Promise<void> {
   expect((await p.run("handoff", "ask", "--change", "001", "--plan", "plan ready for 001-x. Approve to start the tasks?")).code).toBe(0);
-  expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
+  expect((await p.run("handoff", "resolve", "1", "--approve", "yes")).code).toBe(0);
 }
 
 describe("the run prefix on next and status", () => {

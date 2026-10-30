@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-30T14:45:10.544Z",
+  "files": {
+    "src/graph/bundle.ts": "df884dd341e2922521f88aba2023b339b116c2e24bdefd4e2e9de7ca195ddfc4",
+    "tests/query/task-reach.test.ts": "c9a31db9f9d5274edd69af2dfa5e48cb930a76503b6475121dd2b82776f279fb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-016"
+  ],
+  "task": "048/1.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 117 pass\n 0 fail\n 592 expect() calls\nRan 117 tests across 17 files. [3.73s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

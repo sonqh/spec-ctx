@@ -1,4 +1,4 @@
-// Covers: REQ-HND-001, REQ-HND-002, REQ-HND-003
+// Covers: REQ-HND-001, REQ-HND-002, REQ-HND-003, REQ-HND-004
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { Project } from "../helpers.ts";
@@ -210,5 +210,48 @@ describe("handoff", () => {
     const j = JSON.parse((await p.run("status", "--json")).out);
     expect(j.open_questions).toHaveLength(1);
     expect(j.handoff).toBe(false);
+  });
+});
+
+const Q = (n: number, stage?: string) => ({ n, asked_at: "2026-10-28", task: "002-t", text: `q${n}`, status: "open", ...(stage ? { stage } : {}) });
+const questions = (): any[] => JSON.parse(p.read(".ctx/questions.json"));
+
+describe("verdict on plan and archive questions", () => {
+  test("SCN-HND-004-1 approve and reject store the verdict", async () => {
+    p = setup();
+    p.write(".ctx/questions.json", JSON.stringify([Q(1, "plan"), Q(2, "archive")]) + "\n");
+    expect((await p.run("handoff", "resolve", "1", "--approve", "yes")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "2", "--reject", "Not yet, one task is weak")).code).toBe(0);
+    const qs = questions();
+    expect(qs[0]).toMatchObject({ status: "resolved", answer: "yes", verdict: "approved" });
+    expect(qs[1]).toMatchObject({ status: "resolved", answer: "Not yet, one task is weak", verdict: "rejected" });
+  });
+
+  test("SCN-HND-004-2 a plain resolve or both flags exit 2 and the question stays open", async () => {
+    p = setup();
+    p.write(".ctx/questions.json", JSON.stringify([Q(1, "plan"), Q(2, "archive")]) + "\n");
+    for (const args of [["1", "yes"], ["2", "yes"], ["1", "--approve", "--reject", "yes"], ["2", "--approve", "--reject", "yes"]]) {
+      const r = await p.run("handoff", "resolve", ...args);
+      expect(r.code).toBe(2);
+      expect(r.err.split("\n").filter((l) => l.startsWith("specctx:"))).toHaveLength(1);
+      expect(r.err).toContain("--approve");
+      expect(r.err).toContain("--reject");
+    }
+    expect(questions().map((q) => q.status)).toEqual(["open", "open"]);
+    expect(questions().some((q) => "verdict" in q)).toBe(false);
+  });
+
+  test("SCN-HND-004-3 other stages resolve as before and store no verdict", async () => {
+    p = setup();
+    p.write(".ctx/questions.json", JSON.stringify([Q(1, "design"), Q(2), Q(3, "cap")]) + "\n");
+    expect((await p.run("handoff", "resolve", "1", "redis")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "2", "redis")).code).toBe(0);
+    // a flag on these questions exits 2 and the question stays open
+    const r = await p.run("handoff", "resolve", "3", "--approve", "redis");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("plan and archive");
+    const qs = questions();
+    expect(qs.slice(0, 2).every((q) => q.status === "resolved" && !("verdict" in q))).toBe(true);
+    expect(qs[2].status).toBe("open");
   });
 });

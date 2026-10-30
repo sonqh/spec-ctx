@@ -27,7 +27,7 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   "task reopen": {},
   "handoff write": {},
   "handoff ask": { change: "string", plan: "bool" },
-  "handoff resolve": {},
+  "handoff resolve": { approve: "bool", reject: "bool" },
   adopt: { "dry-run": "bool" },
   "baseline write": {},
   "baseline prune": {},

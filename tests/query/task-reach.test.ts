@@ -59,15 +59,36 @@ describe("task reach", () => {
     expect(h.some((x) => x.startsWith("src/") || x.startsWith("tests/"))).toBe(false);
   });
 
-  test("SCN-QRY-016-4 the decision for a cited requirement stays", async () => {
+  for (const depth of [1, 2]) {
+    test(`SCN-QRY-016-4 the decision for a cited requirement stays at depth ${depth}`, async () => {
+      p = project();
+      p.write("openspec/changes/009-add-x/design.md", "# Design\n\n## Decisions\n\n- D1 Pick one. Refs: REQ-TH-001\n");
+      const full = await bundleOf(p, 100000, "009/1.1", "--depth", String(depth));
+      // room for the decision, or for one delta, but not for both: a class 3 decision then drops before the delta
+      const budget = ["009/1.1", "REQ-TH-001", "009/D1", "REQ-TH-020", "src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"].reduce((n, id) => n + size(full.text, id), 0) - 1;
+      const b = await bundleOf(p, budget, "009/1.1", "--depth", String(depth));
+      expect(b.text).toContain("-- 009/D1 |");
+      expect(b.text).toContain("| decision for REQ-TH-001\n");
+      expect(b.omitted).not.toContain("009/D1");
+    });
+  }
+
+  test("SCN-QRY-016-5 the decision of a second requested ID keeps depth 1 at depth 2", async () => {
     p = project();
-    p.write("openspec/changes/009-add-x/design.md", "# Design\n\n## Decisions\n\n- D1 Pick one. Refs: REQ-TH-001\n");
-    const full = await bundleOf(p, 100000, "009/1.1");
-    const budget = ["009/1.1", "REQ-TH-001", "009/D1", "src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"].reduce((n, id) => n + size(full.text, id), 0) + 5;
-    const b = await bundleOf(p, budget, "009/1.1");
-    expect(b.text).toContain("-- 009/D1 |");
-    expect(b.text).toContain("| decision for REQ-TH-001\n");
-    expect(b.omitted).not.toContain("009/D1");
+    // the first requirement refs the second, so the walk for the first ID reaches the decision of the second at depth 2
+    p.write("openspec/changes/009-add-x/design.md", "# Design\n\n## Decisions\n\n- D1 Pick one. Refs: REQ-TH-002\n");
+    const ids = ["REQ-TH-001", "REQ-TH-002"];
+    const one = await bundleOf(p, 100000, ...ids, "--depth", "1");
+    expect(one.text).toContain("| decision for REQ-TH-002\n");
+    const two = await bundleOf(p, 100000, ...ids, "--depth", "2");
+    expect(two.text).toContain("| decision for REQ-TH-002\n");
+    // room for the decision, or for one task that cites REQ-TH-001, but not for both
+    const budget = ["REQ-TH-001", "REQ-TH-002", "cap/thing", "009/D1", "009/1.1", "src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"].reduce((n, id) => n + size(one.text, id), 0) - 1;
+    for (const depth of ["1", "2"]) {
+      const b = await bundleOf(p, budget, ...ids, "--depth", depth);
+      expect(b.text).toContain("| decision for REQ-TH-002\n");
+      expect(b.omitted).not.toContain("009/D1");
+    }
   });
 
   test("a shared task number reads the entry that the caller passes", async () => {

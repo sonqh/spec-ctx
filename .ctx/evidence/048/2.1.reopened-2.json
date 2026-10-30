@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-30T14:45:24.099Z",
+  "files": {
+    "src/cli/workflow.ts": "84a2e4c07bc249f51fadaab904557ba005cd8f0abaad05877c9100e323eef925",
+    "src/handoff/handoff.ts": "b9449ae28be63aab43f24b22cea70951b4e2beaae204f343be7fec65e927d781",
+    "src/handoff/questions.ts": "85ffdb27871c2cf932f8bf07cf4f7e7bd06edc58bfd230b07fe2916879a2f302",
+    "tests/handoff/handoff.test.ts": "11db0bc05269908a82f62396d8744f68603598c333a5c5cb09163cb6a80aadda",
+    "tests/loop/archive-stop.test.ts": "6ab84c0c21f1cbba43373542de89cf7d7c9a48a919e5ec97c98bc43835b65c20",
+    "tests/loop/fails.test.ts": "8b66e89937310880f40a57ebfb8260eee6f4a10793cc12e19eaf292f7f20a896",
+    "tests/loop/plan-stop.test.ts": "6e7da6ecb499975698cf93e915a41c532b1767e0404291072c65257b9aabe608"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/handoff/handoff.ts",
+  "reqs": [
+    "REQ-HND-004",
+    "REQ-HND-002"
+  ],
+  "task": "048/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/handoff tests/cli/help.test.ts tests/tasks tests/loop/fails.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 66 pass\n 0 fail\n 416 expect() calls\nRan 66 tests across 9 files. [1302.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

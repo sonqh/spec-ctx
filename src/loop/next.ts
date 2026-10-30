@@ -137,7 +137,9 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   if (blocking) {
     const task = blocking.task.includes("/") ? blocking.task : null;
     const attempt = task ? failsInWindow(root, task, qs).length : 0;
-    return done({ action: "ask", attempt, command: rc(`handoff resolve ${blocking.n} "<answer>"`), human: true, reason: blocking.text, state: "question_open", task });
+    // REQ-LOOP-015 a plan or archive question shows the verdict form (048/D6)
+    const form = blocking.stage === "plan" || blocking.stage === "archive" ? "<--approve|--reject> " : "";
+    return done({ action: "ask", attempt, command: rc(`handoff resolve ${blocking.n} ${form}"<answer>"`), human: true, reason: blocking.text, state: "question_open", task });
   }
 
   // step 3: planning state from OpenSpec
@@ -164,9 +166,14 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   // REQ-LOOP-009 step 4b: the plan stop. It needs no [x] task, no current task, and no question with stage plan, open or resolved. Only --plan sets that stage (034/D1, 041/D2).
   const cur0 = readCurrent(root);
   const started = tasks.some((t) => t.status === "done") || (cur0?.task !== undefined && cur0.task.split("/")[0] === key);
-  if (!started && !qs.some((q) => q.stage === "plan" && q.task === folder)) {
-    const text = `plan ready for ${folder}. Approve to start the tasks?`;
-    return done({ action: "ask", command: rc(`handoff ask --change ${folder} --plan "${text}"`), human: true, reason: text, state: "plan_stop" });
+  // REQ-LOOP-015 REQ-LOOP-016 the newest plan question decides, the one with the highest n. A rejection holds the stop before the started guard. Only an approval ends it. No verdict is no approval (048/D4).
+  const newestPlan = newestOf(qs.filter((q) => q.stage === "plan" && q.task === folder && q.status === "resolved"));
+  const planText = `plan ready for ${folder}. Approve to start the tasks?`;
+  if (newestPlan?.verdict === "rejected") {
+    return done({ action: "ask", command: rc(`handoff ask --change ${folder} --plan "${planText}"`), human: true, reason: `plan rejected in question ${newestPlan.n}: ${newestPlan.answer ?? ""}`, state: "plan_stop" });
+  }
+  if (!started && newestPlan?.verdict !== "approved") {
+    return done({ action: "ask", command: rc(`handoff ask --change ${folder} --plan "${planText}"`), human: true, reason: planText, state: "plan_stop" });
   }
   // REQ-LOOP-013 repair runs Verify, so a ticked task with no Verify command never gets it (044/D2)
   const ticked = tasks.find((t) => t.status === "done" && parseVerify(t.title).command !== null && !hasEvidence(root, t));
@@ -226,9 +233,19 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   if (cfg.loop.archive !== "ask") return done({ action: "archive", command: archive, human: false, state: "gate_passed" });
   // REQ-LOOP-007 a resolved archive question after the newest evidence is the approval. The stage field decides, not the text (031/D2).
   const newest = newestEvidenceAt(root, key);
-  const approved = qs.filter((q) => q.status === "resolved" && q.task === folder && q.stage === "archive" && typeof q.resolved_at === "string" && cmpStr(q.resolved_at, newest) > 0).at(-1);
-  if (approved) return done({ action: "archive", command: archive, human: false, reason: `archive approved in question ${approved.n}`, state: "gate_passed" });
-  return done({ action: "archive", command: rc(`handoff ask --change ${folder} "archive ${folder}?"`), human: true, state: "gate_passed" });
+  // REQ-LOOP-015 REQ-LOOP-016 the newest archive question after the newest evidence decides. Only an approval counts (048/D5).
+  const decided = newestOf(qs.filter((q) => q.status === "resolved" && q.task === folder && q.stage === "archive" && typeof q.resolved_at === "string" && cmpStr(q.resolved_at, newest) > 0));
+  if (decided?.verdict === "approved") return done({ action: "archive", command: archive, human: false, reason: `archive approved in question ${decided.n}`, state: "gate_passed" });
+  const askArchive = rc(`handoff ask --change ${folder} "archive ${folder}?"`);
+  if (decided?.verdict === "rejected") {
+    return done({ action: "archive", command: askArchive, human: true, reason: `archive rejected in question ${decided.n}: ${decided.answer ?? ""}`, state: "gate_passed" });
+  }
+  return done({ action: "archive", command: askArchive, human: true, state: "gate_passed" });
+}
+
+/** The question with the highest n, or undefined (048/D4). */
+function newestOf(qs: Question[]): Question | undefined {
+  return qs.reduce<Question | undefined>((a, q) => (a === undefined || q.n > a.n ? q : a), undefined);
 }
 
 /** REQ-LOOP-001 REQ-CLI-007 the human form: action first, one line per key, next last (024/D1). Strict mode. */

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T14:44:33.016Z",
+  "attempt": 1,
+  "stderr_tail": "- []\n+ [\n+   \".ctx/evidence/048/2.1.json:1  stale-evidence  048/2.1 tests/loop/archive-stop.test.ts\",\n+   \".ctx/evidence/048/2.1.json:1  stale-evidence  048/2.1 tests/loop/plan-stop.test.ts\",\n+   \"tests/query/task-reach.test.ts:78  dangling-ref  REQ-TH-001\",\n+   \"tests/query/task-reach.test.ts:78  dangling-ref  REQ-TH-002\",\n+   \"dangling-ref  2  No entry has this ID. Fix the ID or remove the link. A tag inside a string literal or fixture text also reads as a link. Build that text at run time, or move the file under a path in [scan] ignore.\",\n+   \"stale-evidence  2  Run node dist/cli.js task reopen <task> <why>, then node dist/cli.js task done <task>.\",\n+ ]\n\n- Expected  - 1\n+ Received  + 8\n\n      at <anonymous> (/home/claude/spec-ctx/tests/gov/governance.test.ts:21:101)\n(fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [753.88ms]\n\n 40 pass\n 1 fail\n 302 expect() calls\nRan 41 tests across 10 files. [5.66s]",
+  "task": "048/4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/getting-started.md docs/verification/048.md skills/specctx-run/SKILL.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/getting-started.md docs/verification/048.md skills/specctx-run/SKILL.md && bun test tests/gov tests/skills && bash tests/parity/run.sh && grep -q \"048\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 1
+  }
+}

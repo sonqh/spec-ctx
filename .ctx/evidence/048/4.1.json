@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-30T14:56:04.935Z",
+  "files": {
+    "src/graph/bundle.ts": "df884dd341e2922521f88aba2023b339b116c2e24bdefd4e2e9de7ca195ddfc4",
+    "src/handoff/questions.ts": "85ffdb27871c2cf932f8bf07cf4f7e7bd06edc58bfd230b07fe2916879a2f302",
+    "src/loop/next.ts": "3c6d15f5b50b53d3744e0ccfd51bf26e0cf81819217547778c7c61930384642f",
+    "tests/handoff/handoff.test.ts": "11db0bc05269908a82f62396d8744f68603598c333a5c5cb09163cb6a80aadda",
+    "tests/loop/archive-stop.test.ts": "6ab84c0c21f1cbba43373542de89cf7d7c9a48a919e5ec97c98bc43835b65c20",
+    "tests/loop/plan-stop.test.ts": "64a8c6b72633f3f4ae3c14e1f71f7bc7ee0f0044800ed3a9c0fc1377527a3342",
+    "tests/query/task-reach.test.ts": "c9a31db9f9d5274edd69af2dfa5e48cb930a76503b6475121dd2b82776f279fb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-015",
+    "REQ-LOOP-016",
+    "REQ-HND-004",
+    "REQ-QRY-016"
+  ],
+  "task": "048/4.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/getting-started.md docs/verification/048.md skills/specctx-run/SKILL.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/getting-started.md docs/verification/048.md skills/specctx-run/SKILL.md && bun test tests/gov tests/skills && bash tests/parity/run.sh && grep -q \"048\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 41 pass\n 0 fail\n 304 expect() calls\nRan 41 tests across 10 files. [4.38s]",
+    "stdout_sha256": "2747ff73073cd51c4292fb5e02a68dce8c4b8e565566e206dfc1249252d43007"
+  }
+}

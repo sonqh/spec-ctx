@@ -611,5 +611,37 @@
     "stage": "archive",
     "answer": "Not yet. The lead moved the code and test lines of cited and tagged requirements to class 0 (bundle.ts, the 047 query delta, D3, D7). Run the repairs that next prints, remeasure, then ask the archive question again.",
     "resolved_at": "2026-10-30T14:23:54.058Z"
+  },
+  {
+    "n": 68,
+    "asked_at": "2026-10-30T14:31:20.986Z",
+    "task": "048-review-fixes",
+    "text": "plan ready for 048-review-fixes. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead after product manager and architect review, with plan edits in the lead's brief to the implementing engineer.",
+    "resolved_at": "2026-10-30T14:35:10.130Z"
+  },
+  {
+    "n": 69,
+    "asked_at": "2026-10-30T14:50:58.693Z",
+    "task": "048-review-fixes",
+    "text": "archive 048-review-fixes?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "rejected",
+    "answer": "Architect blocker: a plan rejection deadlocks a change once every task is [x], because stageOf stores stage archive even with --plan. Fix stageOf, REQ-LOOP-007, and extend SCN-LOOP-015-4.",
+    "resolved_at": "2026-10-30T14:54:22.706Z"
+  },
+  {
+    "n": 70,
+    "asked_at": "2026-10-30T15:02:27.847Z",
+    "task": "048-review-fixes",
+    "text": "archive 048-review-fixes?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect blocker was fixed: stageOf returns plan first with --plan, and SCN-LOOP-015-4 covers reject, re-ask and approve.",
+    "resolved_at": "2026-10-30T15:02:48.781Z"
   }
 ]

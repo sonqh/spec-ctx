@@ -239,7 +239,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { resolve } = await import("../handoff/handoff.ts");
       const n = arg(c, 0, "a question number");
       if (!/^\d+$/.test(n)) throw new UsageExit("handoff resolve needs a question number");
-      const h = resolve(c.root, entries, Number(n), c.p.positional.slice(1).join(" "));
+      const approve = c.p.flags.approve === true;
+      const reject = c.p.flags.reject === true;
+      const verdict = approve && reject ? "both" : approve ? "approved" : reject ? "rejected" : undefined;
+      const h = resolve(c.root, entries, Number(n), c.p.positional.slice(1).join(" "), verdict);
       if (c.json) print(c, { open_questions: h.open_questions, resolved: h.resolved });
       else c.io.out(`resolved question ${n}\n`);
       return 0;

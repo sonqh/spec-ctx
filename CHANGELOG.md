@@ -4,6 +4,14 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+Change 048-review-fixes.
+
+### Fixed
+
+- `bundle` keeps a `decision for <ID>` block at depth 1 at every depth. The block of a cited requirement and the block of a second requested ID no longer fall to budget class 3 at `--depth 2`. REQ-QRY-016.
+- `handoff resolve` on a plan or archive question needs `--approve` or `--reject`. A plain resolve exits 2. A human no no longer reads as a yes. REQ-HND-004.
+- `next` keeps the plan stop or the archive stop after a rejection and names the question. A rejection of the plan holds the stop even after a task started. A resolved question with no verdict is not an approval. The newest question decides. REQ-LOOP-015, REQ-LOOP-016.
+
 Change 043-stranger-commands.
 
 ### Added

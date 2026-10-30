@@ -439,6 +439,8 @@ Usage:
   `specctx handoff resolve <n> <answer> [flags]`
 
 Flags:
+  `--approve`                  Approve a plan or archive question. A plan or archive question needs this or --reject.
+  `--reject`                   Reject a plan or archive question. The stop stays.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
   `--help`                     Show this help.
@@ -449,7 +451,7 @@ Exit codes:
   `3` An internal error.
 
 Example:
-  `specctx handoff resolve 1 "yes, for one release"`
+  `specctx handoff resolve 1 --approve "yes, for one release"`
 
 == init
 specctx init: Write a default spec-ctx.toml file.

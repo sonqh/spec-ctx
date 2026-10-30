@@ -156,7 +156,11 @@ export const TABLE: CommandHelp[] = [
   },
   {
     name: "handoff resolve", group: "Write", args: "<n> <answer>", summary: "Move open question n to the resolved list.",
-    flags: [], exit: PLAIN, example: "specctx handoff resolve 1 \"yes, for one release\"",
+    flags: [
+      ["--approve", "Approve a plan or archive question. A plan or archive question needs this or --reject."],
+      ["--reject", "Reject a plan or archive question. The stop stays."],
+    ],
+    exit: PLAIN, example: "specctx handoff resolve 1 --approve \"yes, for one release\"",
   },
   // Setup
   {

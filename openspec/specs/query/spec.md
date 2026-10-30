@@ -224,7 +224,7 @@ Refs: REQ-QRY-003, REQ-QRY-005, REQ-QRY-011, REQ-QRY-012
 - **THEN** it exits 2 and stderr names the input, as `bundle` does
 
 ### Requirement: REQ-QRY-016 Task reach
-For a requested task at depth 1 or more, `bundle` SHALL put the requirements that the task cites, and their main versions, in class 0. It SHALL put the code and test lines of those requirements in class 1, with the reasons `implements <REQ>` and `covers <REQ>`. It SHALL keep the decisions that name those requirements. A task that cites no requirement gets no change from this rule.
+For a requested task at depth 1 or more, `bundle` SHALL put the requirements that the task cites, and their main versions, in class 0. It SHALL put the code and test lines of those requirements in class 1, with the reasons `implements <REQ>` and `covers <REQ>`. It SHALL keep the decisions that name those requirements, and those that name a requested ID, at depth 1 at every depth. A task that cites no requirement gets no change from this rule.
 
 Refs: REQ-QRY-003, REQ-QRY-012
 
@@ -241,8 +241,12 @@ Refs: REQ-QRY-003, REQ-QRY-012
 - **THEN** the output holds the task, its deltas, and its designs, and no code or test line
 
 #### Scenario: SCN-QRY-016-4 Decision blocks stay
-- **WHEN** a decision names a cited requirement, and the change has deltas that fill the budget
-- **THEN** the output holds the decision block with the reason `decision for <REQ>`
+- **WHEN** a decision names a cited requirement, and the change has deltas that fill the budget, at `--depth 1` and at `--depth 2`
+- **THEN** both outputs hold the decision block with the reason `decision for <REQ>`, in the same budget class
+
+#### Scenario: SCN-QRY-016-5 Two requested IDs
+- **WHEN** `bundle` runs for two requirements at `--depth 2`, and the decision of the second is reachable from the first, and deltas fill the budget
+- **THEN** the decision of the second holds the reason `decision for <REQ>` and the same budget class as at `--depth 1`
 
 ### Requirement: REQ-QRY-017 File reach
 For a requested file at depth 1 or more, `bundle` SHALL put the code and test lines of its tagged requirements into class 1. Their reasons are `implements <REQ>` and `covers <REQ>`. A requirement that only a task line names adds no lines. The answer of `related` for a file does not change.

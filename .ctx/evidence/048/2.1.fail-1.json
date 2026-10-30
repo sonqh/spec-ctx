@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T14:41:12.260Z",
+  "attempt": 1,
+  "stderr_tail": "tests/handoff/handoff.test.ts:\n231 |     p = setup();\n232 |     p.write(\".ctx/questions.json\", JSON.stringify([Q(1, \"plan\"), Q(2, \"archive\")]) + \"\\n\");\n233 |     for (const args of [[\"1\", \"yes\"], [\"2\", \"yes\"], [\"1\", \"--approve\", \"--reject\", \"yes\"], [\"2\", \"--approve\", \"--reject\", \"yes\"]]) {\n234 |       const r = await p.run(\"handoff\", \"resolve\", ...args);\n235 |       expect(r.code).toBe(2);\n236 |       expect(r.err.trim().split(\"\\n\")).toHaveLength(1);\n                                             ^\nerror: expect(received).toHaveLength(expected)\n\nExpected length: 1\nReceived length: 2\n\n      at <anonymous> (/home/claude/spec-ctx/tests/handoff/handoff.test.ts:236:40)\n(fail) verdict on plan and archive questions > SCN-HND-004-2 a plain resolve or both flags exit 2 and the question stays open [10.62ms]\n\n 65 pass\n 1 fail\n 400 expect() calls\nRan 66 tests across 9 files. [1479.00ms]",
+  "task": "048/2.1",
+  "verify": {
+    "command": "bun run build && bun test tests/handoff tests/cli/help.test.ts tests/tasks tests/loop/fails.test.ts && bun run typecheck",
+    "exit": 1
+  }
+}

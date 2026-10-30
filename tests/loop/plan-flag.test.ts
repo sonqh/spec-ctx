@@ -54,7 +54,7 @@ describe("the plan marker", () => {
   test("SCN-LOOP-009-3 a resolved --plan question ends the plan stop", async () => {
     expect((await p.run("handoff", "ask", "--change", CHANGE, "--plan", Q)).code).toBe(0);
     expect(questions()[1]).toMatchObject({ n: 2, stage: "plan" });
-    expect((await p.run("handoff", "resolve", "2", "yes")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "2", "--approve", "yes")).code).toBe(0);
     expect(await next()).toMatchObject({ action: "start", human: false, task: `${CHANGE}/1.1` });
   });
 });

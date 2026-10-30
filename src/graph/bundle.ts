@@ -130,9 +130,12 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   }
   const found = new Map<string, Hit>();
   for (const i of wanted) {
-    // decisions that reference a requested ID are included at every depth, as depth 1
+    // decisions that reference a requested ID are included at every depth, as depth 1.
+    // REQ-QRY-016 They replace a deeper hit, which the walk for an earlier requested ID can leave (048/D1).
     for (const e of entries) {
-      if (e.kind === "decision" && e.refs.includes(i) && !found.has(e.id)) found.set(e.id, { reason: `decision for ${i}`, depth: 1 });
+      if (e.kind !== "decision" || !e.refs.includes(i)) continue;
+      const cur = found.get(e.id);
+      if (!cur || cur.depth > 1) found.set(e.id, { reason: `decision for ${i}`, depth: 1 });
     }
     for (const [r, hit] of walkFound(entries, i, depth, all)) {
       if (!wanted.includes(r) && !found.has(r)) found.set(r, hit);
@@ -148,7 +151,9 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   }
   for (const c of r.cited) {
     for (const e of entries) {
-      if (e.kind === "decision" && e.refs.includes(c) && !found.has(e.id)) found.set(e.id, { reason: `decision for ${c}`, depth: 1 });
+      if (e.kind !== "decision" || !e.refs.includes(c)) continue;
+      const cur = found.get(e.id);
+      if (!cur || cur.depth > 1) found.set(e.id, { reason: `decision for ${c}`, depth: 1 });
     }
   }
   for (const [id, hit] of r.lines) {

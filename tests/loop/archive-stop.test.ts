@@ -1,4 +1,4 @@
-// Covers: REQ-LOOP-007, REQ-HND-002
+// Covers: REQ-LOOP-007, REQ-LOOP-015, REQ-LOOP-016, REQ-HND-002
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync } from "node:fs";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
@@ -44,7 +44,7 @@ describe("the archive stop lives in the engine", () => {
     const a = await p.run("handoff", "ask", "--change", CHANGE, "--plan", "plan ready?");
     expect(a.code, a.err).toBe(0);
     expect(questions()[0]).toMatchObject({ n: 1, task: CHANGE, stage: "plan", status: "open" });
-    expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "1", "--approve", "yes")).code).toBe(0);
     const plain = await p.run("handoff", "ask", "no change");
     expect(plain.code, plain.err).toBe(0);
     expect(questions()[1]).not.toHaveProperty("stage");
@@ -63,11 +63,11 @@ describe("the archive stop lives in the engine", () => {
     const a = await p.run("handoff", "ask", "--change", CHANGE, ARCHIVE_Q);
     expect(a.code, a.err).toBe(0);
     expect(questions()[2]).toMatchObject({ n: 3, task: CHANGE, text: ARCHIVE_Q, stage: "archive", status: "open" });
-    expect(await next()).toMatchObject({ action: "ask", human: true, reason: ARCHIVE_Q, state: "question_open", command: 'specctx handoff resolve 3 "<answer>"' });
+    expect(await next()).toMatchObject({ action: "ask", human: true, reason: ARCHIVE_Q, state: "question_open", command: 'specctx handoff resolve 3 <--approve|--reject> "<answer>"' });
   });
 
   test("SCN-LOOP-007-3 resolve approves the archive, and a plan question or an old approval does not", async () => {
-    expect((await p.run("handoff", "resolve", "3", "yes")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "3", "--approve", "yes")).code).toBe(0);
     const os = process.env.SPECCTX_OPENSPEC!;
     expect(await next()).toEqual({
       action: "archive", attempt: 0, change: CHANGE, command: `${os} archive ${CHANGE} -y`, human: false, max_attempts: 3,
@@ -82,5 +82,34 @@ describe("the archive stop lives in the engine", () => {
     expect(await next()).toMatchObject({ action: "archive", human: true });
     p.write(".ctx/questions.json", saved);
     expect((await next()).human).toBe(false);
+  });
+});
+
+describe("the verdict at the archive stop", () => {
+  const ASK = `specctx handoff ask --change ${CHANGE} "${ARCHIVE_Q}"`;
+  const reject = async (n: number, answer: string): Promise<void> => {
+    expect((await p.run("handoff", "ask", "--change", CHANGE, ARCHIVE_Q)).code).toBe(0);
+    expect((await p.run("handoff", "resolve", String(n), "--reject", answer)).code).toBe(0);
+  };
+
+  test("SCN-LOOP-015-1 a rejected archive question keeps the stop and names the rejection", async () => {
+    p.write(".ctx/questions.json", "[]\n");
+    await reject(1, "Not yet, review the notes");
+    expect(await next()).toMatchObject({ action: "archive", human: true, state: "gate_passed", command: ASK, reason: "archive rejected in question 1: Not yet, review the notes" });
+  });
+
+  test("SCN-LOOP-015-5 the highest number decides at the archive stop", async () => {
+    // a later approval ends the stop
+    expect((await p.run("handoff", "ask", "--change", CHANGE, ARCHIVE_Q)).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "2", "--approve", "yes")).code).toBe(0);
+    expect(await next()).toMatchObject({ action: "archive", human: false, reason: "archive approved in question 2" });
+    // a later rejection wins over the earlier approval
+    await reject(3, "Wait for the review");
+    expect(await next()).toMatchObject({ action: "archive", human: true, reason: "archive rejected in question 3: Wait for the review" });
+  });
+
+  test("SCN-LOOP-016-2 a resolved archive question with no verdict is not an approval", async () => {
+    p.write(".ctx/questions.json", JSON.stringify([{ n: 1, asked_at: "2026-10-28", task: CHANGE, text: ARCHIVE_Q, status: "resolved", answer: "yes", resolved_at: "2999-01-01T00:00:00.000Z", stage: "archive" }]) + "\n");
+    expect(await next()).toMatchObject({ action: "archive", human: true, command: ASK });
   });
 });

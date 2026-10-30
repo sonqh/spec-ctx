@@ -9,7 +9,7 @@ import { listEvidence } from "../tasks/evidence.ts";
 import { activeChanges, nextTask } from "../tasks/tasks.ts";
 import { cmpStr, splitLines } from "../util/pystr.ts";
 import { isoNow } from "../util/time.ts";
-import { addQuestion, type QuestionStage, fromHandoffItems, hasQuestions, readQuestions, renderQuestions, resolveQuestion, writeQuestions } from "./questions.ts";
+import { addQuestion, type QuestionStage, fromHandoffItems, hasQuestions, readQuestions, renderQuestions, resolveQuestion, writeQuestions, type Verdict } from "./questions.ts";
 
 export const HANDOFF_PATH = ".ctx/handoff.md";
 export const CURRENT_PATH = ".ctx/current.json";
@@ -191,16 +191,17 @@ export function ask(root: string, entries: Entry[], text: string, change?: strin
   return h;
 }
 
-/** REQ-LOOP-007 archive when the change has a task and every task is [x]. Else plan with the flag and design without it. The text plays no part (041/D2). */
+/** REQ-LOOP-007 plan with the flag, whatever the task state. Else archive when the change has a task and every task is [x]. Else design. The text plays no part (041/D2). */
 export function stageOf(entries: Entry[], folder: string, plan = false): QuestionStage {
+  if (plan) return "plan";
   const tasks = entries.filter((e) => e.kind === "task" && e.change === folder && !e.file.includes("/archive/"));
   if (tasks.length > 0 && tasks.every((t) => t.status === "done")) return "archive";
-  return plan ? "plan" : "design";
+  return "design";
 }
 
 /** REQ-HND-002 resolve question n in questions.json and render the handoff again (022/D6). */
-export function resolve(root: string, entries: Entry[], n: number, answer: string): Handoff {
-  resolveQuestion(root, n, answer);
+export function resolve(root: string, entries: Entry[], n: number, answer: string, verdict?: Verdict | "both"): Handoff {
+  resolveQuestion(root, n, answer, verdict);
   return refresh(root, entries);
 }
 

@@ -65,6 +65,8 @@ Command flags:
   `handoff ask --change <name>`
                                Give the question to this change, not to the current task. The key or the full folder name works.
   `handoff ask --plan`         Mark the question as the plan approval. Only this mark ends the plan stop. It needs --change.
+  `handoff resolve --approve`  Approve a plan or archive question. A plan or archive question needs this or --reject.
+  `handoff resolve --reject`   Reject a plan or archive question. The stop stays.
   `init --schema`              Also install the ID templates and add the spec-ctx rules to openspec/config.yaml.
   `init --skills`              Also install the specctx-run skill and its aliases in .claude/skills and .agents/skills.
   `init --all`                 Do all three.

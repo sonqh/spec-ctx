@@ -212,6 +212,6 @@ All six exit 0. `openspec/specs/greeting/spec.md` carries `REQ-GRT-001` with its
 - `specctx task next` exits 1 with `no open task` when no change is active. Exit 1 is the findings code, not a crash.
 - `openspec status --change <name>` after archive says `No changes exist.` The change is under `openspec/changes/archive/`.
 - Upstream `validate --all --strict` exits 0 with an INFO line when archive would refuse a MODIFIED header. `specctx check` catches the retitle case with `retitle-needs-renamed`.
-- Open questions live in `.ctx/questions.json`. `specctx handoff ask "<text>"` adds one and `specctx handoff resolve <n> "<answer>"` closes it. `handoff.md` shows both lists.
+- Open questions live in `.ctx/questions.json`. `specctx handoff ask "<text>"` adds one and `specctx handoff resolve <n> "<answer>"` closes it. A plan or archive question needs `--approve` or `--reject`, and a rejection keeps the stop. `handoff.md` shows both lists.
 - `specctx handoff ask --change <c> "<text>"` gives the question to change `<c>`. `specctx next` then returns `ask` with `human: true` for that change until a human resolves the question. `--plan` marks the question as the plan approval. Only a `--plan` question ends the plan stop. A plain question during planning has `stage: design`. The `specctx-run` skill runs the plan stop command that `next` prints.
 - Commit `.ctx/evidence/`, `.ctx/handoff.md`, `.ctx/questions.json`, and `.ctx/baseline.json`. `init` puts the per session files in `.gitignore`.

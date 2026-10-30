@@ -16,7 +16,12 @@ export interface Question {
   resolved_at?: string;
   /** REQ-LOOP-007 the stage when handoff ask --change ran: plan with --plan, design without it, archive with every task done (041/D2). */
   stage?: QuestionStage;
+  /** REQ-HND-004 the verdict of a human on a plan or archive question. Other stages store none (048/D3). */
+  verdict?: Verdict;
 }
+
+/** REQ-HND-004 handoff resolve --approve or --reject. */
+export type Verdict = "approved" | "rejected";
 
 /** REQ-LOOP-014 cap marks the question that task done writes at the attempt cap (044/D3). */
 export type QuestionStage = "plan" | "archive" | "design" | "cap";
@@ -64,7 +69,7 @@ export function addQuestion(root: string, task: string, text: string, stage?: Qu
 }
 
 /** REQ-HND-002 resolve the open question n with an answer. Exit 2 when n is not an open question. */
-export function resolveQuestion(root: string, n: number, answer: string): Question {
+export function resolveQuestion(root: string, n: number, answer: string, verdict?: Verdict | "both"): Question {
   const qs = readQuestions(root);
   const item = qs.find((x) => x.n === n && x.status === "open");
   if (!Number.isInteger(n) || !item) {
@@ -73,6 +78,11 @@ export function resolveQuestion(root: string, n: number, answer: string): Questi
   }
   const a = oneLine(answer);
   if (!a) throw new UsageExit("handoff resolve needs an answer");
+  // REQ-HND-004 a plan or archive question needs one verdict. Other stages take none (048/D3).
+  const needs = item.stage === "plan" || item.stage === "archive";
+  if (needs && (verdict === undefined || verdict === "both")) throw new UsageExit("handoff resolve needs --approve or --reject for a plan or archive question");
+  if (!needs && verdict !== undefined) throw new UsageExit("--approve and --reject apply to plan and archive questions");
+  if (needs) item.verdict = verdict as Verdict;
   item.status = "resolved";
   item.answer = a;
   item.resolved_at = isoNow();
