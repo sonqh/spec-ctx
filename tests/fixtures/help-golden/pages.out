@@ -61,10 +61,10 @@ Example:
   `specctx query lockfile --kind req`
 
 == related
-specctx related: Show the entries that link to an ID or to a file.
+specctx related: Show the entries that link to an ID, a file, or a change.
 
 Usage:
-  `specctx related <ID|path> [flags]`
+  `specctx related <ID|path|change> [flags]`
 
 Flags:
   `--depth <n>`                Follow links n steps. The default is 1.
@@ -82,10 +82,10 @@ Example:
   `specctx related src/graph/bundle.ts`
 
 == bundle
-specctx bundle: Print the spec text for the IDs or files and their links.
+specctx bundle: Print the spec text for the IDs, files, or changes and their links.
 
 Usage:
-  `specctx bundle <ID|path...> [flags]`
+  `specctx bundle <ID|path|change...> [flags]`
 
 Flags:
   `--budget <n>`               Stop at n characters. The default is 8000.

@@ -27,6 +27,20 @@ Change 044-day-one-noise.
 
 - A passing `task done` resolves the open attempt-cap question of its task, so `next` stops returning `ask`. `task done` now writes that question with `stage: "cap"`. A question with no stage stays open. Plan, design, and archive questions stay open. REQ-LOOP-014.
 
+Change 046-structural-edges.
+
+### Added
+
+- `build` writes a `change/<key>` entry for each change and a `cap/<name>` entry for each capability. One change key gives one entry. An active folder wins, then the newest archive. REQ-IDX-010, REQ-IDX-013.
+- A task entry carries a `links` list of the design decisions that its line names, such as `design:045/D2`. It is the only stored link. REQ-IDX-012.
+- `related` and `bundle` take a change key or a folder name. A change reaches its deltas and its capabilities. A task reaches the deltas of its change and its design decisions. A requirement reaches its capability, and a capability reaches its requirements when it is the start. A modified requirement shows its main version. The CLI derives these edges from the folder structure when you ask. REQ-QRY-009, REQ-QRY-010, REQ-QRY-011.
+- `query --kind cap` and `query --kind change` list the new entries. REQ-QRY-013.
+
+### Changed
+
+- `bundle` keeps entries by class when it passes its budget. First the requested IDs. Then code and test lines. Then specs and active decisions. Last, archived decisions and entries from depth 2. The print order and the `truncated:` line keep their form, and the line lists the omitted IDs in print order. The bundle of REQ-LOOP-001 keeps all 12 code and test lines that it lost before. REQ-QRY-012, REQ-QRY-014.
+- Plain `query` returns no `cap` or `change` entry, so the top 20 of a query does not change. REQ-QRY-013.
+
 Change 045-query-by-file.
 
 ### Added

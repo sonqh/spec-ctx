@@ -37,11 +37,11 @@ A product review on 2026-10-30 measured the query surface.
 ## Order of work
 
 1. Lookup by file, from code tags, test tags, and paths that tasks name. Done in change 045.
-2. Edges that OpenSpec already implies, and a budget that keeps code and tests. The edges:
+2. Edges that OpenSpec already implies, and a budget that keeps code and tests. Done in change 046. The edges:
    - a task to the deltas of its change
    - a delta to its capability, and a change to its capabilities
    - a task to the design decisions that it names
-3. One front door, `specctx context`, and a query of what changed since a ref.
+3. One front door, `specctx context`, and a query of what changed since a ref. `task start` then prints `context <task>`, so the skills get the same answer. A task must reach the code and test lines of the requirements it cites. Today they sit at depth 2 from the task.
 4. The benchmark.
 5. Readable capability codes in `adopt`.
 6. The upstream ID grammar when #1979 has a decision.

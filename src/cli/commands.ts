@@ -158,10 +158,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   // REQ-QRY-001 no term lists a whole change. Without --change a term is required (017/D6).
   if (cmd === "query" && !f.change) need(1, "at least one term");
   if (cmd === "related") {
-    need(1, "one ID or path");
-    if (p.positional.length > 1) throw new UsageExit("related takes one ID or path");
+    need(1, "one ID, path, or change");
+    if (p.positional.length > 1) throw new UsageExit("related takes one ID, path, or change");
   }
-  if (cmd === "bundle") need(1, "at least one ID or path");
+  if (cmd === "bundle") need(1, "at least one ID, path, or change");
   if ((cmd === "status" || cmd === "check" || cmd === "next") && p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
   const { data, rebuilt } = loadIndex(root, cfg);
   if (rebuilt) io.err("index rebuilt\n");
@@ -204,23 +204,33 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     }
     case "related": {
       const { canon } = await import("../index/canonical.ts");
-      const { related } = await import("../graph/related.ts");
+      const { related, mainVersion } = await import("../graph/related.ts");
       const ids = canon(entries);
       let id = p.positional[0]!;
       let isPath = false;
       if (!ids.has(id) && !(all && entries.some((e) => e.id === id))) {
-        // REQ-QRY-005 an input that is no known ID is a path in the repository
-        const { resolveFileInput } = await import("../graph/path.ts");
-        const r = resolveFileInput(root, io.cwd, id);
-        if ("error" in r) {
-          io.err(`${r.error}\n`);
-          return 2;
+        // REQ-QRY-011 a change key or folder name is a change. REQ-QRY-005 any other input is a path in the repository.
+        const { resolveFileInput, changeInput } = await import("../graph/path.ts");
+        const ch = changeInput(entries, id);
+        if (ch) id = ch;
+        else {
+          const r = resolveFileInput(root, io.cwd, id);
+          if ("error" in r) {
+            io.err(`${r.error}\n`);
+            return 2;
+          }
+          id = r.rel;
+          isPath = true;
         }
-        id = r.rel;
-        isPath = true;
       }
       const rows: [(typeof entries)[number], string][] = [];
       for (const [i, reason] of related(entries, id, (f.depth as number | undefined) ?? 1, all)) {
+        // REQ-QRY-010 the pair of a main version stands for the non-canonical copy in the main spec
+        if (!all && reason === `main version of ${i}`) {
+          const m = mainVersion(entries, i);
+          if (m) rows.push([m, reason]);
+          continue;
+        }
         const copies = all ? entries.filter((e) => e.id === i) : ids.has(i) ? [ids.get(i)!] : [];
         // canonical copy first, the rest in index order
         copies.sort((a, b) => Number(!a.canonical) - Number(!b.canonical));
@@ -236,13 +246,14 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { bundle } = await import("../graph/bundle.ts");
       const ids = canon(entries);
       // REQ-QRY-005 an input that is no known ID is a path in the repository
-      const { resolveFileInput } = await import("../graph/path.ts");
+      const { resolveFileInput, changeInput } = await import("../graph/path.ts");
       const wanted: string[] = [];
       const paths = new Set<string>();
       const unknown: string[] = [];
       const pathErrors: string[] = [];
       for (const i of p.positional) {
         if (ids.has(i)) wanted.push(i);
+        else if (changeInput(entries, i)) wanted.push(changeInput(entries, i)!);
         else {
           const r = resolveFileInput(root, io.cwd, i);
           if ("rel" in r) {

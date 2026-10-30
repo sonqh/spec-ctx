@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T13:13:14.572Z",
+  "bundle_chars": 7975,
+  "files": {
+    "src/graph/bundle.ts": "e31ff58820efa9a901837c3f9cf97282b74f1c6199b6fd3fc278b5ca10638b85",
+    "src/graph/links.ts": "9c2864a517b89febef025d513bc78037fe3a5f930441aab3d594e0b654ded86d",
+    "src/graph/query.ts": "19b92d1799b010492149b31915e69600db8634587b49734d97f58a7a8c2ca580",
+    "src/graph/related.ts": "dc3ea29fc99c7ec9df5388a1d25bb36f540e9d830bdbf24c2f55437219957edc",
+    "tests/query/budget.test.ts": "179bbb51d5018c9e5d0665ce9292c9834018d1efbe53123b492c8b280c0b76f1",
+    "tests/query/plain.test.ts": "fa0a58ff0034c2f1969f6ebf25fbd94842b25c7b68fff5275e589937f662c44e",
+    "tests/query/structural.test.ts": "232cb979058a52e2c158d01792b07a44cc1e33e90d1eecad3bda4edc421982c2"
+  },
+  "kind": "command",
+  "reason": "budget.test.ts comment edit after close",
+  "reqs": [
+    "REQ-QRY-009",
+    "REQ-QRY-010",
+    "REQ-QRY-012",
+    "REQ-QRY-013",
+    "REQ-QRY-014"
+  ],
+  "started_at": "2026-10-30T13:08:57.590Z",
+  "task": "046/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/index && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 153 pass\n 0 fail\n 857 expect() calls\nRan 153 tests across 24 files. [8.26s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

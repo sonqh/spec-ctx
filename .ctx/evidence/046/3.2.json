@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-30T13:19:58.089Z",
+  "files": {
+    "src/graph/bundle.ts": "e31ff58820efa9a901837c3f9cf97282b74f1c6199b6fd3fc278b5ca10638b85",
+    "src/graph/links.ts": "9c2864a517b89febef025d513bc78037fe3a5f930441aab3d594e0b654ded86d",
+    "src/graph/related.ts": "dc3ea29fc99c7ec9df5388a1d25bb36f540e9d830bdbf24c2f55437219957edc",
+    "src/index/structure.ts": "ada96242d11866368d2047c13dd2442601c8353c0591699f08347aee0d682f88",
+    "tests/index/structure.test.ts": "cf0659af944961432fb6e5a8b6f58b0d9fa444478e9f11d0fedcba090a4321ee",
+    "tests/query/budget.test.ts": "3412f4bc0a9c10e1a1e80d0e972a8b5cd0340851c71a4acd8f04a2754043b168",
+    "tests/query/structural.test.ts": "232cb979058a52e2c158d01792b07a44cc1e33e90d1eecad3bda4edc421982c2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-009",
+    "REQ-QRY-012",
+    "REQ-IDX-010"
+  ],
+  "task": "046/3.2",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/verification/046.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/verification/046.md && bun test tests/gov && bash tests/parity/run.sh && grep -q \"046\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 25 pass\n 0 fail\n 217 expect() calls\nRan 25 tests across 8 files. [5.04s]",
+    "stdout_sha256": "70234a7a70068348ce4da4514a9ca9d96a282a8f94dd54454a95c7db19d84d4c"
+  }
+}

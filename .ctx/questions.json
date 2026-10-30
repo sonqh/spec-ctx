@@ -561,5 +561,35 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review.",
     "resolved_at": "2026-10-30T12:28:55.140Z"
+  },
+  {
+    "n": 63,
+    "asked_at": "2026-10-30T12:52:09.758Z",
+    "task": "046-structural-edges",
+    "text": "plan ready for 046-structural-edges. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead after product manager and architect review, with plan edits listed in the lead's brief to the implementing engineer: derive delta, cap and main links at query time; store only design links; cap to requirement only from a cap start; drop caps from query --change; tie rule for duplicate change keys; no cap or change entries in plain query results; budget classes made explicit; SCN-QRY-012-2 on a temp copy; record p95 and kept code and test lines.",
+    "resolved_at": "2026-10-30T12:59:56.257Z"
+  },
+  {
+    "n": 64,
+    "asked_at": "2026-10-30T13:18:55.918Z",
+    "task": "046/3.2",
+    "text": "task 046/3.2 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [808.79ms]. What should change?",
+    "status": "resolved",
+    "stage": "cap",
+    "answer": "Verify passed. Resolved by task done.",
+    "resolved_at": "2026-10-30T13:19:58.097Z"
+  },
+  {
+    "n": 65,
+    "asked_at": "2026-10-30T13:25:25.537Z",
+    "task": "046-structural-edges",
+    "text": "archive 046-structural-edges?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after the architect diff review: no blocker.",
+    "resolved_at": "2026-10-30T13:33:26.774Z"
   }
 ]

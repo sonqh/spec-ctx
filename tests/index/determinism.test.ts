@@ -33,7 +33,7 @@ describe("record shape", () => {
     const keys = ["id", "kind", "file", "line", "title", "text", "change", "status", "canonical", "refs"];
     for (const e of idx.entries) {
       for (const k of keys) expect(e, k).toHaveProperty(k);
-      expect(["req", "scn", "adr", "decision", "task", "code", "test"]).toContain(e.kind);
+      expect(["req", "scn", "adr", "decision", "task", "code", "test", "change", "cap"]).toContain(e.kind);
       expect(["active", "modified", "removed", "archived", "done", "open"]).toContain(e.status);
       if (!["req", "scn", "decision", "task"].includes(e.kind)) expect(e.text).toBe("");
       expect(Object.keys(e)).toEqual([...Object.keys(e)].sort());

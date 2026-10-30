@@ -1,10 +1,23 @@
-// REQ-QRY-005 REQ-QRY-008 turn the input of related or bundle into a repository path.
+// REQ-QRY-005 REQ-QRY-008 REQ-QRY-011 turn the input of related or bundle into a change or a repository path.
 import { realpathSync, statSync } from "node:fs";
 import { isAbsolute, relative, resolve, sep } from "node:path";
+import type { Entry } from "../index/types.ts";
+import { changeKey, resolveChange } from "../index/scan.ts";
 
 export type FileInput = { rel: string } | { error: string };
 
-const ID_SHAPE = /^(?:(?:REQ|SCN)-[A-Z]{2,6}-\d{3}(?:-\d+)?|ADR-\d{3}|[^/\s]+\/(?:\d+\.\d+|D\d+))$/;
+const ID_SHAPE = /^(?:(?:REQ|SCN)-[A-Z]{2,6}-\d{3}(?:-\d+)?|ADR-\d{3}|[^/\s]+\/(?:\d+\.\d+|D\d+)|(?:change|cap)\/[^/\s]+)$/;
+
+/**
+ * REQ-QRY-011 a change key or a folder name that is no ID resolves to `change/<key>`.
+ * The caller runs this after the ID check and before the path rule (046/D8).
+ */
+export function changeInput(entries: Entry[], input: string): string | undefined {
+  const folder = resolveChange(entries, input);
+  if (folder === undefined) return undefined;
+  const id = `change/${changeKey(folder)}`;
+  return entries.some((e) => e.id === id) ? id : undefined;
+}
 
 /** An input that looks like an ID. When it is no file, the error is `unknown id`. */
 export const idShaped = (input: string): boolean => ID_SHAPE.test(input);

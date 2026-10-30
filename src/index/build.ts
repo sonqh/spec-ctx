@@ -5,6 +5,7 @@ import type { Config } from "../config.ts";
 import { dumps } from "../util/json.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
 import { markCanonical } from "./canonical.ts";
+import { addStructure } from "./structure.ts";
 import { scanMarkdown, scannedOf, scanner, scanSource, walk, type ScanFile, type Scanner } from "./scan.ts";
 import type { Entry, Index, Problem } from "./types.ts";
 
@@ -20,6 +21,7 @@ export function buildIndex(root: string, cfg: Config, files?: ScanFile[], sc?: S
     if (f.kind === "md") scanMarkdown(s, f.path, entries, problems);
     else scanSource(s, f.path, entries, scnNamed);
   }
+  addStructure(entries, list);
   markCanonical(entries);
   entries.sort((a, b) => cmpTuple([a.id, a.file, a.line], [b.id, b.file, b.line]));
   const uniq = new Map<string, Problem>();

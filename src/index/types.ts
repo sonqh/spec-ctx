@@ -1,6 +1,6 @@
 // REQ-IDX-002 record shape of .ctx/index.json.
 
-export type Kind = "req" | "scn" | "adr" | "decision" | "task" | "code" | "test";
+export type Kind = "req" | "scn" | "adr" | "decision" | "task" | "code" | "test" | "change" | "cap";
 export type Status = "active" | "modified" | "removed" | "archived" | "done" | "open";
 
 export interface Entry {
@@ -17,6 +17,8 @@ export interface Entry {
   scenarios?: string[];
   /** REQ-IDX-009 paths that an active task line names in backticks. */
   paths?: string[];
+  /** REQ-IDX-012 `design:<key>/D<n>` links of a task. The only stored link. */
+  links?: string[];
 }
 
 /** file, line, rule, detail */

@@ -18,6 +18,8 @@ export function query(entries: Entry[], args: string[], o: QueryOpts = {}): Entr
   const kind = o.kind?.toLowerCase();
   const hits: [number, string, string, number, Entry][] = [];
   for (const e of poolOf(entries, !!o.all)) {
+    // REQ-QRY-013 change and cap entries show only for an explicit --kind
+    if (!kind && (e.kind === "cap" || e.kind === "change")) continue;
     if ((kind && e.kind !== kind) || (o.change && !matchesChange(e.change, o.change))) continue;
     // REQ-IDX-005 --change takes a key or a full folder name
     const idl = e.id.toLowerCase();

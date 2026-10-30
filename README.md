@@ -135,6 +135,36 @@ task  002/3.3  done  openspec/changes/archive/2026-10-24-002-ids-and-tasks/tasks
 
 A path that is not a file in the repository exits 2. A file with no links prints `no links: <path>` and exits 0.
 
+### Ask about a change or a task
+
+`related` and `bundle` take a change key or a folder name where they take an ID. A change reaches the requirements and scenarios of its delta specs and the capabilities they touch. This is the output for an archived change of this repository:
+
+```text
+$ specctx related 045
+req  REQ-IDX-008  active  openspec/specs/index/spec.md:133  delta in change/045
+req  REQ-IDX-009  active  openspec/specs/index/spec.md:146  delta in change/045
+req  REQ-QRY-005  active  openspec/specs/query/spec.md:76  delta in change/045
+req  REQ-QRY-006  active  openspec/specs/query/spec.md:93  delta in change/045
+req  REQ-QRY-008  active  openspec/specs/query/spec.md:106  delta in change/045
+scn  SCN-IDX-008-1  active  openspec/specs/index/spec.md:138  delta in change/045
+scn  SCN-IDX-008-2  active  openspec/specs/index/spec.md:142  delta in change/045
+scn  SCN-IDX-009-1  active  openspec/specs/index/spec.md:151  delta in change/045
+scn  SCN-IDX-009-2  active  openspec/specs/index/spec.md:155  delta in change/045
+scn  SCN-QRY-005-1  active  openspec/specs/query/spec.md:81  delta in change/045
+scn  SCN-QRY-005-2  active  openspec/specs/query/spec.md:85  delta in change/045
+scn  SCN-QRY-005-3  active  openspec/specs/query/spec.md:89  delta in change/045
+scn  SCN-QRY-006-1  active  openspec/specs/query/spec.md:98  delta in change/045
+scn  SCN-QRY-006-3  active  openspec/specs/query/spec.md:102  delta in change/045
+scn  SCN-QRY-008-1  active  openspec/specs/query/spec.md:111  delta in change/045
+scn  SCN-QRY-008-2  active  openspec/specs/query/spec.md:115  delta in change/045
+scn  SCN-QRY-008-3  active  openspec/specs/query/spec.md:119  delta in change/045
+scn  SCN-QRY-008-4  active  openspec/specs/query/spec.md:123  delta in change/045
+cap  cap/index  active  openspec/specs/index/spec.md:1  capability touched by change/045
+cap  cap/query  active  openspec/specs/query/spec.md:1  capability touched by change/045
+```
+
+A task reaches the same delta entries and the design decisions that its line names, for example `specctx related 045/2.1`. A requirement reaches its capability, and `related cap/query` lists the requirements of one capability. A modified requirement shows its main version beside the delta. The index stores only the `change` and `cap` entries and the design links of tasks. The other edges come from the folder structure when you ask. `query` hides the `change` and `cap` entries unless you pass `--kind change` or `--kind cap`.
+
 ## The life cycle for agents
 
 `init --all` installs one skill, `specctx-run`. The user types one prompt, such as "build this" or "continue". The skill loops until the change reaches the archive or a human must decide.
@@ -216,8 +246,8 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | `status` | Active changes with task counts, the current task, and open questions. |
 | `next` | The next action of the loop from the files on disk: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`. `--json` prints one object. Flag: `--change`. |
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
-| `related <ID\|path>` | Linked entries with the reason for each link. A file path works too. Flags: `--depth`, `--all`. |
-| `bundle <ID\|path...>` | Spec text of the IDs or files, their scenarios, decisions, and neighbors. Flags: `--budget`, `--depth`, `--all`. |
+| `related <ID\|path\|change>` | Linked entries with the reason for each link. A file path or a change works too. Flags: `--depth`, `--all`. |
+| `bundle <ID\|path\|change...>` | Spec text of the IDs, files, or changes, their scenarios, decisions, and neighbors. Code and test lines stay in the budget before archived decisions. Flags: `--budget`, `--depth`, `--all`. |
 | `check` | ID and link integrity. `--strict` adds test coverage and evidence. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
@@ -339,7 +369,7 @@ A Verify command is code from the pull request. The boundary:
 ## Status
 
 - Published: `spec-ctx@0.4.0` on npm, with tags `v0.4.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 045. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 046. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -349,7 +379,7 @@ A Verify command is code from the pull request. The boundary:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0215 (n=129) | 0.93 (222/238) | 60 (of 111 reopens) | 52 (n=129) | 0 (0 baselined + 0 new) |
+| total | 0.0205 (n=131) | 0.93 (226/242) | 60 (of 112 reopens) | 54 (n=131) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

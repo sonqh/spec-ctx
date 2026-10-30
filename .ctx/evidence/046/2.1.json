@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-30T13:19:39.484Z",
+  "files": {
+    "src/cli/commands.ts": "123a345e35990edf2a8702729e587bd5960ad2192a523abe0f6e3514e31cd16d",
+    "src/graph/bundle.ts": "e31ff58820efa9a901837c3f9cf97282b74f1c6199b6fd3fc278b5ca10638b85",
+    "src/graph/links.ts": "9c2864a517b89febef025d513bc78037fe3a5f930441aab3d594e0b654ded86d",
+    "src/graph/query.ts": "19b92d1799b010492149b31915e69600db8634587b49734d97f58a7a8c2ca580",
+    "src/graph/related.ts": "dc3ea29fc99c7ec9df5388a1d25bb36f540e9d830bdbf24c2f55437219957edc",
+    "tests/query/budget.test.ts": "3412f4bc0a9c10e1a1e80d0e972a8b5cd0340851c71a4acd8f04a2754043b168",
+    "tests/query/change-cli.test.ts": "962849ab792ed31ebffcf7e881a02d43dbb0aa70425182c8f99a73db2c9dc1a8",
+    "tests/query/plain.test.ts": "fa0a58ff0034c2f1969f6ebf25fbd94842b25c7b68fff5275e589937f662c44e",
+    "tests/query/structural.test.ts": "232cb979058a52e2c158d01792b07a44cc1e33e90d1eecad3bda4edc421982c2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-009",
+    "REQ-QRY-010",
+    "REQ-QRY-012",
+    "REQ-QRY-013",
+    "REQ-QRY-014"
+  ],
+  "task": "046/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/index && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 160 pass\n 0 fail\n 877 expect() calls\nRan 160 tests across 25 files. [4.71s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

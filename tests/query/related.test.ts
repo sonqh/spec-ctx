@@ -2,7 +2,10 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { Project, PARITY_FIXTURE } from "../helpers.ts";
 
-const REASONS = ["scenario of", "ref from", "ref to", "decision for", "task cites", "implements", "covers"];
+const REASONS = [
+  "scenario of", "ref from", "ref to", "decision for", "task cites", "implements", "covers",
+  "delta in", "design named in", "task names", "capability of", "requirement in", "capability touched by", "main version of",
+];
 let p: Project;
 let base: Project;
 beforeAll(async () => {

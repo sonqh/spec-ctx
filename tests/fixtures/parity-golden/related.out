@@ -1,3 +1,4 @@
+req  REQ-APPLY-005  active  openspec/specs/apply-pipeline/spec.md:54  main version of REQ-APPLY-005
 adr  ADR-004  active  decisions/ADR-004-catalog-is-external.md:1  ref from REQ-APPLY-005
 req  REQ-APPLY-001  active  openspec/specs/apply-pipeline/spec.md:8  ref to REQ-APPLY-005
 req  REQ-CAT-004  active  openspec/specs/catalog-resolver/spec.md:33  ref to REQ-APPLY-005
@@ -15,3 +16,4 @@ test  tests/apply/status.test.ts:39  active  tests/apply/status.test.ts:39  cove
 test  tests/apply/status.test.ts:48  active  tests/apply/status.test.ts:48  covers REQ-APPLY-005
 test  tests/e2e/init.test.ts:6  active  tests/e2e/init.test.ts:6  covers REQ-APPLY-005
 test  tests/plant.cases.ts:1  active  tests/plant.cases.ts:1  covers REQ-APPLY-005
+cap  cap/apply-pipeline  active  openspec/specs/apply-pipeline/spec.md:1  capability of REQ-APPLY-005
