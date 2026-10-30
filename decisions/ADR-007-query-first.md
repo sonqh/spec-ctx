@@ -46,6 +46,17 @@ A product review on 2026-10-30 measured the query surface.
 5. Readable capability codes in `adopt`.
 6. The upstream ID grammar when #1979 has a decision.
 
+## Speed notes
+
+A trial of the Node compile cache on 2026-10-30 gained about 7 ms at the median, inside the noise of this machine. The team dropped it, because it added a cache folder, an owner check, and two requirements for no measured gain. The profile of one query on this repository:
+
+- Node start, about 44 ms.
+- The freshness walk before each query, 25 to 40 ms for 482 files.
+- The read and parse of `.ctx/index.json`, 22 to 33 ms for 1.8 MB. The file grows with each change.
+- The query itself, 10 to 20 ms.
+
+A later speed change starts with the walk and the index size. It adds no cache of the index and no daemon.
+
 ## What stays from ADR-006
 
 Its decision items 1 to 11 stay in force as rules. They cover one truth per fact, the closed action enum, the closed bypasses, no fork, and the pinned OpenSpec. This ADR replaces its goal sentence and its order of work.
