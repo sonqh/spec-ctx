@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-30T14:10:47.190Z",
+  "bundle_chars": 8128,
+  "files": {
+    "src/cli/workflow.ts": "1d50061695e100ac5c57d0467fba5541e838ad611521de86c050ab985d3e990e",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/evidence.ts": "608afb6c43ba4467ea7e81f40af912108dfb19cde84d3a548927963f15bdf612",
+    "src/tasks/tasks.ts": "169e3f3ea4bd0b720a597e0694c496ef7207b35321fcbfb2b50521ebbc06d5fb",
+    "tests/stats/metrics.test.ts": "a0658da64cc1f3f2ca6fb18759126eb51fabce2c83c5a0f558c3b60d0007abb8",
+    "tests/tasks/done.test.ts": "a7396a93102e1776eed23b5b6d8672fafd070ea4c3572117877a98caa372bf26",
+    "tests/tasks/kebab.test.ts": "41a1ea28cdfa4f05fc7aa6963bdccb871bc0b5a9fb7312bacf3ebd94dd7173fc",
+    "tests/tasks/next.test.ts": "fa055d6c803f21cf4c85f06790364a53bd6afa592535878b5abbab628da7e813",
+    "tests/tasks/start.test.ts": "e0b2d00fedc31f89a8dfc2b60ad6fa272b7ab229e233feaf350c077d35b8ae04"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-002",
+    "REQ-TASK-007",
+    "REQ-STAT-002"
+  ],
+  "started_at": "2026-10-30T14:09:52.041Z",
+  "task": "047/3.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks tests/stats tests/loop tests/handoff tests/cli tests/init tests/skills && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 266 pass\n 0 fail\n 1678 expect() calls\nRan 266 tests across 42 files. [10.08s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

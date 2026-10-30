@@ -52,6 +52,21 @@ Change 045-query-by-file.
 
 - A code tag line that names several REQ IDs now gives one code entry for each ID. Before, only the first ID counted. A suffix like `REQ-AB-0011` no longer matches `REQ-AB-001`. The parity golden `index.json` has three more entries. REQ-IDX-008.
 
+Change 047-context.
+
+### Added
+
+- `context <task|ID|path|change>` prints the spec text, code lines, and test lines that relate to one input. It gives the output of `bundle` for that input. It takes `--budget`, `--depth`, and `--json`, and exits 2 for no input or for several. REQ-QRY-015.
+- `bundle` and `context` for a task put the requirements it cites, and their main versions, in the first budget class. The code and test lines of those requirements come next. The decisions that name them stay. REQ-QRY-016.
+- `bundle` and `context` for a file add the code and test lines of the requirements that the file tags, so its own tests appear. `related` of a file does not change. REQ-QRY-017, REQ-QRY-005.
+- `task next --json` sets `bundle_command` to the `context` command for the task. REQ-TASK-007.
+
+### Changed
+
+- `task start` prints the `context` answer for the task, with the task entry that it found. It now shows the deltas and designs of the change, and a task with no REQ gets its own line and those deltas. The evidence, the current task, and the Verify command stay the same. REQ-TASK-002.
+- `bundle_chars` in `.ctx/current.json` and `context_ratio` in `stats` change meaning from this change. They measure the new `task start` text. Evidence files keep the old value.
+- `bundle` takes its input rule from `src/graph/input.ts`, which `context` shares. The errors and exit codes do not change.
+
 ## 0.4.0
 
 ### Added

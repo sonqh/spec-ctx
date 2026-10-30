@@ -162,6 +162,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     if (p.positional.length > 1) throw new UsageExit("related takes one ID, path, or change");
   }
   if (cmd === "bundle") need(1, "at least one ID, path, or change");
+  if (cmd === "context") {
+    need(1, "one task, ID, path, or change");
+    if (p.positional.length > 1) throw new UsageExit("context takes one task, ID, path, or change");
+  }
   if ((cmd === "status" || cmd === "check" || cmd === "next") && p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
   const { data, rebuilt } = loadIndex(root, cfg);
   if (rebuilt) io.err("index rebuilt\n");
@@ -241,31 +245,16 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       else io.out(rows.map(([e, r]) => `${e.kind}  ${e.id}  ${e.status}  ${e.file}:${e.line}  ${r}\n`).join(""));
       return 0;
     }
+    case "context":
     case "bundle": {
       const { canon } = await import("../index/canonical.ts");
       const { bundle } = await import("../graph/bundle.ts");
+      const { resolveInputs } = await import("../graph/input.ts");
       const ids = canon(entries);
       // REQ-QRY-005 an input that is no known ID is a path in the repository
-      const { resolveFileInput, changeInput } = await import("../graph/path.ts");
-      const wanted: string[] = [];
-      const paths = new Set<string>();
-      const unknown: string[] = [];
-      const pathErrors: string[] = [];
-      for (const i of p.positional) {
-        if (ids.has(i)) wanted.push(i);
-        else if (changeInput(entries, i)) wanted.push(changeInput(entries, i)!);
-        else {
-          const r = resolveFileInput(root, io.cwd, i);
-          if ("rel" in r) {
-            wanted.push(r.rel);
-            paths.add(r.rel);
-          } else if (r.error.startsWith("unknown id ")) unknown.push(i);
-          else pathErrors.push(r.error);
-        }
-      }
-      if (unknown.length) pathErrors.unshift(`unknown id(s): ${unknown.join(", ")}`);
-      if (pathErrors.length) {
-        io.err(pathErrors.map((l) => l + "\n").join(""));
+      const { wanted, paths, errors, taskId } = resolveInputs(root, io.cwd, entries, p.positional);
+      if (errors.length) {
+        io.err(errors.map((l) => l + "\n").join(""));
         return 2;
       }
       // REQ-QRY-004 --block prints the requirement blocks verbatim and nothing else (034/D2)
@@ -281,8 +270,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         else io.out(text);
         return 0;
       }
+      // 047/D5 a task input passes the entry that findTask picks, so an active task wins over an archived one
+      const task = taskId === undefined ? undefined : (await import("../tasks/tasks.ts")).findTask(root, entries, taskId).entry;
       const b = bundle(root, entries, wanted, (f.budget as number | undefined) ?? cfg.bundle.budget,
-        (f.depth as number | undefined) ?? cfg.bundle.depth, all);
+        (f.depth as number | undefined) ?? cfg.bundle.depth, { all, task });
       if (json) print(b);
       else if (b.text === "" && wanted.every((w) => paths.has(w))) io.out(wanted.map((w) => `no links: ${w}\n`).join(""));
       else io.out(b.text);

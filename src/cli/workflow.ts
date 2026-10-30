@@ -1,4 +1,4 @@
-// REQ-IDS-001 REQ-TASK-001 REQ-TASK-002 REQ-TASK-003 REQ-TASK-005 REQ-VER-002 REQ-HND-001 REQ-LOOP-002 write commands.
+// REQ-IDS-001 REQ-TASK-001 REQ-TASK-002 REQ-TASK-007 REQ-TASK-003 REQ-TASK-005 REQ-VER-002 REQ-HND-001 REQ-LOOP-002 write commands.
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "../config.ts";
@@ -74,7 +74,8 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         }
         return 1;
       }
-      const bundleCommand = rc(c, `bundle ${t.reqs.join(" ")} --budget ${c.cfg.bundle.budget}`);
+      // REQ-TASK-007 the command names the answer that task start prints
+      const bundleCommand = rc(c, `context ${t.id} --budget ${c.cfg.bundle.budget}`);
       if (c.json) {
         print(c, { bundle_command: bundleCommand, change: t.change, id: t.id, reqs: t.reqs, text: t.text, verify: t.verify.command });
       } else {
@@ -91,9 +92,9 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { canon } = await import("../index/canonical.ts");
       const { bundle } = await import("../graph/bundle.ts");
       const ids = canon(entries);
-      const known = t.reqs.filter((r) => ids.has(r));
       for (const r of t.reqs.filter((x) => !ids.has(x))) c.io.err(`warning: task ${t.id} cites ${r}, which the index does not hold\n`);
-      const b = bundle(c.root, entries, known, c.cfg.bundle.budget, c.cfg.bundle.depth);
+      // 047/D5 the entry that findTask found goes in, so an active task wins over an archived one with its number
+      const b = bundle(c.root, entries, [t.id], c.cfg.bundle.budget, c.cfg.bundle.depth, { task: t.entry });
       const { isoNow } = await import("../util/time.ts");
       const { CURRENT_PATH } = await import("../handoff/handoff.ts");
       mkdirSync(join(c.root, ".ctx"), { recursive: true });

@@ -61,6 +61,14 @@ export const TABLE: CommandHelp[] = [
     exit: PLAIN, example: "specctx query lockfile --kind req",
   },
   {
+    name: "context", group: "Read", args: "<task|ID|path|change>", summary: "Print what an agent needs before it edits a task, an ID, a file, or a change.",
+    flags: [
+      ["--budget <n>", "Stop at n characters. The default is 8000."],
+      ["--depth <n>", "Follow links n steps. The default is 1."],
+    ],
+    exit: [OK, ["2", "A usage error, an unknown ID, or a bad path. It takes one input. Use `bundle` for several inputs or for `--block`."], INTERNAL], example: "specctx context 045/2.1",
+  },
+  {
     name: "related", group: "Read", args: "<ID|path|change>", summary: "Show the entries that link to an ID, a file, or a change.",
     flags: [["--depth <n>", "Follow links n steps. The default is 1."], ["--all", "Show all copies of an ID."]],
     exit: [OK, ["2", "A usage error, an unknown ID, or a path that is not a file in the repository."], INTERNAL], example: "specctx related src/graph/bundle.ts",

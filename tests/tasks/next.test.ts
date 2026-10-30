@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-001
+// Covers: REQ-TASK-001, REQ-TASK-007
 import { afterEach, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -23,7 +23,7 @@ describe("task next", () => {
       "## 1. One\n\n- [x] 1.1 A. [REQ-AAA-001] Verify: `true`\n- [x] 1.2 B. [REQ-AAA-001] Verify: `true`\n- [ ] 1.3 C. [REQ-AAA-001, REQ-AAA-002] Verify: `a` and `b`\n"));
     const r = await p.run("task", "next", "--json");
     expect(JSON.parse(r.out)).toEqual({
-      bundle_command: "specctx bundle REQ-AAA-001 REQ-AAA-002 --budget 8000",
+      bundle_command: "specctx context 001/1.3 --budget 8000",
       change: "001-x",
       id: "001/1.3",
       reqs: ["REQ-AAA-001", "REQ-AAA-002"],
@@ -54,5 +54,13 @@ describe("task next", () => {
     p.write("openspec/changes/009-x/tasks.md", tasks("- [x] 1.1 A. [REQ-AAA-001] Verify: `true`\n"));
     const r = await p.run("task", "next", "--change", "009");
     expect(r).toMatchObject({ code: 1, out: "no open task. Every task in the active changes is done. Next: archive 009-x.\n" });
+  });
+
+  test("SCN-TASK-007-1 bundle_command names context behind the run prefix", async () => {
+    p = new Project();
+    p.write("openspec/changes/002-t/tasks.md", tasks("- [ ] 2.1 A. [REQ-AAA-001] Verify: `true`\n"));
+    p.write("spec-ctx.toml", '[cli]\nrun = "node dist/cli.js"\n');
+    const r = await p.run("task", "next", "--change", "002", "--json");
+    expect(JSON.parse(r.out).bundle_command).toBe("node dist/cli.js context 002/2.1 --budget 8000");
   });
 });

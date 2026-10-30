@@ -1,9 +1,9 @@
 // REQ-QRY-003 canonical text with one provenance line per block, in a fixed order, within a budget.
 import { join } from "node:path";
-import { canon } from "../index/canonical.ts";
+import { canon, poolOf } from "../index/canonical.ts";
 import { blockRange, readText } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
-import { cmpTuple, cpLen, pyStrip, splitLines } from "../util/pystr.ts";
+import { cmpStr, cmpTuple, cpLen, pyStrip, splitLines } from "../util/pystr.ts";
 import { KIND_RANK, mainVersion, walkFound, type Hit } from "./related.ts";
 
 export class Lines {
@@ -67,7 +67,54 @@ function budgetClass(e: Entry, requested: boolean, hit: Hit | undefined): number
   return 2;
 }
 
-export function bundle(root: string, entries: Entry[], wanted: string[], budget: number, depth: number, all = false): BundleResult {
+export interface BundleOpts {
+  all?: boolean;
+  /** 047/D5 the task entry that the caller found. It wins over a task with the same ID that canon() holds. */
+  task?: Entry;
+}
+
+/**
+ * REQ-QRY-016 REQ-QRY-017 the requirements that the task cites or that the file tags, and the code and test
+ * entries of each, from one pass over the pool (047/D3, 047/D7). The entries get depth 1.
+ */
+function reach(entries: Entry[], ids: Map<string, Entry>, wanted: string[], all: boolean): { cited: string[]; lines: Map<string, Hit> } {
+  const cited: string[] = [];
+  const tagged: string[] = [];
+  const add = (list: string[], r: string): void => {
+    if (ids.get(r)?.kind === "req" && !cited.includes(r) && !tagged.includes(r)) list.push(r);
+  };
+  const pool = poolOf(entries, all);
+  for (const i of wanted) {
+    const e = ids.get(i);
+    if (e?.kind === "task") for (const r of e.refs) add(cited, r);
+    // a requested input that is no ID is a path. Only the tags of the file count, not a mention in a task line.
+    else if (!e) for (const x of pool) if (x.file === i && (x.kind === "code" || x.kind === "test")) for (const r of x.refs) add(tagged, r);
+  }
+  const lines = new Map<string, Hit>();
+  if (!cited.length && !tagged.length) return { cited, lines };
+  const want = new Set([...cited, ...tagged]);
+  const back = new Map<string, Entry[]>();
+  for (const x of pool) {
+    if (x.kind !== "code" && x.kind !== "test") continue;
+    for (const r of x.refs) {
+      if (!want.has(r)) continue;
+      let l = back.get(r);
+      if (!l) back.set(r, (l = []));
+      l.push(x);
+    }
+  }
+  for (const r of [...cited, ...tagged]) {
+    for (const x of (back.get(r) ?? []).sort((a, b) => cmpStr(a.id, b.id))) {
+      if (!lines.has(x.id)) lines.set(x.id, { reason: `${x.kind === "code" ? "implements" : "covers"} ${r}`, depth: 1 });
+    }
+  }
+  return { cited, lines };
+}
+
+export function bundle(root: string, entries0: Entry[], wanted: string[], budget: number, depth: number, opts: BundleOpts = {}): BundleResult {
+  const all = !!opts.all;
+  // 047/D5 the entry that the caller found stands for its ID. It goes last, so canon() holds it.
+  const entries = opts.task && canon(entries0).get(opts.task.id) !== opts.task ? [...entries0.filter((e) => e !== opts.task), opts.task] : entries0;
   const ids = canon(entries);
   // block, reason, class. The array is in print order.
   const blocks: [Entry, string, number][] = [];
@@ -91,16 +138,33 @@ export function bundle(root: string, entries: Entry[], wanted: string[], budget:
       if (!wanted.includes(r) && !found.has(r)) found.set(r, hit);
     }
   }
+  // REQ-QRY-016 REQ-QRY-017 the cited requirements, their decisions, and the lines of the requirements of a task or a file
+  const r = depth >= 1 ? reach(entries, ids, wanted, all) : { cited: [] as string[], lines: new Map<string, Hit>() };
+  const citedSet = new Set(r.cited);
+  for (const t of wanted) {
+    const te = ids.get(t);
+    if (te?.kind !== "task") continue;
+    for (const c of te.refs) if (citedSet.has(c) && !wanted.includes(c) && !found.has(c)) found.set(c, { reason: `ref from ${t}`, depth: 1 });
+  }
+  for (const c of r.cited) {
+    for (const e of entries) {
+      if (e.kind === "decision" && e.refs.includes(c) && !found.has(e.id)) found.set(e.id, { reason: `decision for ${c}`, depth: 1 });
+    }
+  }
+  for (const [id, hit] of r.lines) {
+    const cur = found.get(id);
+    if (!wanted.includes(id) && (!cur || cur.depth > 1)) found.set(id, hit);
+  }
   // scenarios print inside their requirement
-  const tail = [...found.keys()].filter((r) => ids.has(r) && ids.get(r)!.kind !== "scn");
+  const tail = [...found.keys()].filter((x) => ids.has(x) && ids.get(x)!.kind !== "scn");
   tail.sort((a, b) => cmpTuple([KIND_RANK[ids.get(a)!.kind] ?? 9, a], [KIND_RANK[ids.get(b)!.kind] ?? 9, b]));
-  for (const r of tail) {
-    const hit = found.get(r)!;
-    const e = ids.get(r)!;
-    const cls = budgetClass(e, false, hit);
+  for (const r2 of tail) {
+    const hit = found.get(r2)!;
+    const e = ids.get(r2)!;
+    const cls = citedSet.has(r2) ? 0 : budgetClass(e, false, hit);
     blocks.push([e, hit.reason, cls]);
-    const m = all ? undefined : mainVersion(entries, r);
-    if (m) blocks.push([m, `main version of ${r}`, cls]);
+    const m = all ? undefined : mainVersion(entries, r2);
+    if (m) blocks.push([m, `main version of ${r2}`, cls]);
   }
   const files = new Lines(root);
   const texts = blocks.map(([e, reason]) => {

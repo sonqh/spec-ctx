@@ -59,7 +59,7 @@ You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
 ### 4. Only the spec this task needs
 
-`task start` prints the requirement, its scenarios, the task line, and the test that covers it. Nothing else. The last line is the size of that bundle next to the size of all spec text.
+`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. All of it fits a character budget. The last line is the size of that text next to the size of all spec text.
 
 ![The bundle of one task and its size footer](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/4-start.svg)
 
@@ -107,6 +107,26 @@ graph LR
 
 The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. `bundle` walks the edges to the configured depth inside a character budget. A decision record joins the graph through its `Refs:` line. The demo fixture has none, so the graph above shows no decision.
 
+### Ask for the context
+
+`specctx context <task|ID|path|change>` is the one command to run before you edit. It takes one input and prints the spec text that relates to it, with one provenance line for each block. A task gets the requirements it cites and the code and test lines that tag them. It also gets the decisions that name them, and the deltas and designs of its change. A file gets the requirements it tags and the code and test lines of those requirements, so its own tests appear. `task start` prints this same answer. This is the output for task `045/2.1` of this repository, with the text of each block left out:
+
+```text
+$ specctx context 045/2.1
+-- 045/2.1 | openspec/changes/archive/2026-10-30-045-query-by-file/tasks.md:11 | done | requested
+-- 045/D2 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:22 | archived | design named in 045/2.1
+-- 045/D3 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:23 | archived | design named in 045/2.1
+-- REQ-IDX-008 | openspec/specs/index/spec.md:133 | active | delta in change of 045/2.1
+-- REQ-IDX-009 | openspec/specs/index/spec.md:146 | active | delta in change of 045/2.1
+-- REQ-QRY-005 | openspec/specs/query/spec.md:76 | active | delta in change of 045/2.1
+-- REQ-QRY-006 | openspec/specs/query/spec.md:93 | active | ref from 045/2.1
+-- REQ-QRY-008 | openspec/specs/query/spec.md:106 | active | delta in change of 045/2.1
+-- src/graph/files.ts:1 | src/graph/files.ts:1 | active | implements REQ-QRY-006
+-- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006
+```
+
+`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The input and the requirements it cites stay.
+
 `specctx related` prints each neighbor of an ID and the reason for the link. This is the output for the demo project after its last step:
 
 ```text
@@ -120,7 +140,7 @@ test  tests/login.test.ts:1  active  tests/login.test.ts:1  covers REQ-UA-004
 
 ### Ask about a file
 
-`related` and `bundle` take a file path where they take an ID. Run it before you edit a file. The reason on each line tells you how strong the link is. `implements` comes from a code tag. `covers` comes from a `Covers:` tag. `mentions` comes from a path in backticks in a task line of an active change. This is the output for one file of this repository:
+`related`, `context`, and `bundle` take a file path where they take an ID. Run it before you edit a file. The reason on each line tells you how strong the link is. `implements` comes from a code tag. `covers` comes from a `Covers:` tag. `mentions` comes from a path in backticks in a task line of an active change. This is the output for one file of this repository:
 
 ```text
 $ specctx related src/util/hash.ts
@@ -137,7 +157,7 @@ A path that is not a file in the repository exits 2. A file with no links prints
 
 ### Ask about a change or a task
 
-`related` and `bundle` take a change key or a folder name where they take an ID. A change reaches the requirements and scenarios of its delta specs and the capabilities they touch. This is the output for an archived change of this repository:
+`related`, `context`, and `bundle` take a change key or a folder name where they take an ID. A change reaches the requirements and scenarios of its delta specs and the capabilities they touch. This is the output for an archived change of this repository:
 
 ```text
 $ specctx related 045
@@ -185,7 +205,7 @@ specctx gate --strict          # check, baseline, linters, openspec validate, le
 specctx handoff write          # .ctx/handoff.md for the next session
 ```
 
-The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](https://github.com/sonqh/spec-ctx/blob/main/skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
+The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `context`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](https://github.com/sonqh/spec-ctx/blob/main/skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
 
 ## Install
 
@@ -246,8 +266,9 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | `status` | Active changes with task counts, the current task, and open questions. |
 | `next` | The next action of the loop from the files on disk: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`. `--json` prints one object. Flag: `--change`. |
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
+| `context <task\|ID\|path\|change>` | The spec text, code lines, and test lines that relate to one input, in a budget. `task start` prints the same answer. Flags: `--budget`, `--depth`. |
 | `related <ID\|path\|change>` | Linked entries with the reason for each link. A file path or a change works too. Flags: `--depth`, `--all`. |
-| `bundle <ID\|path\|change...>` | Spec text of the IDs, files, or changes, their scenarios, decisions, and neighbors. Code and test lines stay in the budget before archived decisions. Flags: `--budget`, `--depth`, `--all`. |
+| `bundle <ID\|path\|change...>` | The answer of `context` for several inputs. Flags: `--budget`, `--depth`, `--all`, `--block`. |
 | `check` | ID and link integrity. `--strict` adds test coverage and evidence. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
@@ -369,7 +390,7 @@ A Verify command is code from the pull request. The boundary:
 ## Status
 
 - Published: `spec-ctx@0.4.0` on npm, with tags `v0.4.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 046. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 047. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -379,9 +400,9 @@ A Verify command is code from the pull request. The boundary:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0205 (n=131) | 0.93 (226/242) | 60 (of 112 reopens) | 54 (n=131) | 0 (0 baselined + 0 new) |
+| total | 0.0199 (n=134) | 0.93 (230/246) | 60 (of 113 reopens) | 58 (n=134) | 0 (0 baselined + 0 new) |
 
-- `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
+- `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. The meaning changed on 2026-10-30 with change 047-context. Before, `task start` printed the cited requirements. Now it prints the `context` answer, which holds more. `bundle_chars` in the evidence of older tasks keeps the old size, so the two do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
 - `stale_catches`: reopened tasks that `check --strict` flagged as stale, out of all reopened tasks. A higher share means the check found the drift before a person did.
 - `cycle_time_median_s`: the median number of seconds from `task start` to `task done`. Lower is faster.

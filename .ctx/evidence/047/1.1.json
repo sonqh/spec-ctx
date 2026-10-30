@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T14:16:48.674Z",
+  "files": {
+    "src/cli/commands.ts": "aedf3c3281d6a89c7f0ec03c71e33e77fa3bf0be990ed6c8eeac00a12bf3118f",
+    "src/graph/bundle.ts": "c5395532b9552a313ecc23f8391fbe2647519b96c7e2027902c087b59bdfaaed",
+    "src/graph/input.ts": "ac231eb1f7b41b5e5800f10209a4ba4a92695a24558dedbf4f82a489393ccbd6",
+    "src/graph/path.ts": "2d7b05fc6ee4f41f707a4fdf3060683cdc1b2141272537441853f186d05ac0b4",
+    "src/graph/related.ts": "dc3ea29fc99c7ec9df5388a1d25bb36f540e9d830bdbf24c2f55437219957edc",
+    "tests/cli/help-path.test.ts": "d828fa4d6ce30562da03ce2eab2abbe7319d15392d24358fa15bfa4b887300b2",
+    "tests/query/context.test.ts": "23948435bf02bc773429d95e7042e77e884b87dbabdb0ed3cbacf62346eb0456",
+    "tests/query/file-cli.test.ts": "60bc3a56e979b757a1308bf8dccf9879ed9221bccc199398951ac56d723ef641",
+    "tests/query/task-reach.test.ts": "bf606f35fd2b017c1d690be0467ea1dc1e302a17483d869fa17fdb3c99a3b98f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-016",
+    "REQ-QRY-017",
+    "REQ-QRY-005"
+  ],
+  "task": "047/1.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/index tests/tasks && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 174 pass\n 0 fail\n 963 expect() calls\nRan 174 tests across 27 files. [5.10s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

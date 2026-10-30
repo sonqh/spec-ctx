@@ -591,5 +591,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after the architect diff review: no blocker.",
     "resolved_at": "2026-10-30T13:33:26.774Z"
+  },
+  {
+    "n": 66,
+    "asked_at": "2026-10-30T13:58:38.798Z",
+    "task": "047-context",
+    "text": "plan ready for 047-context. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead after product manager and architect review, with ten plan edits in the lead's brief to the implementing engineer.",
+    "resolved_at": "2026-10-30T14:01:24.406Z"
+  },
+  {
+    "n": 67,
+    "asked_at": "2026-10-30T14:22:38.073Z",
+    "task": "047-context",
+    "text": "archive 047-context? Two plan stops fired in 4.1: task start 046/2.1 keeps 9 of 13 code and test lines (13 before), and the external task start median rose 12 ms (paired, 41 runs). See docs/verification/047.md.",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Not yet. The lead moved the code and test lines of cited and tagged requirements to class 0 (bundle.ts, the 047 query delta, D3, D7). Run the repairs that next prints, remeasure, then ask the archive question again.",
+    "resolved_at": "2026-10-30T14:23:54.058Z"
   }
 ]

@@ -102,13 +102,16 @@ reqs: REQ-GRT-001
 verify: node --test test/greeting.test.js
 
 $ specctx task start add-greeting/1.1
--- REQ-GRT-001 | openspec/changes/add-greeting/specs/greeting/spec.md:8 | active | requested
+-- add-greeting/1.1 | openspec/changes/add-greeting/tasks.md:5 | open | requested
+- [ ] 1.1 Add `greet(name)` in `src/greeting.js` [REQ-GRT-001] Verify: `node --test test/greeting.test.js`
+
+-- REQ-GRT-001 | openspec/changes/add-greeting/specs/greeting/spec.md:3 | active | ref from add-greeting/1.1
 ### Requirement: REQ-GRT-001 Greet by name
 ...
--- bundle 1093 chars, 206.2% of 530 chars of spec text
+-- bundle 626 chars, 148.7% of 421 chars of spec text
 ```
 
-`task start` prints the bundle: the requirement, its scenarios, the design decision that refers to it, and the task lines. An agent reads this and nothing else under `openspec/`. The footer compares the bundle to all spec text. On a two task project the bundle is bigger than the spec text, because it also carries the decision and the tasks. On a real tree the ratio drops to a few percent.
+`task start` prints the `context` answer for the task. It holds the task line and the requirement it cites with its scenarios. It holds the code and test lines that tag it, the design decision that refers to it, and the deltas and designs of the change. An agent reads this and nothing else under `openspec/`. The footer compares the bundle to all spec text. On a two task project the bundle is bigger than the spec text, because it also carries the task line. On a real tree the ratio drops to a few percent.
 
 Write the code with a tag that names the requirement, and the test with a cover tag and the scenario IDs.
 

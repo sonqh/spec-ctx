@@ -32,7 +32,10 @@ describe("task start", () => {
       p = setup();
       const r = await p.run("task", "start", "002/2.1");
       expect(r.code, r.err).toBe(0);
-      expect(r.out.startsWith("-- REQ-TASK-001 |")).toBe(true);
+      const ctx = await p.run("context", "002/2.1");
+      expect(ctx.code, ctx.err).toBe(0);
+      expect(r.out.startsWith(ctx.out)).toBe(true);
+      expect(r.out).toContain("-- REQ-TASK-001 |");
       expect(r.out).toContain("#### Scenario: SCN-TASK-001-1 Pick");
       const n = [...bundleOf(r.out)].length;
       expect(JSON.parse(p.read(".ctx/current.json"))).toEqual({ bundle_chars: n, started_at: "2026-10-24T09:00:00.000Z", task: "002/2.1", verify: "true" });
@@ -60,6 +63,29 @@ describe("task start", () => {
     const cur = JSON.parse(p.read(".ctx/current.json"));
     expect(cur.bundle_chars).toBe([...bundleOf(r.out)].length);
     expect(cur.bundle_chars).toBeGreaterThan(50);
+  });
+
+  test("the output minus its footer equals context for the same task", async () => {
+    p = setup();
+    const r = await p.run("task", "start", "002/2.1");
+    const ctx = await p.run("context", "002/2.1");
+    expect(bundleOf(r.out)).toBe(ctx.out);
+  });
+
+  test("SCN-TASK-002-6 a shared task number reads the active task", async () => {
+    p = setup();
+    p.write("src/a.ts", `// ${"REQ-"}TASK-001 code\n`);
+    // the archived task has the same ID and sorts later in the index. It cites no requirement.
+    p.write("openspec/changes/archive/2026-01-02-002-t/tasks.md", "# Tasks\n\n## 2. Work\n\n- [x] 2.1 Old pick. Verify: `true`\n");
+    const idx = await p.build();
+    expect(idx.entries.filter((e: any) => e.kind === "task" && e.id === "002/2.1").length).toBe(2);
+    const r = await p.run("task", "start", "002/2.1");
+    expect(r.code, r.err).toBe(0);
+    expect(r.out).toContain("| ref from 002/2.1\n");
+    expect(r.out).toContain("-- src/a.ts:1 |");
+    expect(r.out).not.toContain("cites no REQ");
+    const ctx = await p.run("context", "002/2.1");
+    expect(bundleOf(r.out)).toBe(ctx.out);
   });
 
   test("the bundle uses the configured budget", async () => {
@@ -90,12 +116,16 @@ describe("task start", () => {
     expect((await p.run("adopt")).code).toBe(0);
     const r = await p.run("task", "start", "add-mfa/1.3");
     expect(r.code, r.err).toBe(0);
+    const ctx = await p.run("context", "add-mfa/1.3");
+    expect(ctx.code, ctx.err).toBe(0);
+    expect(ctx.out).toContain("-- add-mfa/1.3 |");
+    const hint = "task add-mfa/1.3 cites no REQ. Run specctx query --change add-mfa --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.";
+    expect(r.out.startsWith(ctx.out + hint + "\n")).toBe(true);
     const lines = r.out.trimEnd().split("\n");
-    expect(lines).toHaveLength(2);
-    expect(lines[0]).toBe("task add-mfa/1.3 cites no REQ. Run specctx query --change add-mfa --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.");
-    expect(lines[1]).toMatch(/^-- bundle 0 chars, 0% of \d+ chars of spec text$/);
+    expect(lines.at(-2)).toBe(hint);
+    expect(lines.at(-1)).toMatch(/^-- bundle \d+ chars, \d+(\.\d)?% of \d+ chars of spec text$/);
     const j = JSON.parse((await p.run("task", "start", "add-mfa/1.3", "--json")).out);
-    expect(j.hint).toBe(lines[0]);
+    expect(j.hint).toBe(hint);
   });
 
   test("SCN-TASK-002-3 the footer ends task start on the fixture task add-mfa/1.3, and bundle has none", async () => {

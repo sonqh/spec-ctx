@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T14:17:04.267Z",
+  "bundle_chars": 8033,
+  "files": {
+    "src/cli/workflow.ts": "1d50061695e100ac5c57d0467fba5541e838ad611521de86c050ab985d3e990e",
+    "src/graph/bundle.ts": "c5395532b9552a313ecc23f8391fbe2647519b96c7e2027902c087b59bdfaaed",
+    "src/graph/input.ts": "ac231eb1f7b41b5e5800f10209a4ba4a92695a24558dedbf4f82a489393ccbd6",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/tasks.ts": "169e3f3ea4bd0b720a597e0694c496ef7207b35321fcbfb2b50521ebbc06d5fb",
+    "tests/query/context.test.ts": "23948435bf02bc773429d95e7042e77e884b87dbabdb0ed3cbacf62346eb0456",
+    "tests/query/task-reach.test.ts": "bf606f35fd2b017c1d690be0467ea1dc1e302a17483d869fa17fdb3c99a3b98f",
+    "tests/tasks/kebab.test.ts": "41a1ea28cdfa4f05fc7aa6963bdccb871bc0b5a9fb7312bacf3ebd94dd7173fc",
+    "tests/tasks/start.test.ts": "e0b2d00fedc31f89a8dfc2b60ad6fa272b7ab229e233feaf350c077d35b8ae04"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-015",
+    "REQ-QRY-016",
+    "REQ-QRY-017",
+    "REQ-TASK-002"
+  ],
+  "started_at": "2026-10-30T14:11:04.311Z",
+  "task": "047/4.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/getting-started.md docs/verification/047.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/getting-started.md docs/verification/047.md && bun test tests/gov && bash tests/parity/run.sh && grep -q \"047\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 25 pass\n 0 fail\n 217 expect() calls\nRan 25 tests across 8 files. [4.88s]",
+    "stdout_sha256": "698620ba91205dea2ace0b0bec30d61e707c133d4c5e5ca40bdab2d657da47ac"
+  }
+}

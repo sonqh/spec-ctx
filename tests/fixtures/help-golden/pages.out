@@ -60,6 +60,27 @@ Exit codes:
 Example:
   `specctx query lockfile --kind req`
 
+== context
+specctx context: Print what an agent needs before it edits a task, an ID, a file, or a change.
+
+Usage:
+  `specctx context <task|ID|path|change> [flags]`
+
+Flags:
+  `--budget <n>`               Stop at n characters. The default is 8000.
+  `--depth <n>`                Follow links n steps. The default is 1.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error, an unknown ID, or a bad path. It takes one input. Use `bundle` for several inputs or for `--block`.
+  `3` An internal error.
+
+Example:
+  `specctx context 045/2.1`
+
 == related
 specctx related: Show the entries that link to an ID, a file, or a change.
 
