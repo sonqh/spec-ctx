@@ -2,7 +2,7 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
-## Unreleased
+## 0.3.0
 
 ### Added
 
