@@ -212,11 +212,11 @@ describe("specctx next walks the decision order", () => {
     expect((await p.run("task", "done", `${CHANGE}/1.3`)).code).toBe(0);
     expect(await next()).toEqual(base({ action: "gate", command: "specctx gate --strict", state: "gate_due" }));
     // a pass before the newest evidence does not count, and a failed run does not count
-    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:15:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [] }) + "\n");
+    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:15:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [], strict: true }) + "\n");
     expect((await next()).action).toBe("gate");
-    p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:21:00.000Z", duration_s: 1, failed_step: "check", ok: false, steps: ["check"] }) + "\n");
+    p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:21:00.000Z", duration_s: 1, failed_step: "check", ok: false, steps: ["check"], strict: true }) + "\n");
     expect((await next()).action).toBe("gate");
-    p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:22:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [] }) + "\n");
+    p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:22:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [], strict: true }) + "\n");
     // REQ-LOOP-007 the archive stop under ask names the archive question (031/D2)
     expect(await next()).toEqual(base({ action: "archive", command: `specctx handoff ask --change ${CHANGE} "archive ${CHANGE}?"`, human: true, state: "gate_passed" }));
     p.write("spec-ctx.toml", "[loop]\narchive = \"auto\"\n");

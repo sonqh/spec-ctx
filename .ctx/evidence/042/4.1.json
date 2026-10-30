@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T06:48:42.253Z",
+  "bundle_chars": 3459,
+  "files": {
+    "tests/index/covers.test.ts": "6c70ee95e939dedd37eb7d74bee3098a27baaf37431c5c225695411f45ff2ba5"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDX-007"
+  ],
+  "started_at": "2026-10-30T06:47:47.998Z",
+  "task": "042/4.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/index tests/check && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 98 pass\n 0 fail\n 508 expect() calls\nRan 98 tests across 15 files. [3.57s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

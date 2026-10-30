@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Covers: REQ-DIST-005, REQ-DIST-010, REQ-DIST-011, SCN-DIST-011-1, SCN-DIST-011-2, SCN-DIST-011-3
+# Covers: REQ-DIST-005, REQ-DIST-010, REQ-DIST-011, REQ-VER-013, SCN-DIST-011-1, SCN-DIST-011-2, SCN-DIST-011-3, SCN-VER-013-1
 # Runs action/run.sh in a temp git repo. A recording script stands in for specctx. No network.
 set -euo pipefail
 here=$(cd "$(dirname "$0")/../.." && pwd)
@@ -60,3 +60,14 @@ for ev in workflow_run schedule workflow_dispatch ""; do
   [ "$(wc -l < "$work/err")" = 1 ] || { cat "$work/err"; exit 1; }
 done
 echo "ok: other events are refused with one line"
+
+# SCN-VER-013-1 a push that creates a branch has forty zeros as its base. The real CLI prints one line and passes.
+mkdir -p "$work/openspec"
+zero=$(printf '0%.0s' $(seq 1 40))
+set +e
+out=$(cd "$work" && GITHUB_EVENT_NAME=push INPUT_RERUN=true INPUT_BASE="$zero" INPUT_SPECCTX="node $here/dist/cli.js" bash "$here/action/run.sh" 2>&1)
+code=$?
+set -e
+[ "$code" = 0 ] || { echo "zero base exit was $code"; echo "$out"; exit 1; }
+[ "$out" = "rerun: base is the zero commit (a new branch), nothing to compare" ] || { echo "$out"; exit 1; }
+echo "ok: a zero base passes with one line"

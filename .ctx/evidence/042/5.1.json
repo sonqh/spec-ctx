@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T06:49:59.376Z",
+  "bundle_chars": 8456,
+  "files": {
+    "src/cli/gate.ts": "f272adf3b52c5fbc9b8212b4d7db29cce92540205efa47f92e66efc163b65495",
+    "src/gate/rerun.ts": "b95f0d193c794c0d239bab78022ec4cc1d6631ab7ff24062a701330d6264c161",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/stats/write.ts": "6d849db11a56b54c5a2f2519b90ab40d2fadcdd1362ababbd4e55f76376ee43c",
+    "src/util/time.ts": "1dc9d1bec03f78ed785fc550ae40deeffa0984288ff3b8a51de3162c4f0f5038",
+    "tests/action/rerun.sh": "8e58300db2398a61bd978c663376a71811041921be8acac993a37f94d09a66bf",
+    "tests/cli/gate.test.ts": "a8f3e250def75df7ec51ddf54bd1f8138024cfc046695b3070c978da67abb290",
+    "tests/gate/rerun-base.test.ts": "993cf4bc922ae24d83a6af70d9091b3dd92678d5acf452667d198bbafac2e530",
+    "tests/gate/rerun-cli.test.ts": "72fcd26c598cb795c04fde4be886b5019405c6839456332f4195fcabc0e19ea1",
+    "tests/gov/gate-log.test.ts": "dfb1ccd748fe1ea20052838f55d34b8fde1d92fb568cb105dcdc51a9a4b43817",
+    "tests/stats/cli.test.ts": "44d35826f2d3221af6bbf86813639ab319602a48eceaa5840abbb7635f610943"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-013",
+    "REQ-STAT-005"
+  ],
+  "started_at": "2026-10-30T06:49:26.735Z",
+  "task": "042/5.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/042.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/042.md && grep -q \"042\" CHANGELOG.md && bash tests/action/rerun-docs.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "ab91e9495447b67aae15a0065438a379a6954e6b374a96e1ea974ff48bce3fca"
+  }
+}

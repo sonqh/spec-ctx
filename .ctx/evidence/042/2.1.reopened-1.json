@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-30T06:46:35.676Z",
+  "bundle_chars": 8272,
+  "files": {
+    "src/cli/gate.ts": "c3151e73732c145f9728c3bef979435a9c26e19d2cd1ffdcf260b841974235f7",
+    "src/loop/next.ts": "2b7ad3734bbe6028a820a75cbb90af89ebf8b10fe441336b45d258a1cbd9d588",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/stats/write.ts": "6d849db11a56b54c5a2f2519b90ab40d2fadcdd1362ababbd4e55f76376ee43c",
+    "src/util/time.ts": "1dc9d1bec03f78ed785fc550ae40deeffa0984288ff3b8a51de3162c4f0f5038",
+    "tests/cli/gate.test.ts": "a8f3e250def75df7ec51ddf54bd1f8138024cfc046695b3070c978da67abb290",
+    "tests/gate/rerun-cli.test.ts": "f84f80ff14670cf48ac90b24809aeab39693572b7b4bb483efc64e1c68700fba",
+    "tests/gov/gate-log.test.ts": "dfb1ccd748fe1ea20052838f55d34b8fde1d92fb568cb105dcdc51a9a4b43817",
+    "tests/loop/gate-rerun-line.test.ts": "e153d5749a0d219075a698cbf26a3c9d50bc3e558b42e250bfaf878eafdb7e57",
+    "tests/loop/gate-strict.test.ts": "5b12c97fd3c2d11b48e1ab268eef34ace48ef2e074ab04d115fc16ae27f358b5",
+    "tests/stats/cli.test.ts": "44d35826f2d3221af6bbf86813639ab319602a48eceaa5840abbb7635f610943"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/cli/gate.ts",
+  "reqs": [
+    "REQ-LOOP-011",
+    "REQ-STAT-005"
+  ],
+  "started_at": "2026-10-30T06:45:46.106Z",
+  "task": "042/2.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/cli tests/gate tests/stats tests/gov && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 204 pass\n 0 fail\n 1252 expect() calls\nRan 204 tests across 34 files. [15.06s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

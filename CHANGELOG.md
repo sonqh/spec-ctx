@@ -20,6 +20,11 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Changed
 
+- Fix (change 042): `action.yml` parses again. The `description` of `rerun` held `base: ${{ github.event.before }}` as a plain scalar, and GitHub rejected the file with "Mapping values are not allowed in this context". The `rerun` and `base` descriptions now name `github.event.before` in words and hold no `${{`. `tests/action/yaml-quotes.sh` fails on any `description` that holds `${{`, and on an unquoted one that holds `: `. `tests/action/selftest.sh` runs it. REQ-DIST-014.
+- The gate log line has a `strict` key. `next` counts a gate line only when `ok` and `strict` are both true. A plain `gate` no longer moves `next` to `archive`. A line from before this change has no `strict` key and does not count, so run `gate --strict` once. REQ-LOOP-011, REQ-STAT-005.
+- `gate --rerun --base` with forty zeros prints `rerun: base is the zero commit (a new branch), nothing to compare` and exits 0. A base that `git rev-parse --verify <base>^{commit}` cannot resolve prints `rerun: base <ref> is not in this clone. Fetch it or use fetch-depth: 0` and exits 1. A ref that exists but shares no history still gets the no-merge-base line. REQ-VER-013.
+- The `Covers:` tag in a test file reads the rest of the line and records every REQ ID on it, with word boundaries. An SCN ID, a space, or a semicolon no longer drops the rest of the line. `REQ-AB-0011` no longer reads as `REQ-AB-001`. REQ-IDX-007.
+
 - `next` ignores a gate log line whose `steps` is exactly `["rerun"]`. A passing `gate --rerun` after a failed `gate --strict` no longer makes `next` return `archive`. REQ-LOOP-011.
 - Behavior change: the plan stop ends only on a question that `handoff ask --change <c> --plan` recorded. The plan stop command that `next` prints carries `--plan`. A plain `handoff ask --change` before all tasks are done stores `stage: design` and no longer ends the stop. An older `questions.json` with `stage: plan` still counts. REQ-LOOP-007, REQ-LOOP-009.
 - The human form of `next` prints `tasks: none` for an empty list and joins IDs with a comma and a space. The JSON form stays. REQ-LOOP-012.

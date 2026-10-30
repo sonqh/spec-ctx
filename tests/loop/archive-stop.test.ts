@@ -55,7 +55,7 @@ describe("the archive stop lives in the engine", () => {
     expect((await p.run("task", "start", `${CHANGE}/1.1`)).code).toBe(0);
     const d = await p.run("task", "done", `${CHANGE}/1.1`);
     expect(d.code, d.out + d.err).toBe(0);
-    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "2999-01-01T00:00:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [] }) + "\n");
+    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "2999-01-01T00:00:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [], strict: true }) + "\n");
     expect(await next()).toMatchObject({ action: "archive", human: true, state: "gate_passed", command: `specctx handoff ask --change ${CHANGE} "${ARCHIVE_Q}"` });
   });
 

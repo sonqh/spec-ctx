@@ -64,17 +64,17 @@ function questions(root: string): Question[] {
   }
 }
 
-/** REQ-LOOP-011 the last line of the gate log that is not a rerun line, or null. A line with steps exactly ["rerun"] never counts (041/D1). */
+/** REQ-LOOP-011 the last line of the gate log that is not a rerun line, or null. A line with steps exactly ["rerun"] never counts (041/D1). Only `ok` with `strict: true` passes (042/D2). */
 function lastGate(root: string): { at: string; ok: boolean } | null {
   const p = join(root, ".ctx/gate-log.jsonl");
   if (!existsSync(p)) return null;
   const lines = readFileSync(p, "utf8").split("\n").filter((l) => l.trim());
   for (let i = lines.length - 1; i >= 0; i--) {
     try {
-      const o = JSON.parse(lines[i]!) as { at?: unknown; ok?: unknown; steps?: unknown };
+      const o = JSON.parse(lines[i]!) as { at?: unknown; ok?: unknown; steps?: unknown; strict?: unknown };
       const rerun = Array.isArray(o.steps) && o.steps.length === 1 && o.steps[0] === "rerun";
       if (rerun) continue;
-      return { at: typeof o.at === "string" ? o.at : "", ok: o.ok === true };
+      return { at: typeof o.at === "string" ? o.at : "", ok: o.ok === true && o.strict === true };
     } catch {
       return null;
     }

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T06:47:07.238Z",
+  "attempt": 1,
+  "stderr_tail": "212 |     expect(r.code).toBe(1);\n213 |     expect(lines(r.out)).toEqual([\"rerun: no merge base with no-such-ref, fetch full history (fetch-depth: 0)\"]);\n                               ^\nerror: expect(received).toEqual(expected)\n\n  [\n-   \"rerun: no merge base with no-such-ref, fetch full history (fetch-depth: 0)\",\n+   \"rerun: base no-such-ref is not in this clone. Fetch it or use fetch-depth: 0\",\n  ]\n\n- Expected  - 1\n+ Received  + 1\n\n      at <anonymous> (/home/claude/spec-ctx/tests/gate/rerun-cli.test.ts:213:26)\n(fail) gate --rerun > SCN-VER-005-3 no merge base fails with the one line [63.93ms]\n\n 43 pass\n 1 fail\n 129 expect() calls\nRan 44 tests across 7 files. [3.43s]",
+  "task": "042/3.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gate && bash tests/action/rerun.sh && bun run typecheck",
+    "exit": 1
+  }
+}

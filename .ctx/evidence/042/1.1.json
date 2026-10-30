@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-30T06:51:33.624Z",
+  "files": {
+    "tests/action/yaml-quotes.sh": "dd02e0c81e095f0a6087380ec9ab0d96d47d73eabbe4ddc40434b42325864ed8"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-014"
+  ],
+  "task": "042/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bash tests/action/yaml-quotes.sh action.yml && bash tests/action/selftest.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "94b3da98eb710fb65c632275581cc356fbd002537bdcf66d2a248405e712b347"
+  }
+}

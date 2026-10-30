@@ -17,10 +17,10 @@ inputs:
     description: Command that runs specctx. Empty means npx with the version input.
     default: ""
   rerun:
-    description: Run only gate --rerun. It reruns the Verify command of each task that the pull request closed. Use it on pull_request or push only. On push, pass base: ${{ github.event.before }}.
+    description: Run only gate --rerun. It reruns the Verify command of each task that the pull request closed. Use it on pull_request or push only. On push, pass the commit before the push (github.event.before) as base.
     default: "false"
   base:
-    description: With rerun, the ref for the merge base, such as origin/main. On push, use ${{ github.event.before }}. Empty uses the default of spec-ctx.toml. Without rerun, the action ignores it.
+    description: With rerun, the ref for the merge base, such as origin/main. On push, use the commit before the push (github.event.before). Empty uses the default of spec-ctx.toml. Without rerun, the action ignores it.
     default: ""
 runs:
   using: composite

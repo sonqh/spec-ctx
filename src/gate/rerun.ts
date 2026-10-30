@@ -1,4 +1,4 @@
-// REQ-VER-005 REQ-VER-006 REQ-VER-007 the rerun step: the tasks a range closed, the compare, the groups (036/D1).
+// REQ-VER-013 REQ-VER-005 REQ-VER-006 REQ-VER-007 the rerun step: the tasks a range closed, the compare, the groups (036/D1).
 import { spawnSync } from "node:child_process";
 import type { Entry } from "../index/types.ts";
 import { changeKey, changeOf } from "../index/scan.ts";
@@ -91,6 +91,17 @@ export function headSha(root: string): string {
 
 /** REQ-VER-010 the line for a merge base equal to HEAD. */
 export const HEAD_BASE_LINE = "rerun: merge base is HEAD, nothing to compare. On push, pass --base <the commit before the push>";
+
+/** REQ-VER-013 the line for a base of forty zeros, the `before` of a push that creates a branch. */
+export const ZERO_BASE_LINE = "rerun: base is the zero commit (a new branch), nothing to compare";
+
+/** REQ-VER-013 a base that ends the rerun before the merge base: the zero commit passes, an unknown commit fails. */
+export function baseProblem(root: string, base: string): { ok: boolean; line: string } | null {
+  if (/^0{40}$/.test(base)) return { ok: true, line: ZERO_BASE_LINE };
+  const known = !base.startsWith("-") && git(root, ["rev-parse", "--verify", "--quiet", `${base}^{commit}`]).ok;
+  if (known) return null;
+  return { ok: false, line: `rerun: base ${base} is not in this clone. Fetch it or use fetch-depth: 0` };
+}
 
 export type ClosedResult = { ok: true; mergeBase: string; tasks: Entry[] } | { ok: false; line: string };
 

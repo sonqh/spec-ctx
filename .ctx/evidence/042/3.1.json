@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-30T06:47:41.988Z",
+  "bundle_chars": 5263,
+  "files": {
+    "src/cli/gate.ts": "f272adf3b52c5fbc9b8212b4d7db29cce92540205efa47f92e66efc163b65495",
+    "src/gate/rerun.ts": "b95f0d193c794c0d239bab78022ec4cc1d6631ab7ff24062a701330d6264c161",
+    "tests/action/rerun.sh": "8e58300db2398a61bd978c663376a71811041921be8acac993a37f94d09a66bf",
+    "tests/gate/rerun-base.test.ts": "993cf4bc922ae24d83a6af70d9091b3dd92678d5acf452667d198bbafac2e530"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-013"
+  ],
+  "started_at": "2026-10-30T06:46:41.216Z",
+  "task": "042/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate && bash tests/action/rerun.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 44 pass\n 0 fail\n 129 expect() calls\nRan 44 tests across 7 files. [3.69s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "2bea202eb2d431fa142e7f1292c8ff002609d5ceface751a6e2e305ac27337cc"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T06:47:23.431Z",
+  "attempt": 2,
+  "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nwrote src/assets.generated.ts\nbun test v1.4.4 (38afee6c8)\n\n 44 pass\n 0 fail\n 129 expect() calls\nRan 44 tests across 7 files. [3.83s]\nok: rerun builds gate --strict --rerun --base <ref>\nok: the default gate has no --rerun and no --base\nok: pull_request_target is refused with one line\nok: pull_request, push, and a default gate on pull_request_target run\nok: other events are refused with one line\nzero base exit was 2\nspecctx: not an OpenSpec project (no openspec/ under /tmp/tmp.7cIv5e60bI). Run npx -y @fission-ai/openspec@latest init first.",
+  "task": "042/3.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gate && bash tests/action/rerun.sh && bun run typecheck",
+    "exit": 1
+  }
+}

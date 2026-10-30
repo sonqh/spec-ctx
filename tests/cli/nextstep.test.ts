@@ -57,7 +57,7 @@ describe("next step lines", () => {
     let r = await both(p);
     expect(r.status).toBe("next: specctx gate --strict");
     expect(r.status).toBe(r.next);
-    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "9999-12-31T00:00:00.000Z", ok: true }) + "\n");
+    p.write(".ctx/gate-log.jsonl", JSON.stringify({ at: "9999-12-31T00:00:00.000Z", ok: true, strict: true }) + "\n");
     r = await both(p);
     // REQ-LOOP-007 under [loop] archive = "ask" the archive stop names the archive question (031/D2)
     expect(r.status).toBe(`next: specctx handoff ask --change 001-x "archive 001-x?"`);

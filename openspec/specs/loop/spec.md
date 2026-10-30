@@ -196,7 +196,7 @@ Refs: REQ-LOOP-008, REQ-LOOP-006
 - **THEN** the reason is `Verify failed (exit 1): FAIL two. stale waiting: 002/1.1`
 
 ### Requirement: REQ-LOOP-011 Rerun line is not the gate
-`next` SHALL judge the gate from the last line of `.ctx/gate-log.jsonl` whose `steps` is not exactly `["rerun"]`. A line from `gate --rerun` SHALL never count as a passing gate.
+`next` SHALL judge the gate from the last line of `.ctx/gate-log.jsonl` whose `steps` is not exactly `["rerun"]`. The line counts only when `ok` is true and `strict` is true. A line without a `strict` key SHALL not count. A line from `gate --rerun` SHALL never count as a passing gate.
 
 Refs: REQ-LOOP-001, REQ-CLI-009
 
@@ -207,6 +207,10 @@ Refs: REQ-LOOP-001, REQ-CLI-009
 #### Scenario: SCN-LOOP-011-2 Rerun after a passing gate
 - **WHEN** a passing gate line follows the newest evidence and a later `rerun` line has `ok: false`
 - **THEN** `next --json` does not print `action: gate`
+
+#### Scenario: SCN-LOOP-011-3 Non-strict pass
+- **WHEN** every task has `[x]` and evidence, and the last gate line has `ok: true` and `strict: false` or no `strict` key
+- **THEN** `next --json` prints `action: gate`
 
 ### Requirement: REQ-LOOP-012 Human tasks line
 The human form of `next` SHALL print `tasks: none` for an empty list. Otherwise it SHALL print the IDs joined with a comma and a space. The JSON form SHALL not change.

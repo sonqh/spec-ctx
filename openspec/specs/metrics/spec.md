@@ -60,7 +60,7 @@ Refs: REQ-ADOPT-005
 - **THEN** the total `debt` is 2 and the `debt` of the `002-ids` row is 2
 
 ### Requirement: REQ-STAT-005 Gate log and series
-`specctx gate` SHALL append one JSON line to `.ctx/gate-log.jsonl` per run: `at`, `ok`, `failed_step` (or null), `duration_s`, `steps`. `scripts/ci-local.sh` SHALL not append a second line. `stats` SHALL print `gate_runs`, `gate_pass_rate`, and `gate_failures_caught` from the last 100 lines, and a footer that defines `context_ratio`. `stats --write` SHALL save the table as `docs/metrics/<YYYY-MM-DD>.md` with the UTC date and overwrite a file of the same day.
+`specctx gate` SHALL append one JSON line to `.ctx/gate-log.jsonl` per run: `at`, `ok`, `failed_step` (or null), `duration_s`, `steps`, `strict`. `scripts/ci-local.sh` SHALL not append a second line. `stats` SHALL print `gate_runs`, `gate_pass_rate`, and `gate_failures_caught` from the last 100 lines, and a footer that defines `context_ratio`. `stats --write` SHALL save the table as `docs/metrics/<YYYY-MM-DD>.md` with the UTC date and overwrite a file of the same day.
 
 Refs: REQ-CHK-003
 
@@ -87,3 +87,7 @@ Refs: REQ-CHK-003
 #### Scenario: SCN-STAT-005-6 UTC date
 - **WHEN** `stats --write` runs at `2026-10-24T23:30:00-05:00`
 - **THEN** the file is `docs/metrics/2026-10-25.md`, because the UTC date of that time is 25 October
+
+#### Scenario: SCN-STAT-005-7 Strict flag
+- **WHEN** `specctx gate` runs, then `specctx gate --strict` runs
+- **THEN** the first log line has `strict: false` and the second has `strict: true`

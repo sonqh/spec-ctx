@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T06:48:21.151Z",
+  "attempt": 1,
+  "stderr_tail": "      at async covered (/home/claude/spec-ctx/tests/index/covers.test.ts:14:23)\n      at async <anonymous> (/home/claude/spec-ctx/tests/index/covers.test.ts:43:18)\n(fail) the Covers tag reads the whole line > SCN-IDX-007-3 a four digit suffix does not match the three digit ID [1.83ms]\n70 |       if (stub) delete process.env.SPECCTX_OPENSPEC;\n71 |     }\n72 |   }\n73 |   async build(): Promise<any> {\n74 |     const r = await this.run(\"build\");\n75 |     if (r.code !== 0) throw new Error(`build failed: ${r.err}`);\n                                     ^\nerror: build failed: specctx: not an OpenSpec project (no openspec/ under /tmp/specctx-test-lfR2e0/repo). Run npx -y @fission-ai/openspec@latest init first.\n\n      at build (/home/claude/spec-ctx/tests/helpers.ts:75:33)\n      at async <anonymous> (/home/claude/spec-ctx/tests/index/covers.test.ts:50:25)\n(fail) the Covers tag reads the whole line > a Covers line with only SCN IDs adds no REQ and no code entry [1.80ms]\n\n 93 pass\n 5 fail\n 502 expect() calls\nRan 98 tests across 15 files. [2.94s]",
+  "task": "042/4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/index tests/check && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 1
+  }
+}

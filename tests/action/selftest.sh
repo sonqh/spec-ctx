@@ -49,4 +49,11 @@ bash "$here/tests/action/rerun.sh" >/dev/null
 bash "$here/tests/action/rerun-job.sh" >/dev/null
 bash "$here/tests/action/rerun-docs.sh" >/dev/null
 echo "ok: the rerun input, the CI job, and the docs"
+# SCN-DIST-014-1 and SCN-DIST-014-2 a description with ": " or "${{" must be quoted
+bash "$here/tests/action/yaml-quotes.sh" "$here/action.yml" >/dev/null
+printf 'inputs:\n  rerun:\n    description: Run it. On push, pass base: the commit before the push.\n' > "$work/plain.yml"
+if bash "$here/tests/action/yaml-quotes.sh" "$work/plain.yml" >/dev/null; then echo "a plain scalar with ': ' passed"; exit 1; fi
+printf 'inputs:\n  rerun:\n    description: "On push, pass ${{ github.event.before }} as base."\n' > "$work/expr.yml"
+if bash "$here/tests/action/yaml-quotes.sh" "$work/expr.yml" >/dev/null; then echo "a quoted description with an expression passed"; exit 1; fi
+echo "ok: action.yml has no expression in a description, and a plain scalar or an expression fails"
 echo "selftest: the action passes clean and fails on a lint error"

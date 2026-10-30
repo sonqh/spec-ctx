@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T06:45:40.700Z",
+  "bundle_chars": 3610,
+  "files": {
+    "tests/action/yaml-quotes.sh": "b63d9e4c1fe9352c41cb2abe1ac417427a5bae04e423e450890de49067864b94"
+  },
+  "kind": "command",
+  "reason": "lead review: no expression syntax in action.yml descriptions",
+  "reqs": [
+    "REQ-DIST-014"
+  ],
+  "started_at": "2026-10-30T06:45:22.209Z",
+  "task": "042/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bash tests/action/yaml-quotes.sh action.yml && bash tests/action/selftest.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "2519e0b5103dc0a23bd363b18aa2b12ecd9af3e2cf81c57cf35361fd8563364c"
+  }
+}

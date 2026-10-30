@@ -1,4 +1,4 @@
-// Covers: REQ-LOOP-011, SCN-LOOP-011-1, SCN-LOOP-011-2
+// Covers: REQ-LOOP-011, SCN-LOOP-011-1, SCN-LOOP-011-2, SCN-LOOP-011-3
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync } from "node:fs";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
@@ -8,7 +8,7 @@ let p: Project;
 const CHANGE = "add-mfa";
 const TASKS = `openspec/changes/${CHANGE}/tasks.md`;
 const SPEC = `openspec/changes/${CHANGE}/specs/user-auth/spec.md`;
-const line = (at: string, ok: boolean, steps: string[]): string => JSON.stringify({ at, duration_s: 1, failed_step: ok ? null : "check", ok, steps }) + "\n";
+const line = (at: string, ok: boolean, steps: string[]): string => JSON.stringify({ at, duration_s: 1, failed_step: ok ? null : "check", ok, steps, strict: true }) + "\n";
 
 async function action(): Promise<string> {
   const r = await p.run("next", "--json");

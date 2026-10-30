@@ -259,10 +259,19 @@ describe("gate log", () => {
     expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(0);
     const lines = log();
     expect(lines).toHaveLength(2);
-    expect(Object.keys(lines[0]!).sort()).toEqual(["at", "duration_s", "failed_step", "ok", "steps"]);
+    expect(Object.keys(lines[0]!).sort()).toEqual(["at", "duration_s", "failed_step", "ok", "steps", "strict"]);
     expect(lines[0]).toMatchObject({ ok: true, failed_step: null, steps: ["check", "baseline", "lint tells", "lint ste", "validate", "spec-length"] });
     expect(typeof lines[0]!.at).toBe("string");
     expect(typeof lines[0]!.duration_s).toBe("number");
+  });
+
+  // Covers: REQ-STAT-005
+  test("SCN-STAT-005-7 the log line records whether the run was strict", async () => {
+    p = new Project();
+    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    expect((await p.run("gate", "--markdown", "openspec/**/*.md")).code).toBe(0);
+    expect((await p.run("gate", "--strict", "--markdown", "openspec/**/*.md")).code).toBe(0);
+    expect(log().map((l) => l.strict)).toEqual([false, true]);
   });
 
   test("SCN-STAT-005-1 a failure at lint tells logs ok false and the step", async () => {

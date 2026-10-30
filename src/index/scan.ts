@@ -19,7 +19,9 @@ const ADR_HDR = new RegExp(`^# (ADR-\\d{3})${S}+(.*)$`, "s");
 const REFS_RE = new RegExp(`^Refs:${S}*(.+)$`, "s");
 const TASK_REQ = new RegExp(`\\[(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)\\]`, "g");
 const CODE_TAG = new RegExp(`(?://|#|/\\*|\\*)${S}*(REQ-[A-Z]{2,6}-\\d{3})`);
-const COVER_TAG = new RegExp(`Covers:${S}*(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)`);
+// REQ-IDX-007 the rest of the line after Covers:, and each REQ ID in it with word boundaries (042/D4)
+const COVER_TAG = /Covers:(.*)$/s;
+const REQ_ID = /\bREQ-[A-Z]{2,6}-\d{3}\b/g;
 const SENTENCE_END = new RegExp(`(?<=[.!?])${S}`);
 const COMMA = new RegExp(`${S}*,${S}*`);
 const SKIP_DIRS = new Set(["node_modules", ".git"]);
@@ -355,7 +357,9 @@ export function scanSource(sc: Scanner, rpath: string, entries: Entry[], scnName
     if (isTest) {
       const m = COVER_TAG.exec(line);
       if (m) {
-        for (const rid of m[1]!.split(COMMA)) {
+        // a Covers line never counts as a code tag, with or without a REQ ID
+        const ids = [...new Set(m[1]!.match(REQ_ID) ?? [])];
+        for (const rid of ids) {
           entries.push(entry({ id: `${rpath}:${i}`, kind: "test", file: rpath, line: i, title: pyStrip(line), change: "main", status: "active", refs: [rid] }));
         }
         continue;

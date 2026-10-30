@@ -1,4 +1,4 @@
-// REQ-CLI-009 REQ-CLI-004 specctx gate: check, the baseline against the merge base, both linters, openspec validate, spec length. Stops at the first failure.
+// REQ-LOOP-011 REQ-STAT-005 REQ-CLI-009 REQ-CLI-004 specctx gate: check, the baseline against the merge base, both linters, openspec validate, spec length. Stops at the first failure.
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
@@ -60,9 +60,9 @@ export const GATE_STEPS = ["check", "baseline", "lint tells", "lint ste", "valid
 type Step = (typeof GATE_STEPS)[number];
 
 /** REQ-STAT-005 one JSON line per gate run, after the last step or at the first failure. */
-export function appendGateLog(root: string, line: { at: string; ok: boolean; failed_step: string | null; duration_s: number; steps: string[] }): void {
+export function appendGateLog(root: string, line: { at: string; ok: boolean; failed_step: string | null; duration_s: number; steps: string[]; strict: boolean }): void {
   mkdirSync(join(root, ".ctx"), { recursive: true });
-  const sorted = { at: line.at, duration_s: line.duration_s, failed_step: line.failed_step, ok: line.ok, steps: line.steps };
+  const sorted = { at: line.at, duration_s: line.duration_s, failed_step: line.failed_step, ok: line.ok, steps: line.steps, strict: line.strict };
   appendFileSync(join(root, GATE_LOG), JSON.stringify(sorted) + "\n");
 }
 
@@ -71,7 +71,7 @@ export async function runGate(root: string, o: GateOpts, io: Io): Promise<number
   const ran: Step[] = [];
   const r = await gateSteps(root, o, io, ran);
   const { isoNow } = await import("../util/time.ts");
-  appendGateLog(root, { at: isoNow(), ok: r === null, failed_step: r, duration_s: Math.round((Date.now() - start) / 1000), steps: [...ran] });
+  appendGateLog(root, { at: isoNow(), ok: r === null, failed_step: r, duration_s: Math.round((Date.now() - start) / 1000), steps: [...ran], strict: o.strict });
   return r === null ? 0 : 1;
 }
 
@@ -259,9 +259,16 @@ export async function runRerun(root: string, cfg: import("../config.ts").Config,
   const { runVerify } = await import("../verify/run.ts");
   const { isoNow } = await import("../util/time.ts");
   const finish = (ok: boolean): number => {
-    appendGateLog(root, { at: isoNow(), ok, failed_step: ok ? null : "rerun", duration_s: Math.round((Date.now() - start) / 1000), steps: ["rerun"] });
+    appendGateLog(root, { at: isoNow(), ok, failed_step: ok ? null : "rerun", duration_s: Math.round((Date.now() - start) / 1000), steps: ["rerun"], strict: o.strict });
     return ok ? 0 : 1;
   };
+  // REQ-VER-013 a zero base passes and a base that this clone lacks fails, before any merge base (042/D3)
+  const { baseProblem } = await import("../gate/rerun.ts");
+  const bp = baseProblem(root, o.base);
+  if (bp) {
+    io.out(o.json ? dumps({ base: o.base, ...(bp.ok ? { warning: bp.line } : { error: bp.line }), merge_base: null, ok: bp.ok, tasks: [] }) + "\n" : bp.line + "\n");
+    return finish(bp.ok);
+  }
   const { data } = loadIndex(root, cfg);
   const closed = closedTasks(root, o.base, data.entries, scanner(root, cfg).taskRe);
   if (!closed.ok) {

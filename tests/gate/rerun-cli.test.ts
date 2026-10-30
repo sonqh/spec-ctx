@@ -1,4 +1,4 @@
-// Covers: REQ-CLI-009, REQ-VER-007, REQ-VER-006, REQ-CLI-004
+// Covers: REQ-CLI-009, REQ-VER-007, REQ-VER-006, REQ-CLI-004, REQ-STAT-005
 import { existsSync, readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import type { Project } from "../helpers.ts";
@@ -66,6 +66,7 @@ describe("gate --rerun", () => {
     const log = lines(readFileSync(p.path(".ctx/gate-log.jsonl"), "utf8")).map((l) => JSON.parse(l));
     expect(log).toHaveLength(1);
     expect(log[0]).toMatchObject({ ok: true, failed_step: null, steps: ["rerun"] });
+    expect(typeof log[0].strict).toBe("boolean");
   });
 
   test("SCN-CLI-009-1 the default gate does not run the rerun", async () => {
@@ -207,9 +208,13 @@ describe("gate --rerun", () => {
 
   test("SCN-VER-005-3 no merge base fails with the one line", async () => {
     const p = setup([{ num: "1.1", command: "exit 0" }]);
-    const r = await p.run("gate", "--rerun", "--base", "no-such-ref");
+    // a commit with no shared history: the ref exists (042/D3), the merge base does not
+    git(p, "checkout", "-q", "--orphan", "other");
+    git(p, "commit", "-q", "--allow-empty", "-m", "unrelated");
+    git(p, "checkout", "-q", "main");
+    const r = await p.run("gate", "--rerun", "--base", "other");
     expect(r.code).toBe(1);
-    expect(lines(r.out)).toEqual(["rerun: no merge base with no-such-ref, fetch full history (fetch-depth: 0)"]);
+    expect(lines(r.out)).toEqual(["rerun: no merge base with other, fetch full history (fetch-depth: 0)"]);
   });
 
   test("no closed task prints one line and exits 0", async () => {

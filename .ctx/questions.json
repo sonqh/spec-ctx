@@ -442,5 +442,35 @@
     "stage": "archive",
     "answer": "Approved by the lead.",
     "resolved_at": "2026-10-30T06:24:18.037Z"
+  },
+  {
+    "n": 51,
+    "asked_at": "2026-10-30T06:44:26.841Z",
+    "task": "042-action-yaml-and-review",
+    "text": "plan ready for 042-action-yaml-and-review. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. Drop task 5.1: SCN-LOOP-007-4 already covers --plan without --change. The other three choices are fine.",
+    "resolved_at": "2026-10-30T06:44:53.988Z"
+  },
+  {
+    "n": 52,
+    "asked_at": "2026-10-30T06:50:15.130Z",
+    "task": "042-action-yaml-and-review",
+    "text": "archive 042-action-yaml-and-review?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Not yet. The lead wants no expression syntax in action.yml descriptions at all, since the runner may try to read it. Reopen 042/1.1, reword both descriptions to name github.event.before without the dollar and braces, make yaml-quotes.sh fail on any description that holds the expression opener, then close 1.1 again.",
+    "resolved_at": "2026-10-30T06:50:41.217Z"
+  },
+  {
+    "n": 53,
+    "asked_at": "2026-10-30T06:51:47.047Z",
+    "task": "042-action-yaml-and-review",
+    "text": "archive 042-action-yaml-and-review?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after review.",
+    "resolved_at": "2026-10-30T06:52:00.825Z"
   }
 ]

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T06:49:46.216Z",
+  "attempt": 1,
+  "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nwrote src/assets.generated.ts\n0 hard finding(s), baseline 0\n\n0 violations (0 hard, baseline 0), 172 words, 0.0 per 100 words\nHedges/modality (may, might, could) are never flagged: confidence is content.",
+  "task": "042/5.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/042.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/042.md && grep -q \"042\" CHANGELOG.md && bash tests/action/rerun-docs.sh",
+    "exit": 1
+  }
+}
