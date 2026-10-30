@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { readQuestions, type Question } from "../handoff/questions.ts";
 import { isFailFile } from "../tasks/evidence.ts";
 import { evidenceRel } from "../tasks/tasks.ts";
+import { runCommand } from "../runcmd.ts";
 import { dumps } from "../util/json.ts";
 import { cmpStr } from "../util/pystr.ts";
 import { isoNow } from "../util/time.ts";
@@ -92,8 +93,8 @@ export function capQuestion(task: string, attempts: number, tail: string): strin
 }
 
 /** REQ-LOOP-002 the last line of a failed `task done` at the cap. Strict mode. */
-export function blockedLine(n: number): string {
-  return `blocked: question ${n} written. Run specctx handoff resolve ${n} "<answer>" to continue.`;
+export function blockedLine(n: number, run = "specctx"): string {
+  return `blocked: question ${n} written. Run ${runCommand(run, `handoff resolve ${n} "<answer>"`)} to continue.`;
 }
 
 /**

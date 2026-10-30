@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-30T07:38:26.137Z",
+  "bundle_chars": 8045,
+  "files": {
+    "src/adopt/plan.ts": "da37dbe415b27a2100d739b4df10a6b4ab0569ccc8b430e68ee10eb7a6fac78b",
+    "tests/adopt/dryrun.test.ts": "b8409873969c680cf2877a74292c9958602c102c4d9875406734fc522e716f7c",
+    "tests/gov/readme-links.test.ts": "6ee741f31d3ed27ae767dfa30d9cc0e895c87b727eae8c1690ba8ba63166d168"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-011",
+    "REQ-ADOPT-001"
+  ],
+  "started_at": "2026-10-30T07:36:31.385Z",
+  "task": "043/5.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gov tests/adopt && bun run typecheck && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 52 pass\n 0 fail\n 388 expect() calls\nRan 52 tests across 13 files. [6.55s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "97be571315eece5abb043ef8c0611b13950c88f1c73953c9bb0e8775c42fb1c8"
+  }
+}

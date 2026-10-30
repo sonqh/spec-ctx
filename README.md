@@ -37,7 +37,7 @@ Six commands on a small project. Each clip is one command.
 
 OpenSpec names a requirement by its header text. A reword breaks every link to it. `adopt` gives each requirement and scenario an ID that stays. Run it once on a project that has specs. A new project gets IDs from `init --all`.
 
-![The adopt dry run lists each header and its new ID](docs/demo/clips/1-adopt.svg)
+![The adopt dry run lists each header and its new ID](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/1-adopt.svg)
 
 You see: the dry run prints each header and the ID it gets. Then `adopt` writes them.
 
@@ -45,7 +45,7 @@ You see: the dry run prints each header and the ID it gets. Then `adopt` writes 
 
 `status` shows the open change, the task counts, and the next command to run.
 
-![One change with two tasks done and one open](docs/demo/clips/2-status.svg)
+![One change with two tasks done and one open](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/2-status.svg)
 
 You see: one change, two tasks done, one open, and the hint.
 
@@ -53,7 +53,7 @@ You see: one change, two tasks done, one open, and the hint.
 
 `task next` picks the first open task. It prints the requirement IDs the task cites and the Verify command, the shell command that proves the task is done.
 
-![Task add-mfa/1.3 with its requirement and Verify command](docs/demo/clips/3-next.svg)
+![Task add-mfa/1.3 with its requirement and Verify command](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/3-next.svg)
 
 You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
@@ -61,7 +61,7 @@ You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
 `task start` prints the requirement, its scenarios, the task line, and the test that covers it. Nothing else. The last line is the size of that bundle next to the size of all spec text.
 
-![The bundle of one task and its size footer](docs/demo/clips/4-start.svg)
+![The bundle of one task and its size footer](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/4-start.svg)
 
 You see: 711 characters, 3.6 percent of the tree. The agent reads this instead of the tree.
 
@@ -69,7 +69,7 @@ You see: 711 characters, 3.6 percent of the tree. The agent reads this instead o
 
 `task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that were checked. The agent cannot tick the box by hand.
 
-![A refused done, the edit, and a passing done](docs/demo/clips/5-done.svg)
+![A refused done, the edit, and a passing done](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/5-done.svg)
 
 You see: a red refusal, the edit, then a green done line.
 
@@ -77,7 +77,7 @@ You see: a red refusal, the edit, then a green done line.
 
 `handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it. The questions live in `.ctx/questions.json`. `handoff ask` adds one and `handoff resolve <n>` answers it.
 
-![The head of the handoff file](docs/demo/clips/6-handoff.svg)
+![The head of the handoff file](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/6-handoff.svg)
 
 You see: the head of `.ctx/handoff.md`.
 
@@ -138,7 +138,7 @@ specctx gate --strict          # check, baseline, linters, openspec validate, le
 specctx handoff write          # .ctx/handoff.md for the next session
 ```
 
-The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
+The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `bundle`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](https://github.com/sonqh/spec-ctx/blob/main/skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
 
 ## Install
 
@@ -158,7 +158,7 @@ The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its pla
 
 ## Two paths
 
-[`docs/getting-started.md`](docs/getting-started.md) walks the fresh path on upstream OpenSpec with real output, for a developer who knows OpenSpec.
+[`docs/getting-started.md`](https://github.com/sonqh/spec-ctx/blob/main/docs/getting-started.md) walks the fresh path on upstream OpenSpec with real output, for a developer who knows OpenSpec.
 
 ### Fresh project
 
@@ -180,6 +180,7 @@ specctx baseline write
 specctx gate --strict
 ```
 
+- `adopt --dry-run` exits 1 when headers need IDs. A script with `set -e` must allow that code.
 - `adopt` gives an ID to every requirement and scenario header without one, in `openspec/specs/` and in the deltas of active changes. A delta header gets the main ID by its text or through its RENAMED line. A delta header that matches neither keeps its text and goes into `adopt-report.md`.
 - `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
 - `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
@@ -249,6 +250,9 @@ base = "origin/main"  # the ref whose merge base holds the baseline that gate co
 [loop]
 max_attempts = 3                        # Verify failures on one task before task done writes a question
 archive = "ask"                         # "ask" stops before archive for a human. "auto" lets the loop archive.
+
+[cli]
+run = "specctx"                         # the prefix of every command that spec-ctx prints. init writes npx -y spec-ctx@<version> under npx.
 ```
 
 With `brackets = true`, `init --schema` installs templates with `[REQ-<CAP>-NNN]` and `[SCN-<CAP>-NNN-N]` in the headers. The merged rules show the same form. Task citations, `Refs:` lines, and tags stay bare. After you change the value, run `specctx init --schema` again. It switches each template and rule that you did not edit. It keeps the ones you edited, unless you add `--force`.
@@ -318,7 +322,7 @@ A Verify command is code from the pull request. The boundary:
 ## Status
 
 - Published: `spec-ctx@0.4.0` on npm, with tags `v0.4.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 042. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 043. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -328,7 +332,7 @@ A Verify command is code from the pull request. The boundary:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0228 (n=116) | 0.93 (204/220) | 56 (of 106 reopens) | 61 (n=116) | 0 (0 baselined + 0 new) |
+| total | 0.0224 (n=122) | 0.93 (212/228) | 58 (of 108 reopens) | 57 (n=122) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

@@ -46,7 +46,7 @@ describe("README order", () => {
       const i = lines.findIndex((l, k) => k > at && k < to && l.startsWith(`### ${n}. `));
       expect(i, `### ${n}.`).toBeGreaterThan(at);
       const near = lines.slice(i + 1, i + 5);
-      const img = near.findIndex((l) => new RegExp(`^!\\[[^\\]]+\\]\\(docs/demo/clips/${n}-[a-z]+\\.svg\\)$`).test(l));
+      const img = near.findIndex((l) => new RegExp(`^!\\[[^\\]]+\\]\\(https://raw\\.githubusercontent\\.com/sonqh/spec-ctx/main/docs/demo/clips/${n}-[a-z]+\\.svg\\)$`).test(l));
       expect(img, `clip ${n}`).toBeGreaterThan(0);
       // a paragraph before the clip and one after it
       expect(near.slice(0, img).some((l) => l.trim() !== "")).toBe(true);

@@ -4,8 +4,10 @@ import type { Io } from "../main.ts";
 import type { Parsed } from "./args.ts";
 import { UsageExit } from "./errors.ts";
 import { findRoot, requireOpenSpec } from "./root.ts";
+import { defaults } from "../config.ts";
 import { hintOf } from "../check/hints.ts";
 import { paint } from "./color.ts";
+import { runCommand } from "../runcmd.ts";
 
 /** check with warnings and the baseline filter. Strict mode adds the strict rules and the warnings. */
 async function runCheck(root: string, cfg: import("../config.ts").Config, data: import("../index/types.ts").Index, strict: boolean) {
@@ -29,7 +31,7 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
  * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
  * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
  */
-export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string; hint?: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string; hint?: string }[]; warnings: string[]; baselined: number }, tty?: boolean, run = "specctx"): string {
   // REQ-CLI-008 every finding of check is hard, so every finding line is red. stale-evidence is one of them.
   // REQ-CHK-001 a finding with a detail, such as a retitle, carries it after the ID (021/D2)
   const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}${x.detail ? `  ${x.detail}` : ""}\n`, tty)).join("")
@@ -59,7 +61,7 @@ export function checkText(r: { findings: { file: string; line: number; rule: str
   const rules = [...count.keys()].sort();
   return body
     + "\n" + paint("dim", `${n} finding${n === 1 ? "" : "s"} in ${files.size} file${files.size === 1 ? "" : "s"} (${r.findings.length} hard, ${r.warnings.length} advisory)\n`, tty)
-    + rules.map((rule) => `${rule}  ${count.get(rule)}  ${own.get(rule)?.join("\n") ?? hintOf(rule)}\n`).join("")
+    + rules.map((rule) => `${rule}  ${count.get(rule)}  ${own.get(rule)?.join("\n") ?? hintOf(rule, run)}\n`).join("")
     + base;
 }
 
@@ -93,7 +95,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     if (json) print(plan);
     else if (!plan.edits.length) io.out(plan.unmatched.length ? planLines(plan).join("\n") + "\nnothing to adopt\n" : "nothing to adopt\n");
     // REQ-CLI-007 the dry run ends with the next step. REQ-ADOPT-001 the exit code stays 1 and the last line says why (017/D5).
-    else io.out(planLines(plan).join("\n") + `\nexit 1: ${plan.edits.length} headers need an ID. Next: specctx adopt\n`);
+    else io.out(planLines(plan).join("\n") + `\nexit 1: ${plan.edits.length} headers need an ID. Next: ${runCommand(cfg.cli.run, "adopt")}\n`);
     return plan.edits.length ? 1 : 0;
   }
   if (cmd === "baseline write" || cmd === "baseline prune") {
@@ -145,7 +147,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         void check;
         const data = buildIndex(root, cfg);
         const r = await runCheck(root, cfg, data, strict);
-        return { code: r.findings.length ? 1 : 0, out: checkText(r, io.tty) };
+        return { code: r.findings.length ? 1 : 0, out: checkText(r, io.tty, cfg.cli.run) };
       },
     }, io);
   }
@@ -269,7 +271,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       // REQ-CHK-004 REQ-CHK-006 the JSON keeps its shape. A finding hint is for the human form only (031/D6).
       const findings = r.findings.map(({ hint: _hint, ...rest }) => rest);
       if (json) print({ baselined: r.baselined, count: findings.length, findings, warnings: r.warnings });
-      else io.out(checkText(r, io.tty));
+      else io.out(checkText(r, io.tty, cfg.cli.run));
       return r.findings.length ? 1 : 0;
     }
   }
@@ -282,16 +284,25 @@ async function init(p: Parsed, io: Io): Promise<number> {
   const root = resolve(io.cwd, (p.flags.root as string | undefined) ?? ".");
   const all = !!p.flags.all;
   const r = runInit(root, { schema: all || !!p.flags.schema, skills: all || !!p.flags.skills, force: !!p.flags.force });
+  // REQ-CLI-010 init prints its next step with the run prefix of the config it wrote or kept (043/D1)
+  const { loadConfigOrExit } = await import("./config.ts");
+  const run = (() => {
+    try {
+      return loadConfigOrExit(root).cli.run;
+    } catch {
+      return defaults().cli.run;
+    }
+  })();
   if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
-  else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + paint("dim", "next: specctx status\n", io.tty));
+  else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + paint("dim", `next: ${runCommand(run, "status")}\n`, io.tty));
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.merged.map((m) => `merged ${m}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
     io.out(r.notes.map((n) => `${n}\n`).join(""));
     // REQ-CLI-007 init ends with the next step. REQ-DIST-002 a kept changed file points to --force (014/D2).
-    const again = ["specctx init", all ? "--all" : [p.flags.schema ? "--schema" : "", p.flags.skills ? "--skills" : ""].filter(Boolean).join(" "), "--force"].filter(Boolean).join(" ");
-    io.out(paint("dim", `next: ${r.changed.length ? again : "specctx status"}\n`, io.tty));
+    const again = [runCommand(run, "init"), all ? "--all" : [p.flags.schema ? "--schema" : "", p.flags.skills ? "--skills" : ""].filter(Boolean).join(" "), "--force"].filter(Boolean).join(" ");
+    io.out(paint("dim", `next: ${r.changed.length ? again : runCommand(run, "status")}\n`, io.tty));
   }
   return 0;
 }

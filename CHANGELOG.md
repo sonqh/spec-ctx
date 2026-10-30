@@ -2,6 +2,19 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+Change 043-stranger-commands.
+
+### Added
+
+- `[cli] run` in `spec-ctx.toml` sets the prefix of every command that spec-ctx prints for you to run. The default is `specctx`. It covers the `command` field and the `next:` line of `next`. It covers the `next:` line of `status` and the hints of `check`. It covers the hints and usage errors of the `task` commands, the `blocked:` line, and the `Next:` lines of `init` and `adopt`. One function, `runCommand`, builds them. A source test fails on a bare `specctx <word>` string outside the help text. This repository sets `node dist/cli.js`. REQ-CLI-010.
+- `init` writes `run = "npx -y spec-ctx@<version>"` when `npm_command` is `exec`, which npm sets for `npx`. Elsewhere it writes no `[cli]` section. An existing `spec-ctx.toml` keeps its bytes, so an existing key stays. REQ-DIST-015.
+
+### Changed
+
+- Every link and image in `README.md` that points into the repository is an absolute GitHub URL, so the page that npm shows works. A test fails on a relative target. The README says that `adopt --dry-run` exits 1 when headers need IDs. The exit code stays. REQ-GOV-011.
+
 ## 0.4.0
 
 ### Added

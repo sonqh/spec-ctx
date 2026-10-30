@@ -8,6 +8,10 @@ import { dumps } from "../util/json.ts";
 import type { Parsed } from "./args.ts";
 import { paint } from "./color.ts";
 import { UsageExit } from "./errors.ts";
+import { runCommand } from "../runcmd.ts";
+
+/** REQ-CLI-010 a command to print, with the run prefix of the config (043/D1). */
+const rc = (c: Ctx, args: string): string => runCommand(c.cfg.cli.run, args);
 
 export interface Ctx {
   root: string;
@@ -70,7 +74,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         }
         return 1;
       }
-      const bundleCommand = `specctx bundle ${t.reqs.join(" ")} --budget ${c.cfg.bundle.budget}`;
+      const bundleCommand = rc(c, `bundle ${t.reqs.join(" ")} --budget ${c.cfg.bundle.budget}`);
       if (c.json) {
         print(c, { bundle_command: bundleCommand, change: t.change, id: t.id, reqs: t.reqs, text: t.text, verify: t.verify.command });
       } else {
@@ -98,7 +102,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       // REQ-TASK-002 the Verify command is frozen here, so task done can refuse a changed one (019/D3)
       writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id, verify: t.verify.command }) + "\n");
       // REQ-TASK-002 a task that cites no REQ gets one hint line, so the agent knows what to add
-      const hint = t.reqs.length ? null : `task ${t.id} cites no REQ. Run specctx query --change ${t.change} --kind req to list its requirements, then add [REQ-<CAP>-NNN] to the task line.`;
+      const hint = t.reqs.length ? null : `task ${t.id} cites no REQ. Run ${rc(c, `query --change ${t.change} --kind req`)} to list its requirements, then add [REQ-<CAP>-NNN] to the task line.`;
       if (c.json) print(c, { bundle: b, hint, task: t.id });
       else c.io.out(b.text + (hint ? hint + "\n" : "") + footer(cpLen(b.text), (await import("../stats/stats.ts")).specCharsOf(entries)));
       return 0;
@@ -113,7 +117,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       if (!dry && manual !== undefined) {
         if (!manual.trim()) throw new UsageExit("--manual needs a note");
         // REQ-TASK-003 a task with a Verify command gets no manual note (019/D1, ADR-004)
-        if (t.verify.command !== null) throw new UsageExit(`task ${t.id} has a Verify command. Run it with specctx task done ${t.id}.`);
+        if (t.verify.command !== null) throw new UsageExit(`task ${t.id} has a Verify command. Run it with ${rc(c, `task done ${t.id}`)}.`);
         if (t.done && hasEvidence(c.root, t)) throw new UsageExit(`task ${t.id} is done`);
         const { writeEvidence } = await import("../tasks/evidence.ts");
         const rel = writeEvidence(c.root, t, entries, { command: null, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", manual.trim());
@@ -132,7 +136,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       if (!dry) {
         const frozen = readCurrent(c.root);
         if (frozen && frozen.task === t.id && typeof frozen.verify === "string" && frozen.verify !== t.verify.command) {
-          throw new UsageExit(`task ${t.id}: the Verify command changed since task start. Run specctx task start ${t.id} again.`);
+          throw new UsageExit(`task ${t.id}: the Verify command changed since task start. Run ${rc(c, `task start ${t.id}`)} again.`);
         }
       }
       const { runVerify, tail } = await import("../verify/run.ts");
@@ -170,7 +174,7 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         // REQ-TASK-003 the refusal is the last line of the output. REQ-CLI-008 it is red on a TTY.
         else if (!c.json) c.io.out(paint("fail", `Verify failed (exit ${r.exit}). The task stays open.\n`, c.io.tty));
         // REQ-LOOP-002 the blocked line comes after the failure text, so the last line names the way out
-        if (!c.json && question !== null) c.io.out(blockedLine(question) + "\n");
+        if (!c.json && question !== null) c.io.out(blockedLine(question, c.cfg.cli.run) + "\n");
         return 1;
       }
       const { sha256 } = await import("../util/hash.ts");

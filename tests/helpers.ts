@@ -26,6 +26,8 @@ export interface Run {
 
 export class Project {
   readonly root: string;
+  /** The value of npm_command during `run`. null removes it, so a test run through npx does not change init (043/D3). */
+  npmCommand: string | null = null;
   private tmp: string;
   constructor(from: string | null = BASE_FIXTURE) {
     this.tmp = mkdtempSync(join(tmpdir(), "specctx-test-"));
@@ -63,11 +65,16 @@ export class Project {
     // status runs the decision of next, so it gets the stand-in OpenSpec command (030/D4).
     const stub = (args[0] === "init" || args[0] === "status") && process.env.SPECCTX_OPENSPEC === undefined;
     if (stub) process.env.SPECCTX_OPENSPEC = args[0] === "init" ? "npx -y @fission-ai/openspec@latest" : OPENSPEC_STUB;
+    const npmBefore = process.env.npm_command;
+    if (this.npmCommand === null) delete process.env.npm_command;
+    else process.env.npm_command = this.npmCommand;
     try {
       const code = await main(args, { cwd, out: (s) => (out += s), err: (s) => (err += s) });
       return { code, out, err };
     } finally {
       if (stub) delete process.env.SPECCTX_OPENSPEC;
+      if (npmBefore === undefined) delete process.env.npm_command;
+      else process.env.npm_command = npmBefore;
     }
   }
   async build(): Promise<any> {

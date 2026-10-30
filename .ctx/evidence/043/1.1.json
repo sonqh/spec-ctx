@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-30T07:32:04.522Z",
+  "bundle_chars": 7796,
+  "files": {
+    "src/config.ts": "72550253e8bf6f3a42cee4df366369b79b89d280e62b230af1c3461a163f9c6e",
+    "src/runcmd.ts": "5b1bae178f4005aafc1d831b56afe150d963802bd7bd57b6804d67cc05af9fe4",
+    "tests/cli/run-config.test.ts": "39e1ab517bba8a1212cc16dba2c0c4aa2387b99b00428927cc12cabaf85fb8a6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-010"
+  ],
+  "started_at": "2026-10-30T07:31:46.014Z",
+  "task": "043/1.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts tests/cli/run-config.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 18 pass\n 0 fail\n 103 expect() calls\nRan 18 tests across 2 files. [391.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

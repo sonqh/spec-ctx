@@ -19,6 +19,8 @@ export interface Config {
   gate: { markdown: string[]; openspec: string; base: string };
   /** REQ-LOOP-003 the Verify failure cap and the archive stop (024/D6, ADR-006 item 4). */
   loop: { max_attempts: number; archive: "ask" | "auto" };
+  /** REQ-CLI-010 the prefix of every command that spec-ctx prints for a person or agent to run (043/D1). */
+  cli: { run: string };
 }
 
 /** REQ-DIST-002 the command that gate runs for openspec validate (018/D1). */
@@ -42,6 +44,7 @@ export function defaults(): Config {
     // REQ-DIST-002 the gate lints nothing unless the project opts in (022/D1, ADR-006 item 9)
     gate: { markdown: [], openspec: DEFAULT_OPENSPEC, base: "origin/main" },
     loop: { max_attempts: 3, archive: "ask" },
+    cli: { run: "specctx" },
   };
 }
 
@@ -130,6 +133,12 @@ export function loadConfig(root: string): Config {
     const v = loop.archive;
     if (v !== "ask" && v !== "auto") throw new ConfigError(`${CONFIG_FILE}: loop.archive must be "ask" or "auto".`);
     cfg.loop.archive = v;
+  }
+  // REQ-CLI-010 the run prefix of printed commands (043/D1)
+  const cli = sec("cli");
+  if ("run" in cli) {
+    if (typeof cli.run !== "string" || !cli.run.trim()) throw new ConfigError(`${CONFIG_FILE}: cli.run must be a string that is not empty.`);
+    cfg.cli.run = cli.run.trim();
   }
   return cfg;
 }

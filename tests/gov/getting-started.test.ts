@@ -20,6 +20,6 @@ describe("getting started guide", () => {
     expect(guide.toLowerCase()).not.toContain("tarball");
     expect(guide).not.toContain(".tgz");
     expect(guide).not.toContain("task backfill");
-    expect(readme).toContain("](docs/getting-started.md)");
+    expect(readme).toContain("](https://github.com/sonqh/spec-ctx/blob/main/docs/getting-started.md)");
   });
 });

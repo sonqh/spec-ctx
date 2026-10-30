@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T07:38:54.804Z",
+  "attempt": 2,
+  "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nwrote src/assets.generated.ts\n0 hard finding(s), baseline 0\nCHANGELOG.md:40:214 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [are done]\nCHANGELOG.md:111:110 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is removed]\nCHANGELOG.md:114:349 passive-voice: Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant. [is written]\n\n3 violations (0 hard, baseline 0), 3566 words, 0.1 per 100 words\nHedges/modality (may, might, could) are never flagged: confidence is content.",
+  "task": "043/6.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/043.md CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/043.md CHANGELOG.md && grep -q \"043\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 1
+  }
+}

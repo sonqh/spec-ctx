@@ -6,6 +6,7 @@ import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
 import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
 import { loadConfigOrExit } from "../cli/config.ts";
+import { VERSION } from "../version.ts";
 
 export const SCHEMA = "spec-driven-ids";
 /** REQ-SCH-003 where the templates land in a project. Upstream reads no project override for the stock templates, so this is a reference path (025/D4). */
@@ -61,13 +62,23 @@ export function detectOpenspec(timeoutMs = DETECT_TIMEOUT_MS): { command: string
  * exists at the root. `src/**` becomes `lib/**` when only `lib/` exists. The comments stay.
  * `openspec` replaces the default command on the `openspec = ` line (022/D2).
  */
-export function configText(root: string, openspec = DEFAULT_OPENSPEC): string {
+export function configText(root: string, openspec = DEFAULT_OPENSPEC, run: string | null = null): string {
   const isDir = (d: string): boolean => existsSync(join(root, d)) && statSync(join(root, d)).isDirectory();
   let text = INIT_TEXT;
   if (!isDir("tests") && isDir("test")) text = text.replace('\ntests = ["tests/**"]\n', '\ntests = ["test/**"]\n');
   if (!isDir("src") && isDir("lib")) text = text.replace('\ncode = ["src/**"]\n', '\ncode = ["lib/**"]\n');
   if (openspec !== DEFAULT_OPENSPEC) text = text.replace(`\nopenspec = "${DEFAULT_OPENSPEC}"\n`, `\nopenspec = ${JSON.stringify(openspec)}\n`);
+  // REQ-DIST-015 a run prefix adds the [cli] section at the end (043/D3)
+  if (run !== null) text += `\n[cli]\n# The prefix of every command that spec-ctx prints for you to run. init wrote it because it ran under npx.\nrun = ${JSON.stringify(run)}\n`;
   return text;
+}
+
+/**
+ * REQ-DIST-015 the run prefix that init writes. npm sets npm_command to exec for npm exec and npx.
+ * Any other value, or none, gives null and the default applies (043/D3).
+ */
+export function runPrefixFor(env: NodeJS.ProcessEnv): string | null {
+  return env.npm_command === "exec" ? `npx -y spec-ctx@${VERSION}` : null;
 }
 
 /**
@@ -96,8 +107,8 @@ export function bracketsOf(root: string): boolean {
 }
 
 /** Target path relative to the project root for every file that init installs, with its bytes. */
-export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC, brackets = false): [string, Buffer][] {
-  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root, openspec))]];
+export function plan(o: InitOpts, root: string, openspec = DEFAULT_OPENSPEC, brackets = false, run: string | null = null): [string, Buffer][] {
+  const out: [string, Buffer][] = [[CONFIG_FILE, Buffer.from(configText(root, openspec, run))]];
   for (const rel of Object.keys(ASSETS).sort()) {
     // REQ-SCH-003 only the four templates land in the project. The fragment merges into config.yaml. No schema folder (025/D3)
     if (o.schema && rel.startsWith(TEMPLATES_SRC)) {
@@ -425,7 +436,7 @@ export function runInit(root: string, o: InitOpts): InitResult {
   const brackets = bracketsOf(root);
   const fragment = fragmentText(brackets);
   const otherFragment = fragmentText(!brackets);
-  let files = plan(o, root, openspec, brackets);
+  let files = plan(o, root, openspec, brackets, runPrefixFor(process.env));
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
   // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
   const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));

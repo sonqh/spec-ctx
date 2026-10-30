@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-30T07:39:17.159Z",
+  "bundle_chars": 8402,
+  "files": {
+    "src/check/hints.ts": "fe7d93c8ed0d5bbc8b1a348a16a5db1794da89e192b9235e05d81f76dd8b8799",
+    "src/cli/commands.ts": "55018067858bae0d8d6470ce970bd249019f0e7189db2dc817895634abd709fb",
+    "src/cli/workflow.ts": "5e2ae7cb6ddac477c11dbd3d19bbfbe0110f93d1e8b41a8ea858fb700c9f428f",
+    "src/config.ts": "72550253e8bf6f3a42cee4df366369b79b89d280e62b230af1c3461a163f9c6e",
+    "src/loop/next.ts": "7d61c8d94060251b7a334034cf47d52fda9f3458aab4e70907f25714f33ffb5e",
+    "src/runcmd.ts": "5b1bae178f4005aafc1d831b56afe150d963802bd7bd57b6804d67cc05af9fe4",
+    "tests/cli/run-config.test.ts": "39e1ab517bba8a1212cc16dba2c0c4aa2387b99b00428927cc12cabaf85fb8a6",
+    "tests/cli/run-prefix.test.ts": "116987cb44ef9e0859aadf202dcac198655db07174c97d83d391c5498bbbbdee",
+    "tests/cli/run-repo.test.ts": "82ae9565975c126dc88f0c6833b4cd57e84073022068944b81f15d8dc882aef2",
+    "tests/cli/run-source.test.ts": "b6b19ba90534824df02b06c6b1ff83fa004a6acec227d2797300df6505f14245",
+    "tests/gov/readme-links.test.ts": "6ee741f31d3ed27ae767dfa30d9cc0e895c87b727eae8c1690ba8ba63166d168",
+    "tests/init/run-key.test.ts": "607050c8005531ef51cadf077df40be283c1226ac44f9aa53865b5feb28dd92a"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-011",
+    "REQ-CLI-010"
+  ],
+  "started_at": "2026-10-30T07:38:28.822Z",
+  "task": "043/6.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/043.md CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/043.md CHANGELOG.md && grep -q \"043\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "650cfb592f6e719a0a53c36862a6f4044580dc42504a474a79bdb573a21fb5f5"
+  }
+}

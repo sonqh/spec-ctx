@@ -29,3 +29,7 @@ depth = 1
 [gate]
 # This repository opts in to the markdown lint. init writes [] for a new project (ADR-006 item 9).
 markdown = ["*.md", "decisions/*.md", "openspec/**/*.md", "docs/**/*.md", "skills/**/*.md", "schemas/**/*.md"]
+
+[cli]
+# In this repository specctx is node dist/cli.js. Printed commands start with this prefix.
+run = "node dist/cli.js"

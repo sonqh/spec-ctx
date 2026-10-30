@@ -12,6 +12,7 @@ import { listEvidence } from "../tasks/evidence.ts";
 import { hasEvidence, nextTask, tasksOf } from "../tasks/tasks.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
 import { capQuestion, failLine, failsInWindow, openQuestionFor } from "./fails.ts";
+import { runCommand } from "../runcmd.ts";
 import { openspecCommand, openspecStatus } from "./openspec.ts";
 
 /** The closed action list. A skill stops on any value outside it. */
@@ -108,6 +109,8 @@ function readCurrent(root: string): { task?: string } | null {
 /** REQ-LOOP-001 the decision of 024/D2. A pure function of the files. It writes nothing. */
 export function decideNext(root: string, cfg: Config, data: Index, want?: string): Decision {
   const openspec = openspecCommand(cfg.gate.openspec);
+  // REQ-CLI-010 every printed command goes through the run prefix (043/D1)
+  const rc = (args: string): string => runCommand(cfg.cli.run, args);
   const d: Decision = { action: "stop", attempt: 0, change: null, command: null, human: false, max_attempts: cfg.loop.max_attempts, reason: null, state: "unknown", task: null, tasks: [] };
   const done = (o: Partial<Decision>): Decision => {
     const r = { ...d, ...o };
@@ -133,7 +136,7 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   if (blocking) {
     const task = blocking.task.includes("/") ? blocking.task : null;
     const attempt = task ? failsInWindow(root, task, qs).length : 0;
-    return done({ action: "ask", attempt, command: `specctx handoff resolve ${blocking.n} "<answer>"`, human: true, reason: blocking.text, state: "question_open", task });
+    return done({ action: "ask", attempt, command: rc(`handoff resolve ${blocking.n} "<answer>"`), human: true, reason: blocking.text, state: "question_open", task });
   }
 
   // step 3: planning state from OpenSpec
@@ -151,7 +154,7 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   if (found.length) {
     const first = found[0]!;
     const task = found.find((f) => TASK_RULES.has(f.rule))?.id ?? null;
-    return done({ action: "cite", command: `specctx query --change ${folder} --kind req`, reason: `${first.rule} ${first.id} at ${first.file}:${first.line}`, state: "citation_missing", task });
+    return done({ action: "cite", command: rc(`query --change ${folder} --kind req`), reason: `${first.rule} ${first.id} at ${first.file}:${first.line}`, state: "citation_missing", task });
   }
 
   // step 5: a hand tick without evidence gets the repair run
@@ -162,10 +165,10 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   const started = tasks.some((t) => t.status === "done") || (cur0?.task !== undefined && cur0.task.split("/")[0] === key);
   if (!started && !qs.some((q) => q.stage === "plan" && q.task === folder)) {
     const text = `plan ready for ${folder}. Approve to start the tasks?`;
-    return done({ action: "ask", command: `specctx handoff ask --change ${folder} --plan "${text}"`, human: true, reason: text, state: "plan_stop" });
+    return done({ action: "ask", command: rc(`handoff ask --change ${folder} --plan "${text}"`), human: true, reason: text, state: "plan_stop" });
   }
   const ticked = tasks.find((t) => t.status === "done" && !hasEvidence(root, t));
-  if (ticked) return done({ action: "repair", command: `specctx task done ${ticked.id}`, state: "done_without_evidence", task: ticked.id });
+  if (ticked) return done({ action: "repair", command: rc(`task done ${ticked.id}`), state: "done_without_evidence", task: ticked.id });
 
   // REQ-LOOP-008 the done tasks whose evidence went stale, earliest first (031/D4, 031/D5)
   const stale: { id: string; path: string }[] = [];
@@ -187,10 +190,10 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     const reason = withWaiting(last ? `Verify failed (exit ${last.file.verify.exit ?? "timeout"}): ${failLine(last.file.stderr_tail)}` : null);
     if (fails.length >= cfg.loop.max_attempts && !openQuestionFor(root, current.id, qs)) {
       const q = capQuestion(current.id, fails.length, last?.file.stderr_tail ?? "");
-      return done({ action: "ask", attempt: fails.length, command: `specctx handoff ask "${q}"`, human: true, reason, state: "attempts_exhausted", task: current.id });
+      return done({ action: "ask", attempt: fails.length, command: rc(`handoff ask "${q}"`), human: true, reason, state: "attempts_exhausted", task: current.id });
     }
-    if (fails.length) return done({ action: "fix", attempt: fails.length, command: `specctx task done ${current.id}`, reason, state: "task_failed", task: current.id });
-    return done({ action: "work", command: `specctx task done ${current.id}`, reason, state: "task_started", task: current.id });
+    if (fails.length) return done({ action: "fix", attempt: fails.length, command: rc(`task done ${current.id}`), reason, state: "task_failed", task: current.id });
+    return done({ action: "work", command: rc(`task done ${current.id}`), reason, state: "task_started", task: current.id });
   }
 
   // REQ-LOOP-008 step 6b: the stale tasks repair after the current task (031/D4, 031/D5)
@@ -198,7 +201,7 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     // REQ-LOOP-008 one turn repairs every stale task (033/D1)
     return done({
       action: "repair",
-      command: stale.map((s) => `specctx task reopen ${s.id} "stale evidence: ${s.path}" && specctx task done ${s.id}`).join(" && "),
+      command: stale.map((s) => `${rc(`task reopen ${s.id} "stale evidence: ${s.path}"`)} && ${rc(`task done ${s.id}`)}`).join(" && "),
       reason: stale.map((s) => `stale-evidence ${s.id} ${s.path}`).join(", "),
       state: "evidence_stale",
       task: stale[0]!.id,
@@ -208,12 +211,12 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
 
   // step 7: the next open task
   const open = nextTask(root, entries, folder);
-  if (open) return done({ action: "start", command: `specctx task start ${open.id}`, state: "task_open", task: open.id });
+  if (open) return done({ action: "start", command: rc(`task start ${open.id}`), state: "task_open", task: open.id });
 
   // step 8: the gate must pass after the newest evidence
   const gate = lastGate(root);
   if (!gate || !gate.ok || cmpStr(gate.at, newestEvidenceAt(root, key)) < 0) {
-    return done({ action: "gate", command: "specctx gate --strict", state: "gate_due" });
+    return done({ action: "gate", command: rc("gate --strict"), state: "gate_due" });
   }
 
   // step 9: archive, with the human stop from [loop] archive
@@ -223,7 +226,7 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   const newest = newestEvidenceAt(root, key);
   const approved = qs.filter((q) => q.status === "resolved" && q.task === folder && q.stage === "archive" && typeof q.resolved_at === "string" && cmpStr(q.resolved_at, newest) > 0).at(-1);
   if (approved) return done({ action: "archive", command: archive, human: false, reason: `archive approved in question ${approved.n}`, state: "gate_passed" });
-  return done({ action: "archive", command: `specctx handoff ask --change ${folder} "archive ${folder}?"`, human: true, state: "gate_passed" });
+  return done({ action: "archive", command: rc(`handoff ask --change ${folder} "archive ${folder}?"`), human: true, state: "gate_passed" });
 }
 
 /** REQ-LOOP-001 REQ-CLI-007 the human form: action first, one line per key, next last (024/D1). Strict mode. */
