@@ -1,10 +1,21 @@
 # spec-ctx
 
-spec-ctx is a deterministic context engine and task workflow for OpenSpec projects. The CLI is `specctx`. Specs live in `openspec/`. Decisions live in `decisions/`. Every requirement has an ID. Read `decisions/ADR-002-id-scheme.md` once.
+spec-ctx is a light query script over the IDs in an OpenSpec repository. The CLI is `specctx`. Specs live in `openspec/`. Decisions live in `decisions/`. Every requirement has an ID. Read `decisions/ADR-002-id-scheme.md` once.
+
+## Direction
+
+Read `decisions/ADR-007-query-first.md` before you plan any change. The owner set this direction. It binds every agent.
+
+- spec-ctx answers one question: what relates to this task, requirement, file, or change? It returns only the linked specs, decisions, code, and tests, through the IDs that `init` and `adopt` wrote.
+- It is a CLI that reads files. No MCP server, no server of any kind, no LLM call, no embeddings.
+- Tasks, Verify, evidence, and `check` keep the links true. They support query. They are not the headline.
+- The loop (`next`, `specctx-run`), the gate, the Action rerun, and the replay script are frozen. Bug fixes only.
+- Every proposal says how the change makes query better or keeps the links true. A change that does neither waits for the owner.
+- Adjust existing work to serve query. Do not remove it.
 
 ## First thing in every session
 
-Run the `specctx-run` skill. It runs `specctx next --json` and acts on the action it gets, until the change reaches the archive or a human must decide. The repo-local `bootstrap-context` skill still loads the specs for one task when you need them by hand. The engine is the TypeScript CLI. Run `bun run build` once if `dist/` is missing. In this repository `specctx` is `node dist/cli.js`.
+To build a change, run the `specctx-run` skill. It runs `specctx next --json` and acts on the action it gets, until the change reaches the archive or a human must decide. The repo-local `bootstrap-context` skill still loads the specs for one task when you need them by hand. The engine is the TypeScript CLI. Run `bun run build` once if `dist/` is missing. In this repository `specctx` is `node dist/cli.js`.
 
 The loop that the skill runs for every task:
 
