@@ -286,7 +286,7 @@ req-without-scn  1  Add a scenario under the requirement.
 reused-id  1  The ID is retired. Get a new ID from specctx id new.
 scenario-id-mismatch  1  Give the scenario the number of its requirement.
 scenario-untested  152  Name the scenario ID in a test.
-stale-evidence  1  Run specctx task reopen and then specctx task done.
+stale-evidence  1  Run specctx task reopen <task> <why>, then specctx task done <task>.
 task-without-req  1  Cite a requirement in brackets on the task line, for example [REQ-ABC-001].
 task-without-verify  1  Add Verify: and a command in backticks to the task line.
 uncovered  104  Add a test with a Covers tag for the requirement.

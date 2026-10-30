@@ -18,7 +18,8 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   uncovered: { level: "hard", hint: "Add a test with a Covers tag for the requirement." },
   "scenario-untested": { level: "hard", hint: "Name the scenario ID in a test." },
   "done-without-evidence": { level: "hard", hint: "Run specctx task done. It runs the Verify command and writes the evidence." },
-  "stale-evidence": { level: "hard", hint: "Run specctx task reopen and then specctx task done." },
+  // REQ-CHK-006 the hint names the why argument of task reopen (031/D8)
+  "stale-evidence": { level: "hard", hint: "Run specctx task reopen <task> <why>, then specctx task done <task>." },
   "evidence-without-done": { level: "hard", hint: "Run specctx task done, or remove the evidence file." },
   // REQ-CHK-005 advisory in plain check. check --strict reports it as a hard finding (028/D5).
   "weak-verify": { level: "advisory", hint: "Name a test file or a command whose exit code proves the task." },

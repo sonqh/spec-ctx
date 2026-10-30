@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T00:24:15.092Z",
+  "files": {
+    "src/cli/workflow.ts": "f097562a9aef297072a4138ecc9296b5e250b365a5db7ed2ee1b8e88085293a3",
+    "src/handoff/handoff.ts": "7b028d547d53c9dabfdbd57878f26cafd56b2dcd457e2fc6fda9307b280fae22",
+    "src/handoff/questions.ts": "672c88bb82d83caf07ee7f23752ce65d6a095443a4f796330618b36451e91bb2",
+    "src/loop/next.ts": "9d2ae94a69ef65717cd1ee0b18c4be9ba00c4191a8a177d8ec297929fe5ecad6",
+    "tests/cli/nextstep.test.ts": "f7eabbcc6d64918b0a20cf1af6b14cc7b5ff59e06670b20cc25f434a6a01f6bd",
+    "tests/handoff/handoff.test.ts": "4e7f8d2eae747c0d141f42cd6e0d1cca9df3465ed3701004b7fa58347b75e55e",
+    "tests/loop/archive-stop.test.ts": "21cb8cac48f8df023b540ac6da745f176f8f12311e6f17f8f8c07923c53f713c",
+    "tests/loop/fails.test.ts": "12431ec222ae0363b00db1b745889a6abe44b3c00005afba6532571205fdc5c1",
+    "tests/loop/next.test.ts": "1f507b42cbcf12fb06f6f03b1649c4294bd7230f4e481b5a6f445e016f7d3989",
+    "tests/loop/plan-stop.test.ts": "3d8609fd0f9e80c3a09d9d7f02f4d569e41ee4301180495a30f095e06452e84b"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-007",
+    "REQ-HND-002"
+  ],
+  "task": "031/1.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/archive-stop.test.ts tests/loop/plan-stop.test.ts tests/handoff",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 17 pass\n 0 fail\n 87 expect() calls\nRan 17 tests across 3 files. [375.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

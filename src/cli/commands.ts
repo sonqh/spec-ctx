@@ -29,7 +29,7 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
  * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
  * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
  */
-export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string; hint?: string }[]; warnings: string[]; baselined: number }, tty?: boolean): string {
   // REQ-CLI-008 every finding of check is hard, so every finding line is red. stale-evidence is one of them.
   // REQ-CHK-001 a finding with a detail, such as a retitle, carries it after the ID (021/D2)
   const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}${x.detail ? `  ${x.detail}` : ""}\n`, tty)).join("")
@@ -48,10 +48,18 @@ export function checkText(r: { findings: { file: string; line: number; rule: str
     // a manual-evidence warning names a task. Its file is the evidence file of the task.
     else if (task?.includes("/")) files.add(`.ctx/evidence/${task}.json`);
   }
+  // REQ-CHK-006 the distinct hints that findings carry, in finding order. A rule with none prints the table hint (031/D6).
+  const own = new Map<string, string[]>();
+  for (const x of r.findings) {
+    if (x.hint === undefined) continue;
+    const l = own.get(x.rule) ?? [];
+    if (!l.includes(x.hint)) l.push(x.hint);
+    own.set(x.rule, l);
+  }
   const rules = [...count.keys()].sort();
   return body
     + "\n" + paint("dim", `${n} finding${n === 1 ? "" : "s"} in ${files.size} file${files.size === 1 ? "" : "s"} (${r.findings.length} hard, ${r.warnings.length} advisory)\n`, tty)
-    + rules.map((rule) => `${rule}  ${count.get(rule)}  ${hintOf(rule)}\n`).join("")
+    + rules.map((rule) => `${rule}  ${count.get(rule)}  ${own.get(rule)?.join("\n") ?? hintOf(rule)}\n`).join("")
     + base;
 }
 
@@ -245,7 +253,9 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     }
     case "check": {
       const r = await runCheck(root, cfg, data, !!f.strict);
-      if (json) print({ baselined: r.baselined, count: r.findings.length, findings: r.findings, warnings: r.warnings });
+      // REQ-CHK-004 REQ-CHK-006 the JSON keeps its shape. A finding hint is for the human form only (031/D6).
+      const findings = r.findings.map(({ hint: _hint, ...rest }) => rest);
+      if (json) print({ baselined: r.baselined, count: findings.length, findings, warnings: r.warnings });
       else io.out(checkText(r, io.tty));
       return r.findings.length ? 1 : 0;
     }

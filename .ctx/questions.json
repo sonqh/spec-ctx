@@ -224,5 +224,24 @@
     "status": "resolved",
     "answer": "approved by the lead. Accept the status slowdown: status and next must agree (ADR-006). D6 is right, keep all three lines.",
     "resolved_at": "2026-10-29T23:55:43.693Z"
+  },
+  {
+    "n": 29,
+    "asked_at": "2026-10-30T00:19:52.064Z",
+    "task": "031-archive-stop",
+    "text": "plan ready for 031-archive-stop. Approve to start the tasks?",
+    "status": "resolved",
+    "answer": "approved by the lead. Gate on the plan artifacts passed, spec-length ok.",
+    "resolved_at": "2026-10-30T00:20:38.295Z"
+  },
+  {
+    "n": 30,
+    "asked_at": "2026-10-30T00:27:39.970Z",
+    "task": "031-archive-stop",
+    "text": "archive 031-archive-stop?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "archive approved by the lead. The REQ-CLI-007 delta added after plan approval is accepted, it follows from REQ-LOOP-007.",
+    "resolved_at": "2026-10-30T00:28:38.059Z"
   }
 ]

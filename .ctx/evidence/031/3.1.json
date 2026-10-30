@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T00:25:48.635Z",
+  "bundle_chars": 8176,
+  "files": {
+    "src/check/check.ts": "fa499ed6a965536298ad5e23b39cd519dd35def893c2034991bab16ce70ecf1a",
+    "src/check/hints.ts": "55a4d9f91bdc2a39c1882da207adf77b9f0cf25d35a5015292980823c6b495a6",
+    "src/cli/commands.ts": "97161711f960fc26e44c458cb86aeb951b1ed80883183015011d06b4ac27547c",
+    "tests/adopt/brackets.test.ts": "d4da179da4fc8c8421734d15a86f878bbb26f17a561024cee8dab91ee2a87daa",
+    "tests/check/base.test.ts": "58f79e24a7a7444bd17a55994886d5eeb489f4592795ae672379ab80561bfd13",
+    "tests/check/dupkey.test.ts": "d5025202a28f69ea272457c5753b20ff310c167a1911812bfb1d9c53ea31b22d",
+    "tests/check/hint.test.ts": "968d3f8d89f89442ebc5910807db45d2f9cfba51bc64c6e1066f73764a6cad9a",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-006",
+    "REQ-CHK-004"
+  ],
+  "started_at": "2026-10-30T00:24:42.717Z",
+  "task": "031/3.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/check tests/adopt && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 77 pass\n 0 fail\n 363 expect() calls\nRan 77 tests across 11 files. [3.21s]",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

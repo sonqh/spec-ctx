@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-30T00:24:00.024Z",
+  "bundle_chars": 8218,
+  "files": {
+    "src/check/evidence.ts": "3ab886e5dec4a2f05b26303621e61c1bebcc0391becf49337ccf32acb8869c15",
+    "src/loop/next.ts": "9d2ae94a69ef65717cd1ee0b18c4be9ba00c4191a8a177d8ec297929fe5ecad6",
+    "tests/check/evidence.test.ts": "2319c3a63bdd56e3e924ddd121a1c002c7a7d0c0014bcfd760850d54b51467d6",
+    "tests/check/strict.test.ts": "b3997ef636c707b10eb15f48caf568973768a23fa3f871065db4ed2dd8b99288",
+    "tests/loop/stale.test.ts": "3b22694d766f0d1375ee3b0cd77faa80c672c8c1a5575bb6f0088e7d4565e7f5"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-008",
+    "REQ-CHK-003"
+  ],
+  "started_at": "2026-10-30T00:23:07.697Z",
+  "task": "031/2.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/check/evidence.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 33 pass\n 0 fail\n 379 expect() calls\nRan 33 tests across 7 files. [1.56s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

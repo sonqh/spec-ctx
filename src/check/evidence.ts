@@ -1,8 +1,31 @@
 // REQ-CHK-003 evidence rules of check --strict.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Entry, Problem } from "../index/types.ts";
 import { fileSha256 } from "../util/hash.ts";
+import { evidenceRel } from "../tasks/tasks.ts";
+
+/**
+ * REQ-CHK-003 REQ-LOOP-008 the stale paths of one evidence file, sorted. A damaged file is stale as a whole and
+ * returns its own path. check and next both read this, so the two never differ (031/D5).
+ */
+export function staleFiles(root: string, rel: string): string[] {
+  let files: Record<string, string> = {};
+  try {
+    const ev = JSON.parse(readFileSync(join(root, rel), "utf8")) as { files?: Record<string, string> };
+    files = ev.files ?? {};
+  } catch {
+    return [rel];
+  }
+  return Object.keys(files).filter((p) => fileSha256(join(root, p)) !== files[p]).sort();
+}
+
+/** REQ-LOOP-008 the first stale path of the evidence of a task, or null when it is fresh or absent (031/D5). */
+export function staleOf(root: string, task: string): string | null {
+  const rel = evidenceRel({ id: task });
+  if (!existsSync(join(root, rel))) return null;
+  return staleFiles(root, rel)[0] ?? null;
+}
 
 export function evidenceFindings(root: string, entries: Entry[], evidence: string[]): Problem[] {
   const out: Problem[] = [];
@@ -27,17 +50,7 @@ export function evidenceFindings(root: string, entries: Entry[], evidence: strin
     }
     // archived changes are exempt from stale-evidence
     if (!active) continue;
-    let files: Record<string, string> = {};
-    try {
-      const ev = JSON.parse(readFileSync(join(root, rel), "utf8")) as { files?: Record<string, string> };
-      files = ev.files ?? {};
-    } catch {
-      out.push([rel, 1, "stale-evidence", `${id} ${rel}`]);
-      continue;
-    }
-    for (const [path, digest] of Object.entries(files)) {
-      if (fileSha256(join(root, path)) !== digest) out.push([rel, 1, "stale-evidence", `${id} ${path}`]);
-    }
+    for (const path of staleFiles(root, rel)) out.push([rel, 1, "stale-evidence", `${id} ${path}`]);
   }
   for (const e of entries) {
     if (e.kind === "task" && e.status === "done" && !e.file.includes("/archive/") && !have.has(e.id)) {

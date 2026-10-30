@@ -57,6 +57,8 @@ export interface Finding {
   id: string;
   /** REQ-CHK-001 trailing text of the line, such as the old and new title of a retitle (021/D2). */
   detail?: string;
+  /** REQ-CHK-006 a hint for this finding alone. Absent, the summary prints the hint of the rule table (031/D6). */
+  hint?: string;
 }
 
 // REQ-ADOPT-010 the ID of a TO line is bare or in square brackets (027/D4)
@@ -78,6 +80,12 @@ function renamedTargets(root: string, file: string): [string | null, string][] {
   return out;
 }
 
+/** REQ-CHK-006 the header line of an entry as its file writes it, without the line end. */
+function headerLine(root: string, e: Entry): string {
+  const line = readFileSync(join(root, e.file), "utf8").split(/\r?\n/)[e.line - 1];
+  return (line ?? `### Requirement: ${e.id} ${e.title}`).trimEnd();
+}
+
 /**
  * REQ-CHK-001 retitle-needs-renamed: a MODIFIED or REMOVED header of an active change whose ID exists in main
  * with another title, and whose delta file has no RENAMED TO line with that header. Upstream OpenSpec matches
@@ -94,7 +102,9 @@ export function retitleFindings(root: string, entries: Entry[]): Finding[] {
     if (!m || m.title === e.title) continue;
     if (!targets.has(e.file)) targets.set(e.file, renamedTargets(root, e.file));
     if (targets.get(e.file)!.some(([id, title]) => title === e.title && (id === null || id === e.id))) continue;
-    out.push({ file: e.file, line: e.line, rule: "retitle-needs-renamed", id: e.id, detail: `"${m.title}" -> "${e.title}"` });
+    // REQ-CHK-006 the hint copies both header lines as the files write them, bare or in brackets (031/D7)
+    const hint = `Add to the delta before the MODIFIED block:\n## RENAMED Requirements\n- FROM: \`${headerLine(root, m)}\`\n- TO: \`${headerLine(root, e)}\``;
+    out.push({ file: e.file, line: e.line, rule: "retitle-needs-renamed", id: e.id, detail: `"${m.title}" -> "${e.title}"`, hint });
   }
   return out;
 }

@@ -172,7 +172,8 @@ describe("retitle-needs-renamed", () => {
     const line = p.read(DELTA).split("\n").findIndex((l) => l === "### Requirement: REQ-UA-001 Idle timeout") + 1;
     expect(line).toBeGreaterThan(0);
     expect(r.out).toContain(`${DELTA}:${line}  retitle-needs-renamed  REQ-UA-001  "Session timeout" -> "Idle timeout"\n`);
-    expect(r.out).toContain("retitle-needs-renamed  1  Add to the delta before the MODIFIED block. Write each ID as its header writes it, bare or in brackets:\n## RENAMED Requirements\n- FROM: `### Requirement: <ID> <old title>`\n- TO: `### Requirement: <ID> <new title>`\n");
+    // REQ-CHK-006 the hint copies both header lines (031/D7)
+    expect(r.out).toContain("retitle-needs-renamed  1  Add to the delta before the MODIFIED block:\n## RENAMED Requirements\n- FROM: `### Requirement: REQ-UA-001 Session timeout`\n- TO: `### Requirement: REQ-UA-001 Idle timeout`\n");
     // the fixture's own RENAMED pair for REQ-UA-003 keeps that header quiet
     expect(r.out.split("\n").filter((l) => l.includes("  retitle-needs-renamed  "))).toHaveLength(1);
     const j = JSON.parse((await p.run("check", "--json")).out);

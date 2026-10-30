@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { applyBaseline } from "../baseline/baseline.ts";
 import { check } from "../check/check.ts";
+import { staleOf } from "../check/evidence.ts";
 import type { Config } from "../config.ts";
 import { readQuestions, type Question } from "../handoff/questions.ts";
 import { changeKey, matchesChange } from "../index/scan.ts";
@@ -165,6 +166,14 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     return done({ action: "work", command: `specctx task done ${current.id}`, state: "task_started", task: current.id });
   }
 
+  // REQ-LOOP-008 step 6b: the earliest done task whose evidence went stale gets the repair run, after the current task (031/D4, 031/D5)
+  for (const t of tasks) {
+    if (t.status !== "done") continue;
+    const path = staleOf(root, t.id);
+    if (path === null) continue;
+    return done({ action: "repair", command: `specctx task reopen ${t.id} "stale evidence: ${path}" && specctx task done ${t.id}`, reason: `stale-evidence ${t.id} ${path}`, state: "evidence_stale", task: t.id });
+  }
+
   // step 7: the next open task
   const open = nextTask(root, entries, folder);
   if (open) return done({ action: "start", command: `specctx task start ${open.id}`, state: "task_open", task: open.id });
@@ -176,7 +185,13 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   }
 
   // step 9: archive, with the human stop from [loop] archive
-  return done({ action: "archive", command: `${openspec} archive ${folder} -y`, human: cfg.loop.archive === "ask", state: "gate_passed" });
+  const archive = `${openspec} archive ${folder} -y`;
+  if (cfg.loop.archive !== "ask") return done({ action: "archive", command: archive, human: false, state: "gate_passed" });
+  // REQ-LOOP-007 a resolved archive question after the newest evidence is the approval. The stage field decides, not the text (031/D2).
+  const newest = newestEvidenceAt(root, key);
+  const approved = qs.filter((q) => q.status === "resolved" && q.task === folder && q.stage === "archive" && typeof q.resolved_at === "string" && cmpStr(q.resolved_at, newest) > 0).at(-1);
+  if (approved) return done({ action: "archive", command: archive, human: false, reason: `archive approved in question ${approved.n}`, state: "gate_passed" });
+  return done({ action: "archive", command: `specctx handoff ask --change ${folder} "archive ${folder}?"`, human: true, state: "gate_passed" });
 }
 
 /** REQ-LOOP-001 REQ-CLI-007 the human form: action first, one line per key, next last (024/D1). Strict mode. */

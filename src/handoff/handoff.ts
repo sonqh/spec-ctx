@@ -9,7 +9,7 @@ import { listEvidence } from "../tasks/evidence.ts";
 import { activeChanges, nextTask } from "../tasks/tasks.ts";
 import { cmpStr, splitLines } from "../util/pystr.ts";
 import { isoNow } from "../util/time.ts";
-import { addQuestion, fromHandoffItems, hasQuestions, readQuestions, renderQuestions, resolveQuestion, writeQuestions } from "./questions.ts";
+import { addQuestion, type QuestionStage, fromHandoffItems, hasQuestions, readQuestions, renderQuestions, resolveQuestion, writeQuestions } from "./questions.ts";
 
 export const HANDOFF_PATH = ".ctx/handoff.md";
 export const CURRENT_PATH = ".ctx/current.json";
@@ -178,15 +178,23 @@ function refresh(root: string, entries: Entry[]): Handoff {
  */
 export function ask(root: string, entries: Entry[], text: string, change?: string): Handoff {
   let task = currentTask(root);
+  let stage: QuestionStage | undefined;
   if (change !== undefined) {
     const folder = activeFolders(root).find((f) => matchesChange(f, change));
     if (folder === undefined) throw new UsageExit(`no active change ${change}`);
     task = folder;
+    stage = stageOf(entries, folder);
   }
-  const q = addQuestion(root, task, text);
+  const q = addQuestion(root, task, text, stage);
   const h = refresh(root, entries);
   h.asked = q.n;
   return h;
+}
+
+/** REQ-LOOP-007 archive when the change has a task and every task is [x], plan otherwise. The text plays no part (031/D1). */
+export function stageOf(entries: Entry[], folder: string): QuestionStage {
+  const tasks = entries.filter((e) => e.kind === "task" && e.change === folder && !e.file.includes("/archive/"));
+  return tasks.length > 0 && tasks.every((t) => t.status === "done") ? "archive" : "plan";
 }
 
 /** REQ-HND-002 resolve question n in questions.json and render the handoff again (022/D6). */

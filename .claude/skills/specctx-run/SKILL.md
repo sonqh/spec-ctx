@@ -16,14 +16,14 @@ Run `specctx` as `npx spec-ctx` when it is not installed. `openspec` is the comm
 
 ## Actions
 
-- `plan`: take the change name from the request of the user in kebab case. That name is `<c>`. Follow the upstream `openspec-propose` skill for `<c>`. Read existing requirements with `specctx bundle <id>` or `specctx query`, never `openspec show`. Take every ID from `specctx id new REQ <CAP>` and `specctx id new SCN <CAP> --for <REQ>`. Give every task a `[REQ-...]` citation and a `Verify:` code span. Then run `specctx check --strict` and `openspec validate <c> --strict`. Fix every finding. Then run `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. This is the plan stop. `next` returns `ask` until the user resolves the question.
+- `plan`: take the change name from the request of the user in kebab case. That name is `<c>`. Follow the upstream `openspec-propose` skill for `<c>`. Read existing requirements with `specctx bundle <id>` or `specctx query`, never `openspec show`. Take every ID from `specctx id new REQ <CAP>` and `specctx id new SCN <CAP> --for <REQ>`. When the change needs several IDs of one kind, run `specctx id new --count <n>` once. Give every task a `[REQ-...]` citation and a `Verify:` code span. Then run `specctx check --strict` and `specctx gate --strict`. The gate runs the OpenSpec validate and the spec-length check. Fix every finding. Then run `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. This is the plan stop. `next` returns `ask` until the user resolves the question.
 - `cite`: run `specctx query --change <c> --kind req`. Add the `[REQ-...]` citation and a `Verify:` code span to the task line named in `task`. Run `specctx check`. Continue.
 - `start`: run `specctx task start <t>`. Read the bundle it prints. Continue.
 - `work`: implement the task. Tag code with `// REQ-...`. Tag tests with `// Covers: REQ-...`. Then run `specctx task done <t>`.
 - `fix`: read `reason`. It holds the tail of the failed Verify output. Fix the cause. Run `specctx task done <t>` again.
-- `repair`: run `specctx task done <t>`. It runs Verify for a ticked task that has no evidence.
+- `repair`: run the command in the `command` field. It runs Verify again for a ticked task whose evidence is absent or stale.
 - `gate`: run `specctx gate --strict`. Fix every finding. Run it again until it exits 0.
-- `archive`: when `human` is true, stop and ask the user in one line whether to archive `<c>`. When `human` is false, run each step under `operations.archive.guidance` in `openspec/config.yaml`. Then run the command in the `command` field. Then run `openspec validate --all --strict`, `specctx check --strict`, and `specctx handoff write`.
+- `archive`: when `human` is true, run `specctx handoff ask --change <c> "archive <c>?"` and stop. This is the archive stop. `next` returns `ask` until the user resolves the question. When `human` is false, the user approved or `[loop] archive` is `auto`. Then run each step under `operations.archive.guidance` in `openspec/config.yaml`. Then run the command in the `command` field. Then run `openspec validate --all --strict`, `specctx check --strict`, and `specctx handoff write`.
 - `ask`: print `reason`. It is the open question. Stop. The user answers with `specctx handoff resolve <n> "<answer>"`.
 - `stop`: print `reason`. Stop.
 

@@ -208,7 +208,8 @@ describe("specctx next walks the decision order", () => {
     p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:21:00.000Z", duration_s: 1, failed_step: "check", ok: false, steps: ["check"] }) + "\n");
     expect((await next()).action).toBe("gate");
     p.append(".ctx/gate-log.jsonl", JSON.stringify({ at: "2026-10-28T10:22:00.000Z", duration_s: 1, failed_step: null, ok: true, steps: [] }) + "\n");
-    expect(await next()).toEqual(base({ action: "archive", command: `${OS} archive ${CHANGE} -y`, human: true, state: "gate_passed" }));
+    // REQ-LOOP-007 the archive stop under ask names the archive question (031/D2)
+    expect(await next()).toEqual(base({ action: "archive", command: `specctx handoff ask --change ${CHANGE} "archive ${CHANGE}?"`, human: true, state: "gate_passed" }));
     p.write("spec-ctx.toml", "[loop]\narchive = \"auto\"\n");
     expect(await next()).toEqual(base({ action: "archive", command: `${OS} archive ${CHANGE} -y`, human: false, state: "gate_passed" }));
     rmSync(p.path("spec-ctx.toml"));

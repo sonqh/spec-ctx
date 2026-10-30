@@ -24,7 +24,7 @@ Refs: ADR-006, REQ-CLI-007, REQ-LOOP-002
 
 #### Scenario: SCN-LOOP-001-4 Finish states
 - **WHEN** every task has `[x]` and evidence, and `.ctx/gate-log.jsonl` has no `ok: true` line after the newest evidence, then has one. Then an open question names a task of the change
-- **THEN** `next` prints `gate` with `specctx gate --strict`, then `archive` with `<openspec> archive <c> -y` and `human: true` under `[loop] archive = "ask"` or `human: false` under `"auto"`, and `ask` with `human: true` and the question text as the reason before any other rule
+- **THEN** `next` prints `gate` with `specctx gate --strict`, then `archive` with `human: true` and the command of REQ-LOOP-007 under `[loop] archive = "ask"`, or with `human: false` and `<openspec> archive <c> -y` under `"auto"`. Then `ask` with `human: true` and the question text as the reason before any other rule
 
 ### Requirement: REQ-LOOP-002 Fail files and the attempt cap
 A non zero Verify exit in `task done` SHALL write `.ctx/evidence/<c>/<t>.fail-<n>.json` with the keys `at`, `attempt`, `stderr_tail`, `task`, `verify`. `attempt` SHALL be the fail files of the task since `current.json.started_at` plus one. A resolved question for the task resets the count. At `[loop] max_attempts`, `task done` SHALL append a question and print a `blocked:` line. No command SHALL read a fail file as evidence.
@@ -110,3 +110,33 @@ Refs: REQ-LOOP-001, REQ-LOOP-002
 #### Scenario: SCN-LOOP-006-3 Empty tail
 - **WHEN** the tail is empty or holds only spaces
 - **THEN** the reason ends with `: no output`
+
+### Requirement: REQ-LOOP-007 Archive stop in the engine
+`handoff ask --change <c>` SHALL store `stage: archive` when every task of the change is `[x]`, and `stage: plan` otherwise. At the archive stop `next` SHALL return the command `specctx handoff ask --change <c> "archive <c>?"`. A resolved question with `stage: archive` for the change, resolved after its newest evidence, SHALL turn the stop into `archive` with `human: false`. No new state file. No match on question text.
+
+Refs: REQ-LOOP-001, REQ-LOOP-005, REQ-HND-002, ADR-006
+
+#### Scenario: SCN-LOOP-007-1 Archive stop asks
+- **WHEN** every task of `002-ids` has `[x]` and evidence, the gate passed, and `[loop] archive` is `ask`
+- **THEN** `next --json` prints `action: archive`, `human: true`, and the command `specctx handoff ask --change 002-ids "archive 002-ids?"`
+
+#### Scenario: SCN-LOOP-007-2 Open archive question
+- **WHEN** the state of SCN-LOOP-007-1 holds and `handoff ask --change 002 "archive 002-ids?"` runs
+- **THEN** `questions.json` gains an open question with `task: 002-ids` and `stage: archive`, and `next --json` prints `action: ask` with `human: true`
+
+#### Scenario: SCN-LOOP-007-3 Resolve approves the archive
+- **WHEN** a human resolves the question of SCN-LOOP-007-2 with `handoff resolve <n> "yes"`. Then a second project has only a resolved question with `stage: plan` for the change
+- **THEN** `next --json` prints `action: archive`, `human: false`, and `<openspec> archive 002-ids -y` for the first project, and `human: true` for the second
+
+### Requirement: REQ-LOOP-008 Stale evidence in next
+`next` SHALL return `repair` for the earliest `[x]` task of the change whose evidence names a file with another digest. This rule comes after the current task rule and before the next open task rule. The `reason` SHALL be `stale-evidence <t> <file>`. The command SHALL be `specctx task reopen <t> "stale evidence: <file>" && specctx task done <t>`. A current open task SHALL keep its `work` or `fix` action.
+
+Refs: REQ-LOOP-001, REQ-CHK-003, ADR-004
+
+#### Scenario: SCN-LOOP-008-1 Earliest stale task
+- **WHEN** tasks 1.1 and 1.2 of `002-ids` have `[x]` and evidence that names `src/a.ts`. Then `src/a.ts` changes, and task 2.1 is open with no current task
+- **THEN** `next --json` prints `action: repair`, `task: 002/1.1`, `state: evidence_stale`, the reason `stale-evidence 002/1.1 src/a.ts`, and the command `specctx task reopen 002/1.1 "stale evidence: src/a.ts" && specctx task done 002/1.1`
+
+#### Scenario: SCN-LOOP-008-2 Current task first
+- **WHEN** the tree of SCN-LOOP-008-1 has task 2.1 as the current task
+- **THEN** `next --json` prints `action: work` for `002/2.1`, and after the command of SCN-LOOP-008-1 runs with a passing Verify, `next` no longer prints `repair` for `002/1.1`

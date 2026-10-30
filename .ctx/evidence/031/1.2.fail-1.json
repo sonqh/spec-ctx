@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T00:22:08.621Z",
+  "attempt": 1,
+  "stderr_tail": "tests/cli/nextstep.test.ts:\n54 |     let r = await both(p);\n55 |     expect(r.status).toBe(\"next: specctx gate --strict\");\n56 |     expect(r.status).toBe(r.next);\n57 |     p.write(\".ctx/gate-log.jsonl\", JSON.stringify({ at: \"9999-12-31T00:00:00.000Z\", ok: true }) + \"\\n\");\n58 |     r = await both(p);\n59 |     expect(r.status).toBe(`next: ${OPENSPEC_STUB} archive 001-x -y`);\n                          ^\nerror: expect(received).toBe(expected)\n\nExpected: \"next: sh \"/home/claude/spec-ctx/tests/fixtures/openspec-stub.sh\" archive 001-x -y\"\nReceived: \"next: specctx handoff ask --change 001-x \"archive 001-x?\"\"\n\n      at <anonymous> (/home/claude/spec-ctx/tests/cli/nextstep.test.ts:59:22)\n(fail) next step lines > SCN-CLI-007-6 status with every task done ends with the gate command, then the archive command [46.62ms]\n\n 31 pass\n 1 fail\n 370 expect() calls\nRan 32 tests across 6 files. [1238.00ms]",
+  "task": "031/1.2",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/cli/nextstep.test.ts",
+    "exit": 1
+  }
+}

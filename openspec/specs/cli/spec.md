@@ -117,7 +117,7 @@ Refs: REQ-LOOP-001
 
 #### Scenario: SCN-CLI-007-6 Status with every task done
 - **WHEN** `status` runs and every task of the active change has `[x]` and evidence
-- **THEN** the last line is `next: specctx gate --strict` before a passing gate, and `next: <openspec> archive <c> -y` after one. Each equals the command of `next --json`
+- **THEN** the last line is `next: specctx gate --strict` before a passing gate, and `next: <openspec> archive <c> -y` after one under `[loop] archive = "auto"`. Under `"ask"` it is the archive question of REQ-LOOP-007. Each equals the command of `next --json`
 
 #### Scenario: SCN-CLI-007-7 Status with no command
 - **WHEN** `status` runs and the OpenSpec status command exits 1

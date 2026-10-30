@@ -14,7 +14,11 @@ export interface Question {
   status: "open" | "resolved";
   answer?: string;
   resolved_at?: string;
+  /** REQ-LOOP-007 the stage of the change when handoff ask --change ran: plan or archive (031/D1). */
+  stage?: QuestionStage;
 }
+
+export type QuestionStage = "plan" | "archive";
 
 /** The questions sorted by n. An absent file is an empty list. A damaged file is a usage error, not a crash. */
 export function readQuestions(root: string): Question[] {
@@ -46,12 +50,13 @@ export function oneLine(text: string): string {
 }
 
 /** REQ-HND-002 append an open question with the next n. Returns the new question. */
-export function addQuestion(root: string, task: string, text: string): Question {
+export function addQuestion(root: string, task: string, text: string, stage?: QuestionStage): Question {
   const q = oneLine(text);
   if (!q) throw new UsageExit("handoff ask needs a question");
   const qs = readQuestions(root);
   const n = qs.reduce((m, x) => Math.max(m, x.n), 0) + 1;
   const item: Question = { n, asked_at: isoNow(), task, text: q, status: "open" };
+  if (stage !== undefined) item.stage = stage;
   qs.push(item);
   writeQuestions(root, qs);
   return item;

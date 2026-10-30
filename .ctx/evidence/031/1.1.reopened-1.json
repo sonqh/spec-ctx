@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T00:21:31.328Z",
+  "bundle_chars": 8483,
+  "files": {
+    "src/cli/workflow.ts": "f097562a9aef297072a4138ecc9296b5e250b365a5db7ed2ee1b8e88085293a3",
+    "src/handoff/handoff.ts": "7b028d547d53c9dabfdbd57878f26cafd56b2dcd457e2fc6fda9307b280fae22",
+    "src/handoff/questions.ts": "672c88bb82d83caf07ee7f23752ce65d6a095443a4f796330618b36451e91bb2",
+    "tests/handoff/handoff.test.ts": "4e7f8d2eae747c0d141f42cd6e0d1cca9df3465ed3701004b7fa58347b75e55e",
+    "tests/loop/archive-stop.test.ts": "8f14d207b7eb4313fc5c1a7ea8f5cf4df70af4278f4f5f3a52a300521f690aad",
+    "tests/loop/fails.test.ts": "12431ec222ae0363b00db1b745889a6abe44b3c00005afba6532571205fdc5c1",
+    "tests/loop/plan-stop.test.ts": "3d8609fd0f9e80c3a09d9d7f02f4d569e41ee4301180495a30f095e06452e84b"
+  },
+  "kind": "command",
+  "reason": "stale evidence: tests/loop/archive-stop.test.ts",
+  "reqs": [
+    "REQ-LOOP-007",
+    "REQ-HND-002"
+  ],
+  "started_at": "2026-10-30T00:20:50.090Z",
+  "task": "031/1.1",
+  "tool_version": "0.2.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/archive-stop.test.ts tests/loop/plan-stop.test.ts tests/handoff",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 15 pass\n 0 fail\n 76 expect() calls\nRan 15 tests across 3 files. [439.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

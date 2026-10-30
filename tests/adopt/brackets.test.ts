@@ -97,7 +97,8 @@ describe("retitle of a bracketed header (027/D4)", () => {
     expect(r.code).toBe(1);
     const line = p.read(DELTA).split("\n").findIndex((l) => l === "### Requirement: [REQ-UA-001] Idle timeout") + 1;
     expect(r.out).toContain(`${DELTA}:${line}  retitle-needs-renamed  REQ-UA-001  "Session timeout" -> "Idle timeout"\n`);
-    expect(r.out).toContain("retitle-needs-renamed  1  Add to the delta before the MODIFIED block. Write each ID as its header writes it, bare or in brackets:\n## RENAMED Requirements\n");
+    // REQ-CHK-006 the hint shows the bracketed form of both headers (031/D7)
+    expect(r.out).toContain("retitle-needs-renamed  1  Add to the delta before the MODIFIED block:\n## RENAMED Requirements\n- FROM: `### Requirement: [REQ-UA-001] Session timeout`\n- TO: `### Requirement: [REQ-UA-001] Idle timeout`\n");
     const pair = "## RENAMED Requirements\n\n- FROM: `### Requirement: [REQ-UA-001] Session timeout`\n- TO: `### Requirement: [REQ-UA-001] Idle timeout`\n\n";
     p.write(DELTA, p.read(DELTA).replace("## MODIFIED Requirements\n", pair + "## MODIFIED Requirements\n"));
     p.touchForward(DELTA, 10000);
