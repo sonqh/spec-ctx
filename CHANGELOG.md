@@ -6,6 +6,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Added
 
+- `scripts/replay-rerun.sh <repo> --since <date>` replays `gate --rerun` over the first-parent history of a repository, N runs per commit, in a temp worktree. It writes a JSON line per commit and `summary.md`, and exits 1 for a flaky task. `docs/verification/replay-rerun.md` gives the commands. REQ-VER-008.
 - `check --strict` reports `scenario-untested` for a scenario in an ADDED or MODIFIED block of an active change, once the change has a task and no open task. The hint names the `// Covers: <SCN>` tag. Before that, the plan step stays green. REQ-CHK-008.
 - `init --skills` without `--schema` writes only the skill folders when `spec-ctx.toml` exists. It no longer appends `adopt-report.md` to `.gitignore`, with or without `--force`. Plain `init` keeps its lines. REQ-DIST-013.
 - `id new REQ CLI-009` and `id new SCN CLI-009` exit 2 and name the right command: `id new REQ CLI` or `id new SCN CLI --for REQ-CLI-<NNN>`. REQ-IDS-005.

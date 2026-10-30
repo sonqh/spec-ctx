@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-30T05:54:41.519Z",
+  "files": {
+    "tests/replay/replay.test.ts": "6f78988ded7d74facfd9823f0326eb8114fc946b2ca50600e2c9f8376ec7a78f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-008"
+  ],
+  "task": "040/2.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 docs/verification/replay-rerun.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/replay-rerun.md && grep -q 'scripts/replay-rerun.sh . --since' docs/verification/replay-rerun.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "78a0c97b2853bad6114144b8c01ea3fcb126cee1503d68a301812ff1306ef6fb"
+  }
+}

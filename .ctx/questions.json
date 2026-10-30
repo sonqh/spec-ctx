@@ -402,5 +402,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review.",
     "resolved_at": "2026-10-30T03:59:18.432Z"
+  },
+  {
+    "n": 47,
+    "asked_at": "2026-10-30T05:50:31.632Z",
+    "task": "040-replay-rerun",
+    "text": "plan ready for 040-replay-rerun. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead.",
+    "resolved_at": "2026-10-30T05:50:57.441Z"
+  },
+  {
+    "n": 48,
+    "asked_at": "2026-10-30T05:53:16.453Z",
+    "task": "040-replay-rerun",
+    "text": "archive 040-replay-rerun?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after review.",
+    "resolved_at": "2026-10-30T05:53:40.512Z"
   }
 ]
