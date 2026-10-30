@@ -50,6 +50,8 @@ Command flags:
   `check --strict`             Also find gaps in tests and evidence.
   `gate --strict`              Run `check` and `openspec validate` in strict mode.
   `gate --markdown <globs>`    Lint these markdown globs instead of [gate] markdown. Separate them with spaces.
+  `gate --rerun`               Run only the rerun step. Run the command of each task that the range closed. Compare its exit code with the evidence.
+  `gate --base <ref>`          With --rerun, take the merge base with this ref. The default is [gate] base.
   `task next --change <name>`  Look only in this change. The key or the full folder name works.
   `stats --change <name>`      Show only this change.
   `stats --write`              Also write docs/metrics/<date>.md.

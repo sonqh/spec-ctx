@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T03:19:25.006Z",
+  "files": {
+    "src/gate/rerun.ts": "22e09a620ef316f00bc4ce6320cf362d59408e7a911e542041180335b0f55909",
+    "src/graph/query.ts": "aa1aaa72f586e3cfd4055a87e3962b4d7e7c83ed202beef455f9e76aae396923",
+    "src/handoff/handoff.ts": "7b028d547d53c9dabfdbd57878f26cafd56b2dcd457e2fc6fda9307b280fae22",
+    "src/ids/ids.ts": "b360710cf5557f4998dea8b55281d11c2f1acdd781cb99ab0a625f0a62ae7d40",
+    "src/index/scan.ts": "2888cbdad13da6c0ce8ecaa1ab05bffbe5be73d8e460bb228d0a9fc5a96f38d2",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/tasks.ts": "169e3f3ea4bd0b720a597e0694c496ef7207b35321fcbfb2b50521ebbc06d5fb",
+    "tests/gate/closed.test.ts": "f73813872a8705e946944ed3cf20430f9099c159bc3b636d87fe068c8b366b85",
+    "tests/index/changekey.test.ts": "cb54dc598bfdd81eaba1e18e3b70b1d4dd39097209db01abe592829444b69929",
+    "tests/tasks/kebab.test.ts": "41a1ea28cdfa4f05fc7aa6963bdccb871bc0b5a9fb7312bacf3ebd94dd7173fc"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-VER-005",
+    "REQ-IDX-005"
+  ],
+  "task": "036/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate/closed.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 6 pass\n 0 fail\n 11 expect() calls\nRan 6 tests across 1 file. [315.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

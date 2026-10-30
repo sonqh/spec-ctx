@@ -86,6 +86,8 @@ export const TABLE: CommandHelp[] = [
     flags: [
       ["--strict", "Run `check` and `openspec validate` in strict mode."],
       ["--markdown <globs>", "Lint these markdown globs instead of [gate] markdown. Separate them with spaces."],
+      ["--rerun", "Run only the rerun step. Run the command of each task that the range closed. Compare its exit code with the evidence."],
+      ["--base <ref>", "With --rerun, take the merge base with this ref. The default is [gate] base."],
     ],
     exit: [["0", "Every step passed."], ["1", "A step failed."], USAGE, INTERNAL], example: "specctx gate --strict",
   },

@@ -122,6 +122,12 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   }
   if (cmd === "gate") {
     if (p.positional.length) throw new UsageExit("gate takes no arguments");
+    // REQ-CLI-009 the rerun mode runs only the rerun step
+    if (f.base !== undefined && !f.rerun) throw new UsageExit("--base needs --rerun");
+    if (f.rerun) {
+      const { runRerun } = await import("./gate.ts");
+      return runRerun(root, cfg, { strict: !!f.strict, base: (f.base as string | undefined) || cfg.gate.base, json }, io);
+    }
     const { runGate } = await import("./gate.ts");
     const strict = !!f.strict;
     return runGate(root, {

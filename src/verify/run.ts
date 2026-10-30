@@ -17,10 +17,11 @@ export function tail(text: string, n = TAIL_LINES): string {
   return text === "" ? "" : lines.slice(-n).join("\n");
 }
 
-export function runVerify(command: string, cwd: string, timeoutS: number): Promise<RunResult> {
+/** REQ-VER-007 `env` replaces the environment of the child. The rerun passes the current env plus CI and SPECCTX_RERUN. */
+export function runVerify(command: string, cwd: string, timeoutS: number, env?: NodeJS.ProcessEnv): Promise<RunResult> {
   return new Promise((resolve, reject) => {
     // a new process group, so the timeout stops the children of sh too
-    const child = spawn("sh", ["-c", command], { cwd, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn("sh", ["-c", command], { cwd, detached: true, ...(env ? { env } : {}), stdio: ["ignore", "pipe", "pipe"] });
     const out: Buffer[] = [];
     const err: Buffer[] = [];
     let output = "";

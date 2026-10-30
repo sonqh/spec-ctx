@@ -1,7 +1,7 @@
-// REQ-CLI-004 specctx gate: check, the baseline against the merge base, both linters, openspec validate, spec length. Stops at the first failure.
+// REQ-CLI-009 REQ-CLI-004 specctx gate: check, the baseline against the merge base, both linters, openspec validate, spec length. Stops at the first failure.
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
 import type { Io } from "../main.ts";
 import { anyMatch, globRe } from "../util/glob.ts";
 import { cmpStr } from "../util/pystr.ts";
@@ -215,4 +215,122 @@ export function longRequirements(root: string): { id: string; chars: number; fil
     }
   }
   return out;
+}
+
+export interface RerunOpts {
+  strict: boolean;
+  base: string;
+  json: boolean;
+}
+
+/** REQ-CLI-009 the recursion guard: a rerun that a rerun started stops at once. */
+export const RERUN_GUARD = "SPECCTX_RERUN";
+
+interface RerunLine {
+  id: string;
+  status: string;
+  kind: "ok" | "warn" | "fail";
+  file: string;
+  line: number;
+  evidence: string;
+  expected_exit?: number | null;
+  actual_exit?: number | null;
+  timed_out?: boolean;
+  detail?: string;
+  report?: string;
+}
+
+/**
+ * REQ-CLI-009 REQ-VER-005 REQ-VER-006 REQ-VER-007 `gate --rerun`. It runs the Verify command of each task that the range
+ * closed, one group at a time, and compares the exit code with the evidence. It writes no evidence.
+ */
+export async function runRerun(root: string, cfg: import("../config.ts").Config, o: RerunOpts, io: Io): Promise<number> {
+  if (process.env[RERUN_GUARD]) {
+    io.out(o.json ? JSON.stringify({ ok: true, skipped: `${RERUN_GUARD} is set` }) + "\n" : `rerun: skipped, ${RERUN_GUARD} is set\n`);
+    return 0;
+  }
+  const start = Date.now();
+  const { dumps } = await import("../util/json.ts");
+  const { loadIndex } = await import("../index/build.ts");
+  const { scanner } = await import("../index/scan.ts");
+  const { closedTasks, compare, groupRuns, judge, formatMismatch } = await import("../gate/rerun.ts");
+  const { isWeakVerify, parseVerify } = await import("../verify/parse.ts");
+  const { evidenceRel } = await import("../tasks/tasks.ts");
+  const { runVerify } = await import("../verify/run.ts");
+  const { isoNow } = await import("../util/time.ts");
+  const finish = (ok: boolean): number => {
+    appendGateLog(root, { at: isoNow(), ok, failed_step: ok ? null : "rerun", duration_s: Math.round((Date.now() - start) / 1000), steps: ["rerun"] });
+    return ok ? 0 : 1;
+  };
+  const { data } = loadIndex(root, cfg);
+  const closed = closedTasks(root, o.base, data.entries, scanner(root, cfg).taskRe);
+  if (!closed.ok) {
+    io.out(o.json ? dumps({ base: o.base, error: closed.line, merge_base: null, ok: false, tasks: [] }) + "\n" : closed.line + "\n");
+    return finish(false);
+  }
+  const lines: RerunLine[] = [];
+  const pending: { id: string; command: string; cwd: string; expected: number | null; line: RerunLine }[] = [];
+  for (const e of closed.tasks) {
+    const evPath = evidenceRel(e);
+    let ev: import("../gate/rerun.ts").EvidenceView | null = null;
+    try {
+      const j = JSON.parse(readFileSync(join(root, evPath), "utf8")) as { kind: "command" | "manual"; verify?: { command?: string | null; exit?: number | null }; cwd?: string };
+      ev = { kind: j.kind, command: j.verify?.command ?? null, exit: j.verify?.exit ?? null, ...(j.cwd !== undefined ? { cwd: j.cwd } : {}) };
+    } catch {
+      ev = null;
+    }
+    const tl = readFileSync(join(root, e.file), "utf8").split(/\r?\n/)[e.line - 1] ?? "";
+    const spec = parseVerify(tl);
+    const v = compare({ command: spec.command, ...(spec.cwd !== undefined ? { cwd: spec.cwd } : {}) }, ev, o.strict, isWeakVerify);
+    const base: RerunLine = { id: e.id, status: "", kind: "ok", file: e.file, line: e.line, evidence: evPath };
+    if (v.act === "warn") lines.push({ ...base, status: "warn manual", kind: "warn" });
+    else if (v.act === "fail") lines.push({ ...base, status: v.kind, kind: "fail", ...(v.detail ? { detail: v.detail } : {}) });
+    else {
+      const l = { ...base, status: "ok" };
+      lines.push(l);
+      pending.push({ id: e.id, command: v.command, cwd: v.cwd, expected: v.expected, line: l });
+    }
+  }
+  // REQ-VER-007 one run per frozen command and cwd. Groups run one at a time.
+  const env = { ...process.env, CI: "1", [RERUN_GUARD]: "1" };
+  for (const g of groupRuns(pending)) {
+    const dir = resolve(root, g.cwd);
+    let out: { exit: number | null; timedOut: boolean; output: string };
+    if (dir !== resolve(root) && !dir.startsWith(resolve(root) + sep)) out = { exit: null, timedOut: false, output: `cwd ${g.cwd} is outside the project root\n` };
+    else {
+      const r = await runVerify(g.command, dir, cfg.verify.timeout_s, env);
+      out = { exit: r.exit, timedOut: r.timedOut, output: r.output };
+    }
+    for (const m of g.members) {
+      if (judge(m.expected, out) === "ok") continue;
+      m.line.status = "mismatch";
+      m.line.kind = "fail";
+      m.line.expected_exit = m.expected;
+      m.line.actual_exit = out.exit;
+      m.line.timed_out = out.timedOut;
+      m.line.report = formatMismatch({ id: m.id, file: m.line.file, line: m.line.line, evidence: m.line.evidence, expected: m.expected, outcome: out, command: g.command, cwd: g.cwd, timeoutS: cfg.verify.timeout_s });
+    }
+  }
+  const failed = lines.filter((l) => l.kind === "fail");
+  const ok = failed.length === 0;
+  if (o.json) {
+    io.out(dumps({
+      base: o.base,
+      merge_base: closed.mergeBase,
+      ok,
+      tasks: lines.map((l) => {
+        const { report, ...rest } = l;
+        void report;
+        return rest;
+      }),
+    }) + "\n");
+  } else {
+    if (!lines.length) io.out("rerun: no closed tasks\n");
+    for (const l of lines) {
+      if (l.report) io.out(l.report);
+      else io.out(`${l.id}: ${l.status}${l.detail ? ` (${l.detail})` : ""}\n`);
+    }
+    if (lines.length) io.out(`rerun: ${lines.length} task(s), ${failed.length} failure(s)\n`);
+  }
+  return finish(ok);
 }

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-30T03:23:57.126Z",
+  "files": {
+    "src/cli/commands.ts": "8aa5f1c169ba5bd501a60aaab4bd8b568929f31dd35375ad67447b052585850a",
+    "src/cli/gate.ts": "4225ac9a85fc26d30f7fd2e3f463e87eea6f152e539246cc3f18b7a11aac7031",
+    "src/gate/rerun.ts": "22e09a620ef316f00bc4ce6320cf362d59408e7a911e542041180335b0f55909",
+    "src/lint/counts.ts": "fa6c92a2e8808eb2024bc0008a5a060533a63a28c013d7932ccc5ac26211c6e9",
+    "src/verify/run.ts": "5adf131a6fe06e60f8059fe37bb9db0d593396175cca4f8d89c2efff79c66eb8",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6",
+    "tests/gate/compare.test.ts": "c998b9233e5051e141a5bca82ee26eaebb92257cc0da500977833af5e0a8f900",
+    "tests/gate/rerun-cli.test.ts": "f0594955b42e54107c05e5024a9eb335b77d9873566f1a32d57830e8bf57d889"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CLI-009",
+    "REQ-VER-007",
+    "REQ-CLI-004"
+  ],
+  "task": "036/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gate tests/cli && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 111 pass\n 0 fail\n 511 expect() calls\nRan 111 tests across 12 files. [5.24s]",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

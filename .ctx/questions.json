@@ -303,5 +303,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review. Run the archive guidance, including the help-golden note in docs/verification/034.md, then the archive command next prints.",
     "resolved_at": "2026-10-30T03:03:52.195Z"
+  },
+  {
+    "n": 37,
+    "asked_at": "2026-10-30T03:15:06.137Z",
+    "task": "036-gate-rerun",
+    "text": "plan ready for 036-gate-rerun. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. If the help goldens change in 3.1, re-record them and note it in docs/verification/036.md. Put the recursion guard test in 3.1.",
+    "resolved_at": "2026-10-30T03:15:32.795Z"
+  },
+  {
+    "n": 38,
+    "asked_at": "2026-10-30T03:22:48.596Z",
+    "task": "036-gate-rerun",
+    "text": "archive 036-gate-rerun?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review. Archive with the command next prints, then validate, check --strict, build.",
+    "resolved_at": "2026-10-30T03:27:59.501Z"
   }
 ]
