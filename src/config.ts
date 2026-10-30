@@ -62,7 +62,7 @@ export function loadConfig(root: string): Config {
   try {
     raw = parse(readFileSync(p, "utf8")) as Record<string, unknown>;
   } catch (e) {
-    throw new ConfigError(`${CONFIG_FILE}: the file is not valid TOML. ${(e as Error).message.split("\n")[0]}`);
+    throw new ConfigError(`${p}: the file is not valid TOML. ${(e as Error).message.split("\n")[0]}`);
   }
   const sec = (name: string): Record<string, unknown> => {
     const v = raw[name];

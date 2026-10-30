@@ -54,7 +54,7 @@ describe("fail files", () => {
     expect(r.out).toBe(`first\nbad\nVerify failed (exit 1). The task stays open.\n${BLOCKED(1)}\n`);
     const qs = JSON.parse(p.read(".ctx/questions.json"));
     expect(qs).toHaveLength(1);
-    expect(qs[0]).toMatchObject({ n: 1, task: "002/2.2", status: "open", text: "task 002/2.2 failed Verify 3 times. Last: first. What should change?" });
+    expect(qs[0]).toMatchObject({ n: 1, task: "002/2.2", status: "open", text: "task 002/2.2 failed Verify 3 times. Last: bad. What should change?" });
     // a fourth run names the same question and adds no second one
     const again = await p.run("task", "done", "002/2.2", "--json");
     expect(again.code).toBe(1);
@@ -68,6 +68,17 @@ describe("fail files", () => {
     const one = await p.run("task", "done", "002/2.1");
     expect(one.out.trimEnd().split("\n").pop()).toBe(BLOCKED(2));
     expect(JSON.parse(p.read(".ctx/questions.json"))[1].text).toBe("task 002/2.1 failed Verify 1 times. Last: no output. What should change?");
+  });
+
+  test("SCN-LOOP-002-5 the cap question quotes the failing line", async () => {
+    p = new Project();
+    p.write(TASKS, "# Tasks\n\n## 2. Work\n\n- [ ] 2.2 Fail. [REQ-AAA-001] Verify: `echo '$ bun test' && echo 'FAIL two' && echo '1 fail' && exit 1`\n");
+    await p.run("task", "start", "002/2.2");
+    await p.run("task", "done", "002/2.2");
+    await p.run("task", "done", "002/2.2");
+    await p.run("task", "done", "002/2.2");
+    const qs = JSON.parse(p.read(".ctx/questions.json"));
+    expect(qs[0].text).toBe("task 002/2.2 failed Verify 3 times. Last: FAIL two. What should change?");
   });
 
   test("SCN-LOOP-002-3 fail files before task start do not count, a resolve resets, and no current.json counts all", async () => {

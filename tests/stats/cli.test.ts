@@ -44,6 +44,13 @@ describe("stats command", () => {
     expect(s.gate.gate_pass_rate).toMatchObject({ value: null, text: "n/a" });
   });
 
+  test("SCN-STAT-005-6 the file name holds the UTC date", async () => {
+    p = new Project();
+    process.env.SPECCTX_NOW = "2026-10-24T23:30:00-05:00";
+    expect((await p.run("stats", "--write")).out.startsWith("wrote docs/metrics/2026-10-25.md\n")).toBe(true);
+    expect(readdirSync(p.path("docs/metrics"))).toEqual(["2026-10-25.md"]);
+  });
+
   test("SCN-STAT-005-3 two writes on one day leave one file that passes both linters", async () => {
     p = new Project();
     process.env.SPECCTX_NOW = "2026-10-24T08:00:00.000Z";

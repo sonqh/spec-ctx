@@ -263,5 +263,25 @@
     "stage": "archive",
     "answer": "archive approved by the lead. fresh-brackets.sh passed on upstream 1.15.0.",
     "resolved_at": "2026-10-30T00:49:05.410Z"
+  },
+  {
+    "n": 33,
+    "asked_at": "2026-10-30T02:37:14.138Z",
+    "task": "033-dogfood-friction",
+    "text": "plan ready for 033-dogfood-friction. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. Keep the chained command in next for stale tasks. For task 5.1 run tests/parity/run.sh --record once before task done and write the note in docs/verification/033.md. Do not add a bundle command for full MODIFIED blocks in this change.",
+    "resolved_at": "2026-10-30T02:37:55.539Z"
+  },
+  {
+    "n": 34,
+    "asked_at": "2026-10-30T02:41:39.920Z",
+    "task": "033-dogfood-friction",
+    "text": "archive 033-dogfood-friction?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review. Run the archive guidance, then the archive command next prints.",
+    "resolved_at": "2026-10-30T02:42:05.219Z"
   }
 ]

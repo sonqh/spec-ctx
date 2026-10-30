@@ -41,5 +41,5 @@ operations:
       - 'Add the change to `## Unreleased` in CHANGELOG.md.'
       - 'Write `docs/verification/<NNN>.md` like the verification record of the last change.'
       - 'Run `bun run ci:local`. It must exit 0.'
-      - 'Rebuild the index after archive.'
+      - 'Rebuild the index with `node dist/cli.js build` after archive.'
       - 'Run `openspec validate --all --strict` again after archive and before push. Strict mode fails on a main-spec requirement over 500 characters, and a check on the change alone does not catch that.'

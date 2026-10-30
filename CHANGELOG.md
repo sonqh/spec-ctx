@@ -2,6 +2,18 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+### Changed
+
+- `specctx next --json` has a tenth key `tasks`. It lists every task the action names, and `task` stays the first. For `repair` it lists all stale tasks. The `reason` joins `stale-evidence <t> <file>` per task with a comma. The `command` chains the reopen and done pair of each task with `&&`, so one turn repairs all. The action list does not change. REQ-LOOP-001, REQ-LOOP-008.
+- The question that `task done` writes at the attempt cap quotes the failing line of the tail, the same line as the `fix` reason. REQ-LOOP-002.
+- A `spec-ctx.toml` that is not valid TOML gives one line on stderr with the file path and the parse error, and exit 2, in every command. `init` and `adopt` used to print a stack. REQ-DIST-009.
+- The `dangling-ref` hint names the likely cause, a tag inside a string literal or fixture text, and the fix. The scan is the same. REQ-CHK-007.
+- `stats --write` names its file by the UTC date. The requirement says so now. REQ-STAT-005.
+- `specctx-run` says that it overrides two steps of `openspec-propose`, and routes a `stale-evidence` finding of `gate` back to step 1. REQ-SKL-005.
+- The archive guidance of this repository names `node dist/cli.js build` for the index rebuild. REQ-GOV-009.
+
 ## 0.3.0
 
 ### Added

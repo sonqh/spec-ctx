@@ -6,13 +6,13 @@ The closed loop of ADR-006. One read command names the next action from the file
 ## Requirements
 
 ### Requirement: REQ-LOOP-001 Next command
-`specctx next [--json] [--change <c>]` SHALL read the files and write none. `--json` prints one object with the sorted keys `action`, `attempt`, `change`, `command`, `human`, `max_attempts`, `reason`, `state`, `task`. `action` SHALL be one of `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, `stop`. Planning state comes from OpenSpec `status --json`. The human form prints `action:` first and ends with `next: <command>`.
+`specctx next [--json] [--change <c>]` SHALL read the files and write none. `--json` prints one object with the sorted keys `action`, `attempt`, `change`, `command`, `human`, `max_attempts`, `reason`, `state`, `task`, `tasks`. `action` SHALL be one of `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, `stop`. Planning state comes from OpenSpec `status --json`. The human form prints `action:` first and ends with `next: <command>`.
 
 Refs: ADR-006, REQ-CLI-007, REQ-LOOP-002
 
 #### Scenario: SCN-LOOP-001-1 Closed enum
 - **WHEN** `next --json` runs on a project in every state of the decision order
-- **THEN** every `action` is in the list of ten and every object has the nine keys in sorted order. No file under `.ctx/` changes except the index cache
+- **THEN** every `action` is in the list of ten and every object has the ten keys in sorted order. No file under `.ctx/` changes except the index cache
 
 #### Scenario: SCN-LOOP-001-2 Plan states
 - **WHEN** no folder exists under `openspec/changes/` except `archive`, or the OpenSpec status reports `isPlanningComplete: false`, or the OpenSpec command exits 1
@@ -27,7 +27,7 @@ Refs: ADR-006, REQ-CLI-007, REQ-LOOP-002
 - **THEN** `next` prints `gate` with `specctx gate --strict`, then `archive` with `human: true` and the command of REQ-LOOP-007 under `[loop] archive = "ask"`, or with `human: false` and `<openspec> archive <c> -y` under `"auto"`. Then `ask` with `human: true` and the question text as the reason before any other rule
 
 ### Requirement: REQ-LOOP-002 Fail files and the attempt cap
-A non zero Verify exit in `task done` SHALL write `.ctx/evidence/<c>/<t>.fail-<n>.json` with the keys `at`, `attempt`, `stderr_tail`, `task`, `verify`. `attempt` SHALL be the fail files of the task since `current.json.started_at` plus one. A resolved question for the task resets the count. At `[loop] max_attempts`, `task done` SHALL append a question and print a `blocked:` line. No command SHALL read a fail file as evidence.
+A non zero Verify exit in `task done` SHALL write `.ctx/evidence/<c>/<t>.fail-<n>.json` with the keys `at`, `attempt`, `stderr_tail`, `task`, `verify`. `attempt` SHALL be the fail files of the task since `current.json.started_at` plus one. A resolved question for the task resets the count. At `[loop] max_attempts`, `task done` SHALL append a question that quotes the fail line and print a `blocked:` line. No command SHALL read a fail file as evidence.
 
 Refs: ADR-006, REQ-TASK-003, REQ-HND-002
 
@@ -37,7 +37,7 @@ Refs: ADR-006, REQ-TASK-003, REQ-HND-002
 
 #### Scenario: SCN-LOOP-002-2 Cap reached
 - **WHEN** `[loop] max_attempts = 3` and the third `task done 002/2.2` since `task start` fails
-- **THEN** `.ctx/questions.json` gains an open question with `task: 002/2.2` and the text `task 002/2.2 failed Verify 3 times. Last: <first line of the tail>. What should change?`, the last line is `blocked: question <k> written. Run specctx handoff resolve <k> "<answer>" to continue.`. A fourth run adds no second question. The exit code is 1
+- **THEN** `.ctx/questions.json` gains an open question with `task: 002/2.2` and the text `task 002/2.2 failed Verify 3 times. Last: <the failing line of the tail>. What should change?`, the last line is `blocked: question <k> written. Run specctx handoff resolve <k> "<answer>" to continue.`. A fourth run adds no second question. The exit code is 1
 
 #### Scenario: SCN-LOOP-002-3 Attempt window
 - **WHEN** two fail files of `002/2.2` exist from before `current.json.started_at`, or `handoff resolve` closed the question of the cap
@@ -46,6 +46,10 @@ Refs: ADR-006, REQ-TASK-003, REQ-HND-002
 #### Scenario: SCN-LOOP-002-4 Fail files are not evidence
 - **WHEN** `.ctx/evidence/002/2.2.fail-1.json` exists and `002/2.2` is open
 - **THEN** `check --strict` reports no `evidence-without-done` for it, `stats` counts no evidence for `002`, and a later passing `task done 002/2.2` writes `2.2.json` and keeps `2.2.fail-1.json`
+
+#### Scenario: SCN-LOOP-002-5 Cap question quotes the failing line
+- **WHEN** the third failure of `002/2.2` has the tail `$ bun test`, `FAIL two`, `1 fail`
+- **THEN** the new question reads `task 002/2.2 failed Verify 3 times. Last: FAIL two. What should change?`
 
 ### Requirement: REQ-LOOP-003 Loop config
 `spec-ctx.toml` SHALL hold `[loop] max_attempts`, an integer of 1 or more with the default 3, and `[loop] archive`, `"ask"` or `"auto"` with the default `"ask"`. Another value SHALL exit 2 with the key name. `init` SHALL write both keys with a comment above each. `task done` and `next` SHALL use `max_attempts` for the cap. `next` SHALL set `human: true` on `archive` when the value is `"ask"`.
@@ -129,14 +133,18 @@ Refs: REQ-LOOP-001, REQ-LOOP-005, REQ-HND-002, ADR-006
 - **THEN** `next --json` prints `action: archive`, `human: false`, and `<openspec> archive 002-ids -y` for the first project, and `human: true` for the second
 
 ### Requirement: REQ-LOOP-008 Stale evidence in next
-`next` SHALL return `repair` for the earliest `[x]` task of the change whose evidence names a file with another digest. This rule comes after the current task rule and before the next open task rule. The `reason` SHALL be `stale-evidence <t> <file>`. The command SHALL be `specctx task reopen <t> "stale evidence: <file>" && specctx task done <t>`. A current open task SHALL keep its `work` or `fix` action.
+`next` SHALL return `repair` when a `[x]` task has evidence that names a changed file. It comes after the current task rule and before the open task rule. `task` SHALL be the earliest stale task and `tasks` SHALL list all of them. `reason` SHALL join `stale-evidence <t> <file>` per task with `, `. `command` SHALL join `specctx task reopen <t> "stale evidence: <file>" && specctx task done <t>` per task with ` && `. A current task keeps `work` or `fix`.
 
 Refs: REQ-LOOP-001, REQ-CHK-003, ADR-004
 
 #### Scenario: SCN-LOOP-008-1 Earliest stale task
 - **WHEN** tasks 1.1 and 1.2 of `002-ids` have `[x]` and evidence that names `src/a.ts`. Then `src/a.ts` changes, and task 2.1 is open with no current task
-- **THEN** `next --json` prints `action: repair`, `task: 002/1.1`, `state: evidence_stale`, the reason `stale-evidence 002/1.1 src/a.ts`, and the command `specctx task reopen 002/1.1 "stale evidence: src/a.ts" && specctx task done 002/1.1`
+- **THEN** `next --json` prints `action: repair`, `task: 002/1.1`, `tasks: ["002/1.1", "002/1.2"]`, `state: evidence_stale`, and the reason `stale-evidence 002/1.1 src/a.ts, stale-evidence 002/1.2 src/a.ts`. The command holds the reopen and done pair of `002/1.1`, then ` && `, then the pair of `002/1.2`
 
 #### Scenario: SCN-LOOP-008-2 Current task first
 - **WHEN** the tree of SCN-LOOP-008-1 has task 2.1 as the current task
 - **THEN** `next --json` prints `action: work` for `002/2.1`, and after the command of SCN-LOOP-008-1 runs with a passing Verify, `next` no longer prints `repair` for `002/1.1`
+
+#### Scenario: SCN-LOOP-008-3 One stale task
+- **WHEN** only task 1.2 of `002-ids` has stale evidence
+- **THEN** `next --json` prints `task: 002/1.2`, `tasks: ["002/1.2"]`, the reason `stale-evidence 002/1.2 src/a.ts`, and the command of that one task with no ` && `

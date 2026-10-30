@@ -37,14 +37,25 @@ async function closeAlpha(): Promise<void> {
   p.append("src/a.ts", "export const later = 2;\n");
 }
 
-const REPAIR = 'specctx task reopen 001/1.1 "stale evidence: src/a.ts" && specctx task done 001/1.1';
+const REPAIR_ONE = 'specctx task reopen 001/1.1 "stale evidence: src/a.ts" && specctx task done 001/1.1';
+const REPAIR_BOTH = REPAIR_ONE + ' && specctx task reopen 001/1.2 "stale evidence: src/a.ts" && specctx task done 001/1.2';
 
 describe("stale evidence in next", () => {
-  test("SCN-LOOP-008-1 next returns repair for the earliest stale task", async () => {
+  test("SCN-LOOP-008-1 next returns repair for every stale task, the earliest first", async () => {
     await closeAlpha();
     expect(await next()).toEqual({
-      action: "repair", attempt: 0, change: "001-x", command: REPAIR, human: false, max_attempts: 3,
-      reason: "stale-evidence 001/1.1 src/a.ts", state: "evidence_stale", task: "001/1.1",
+      action: "repair", attempt: 0, change: "001-x", command: REPAIR_BOTH, human: false, max_attempts: 3,
+      reason: "stale-evidence 001/1.1 src/a.ts, stale-evidence 001/1.2 src/a.ts", state: "evidence_stale", task: "001/1.1", tasks: ["001/1.1", "001/1.2"],
+    });
+  });
+
+  test("SCN-LOOP-008-3 one stale task gives a one item list and no chain", async () => {
+    const d = await p.run("task", "done", "001/1.2");
+    expect(d.code, d.out + d.err).toBe(0);
+    p.append("src/a.ts", "export const later = 2;\n");
+    expect(await next()).toMatchObject({
+      action: "repair", task: "001/1.2", tasks: ["001/1.2"], reason: "stale-evidence 001/1.2 src/a.ts",
+      command: 'specctx task reopen 001/1.2 "stale evidence: src/a.ts" && specctx task done 001/1.2',
     });
   });
 

@@ -17,7 +17,7 @@ warning: weak-verify 007/1.5 openspec/changes/007-parity-plant/tasks.md:9
 15 findings in 3 files (11 hard, 4 advisory)
 bad-ref  1  Write only IDs on the Refs line, separated by commas.
 code-tag-no-canonical  1  The tag names an archived requirement. Tag the current requirement.
-dangling-ref  2  Fix the ID or remove the link. No entry has this ID.
+dangling-ref  2  No entry has this ID. Fix the ID or remove the link. A tag inside a string literal or fixture text also reads as a link. Build that text at run time, or move the file under a path in [scan] ignore.
 missing-id  1  Add an ID to the header. Run specctx adopt --dry-run to see the plan.
 req-without-scn  1  Add a scenario under the requirement.
 reused-id  1  The ID is retired. Get a new ID from specctx id new.

@@ -2,7 +2,8 @@
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
-import { CONFIG_FILE, loadConfig, type Config } from "../config.ts";
+import { CONFIG_FILE, type Config } from "../config.ts";
+import { loadConfigOrExit } from "../cli/config.ts";
 import type { Io } from "../main.ts";
 import { dumps } from "../util/json.ts";
 import { configText, withCaps } from "./config-write.ts";
@@ -13,7 +14,7 @@ export const REPORT_FILE = "adopt-report.md";
 async function findings(root: string): Promise<Set<string>> {
   const { buildIndex } = await import("../index/build.ts");
   const { check } = await import("../check/check.ts");
-  const cfg = loadConfig(root);
+  const cfg = loadConfigOrExit(root);
   const data = buildIndex(root, cfg);
   return new Set(check(root, cfg, data, false).map((f) => `${f.file}:${f.line}  ${f.rule}  ${f.id}`));
 }

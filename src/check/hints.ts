@@ -10,7 +10,11 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "duplicate-id": { level: "hard", hint: "Give one of the two entries a new ID from specctx id new." },
   "duplicate-change-key": { level: "hard", hint: "Rename one change folder, so that each key names one change." },
   "reused-id": { level: "hard", hint: "The ID is retired. Get a new ID from specctx id new." },
-  "dangling-ref": { level: "hard", hint: "Fix the ID or remove the link. No entry has this ID." },
+  // REQ-CHK-007 the hint names the string literal cause and the fix (033/D3)
+  "dangling-ref": {
+    level: "hard",
+    hint: "No entry has this ID. Fix the ID or remove the link. A tag inside a string literal or fixture text also reads as a link. Build that text at run time, or move the file under a path in [scan] ignore.",
+  },
   "unknown-task-req": { level: "hard", hint: "The task cites an ID that the index does not hold. Fix the ID on the task line." },
   "req-without-scn": { level: "hard", hint: "Add a scenario under the requirement." },
   "code-tag-no-canonical": { level: "hard", hint: "The tag names an archived requirement. Tag the current requirement." },

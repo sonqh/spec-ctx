@@ -278,7 +278,7 @@ warning: manual-evidence 007/1.2
 276 findings in 18 files (274 hard, 2 advisory)
 bad-ref  1  Write only IDs on the Refs line, separated by commas.
 code-tag-no-canonical  1  The tag names an archived requirement. Tag the current requirement.
-dangling-ref  2  Fix the ID or remove the link. No entry has this ID.
+dangling-ref  2  No entry has this ID. Fix the ID or remove the link. A tag inside a string literal or fixture text also reads as a link. Build that text at run time, or move the file under a path in [scan] ignore.
 evidence-without-done  1  Run specctx task done, or remove the evidence file.
 manual-evidence  2  Give the task a Verify command and run specctx task done again.
 missing-id  1  Add an ID to the header. Run specctx adopt --dry-run to see the plan.

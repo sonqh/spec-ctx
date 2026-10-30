@@ -86,10 +86,9 @@ export function writeFail(root: string, task: string, verify: FailFile["verify"]
   return { rel: target, file };
 }
 
-/** REQ-LOOP-002 the question text at the cap. Strict mode. */
+/** REQ-LOOP-002 the question text at the cap. It quotes the failing line (033/D2). Strict mode. */
 export function capQuestion(task: string, attempts: number, tail: string): string {
-  const first = tail.split("\n")[0]?.trim() || "no output";
-  return `task ${task} failed Verify ${attempts} times. Last: ${first}. What should change?`;
+  return `task ${task} failed Verify ${attempts} times. Last: ${failLine(tail)}. What should change?`;
 }
 
 /** REQ-LOOP-002 the last line of a failed `task done` at the cap. Strict mode. */

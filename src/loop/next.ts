@@ -19,7 +19,7 @@ export const ACTIONS = ["plan", "cite", "start", "work", "fix", "repair", "gate"
 export type Action = (typeof ACTIONS)[number];
 
 /** The keys of the object, sorted. Every state prints all of them. */
-export const KEYS = ["action", "attempt", "change", "command", "human", "max_attempts", "reason", "state", "task"] as const;
+export const KEYS = ["action", "attempt", "change", "command", "human", "max_attempts", "reason", "state", "task", "tasks"] as const;
 
 export interface Decision {
   action: Action;
@@ -31,6 +31,8 @@ export interface Decision {
   reason: string | null;
   state: string;
   task: string | null;
+  /** REQ-LOOP-001 every task the action names. `task` is the first one (033/D1). */
+  tasks: string[];
 }
 
 /** The rules of check whose finding means a task or a header lacks its citation (024/D2 step 4). */
@@ -103,8 +105,12 @@ function readCurrent(root: string): { task?: string } | null {
 /** REQ-LOOP-001 the decision of 024/D2. A pure function of the files. It writes nothing. */
 export function decideNext(root: string, cfg: Config, data: Index, want?: string): Decision {
   const openspec = openspecCommand(cfg.gate.openspec);
-  const d: Decision = { action: "stop", attempt: 0, change: null, command: null, human: false, max_attempts: cfg.loop.max_attempts, reason: null, state: "unknown", task: null };
-  const done = (o: Partial<Decision>): Decision => ({ ...d, ...o });
+  const d: Decision = { action: "stop", attempt: 0, change: null, command: null, human: false, max_attempts: cfg.loop.max_attempts, reason: null, state: "unknown", task: null, tasks: [] };
+  const done = (o: Partial<Decision>): Decision => {
+    const r = { ...d, ...o };
+    if (!o.tasks) r.tasks = r.task === null ? [] : [r.task];
+    return r;
+  };
 
   // step 0 and step 1: the change under consideration, or the plan stop with no change
   const folders = activeFolders(root);
@@ -166,12 +172,23 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     return done({ action: "work", command: `specctx task done ${current.id}`, state: "task_started", task: current.id });
   }
 
-  // REQ-LOOP-008 step 6b: the earliest done task whose evidence went stale gets the repair run, after the current task (031/D4, 031/D5)
+  // REQ-LOOP-008 step 6b: the done tasks whose evidence went stale get the repair run, earliest first, after the current task (031/D4, 031/D5)
+  const stale: { id: string; path: string }[] = [];
   for (const t of tasks) {
     if (t.status !== "done") continue;
     const path = staleOf(root, t.id);
-    if (path === null) continue;
-    return done({ action: "repair", command: `specctx task reopen ${t.id} "stale evidence: ${path}" && specctx task done ${t.id}`, reason: `stale-evidence ${t.id} ${path}`, state: "evidence_stale", task: t.id });
+    if (path !== null) stale.push({ id: t.id, path });
+  }
+  if (stale.length) {
+    // REQ-LOOP-008 one turn repairs every stale task (033/D1)
+    return done({
+      action: "repair",
+      command: stale.map((s) => `specctx task reopen ${s.id} "stale evidence: ${s.path}" && specctx task done ${s.id}`).join(" && "),
+      reason: stale.map((s) => `stale-evidence ${s.id} ${s.path}`).join(", "),
+      state: "evidence_stale",
+      task: stale[0]!.id,
+      tasks: stale.map((s) => s.id),
+    });
   }
 
   // step 7: the next open task

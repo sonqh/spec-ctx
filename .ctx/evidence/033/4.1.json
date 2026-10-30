@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-30T02:40:30.195Z",
+  "bundle_chars": 8659,
+  "files": {
+    "src/cli/commands.ts": "c352f4b79a9290f8ea87166d693db075036f20ca0c8ca065690fd7c3f0b141f0",
+    "src/cli/config.ts": "3efa9b54ea915a4409a9d86069d2c76cfe883787091b07335c8220b22a0b2f6e",
+    "src/cli/gate.ts": "2a051b690499781d9543ecf83c9e0cfe40af5ba2ec0bf5f271e645a228334914",
+    "src/config.ts": "ad27bd55d7b463610c6e89de357bdeb90f3582b0da64ee41e55251cf706c219d",
+    "src/init/init.ts": "b648fed1286867261e2620e5392dec1a51ae8e1956bac279181973b3e8375f28",
+    "tests/cli/gate.test.ts": "9e082356e1ccfe36ab10b1c33c1bc27bc9d20c68550beec83f2b660ce1cba4c6",
+    "tests/config.test.ts": "7cf80034d25b7ad2bf6aa3472151d283924f1523ff0b4bc3e7c78e2af8bfa580",
+    "tests/init/brackets.test.ts": "ff9ad3b61c2a0030d292d9a0af2cf23481d0bc18a5a304c045564e39e5480a3c",
+    "tests/init/init.test.ts": "56f7c3dd7324dfc532dc0be0cfcd1d6afa0801976b8f2775ced5a90c35d20e99"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-009",
+    "REQ-DIST-002"
+  ],
+  "started_at": "2026-10-30T02:39:45.996Z",
+  "task": "033/4.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts tests/init tests/adopt tests/cli",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 143 pass\n 0 fail\n 951 expect() calls\nRan 143 tests across 18 files. [5.07s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -22,13 +22,14 @@ Run `specctx` as `npx spec-ctx` when it is not installed. `openspec` is the comm
 - `work`: implement the task. Tag code with `// REQ-...`. Tag tests with `// Covers: REQ-...`. Then run `specctx task done <t>`.
 - `fix`: read `reason`. It holds the tail of the failed Verify output. Fix the cause. Run `specctx task done <t>` again.
 - `repair`: run the command in the `command` field. It runs Verify again for a ticked task whose evidence is absent or stale.
-- `gate`: run `specctx gate --strict`. Fix every finding. Run it again until it exits 0.
+- `gate`: run `specctx gate --strict`. Fix every finding. For a `stale-evidence` finding, go back to step 1. `next` returns `repair` and its command repairs every stale task. Run the gate again until it exits 0.
 - `archive`: when `human` is true, run `specctx handoff ask --change <c> "archive <c>?"` and stop. This is the archive stop. `next` returns `ask` until the user resolves the question. When `human` is false, the user approved or `[loop] archive` is `auto`. Then run each step under `operations.archive.guidance` in `openspec/config.yaml`. Then run the command in the `command` field. Then run `openspec validate --all --strict`, `specctx check --strict`, and `specctx handoff write`.
 - `ask`: print `reason`. It is the open question. Stop. The user answers with `specctx handoff resolve <n> "<answer>"`.
 - `stop`: print `reason`. Stop.
 
 ## Rules
 
+- This skill overrides two steps of the upstream `openspec-propose` skill. It reads specs with `specctx bundle` or `specctx query`, not `openspec show`. It never runs the closing `/opsx:apply`.
 - Never tick a checkbox by hand. `specctx task done` is the only way a task closes.
 - Never use `--manual` on a task with a Verify command.
 - Never call `/opsx:apply`. This skill replaces it.

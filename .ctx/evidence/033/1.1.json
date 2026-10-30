@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-30T02:38:22.587Z",
+  "bundle_chars": 8110,
+  "files": {
+    "tests/gov/archive-guidance.test.ts": "6c6087f083d329452cb4478aeea05d3a0ae226f7c4fbe4434ff3b38906b450c8",
+    "tests/skills/overrides.test.ts": "c6d06dd33149a0f66313af7275a86b4a6a6f27abf11b9e0d13fc56567b5fcefa"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-SKL-005",
+    "REQ-GOV-009"
+  ],
+  "started_at": "2026-10-30T02:38:08.731Z",
+  "task": "033/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/skills tests/gov/archive-guidance.test.ts",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 14 pass\n 0 fail\n 93 expect() calls\nRan 14 tests across 3 files. [913.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

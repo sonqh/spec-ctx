@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-30T02:39:18.897Z",
+  "bundle_chars": 8419,
+  "files": {
+    "src/check/evidence.ts": "3ab886e5dec4a2f05b26303621e61c1bebcc0391becf49337ccf32acb8869c15",
+    "src/cli/commands.ts": "97161711f960fc26e44c458cb86aeb951b1ed80883183015011d06b4ac27547c",
+    "src/loop/next.ts": "dcbb8f4fe75be53aade59fa7eca9da904cbca175acf7428e25c0580fd636b89b",
+    "src/loop/openspec.ts": "259881e88398779bf9a3a2e358fd057ad6c831747a496b5a895532b93dac074d",
+    "tests/cli/nextstep.test.ts": "f7eabbcc6d64918b0a20cf1af6b14cc7b5ff59e06670b20cc25f434a6a01f6bd",
+    "tests/loop/fail-reason.test.ts": "f1b3fb307de52b36cc750c311905af630c905fd8a1bbe86176fe6962fe8c31ca",
+    "tests/loop/next.test.ts": "e67637a56a85ec25dfe3e17b8b547204a538fe77b76683fbd51b774994a38f5d",
+    "tests/loop/stale.test.ts": "727dedefc576b2cbe5c57253ad87c89edc6171477342ac86c6dcdd2efcbc0361"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/cli/commands.ts",
+  "reqs": [
+    "REQ-LOOP-001",
+    "REQ-LOOP-008"
+  ],
+  "started_at": "2026-10-30T02:38:27.181Z",
+  "task": "033/2.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/tasks tests/cli",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 140 pass\n 0 fail\n 952 expect() calls\nRan 140 tests across 21 files. [4.21s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

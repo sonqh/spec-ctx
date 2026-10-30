@@ -35,6 +35,7 @@ describe("archive guidance of this repository", () => {
     // the three lines from before 030 stay
     expect(has("check --strict")).toBe(true);
     expect(has("Rebuild the index")).toBe(true);
+    expect(g.some((l) => l.includes("Rebuild the index") && l.includes("`node dist/cli.js build`"))).toBe(true);
     expect(g.filter((l) => l.includes("openspec validate --all --strict")).length).toBe(2);
     expect(g.length).toBe(9);
   });

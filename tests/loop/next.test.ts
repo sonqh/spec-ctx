@@ -64,9 +64,10 @@ async function next(...args: string[]): Promise<Record<string, unknown>> {
   return obj;
 }
 
-const base = (o: Record<string, unknown>): Record<string, unknown> => ({
-  action: "stop", attempt: 0, change: CHANGE, command: null, human: false, max_attempts: 3, reason: null, state: "unknown", task: null, ...o,
-});
+const base = (o: Record<string, unknown>): Record<string, unknown> => {
+  const r = { action: "stop", attempt: 0, change: CHANGE, command: null, human: false, max_attempts: 3, reason: null, state: "unknown", task: null, ...o };
+  return { tasks: r.task === null ? [] : [r.task], ...r };
+};
 
 beforeAll(() => {
   p = new Project(NO_ID_FIXTURE);

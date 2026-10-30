@@ -4,7 +4,8 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "no
 import { dirname, join } from "node:path";
 import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
-import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT, loadConfig } from "../config.ts";
+import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
+import { loadConfigOrExit } from "../cli/config.ts";
 
 export const SCHEMA = "spec-driven-ids";
 /** REQ-SCH-003 where the templates land in a project. Upstream reads no project override for the stock templates, so this is a reference path (025/D4). */
@@ -91,7 +92,7 @@ export function fragmentText(brackets: boolean): string {
 
 /** REQ-SCH-006 the value of [ids] brackets, false when spec-ctx.toml is absent (032/D2). */
 export function bracketsOf(root: string): boolean {
-  return existsSync(join(root, CONFIG_FILE)) ? loadConfig(root).ids.brackets : false;
+  return existsSync(join(root, CONFIG_FILE)) ? loadConfigOrExit(root).ids.brackets : false;
 }
 
 /** Target path relative to the project root for every file that init installs, with its bytes. */

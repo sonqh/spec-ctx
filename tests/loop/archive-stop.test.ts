@@ -71,7 +71,7 @@ describe("the archive stop lives in the engine", () => {
     const os = process.env.SPECCTX_OPENSPEC!;
     expect(await next()).toEqual({
       action: "archive", attempt: 0, change: CHANGE, command: `${os} archive ${CHANGE} -y`, human: false, max_attempts: 3,
-      reason: "archive approved in question 3", state: "gate_passed", task: null,
+      reason: "archive approved in question 3", state: "gate_passed", task: null, tasks: [],
     });
     const saved = p.read(".ctx/questions.json");
     // only a resolved plan question for the change: the stop stays

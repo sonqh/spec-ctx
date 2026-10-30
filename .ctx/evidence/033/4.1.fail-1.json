@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T02:40:16.273Z",
+  "attempt": 1,
+  "stderr_tail": "13 |       for (const s of SKILLS) {\n14 |         const src = join(REPO, \"skills\", s);\n15 |         for (const f of readdirSync(src)) {\n16 |           const a = readFileSync(join(src, f));\n17 |           const b = readFileSync(join(REPO, d, s, f));\n18 |           expect(b.equals(a), `${d}/${s}/${f} differs from skills/${s}/${f}. Run: node dist/cli.js init --skills --force`).toBe(true);\n                                                                                                                                ^\nerror: .claude/skills/specctx-run/SKILL.md differs from skills/specctx-run/SKILL.md. Run: node dist/cli.js init --skills --force\n\nExpected: true\nReceived: false\n\n      at <anonymous> (/home/claude/spec-ctx/tests/init/drift.test.ts:18:124)\n(fail) skill copies do not drift > the copies in .claude/skills and .agents/skills of this repo equal skills/ [0.63ms]\nindex rebuilt\n\n 142 pass\n 1 fail\n 944 expect() calls\nRan 143 tests across 18 files. [4.57s]",
+  "task": "033/4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/config.test.ts tests/init tests/adopt tests/cli",
+    "exit": 1
+  }
+}

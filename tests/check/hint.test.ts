@@ -43,3 +43,25 @@ describe("a hint per finding", () => {
     expect(out).toContain("retitle-needs-renamed  3  one\ntwo\n");
   });
 });
+
+// Covers: REQ-CHK-007
+describe("dangling-ref hint", () => {
+  // The literal is built at run time, so the scan of this repository reads no tag in this file.
+  const LITERAL = "const s = '" + "// REQ-" + "NOPE-001';\n";
+
+  test("SCN-CHK-007-1 the hint names the cause and the fix", async () => {
+    p = new Project();
+    p.write("src/lit.ts", LITERAL);
+    const r = await p.run("check");
+    expect(r.code).toBe(1);
+    const line = r.out.split("\n").find((l) => l.startsWith("dangling-ref  "))!;
+    for (const s of ["string literal", "fixture text", "run time", "[scan] ignore"]) expect(line, s).toContain(s);
+  });
+
+  test("SCN-CHK-007-2 the scan still reads a tag inside a string", async () => {
+    p = new Project();
+    p.write("src/lit.ts", LITERAL);
+    const r = await p.run("check");
+    expect(r.out).toContain("src/lit.ts:1  dangling-ref  REQ-NOPE-001");
+  });
+});

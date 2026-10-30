@@ -45,7 +45,7 @@ describe("the plan stop lives in the engine", () => {
     expect(qs).toHaveLength(1);
     expect(qs[0]).toMatchObject({ n: 1, task: CHANGE, text: Q, status: "open" });
     expect(await next()).toEqual({
-      action: "ask", attempt: 0, change: CHANGE, command: 'specctx handoff resolve 1 "<answer>"', human: true, max_attempts: 3, reason: Q, state: "question_open", task: null,
+      action: "ask", attempt: 0, change: CHANGE, command: 'specctx handoff resolve 1 "<answer>"', human: true, max_attempts: 3, reason: Q, state: "question_open", task: null, tasks: [],
     });
   });
 

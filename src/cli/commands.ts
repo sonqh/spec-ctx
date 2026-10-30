@@ -70,14 +70,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   if (cmd === "init") return init(p, io);
   const root = findRoot(io.cwd, f.root as string | undefined);
   requireOpenSpec(root);
-  const { loadConfig, ConfigError } = await import("../config.ts");
-  let cfg;
-  try {
-    cfg = loadConfig(root);
-  } catch (e) {
-    if (e instanceof ConfigError) throw new UsageExit(e.message);
-    throw e;
-  }
+  const { loadConfigOrExit } = await import("./config.ts");
+  const cfg = loadConfigOrExit(root);
   const { dumps } = await import("../util/json.ts");
   const print = (v: unknown): void => io.out(dumps(v) + "\n");
   if (cmd === "build") {

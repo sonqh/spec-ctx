@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-30T02:39:44.273Z",
+  "bundle_chars": 8371,
+  "files": {
+    "src/cli/workflow.ts": "f097562a9aef297072a4138ecc9296b5e250b365a5db7ed2ee1b8e88085293a3",
+    "src/loop/fails.ts": "2048dc542ef602a8e6fc4d8a0675c5ff085f1913125e7453edc06718eb026c03",
+    "src/loop/next.ts": "dcbb8f4fe75be53aade59fa7eca9da904cbca175acf7428e25c0580fd636b89b",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/evidence.ts": "608afb6c43ba4467ea7e81f40af912108dfb19cde84d3a548927963f15bdf612",
+    "tests/loop/fail-reason.test.ts": "f1b3fb307de52b36cc750c311905af630c905fd8a1bbe86176fe6962fe8c31ca",
+    "tests/loop/fails.test.ts": "8b66e89937310880f40a57ebfb8260eee6f4a10793cc12e19eaf292f7f20a896",
+    "tests/tasks/done.test.ts": "a7396a93102e1776eed23b5b6d8672fafd070ea4c3572117877a98caa372bf26"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-002",
+    "REQ-LOOP-006"
+  ],
+  "started_at": "2026-10-30T02:39:23.023Z",
+  "task": "033/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/fails.test.ts tests/tasks",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 41 pass\n 0 fail\n 209 expect() calls\nRan 41 tests across 7 files. [580.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -163,3 +163,42 @@ describe("config", () => {
     expect(loadConfig(p.root)).toEqual(defaults());
   });
 });
+
+// Covers: REQ-DIST-009
+describe("invalid config gives one line", () => {
+  const oneLine = (err: string, path: string): void => {
+    expect(err.trimEnd().split("\n")).toHaveLength(1);
+    expect(err).toContain(path);
+    expect(err).not.toContain("internal error");
+    expect(err).not.toMatch(/\n\s+at /);
+  };
+
+  test("SCN-DIST-009-1 init prints one line and exits 2", async () => {
+    p = new Project();
+    p.write("spec-ctx.toml", "ids = [\n");
+    const r = await p.run("init", "--schema");
+    expect(r.code).toBe(2);
+    expect(r.err.startsWith("specctx: ")).toBe(true);
+    expect(r.err).toContain("not valid TOML");
+    oneLine(r.err, p.path("spec-ctx.toml"));
+  });
+
+  test("SCN-DIST-009-2 next, check, and adopt print the same line", async () => {
+    p = new Project();
+    p.write("spec-ctx.toml", "ids = [\n");
+    const first = (await p.run("init", "--schema")).err;
+    for (const cmd of ["next", "check", "adopt"]) {
+      const r = await p.run(cmd);
+      expect(r.code, cmd).toBe(2);
+      expect(r.err, cmd).toBe(first);
+    }
+  });
+
+  test("SCN-DIST-009-3 another config error is one line too", async () => {
+    p = new Project();
+    p.write("spec-ctx.toml", '[ids]\nbrackets = "yes"\n');
+    const r = await p.run("init", "--schema");
+    expect(r.code).toBe(2);
+    oneLine(r.err, "ids.brackets");
+  });
+});
