@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T12:26:31.287Z",
+  "attempt": 1,
+  "stderr_tail": "- []\n+ [\n+   \"tests/index/codetag.test.ts:27  dangling-ref  REQ-AB-001\",\n+   \"tests/index/codetag.test.ts:27  dangling-ref  REQ-AB-002\",\n+   \"tests/index/codetag.test.ts:28  dangling-ref  REQ-AB-004\",\n+   \"tests/index/codetag.test.ts:28  dangling-ref  REQ-AB-005\",\n+   \"tests/index/codetag.test.ts:28  dangling-ref  REQ-AB-006\",\n+   \"dangling-ref  5  No entry has this ID. Fix the ID or remove the link. A tag inside a string literal or fixture text also reads as a link. Build that text at run time, or move the file under a path in [scan] ignore.\",\n+ ]\n\n- Expected  - 1\n+ Received  + 8\n\n      at <anonymous> (/home/claude/spec-ctx/tests/gov/governance.test.ts:21:101)\n(fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [456.21ms]\n\n 24 pass\n 1 fail\n 215 expect() calls\nRan 25 tests across 8 files. [4.12s]",
+  "task": "045/4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/verification/045.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/verification/045.md && bun test tests/gov && grep -q \"045\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 1
+  }
+}

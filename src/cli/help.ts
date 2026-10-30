@@ -61,19 +61,19 @@ export const TABLE: CommandHelp[] = [
     exit: PLAIN, example: "specctx query lockfile --kind req",
   },
   {
-    name: "related", group: "Read", args: "<ID>", summary: "Show the entries that link to an ID.",
+    name: "related", group: "Read", args: "<ID|path>", summary: "Show the entries that link to an ID or to a file.",
     flags: [["--depth <n>", "Follow links n steps. The default is 1."], ["--all", "Show all copies of an ID."]],
-    exit: [OK, ["2", "A usage error or an unknown ID."], INTERNAL], example: "specctx related REQ-IDX-001",
+    exit: [OK, ["2", "A usage error, an unknown ID, or a path that is not a file in the repository."], INTERNAL], example: "specctx related src/graph/bundle.ts",
   },
   {
-    name: "bundle", group: "Read", args: "<ID...>", summary: "Print the spec text for the IDs and their links.",
+    name: "bundle", group: "Read", args: "<ID|path...>", summary: "Print the spec text for the IDs or files and their links.",
     flags: [
       ["--budget <n>", "Stop at n characters. The default is 8000."],
       ["--depth <n>", "Follow links n steps. The default is 1."],
       ["--all", "Show all copies of an ID."],
       ["--block", "Print only the requirement block, as it sits in the spec file. Each ID must be a requirement."],
     ],
-    exit: [OK, ["2", "A usage error, an unknown ID, or an ID that is not a requirement."], INTERNAL], example: "specctx bundle REQ-IDX-001 --budget 3000",
+    exit: [OK, ["2", "A usage error, an unknown ID, a bad path, or an ID that is not a requirement."], INTERNAL], example: "specctx bundle REQ-IDX-001 --budget 3000",
   },
   {
     name: "check", group: "Read", args: "", summary: "Find ID and link errors.",

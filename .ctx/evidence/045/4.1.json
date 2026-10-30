@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T12:28:26.081Z",
+  "bundle_chars": 8277,
+  "files": {
+    "src/cli/commands.ts": "026f6d0da0fbc13347c8db0b16093b23195627d400bb08dc1d439983a439251f",
+    "src/graph/bundle.ts": "c5ff9b1b956f902af6ec8f4748c468c09f3b77f37929376345bdbf41db1cad54",
+    "src/graph/files.ts": "ca96c31b07cefd31408e3d29d7da48c57058122c4aa0831e22b88f150a2aecb7",
+    "src/graph/path.ts": "02caf335efedb5cd624bf6413637eb50022f3d42944a1191e9698ba309d0504d",
+    "src/graph/related.ts": "b4c9b613f74b7c6aea3ffd7a7076669887c8e665f76a95e58fd7b7802ffdc798",
+    "src/index/scan.ts": "cba36555005dfb3e0ccd902686ac9d86b8b95371db2cae8f1f1eadbb962a04ef",
+    "tests/cli/help-path.test.ts": "62e01dde904c040e7d8cd1f4255c47f3a09c688ccc9700ca33a16e2ed5dc0242",
+    "tests/index/codetag.test.ts": "5970e20f0871b9e1630c0577d9467c0c5b1c457bf72f419da490ff092f9c4e69",
+    "tests/query/file-cli.test.ts": "60bc3a56e979b757a1308bf8dccf9879ed9221bccc199398951ac56d723ef641",
+    "tests/query/file-edges.test.ts": "bee3a8e939cf611b9022c46397529bf5ce09e8f8d20aedb8abab58bdc3292872"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-005",
+    "REQ-QRY-006",
+    "REQ-IDX-008"
+  ],
+  "started_at": "2026-10-30T12:25:25.605Z",
+  "task": "045/4.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/verification/045.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/verification/045.md && bun test tests/gov && grep -q \"045\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 25 pass\n 0 fail\n 217 expect() calls\nRan 25 tests across 8 files. [5.12s]",
+    "stdout_sha256": "1c6685b3d419d31b1f1e4fd1d1b31762d2061ad45f8c46b071713375777feede"
+  }
+}

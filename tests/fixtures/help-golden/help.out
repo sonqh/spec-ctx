@@ -6,8 +6,8 @@ Read:
   `status`                     Show the active changes, the current task, and the open questions.
   `next`                       Name the next action of the loop from the files on disk. Write nothing.
   `query [term...]`            Find the entries that contain all terms. With --change and no term, list every entry of that change.
-  `related <ID>`               Show the entries that link to an ID.
-  `bundle <ID...>`             Print the spec text for the IDs and their links.
+  `related <ID|path>`          Show the entries that link to an ID or to a file.
+  `bundle <ID|path...>`        Print the spec text for the IDs or files and their links.
   `check`                      Find ID and link errors.
   `gate`                       Run `check`, the baseline against the merge base of [gate] base, the markdown linters, `openspec validate` with the command in [gate] openspec, and the length check. Stop at the first failure.
   `task next`                  Show the next open task.

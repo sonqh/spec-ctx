@@ -27,6 +27,17 @@ Change 044-day-one-noise.
 
 - A passing `task done` resolves the open attempt-cap question of its task, so `next` stops returning `ask`. `task done` now writes that question with `stage: "cap"`. A question with no stage stays open. Plan, design, and archive questions stay open. REQ-LOOP-014.
 
+Change 045-query-by-file.
+
+### Added
+
+- `related <path>` and `bundle <path>` take a file in the repository where they take an ID. The answer lists the requirements, scenarios, tasks, and decisions that link to the file. Each line has its reason: `implements, tag at <file>:<line>`, `covers, tag at <file>:<line>`, or `mentions, in task line`. The answer lists no code or test row. A path that is not a file in the repository exits 2 with one line. A file with no links prints `no links: <path>` and exits 0. REQ-QRY-005, REQ-QRY-006, REQ-QRY-008.
+- The index records `paths` on the task entry of an active change. They are the code spans of the task line that look like a path. REQ-IDX-009.
+
+### Fixed
+
+- A code tag line that names several REQ IDs now gives one code entry for each ID. Before, only the first ID counted. A suffix like `REQ-AB-0011` no longer matches `REQ-AB-001`. The parity golden `index.json` has three more entries. REQ-IDX-008.
+
 ## 0.4.0
 
 ### Added

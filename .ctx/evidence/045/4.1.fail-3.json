@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T12:27:09.332Z",
+  "attempt": 3,
+  "stderr_tail": "21 |     expect(r.out.split(\"\\n\").filter((l) => l.includes(\"  \") && !l.startsWith(\"manual-evidence  \"))).toEqual([]);\n                                                                                                         ^\nerror: expect(received).toEqual(expected)\n\n- []\n+ [\n+   \".ctx/evidence/045/1.1.json:1  stale-evidence  045/1.1 tests/index/codetag.test.ts\",\n+   \"stale-evidence  1  Run node dist/cli.js task reopen <task> <why>, then node dist/cli.js task done <task>.\",\n+ ]\n\n- Expected  - 1\n+ Received  + 4\n\n      at <anonymous> (/home/claude/spec-ctx/tests/gov/governance.test.ts:21:101)\n(fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [824.55ms]\n\n 24 pass\n 1 fail\n 215 expect() calls\nRan 25 tests across 8 files. [4.67s]",
+  "task": "045/4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md CHANGELOG.md docs/verification/045.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md CHANGELOG.md docs/verification/045.md && bun test tests/gov && grep -q \"045\" CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md",
+    "exit": 1
+  }
+}

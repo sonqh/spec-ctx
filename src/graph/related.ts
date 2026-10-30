@@ -2,12 +2,14 @@
 import { canon, poolOf } from "../index/canonical.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
+import { fileEdges } from "./files.ts";
 
 // REQ-QRY-003 fixed block order after the requested IDs
 export const KIND_RANK: Record<string, number> = { adr: 0, decision: 1, req: 2, scn: 2, task: 3, code: 4, test: 5 };
 
-export const REASONS = ["scenario of", "ref from", "ref to", "decision for", "task cites", "implements", "covers"];
+export const REASONS = ["scenario of", "ref from", "ref to", "decision for", "task cites", "implements", "covers", "mentions"];
 
+/** REQ-QRY-005 a start that is no ID is a repository path. Its links seed the walk, and the walk adds no code or test row. */
 export function related(entries: Entry[], start: string, depth: number, all = false): [string, string][] {
   const pool = poolOf(entries, all);
   const ids = canon(entries);
@@ -22,15 +24,23 @@ export function related(entries: Entry[], start: string, depth: number, all = fa
   }
   const found = new Map<string, string>();
   const add = (i: string, reason: string): boolean => {
+    if (seeds && ids.get(i) && (ids.get(i)!.kind === "code" || ids.get(i)!.kind === "test")) return false;
     if (i !== start && !found.has(i)) {
       found.set(i, reason);
       return true;
     }
     return false;
   };
+  const isId = ids.has(start) || entries.some((e) => e.id === start);
+  const seeds = isId ? null : fileEdges(entries, start);
+  const frontier0: string[] = [start];
+  if (seeds) {
+    frontier0.length = 0;
+    for (const [i, reason] of seeds) if (add(i, reason)) frontier0.push(i);
+  }
   const s = ids.get(start);
   if (s && s.kind === "req") for (const sid of s.scenarios ?? []) add(sid, `scenario of ${start}`);
-  let frontier = [start];
+  let frontier = frontier0;
   for (let d = 0; d < depth; d++) {
     const nxt: string[] = [];
     for (const x of frontier) {

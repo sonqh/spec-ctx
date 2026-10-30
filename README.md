@@ -118,6 +118,23 @@ code  src/login.ts:1  active  src/login.ts:1  implements REQ-UA-004
 test  tests/login.test.ts:1  active  tests/login.test.ts:1  covers REQ-UA-004
 ```
 
+### Ask about a file
+
+`related` and `bundle` take a file path where they take an ID. Run it before you edit a file. The reason on each line tells you how strong the link is. `implements` comes from a code tag. `covers` comes from a `Covers:` tag. `mentions` comes from a path in backticks in a task line of an active change. This is the output for one file of this repository:
+
+```text
+$ specctx related src/util/hash.ts
+adr  ADR-004  active  decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:1  ref from REQ-TASK-004
+req  REQ-CHK-003  active  openspec/specs/check/spec.md:64  ref to REQ-TASK-004
+req  REQ-STAT-002  active  openspec/specs/metrics/spec.md:19  ref to REQ-TASK-004
+req  REQ-TASK-004  active  openspec/specs/task-workflow/spec.md:89  implements, tag at src/util/hash.ts:1
+req  REQ-VER-004  active  openspec/specs/verify-runner/spec.md:37  ref to REQ-TASK-004
+scn  SCN-TASK-004-1  active  openspec/specs/task-workflow/spec.md:94  scenario of REQ-TASK-004
+task  002/3.3  done  openspec/changes/archive/2026-10-24-002-ids-and-tasks/tasks.md:17  task cites REQ-TASK-004
+```
+
+A path that is not a file in the repository exits 2. A file with no links prints `no links: <path>` and exits 0.
+
 ## The life cycle for agents
 
 `init --all` installs one skill, `specctx-run`. The user types one prompt, such as "build this" or "continue". The skill loops until the change reaches the archive or a human must decide.
@@ -199,8 +216,8 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | `status` | Active changes with task counts, the current task, and open questions. |
 | `next` | The next action of the loop from the files on disk: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`. `--json` prints one object. Flag: `--change`. |
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
-| `related <ID>` | Linked entries with the reason for each link. Flags: `--depth`, `--all`. |
-| `bundle <ID...>` | Spec text of the IDs, their scenarios, decisions, and neighbors. Flags: `--budget`, `--depth`, `--all`. |
+| `related <ID\|path>` | Linked entries with the reason for each link. A file path works too. Flags: `--depth`, `--all`. |
+| `bundle <ID\|path...>` | Spec text of the IDs or files, their scenarios, decisions, and neighbors. Flags: `--budget`, `--depth`, `--all`. |
 | `check` | ID and link integrity. `--strict` adds test coverage and evidence. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
@@ -322,7 +339,7 @@ A Verify command is code from the pull request. The boundary:
 ## Status
 
 - Published: `spec-ctx@0.4.0` on npm, with tags `v0.4.0` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 044. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 045. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
@@ -332,7 +349,7 @@ A Verify command is code from the pull request. The boundary:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0221 (n=125) | 0.93 (217/233) | 59 (of 110 reopens) | 52 (n=125) | 0 (0 baselined + 0 new) |
+| total | 0.0215 (n=129) | 0.93 (222/238) | 60 (of 111 reopens) | 52 (n=129) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

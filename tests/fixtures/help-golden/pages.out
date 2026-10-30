@@ -61,10 +61,10 @@ Example:
   `specctx query lockfile --kind req`
 
 == related
-specctx related: Show the entries that link to an ID.
+specctx related: Show the entries that link to an ID or to a file.
 
 Usage:
-  `specctx related <ID> [flags]`
+  `specctx related <ID|path> [flags]`
 
 Flags:
   `--depth <n>`                Follow links n steps. The default is 1.
@@ -75,17 +75,17 @@ Flags:
 
 Exit codes:
   `0` Success.
-  `2` A usage error or an unknown ID.
+  `2` A usage error, an unknown ID, or a path that is not a file in the repository.
   `3` An internal error.
 
 Example:
-  `specctx related REQ-IDX-001`
+  `specctx related src/graph/bundle.ts`
 
 == bundle
-specctx bundle: Print the spec text for the IDs and their links.
+specctx bundle: Print the spec text for the IDs or files and their links.
 
 Usage:
-  `specctx bundle <ID...> [flags]`
+  `specctx bundle <ID|path...> [flags]`
 
 Flags:
   `--budget <n>`               Stop at n characters. The default is 8000.
@@ -98,7 +98,7 @@ Flags:
 
 Exit codes:
   `0` Success.
-  `2` A usage error, an unknown ID, or an ID that is not a requirement.
+  `2` A usage error, an unknown ID, a bad path, or an ID that is not a requirement.
   `3` An internal error.
 
 Example:

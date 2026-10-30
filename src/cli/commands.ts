@@ -158,10 +158,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   // REQ-QRY-001 no term lists a whole change. Without --change a term is required (017/D6).
   if (cmd === "query" && !f.change) need(1, "at least one term");
   if (cmd === "related") {
-    need(1, "one ID");
-    if (p.positional.length > 1) throw new UsageExit("related takes one ID");
+    need(1, "one ID or path");
+    if (p.positional.length > 1) throw new UsageExit("related takes one ID or path");
   }
-  if (cmd === "bundle") need(1, "at least one ID");
+  if (cmd === "bundle") need(1, "at least one ID or path");
   if ((cmd === "status" || cmd === "check" || cmd === "next") && p.positional.length) throw new UsageExit(`${cmd} takes no arguments`);
   const { data, rebuilt } = loadIndex(root, cfg);
   if (rebuilt) io.err("index rebuilt\n");
@@ -205,11 +205,19 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     case "related": {
       const { canon } = await import("../index/canonical.ts");
       const { related } = await import("../graph/related.ts");
-      const id = p.positional[0]!;
       const ids = canon(entries);
+      let id = p.positional[0]!;
+      let isPath = false;
       if (!ids.has(id) && !(all && entries.some((e) => e.id === id))) {
-        io.err(`unknown id ${id}\n`);
-        return 2;
+        // REQ-QRY-005 an input that is no known ID is a path in the repository
+        const { resolveFileInput } = await import("../graph/path.ts");
+        const r = resolveFileInput(root, io.cwd, id);
+        if ("error" in r) {
+          io.err(`${r.error}\n`);
+          return 2;
+        }
+        id = r.rel;
+        isPath = true;
       }
       const rows: [(typeof entries)[number], string][] = [];
       for (const [i, reason] of related(entries, id, (f.depth as number | undefined) ?? 1, all)) {
@@ -219,6 +227,7 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         for (const e of copies) rows.push([e, reason]);
       }
       if (json) print(rows.map(([e, reason]) => ({ ...e, reason })));
+      else if (isPath && rows.length === 0) io.out(`no links: ${id}\n`);
       else io.out(rows.map(([e, r]) => `${e.kind}  ${e.id}  ${e.status}  ${e.file}:${e.line}  ${r}\n`).join(""));
       return 0;
     }
@@ -226,14 +235,31 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { canon } = await import("../index/canonical.ts");
       const { bundle } = await import("../graph/bundle.ts");
       const ids = canon(entries);
-      const unknown = p.positional.filter((i) => !ids.has(i));
-      if (unknown.length) {
-        io.err(`unknown id(s): ${unknown.join(", ")}\n`);
+      // REQ-QRY-005 an input that is no known ID is a path in the repository
+      const { resolveFileInput } = await import("../graph/path.ts");
+      const wanted: string[] = [];
+      const paths = new Set<string>();
+      const unknown: string[] = [];
+      const pathErrors: string[] = [];
+      for (const i of p.positional) {
+        if (ids.has(i)) wanted.push(i);
+        else {
+          const r = resolveFileInput(root, io.cwd, i);
+          if ("rel" in r) {
+            wanted.push(r.rel);
+            paths.add(r.rel);
+          } else if (r.error.startsWith("unknown id ")) unknown.push(i);
+          else pathErrors.push(r.error);
+        }
+      }
+      if (unknown.length) pathErrors.unshift(`unknown id(s): ${unknown.join(", ")}`);
+      if (pathErrors.length) {
+        io.err(pathErrors.map((l) => l + "\n").join(""));
         return 2;
       }
       // REQ-QRY-004 --block prints the requirement blocks verbatim and nothing else (034/D2)
       if (f.block) {
-        const notReq = p.positional.filter((i) => ids.get(i)!.kind !== "req");
+        const notReq = p.positional.filter((i) => ids.get(i)?.kind !== "req");
         if (notReq.length) {
           io.err(`not a requirement: ${notReq.join(", ")}\n`);
           return 2;
@@ -244,9 +270,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         else io.out(text);
         return 0;
       }
-      const b = bundle(root, entries, p.positional, (f.budget as number | undefined) ?? cfg.bundle.budget,
+      const b = bundle(root, entries, wanted, (f.budget as number | undefined) ?? cfg.bundle.budget,
         (f.depth as number | undefined) ?? cfg.bundle.depth, all);
       if (json) print(b);
+      else if (b.text === "" && wanted.every((w) => paths.has(w))) io.out(wanted.map((w) => `no links: ${w}\n`).join(""));
       else io.out(b.text);
       return 0;
     }

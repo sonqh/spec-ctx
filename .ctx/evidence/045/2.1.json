@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T12:20:40.832Z",
+  "bundle_chars": 6433,
+  "files": {
+    "src/graph/files.ts": "ca96c31b07cefd31408e3d29d7da48c57058122c4aa0831e22b88f150a2aecb7",
+    "tests/query/file-edges.test.ts": "bee3a8e939cf611b9022c46397529bf5ce09e8f8d20aedb8abab58bdc3292872"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-006"
+  ],
+  "started_at": "2026-10-30T12:19:51.887Z",
+  "task": "045/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 28 pass\n 0 fail\n 169 expect() calls\nRan 28 tests across 4 files. [468.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

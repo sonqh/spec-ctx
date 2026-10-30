@@ -15,6 +15,8 @@ export interface Entry {
   canonical: boolean;
   refs: string[];
   scenarios?: string[];
+  /** REQ-IDX-009 paths that an active task line names in backticks. */
+  paths?: string[];
 }
 
 /** file, line, rule, detail */

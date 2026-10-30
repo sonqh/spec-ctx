@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-30T12:28:15.015Z",
+  "files": {
+    "src/index/scan.ts": "cba36555005dfb3e0ccd902686ac9d86b8b95371db2cae8f1f1eadbb962a04ef",
+    "src/index/types.ts": "57d1a1c1f66fc2c0260db0f2bd28a6bdf529e5465f62e8606def3fe3e6f290c3",
+    "tests/index/codetag.test.ts": "5970e20f0871b9e1630c0577d9467c0c5b1c457bf72f419da490ff092f9c4e69",
+    "tests/index/taskpaths.test.ts": "ed218605316342567a446d25ff5fac1d46750f0d01b6b557d8f285af835074a9"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDX-008",
+    "REQ-IDX-009"
+  ],
+  "task": "045/1.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && bun test tests/index tests/check tests/query tests/stats && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 168 pass\n 0 fail\n 842 expect() calls\nRan 168 tests across 25 files. [4.70s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

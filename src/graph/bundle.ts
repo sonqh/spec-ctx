@@ -61,6 +61,8 @@ export function bundle(root: string, entries: Entry[], wanted: string[], budget:
   const ids = canon(entries);
   const blocks: [Entry, string][] = [];
   for (const i of wanted) {
+    // REQ-QRY-005 a path has no block of its own. Its links come from related below.
+    if (!ids.has(i)) continue;
     const copies = [ids.get(i)!];
     if (all) copies.push(...entries.filter((e) => e.id === i && !e.canonical));
     for (const e of copies) blocks.push([e, "requested"]);

@@ -531,5 +531,35 @@
     "stage": "archive",
     "answer": "Approved by the lead after review of the 3.1 fix.",
     "resolved_at": "2026-10-30T08:01:59.492Z"
+  },
+  {
+    "n": 60,
+    "asked_at": "2026-10-30T12:15:55.015Z",
+    "task": "045-query-by-file",
+    "text": "plan ready for 045-query-by-file. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead with one cut: drop the touched edge. Evidence files list the files tagged with the task's REQs, so touched adds no link that implements does not give, and it costs a 1.6 MB read per query. Remove REQ-QRY-007, its scenarios, D3, D8 and task 4.1. Record the related wall time on this repo in docs/verification/045.md instead. D4 stays: no other code or test rows in a file answer.",
+    "resolved_at": "2026-10-30T12:16:37.693Z"
+  },
+  {
+    "n": 61,
+    "asked_at": "2026-10-30T12:27:09.333Z",
+    "task": "045/4.1",
+    "text": "task 045/4.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [824.55ms]. What should change?",
+    "status": "resolved",
+    "stage": "cap",
+    "answer": "Lead: the cause is stale evidence of 045/1.1 after a test edit. Run task reopen 045/1.1 with that reason, task done 045/1.1, then task done 045/4.1.",
+    "resolved_at": "2026-10-30T12:27:48.250Z"
+  },
+  {
+    "n": 62,
+    "asked_at": "2026-10-30T12:28:54.631Z",
+    "task": "045-query-by-file",
+    "text": "archive 045-query-by-file?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review.",
+    "resolved_at": "2026-10-30T12:28:55.140Z"
   }
 ]

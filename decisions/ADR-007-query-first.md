@@ -23,7 +23,7 @@ A product review on 2026-10-30 measured the query surface.
 3. Tasks, Verify, evidence, and `check` keep the links true. They stay as support for query, not as the headline.
 4. The loop (`next`, the `specctx-run` skill), the gate, the baseline, the Action rerun, and the replay script are frozen. They get bug fixes only.
 5. The team adjusts the work of 0.2.0 to 0.4.0 to serve query. It does not remove it.
-   - Evidence files list the files of each task. They become a source of edges from a file to its tasks.
+   - Evidence files keep the proof that the code and test tags of a task held when its Verify passed. They list the files tagged with the task's requirements, not the files the run touched. So they give no new edge from a file to a task (change 045).
    - The ID diff of `gate --rerun` between a base and HEAD becomes a query of what changed since a ref.
    - The delta rules of `check` and the `Covers:` parser keep the edges that query follows.
    - The `[cli] run` prefix makes every printed query command runnable.
@@ -36,7 +36,7 @@ A product review on 2026-10-30 measured the query surface.
 
 ## Order of work
 
-1. Lookup by file, from code tags, evidence files, and paths that tasks name.
+1. Lookup by file, from code tags, test tags, and paths that tasks name. Done in change 045.
 2. Edges that OpenSpec already implies, and a budget that keeps code and tests. The edges:
    - a task to the deltas of its change
    - a delta to its capability, and a change to its capabilities

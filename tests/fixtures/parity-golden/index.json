@@ -11180,6 +11180,34 @@
       "canonical": true,
       "change": "main",
       "file": "src/apply/pipeline.ts",
+      "id": "src/apply/pipeline.ts:275",
+      "kind": "code",
+      "line": 275,
+      "refs": [
+        "REQ-APPLY-006"
+      ],
+      "status": "active",
+      "text": "",
+      "title": "// REQ-APPLY-003, REQ-APPLY-006, REQ-APPLY-008"
+    },
+    {
+      "canonical": true,
+      "change": "main",
+      "file": "src/apply/pipeline.ts",
+      "id": "src/apply/pipeline.ts:275",
+      "kind": "code",
+      "line": 275,
+      "refs": [
+        "REQ-APPLY-008"
+      ],
+      "status": "active",
+      "text": "",
+      "title": "// REQ-APPLY-003, REQ-APPLY-006, REQ-APPLY-008"
+    },
+    {
+      "canonical": true,
+      "change": "main",
+      "file": "src/apply/pipeline.ts",
       "id": "src/apply/pipeline.ts:325",
       "kind": "code",
       "line": 325,
@@ -11381,6 +11409,20 @@
       "line": 49,
       "refs": [
         "REQ-CLI-004"
+      ],
+      "status": "active",
+      "text": "",
+      "title": "// REQ-CLI-004 one line per item, no color, no emoji. REQ-CLI-008 an update shows +N -M."
+    },
+    {
+      "canonical": true,
+      "change": "main",
+      "file": "src/cli/commands.ts",
+      "id": "src/cli/commands.ts:49",
+      "kind": "code",
+      "line": 49,
+      "refs": [
+        "REQ-CLI-008"
       ],
       "status": "active",
       "text": "",

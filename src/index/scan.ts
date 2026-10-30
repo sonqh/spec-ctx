@@ -18,7 +18,9 @@ const SCN_HDR = new RegExp(`^#### Scenario:${S}*(?:(SCN-[A-Z]{2,6}-\\d{3}-\\d+)|
 const ADR_HDR = new RegExp(`^# (ADR-\\d{3})${S}+(.*)$`, "s");
 const REFS_RE = new RegExp(`^Refs:${S}*(.+)$`, "s");
 const TASK_REQ = new RegExp(`\\[(REQ-[A-Z]{2,6}-\\d{3}(?:${S}*,${S}*REQ-[A-Z]{2,6}-\\d{3})*)\\]`, "g");
-const CODE_TAG = new RegExp(`(?://|#|/\\*|\\*)${S}*(REQ-[A-Z]{2,6}-\\d{3})`);
+// REQ-IDX-008 the first marker and ID start the tag. Every REQ ID to the end of the line counts, with word boundaries (045/D5).
+const CODE_TAG = new RegExp(`(?://|#|/\\*|\\*)${S}*(REQ-[A-Z]{2,6}-\\d{3})\\b`);
+const CODE_SPAN = /`([^`]+)`/g;
 // REQ-IDX-007 the rest of the line after Covers:, and each REQ ID in it with word boundaries (042/D4)
 const COVER_TAG = /Covers:(.*)$/s;
 const REQ_ID = /\bREQ-[A-Z]{2,6}-\d{3}\b/g;
@@ -312,10 +314,14 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
         if (!body.includes("Verify:")) problems.push([rpath, i, "task-without-verify", tid]);
       }
       // the full task body is the title, so query output shows the Verify clause
-      entries.push(entry({
+      const t = entry({
         id: tid, kind: "task", file: rpath, line: i, title: pyStrip(body), change,
         status: pyStrip(box).toLowerCase() === "x" ? "done" : "open", refs: reqs,
-      }));
+      });
+      // REQ-IDX-009 an active task records the paths that its line names in backticks
+      const paths = status === "archived" ? [] : taskPaths(body);
+      if (paths.length) t.paths = paths;
+      entries.push(t);
     }
   }
   // REQ-IDX-002 text holds the lower-cased body of each block
@@ -335,6 +341,18 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
       e.refs = [...after.matchAll(ID_RE)].map((x) => x[1]!);
     }
   }
+}
+
+/** REQ-IDX-009 code spans with no space and no `*` that hold a `/` or a `.`. A leading `./` is dropped. */
+export function taskPaths(body: string): string[] {
+  const out = new Set<string>();
+  for (const m of body.matchAll(CODE_SPAN)) {
+    let t = m[1]!;
+    if (/[ \t\n\r\f\v*]/.test(t) || !(t.includes("/") || t.includes("."))) continue;
+    while (t.startsWith("./")) t = t.slice(2);
+    if (t) out.add(t);
+  }
+  return [...out].sort(cmpStr);
 }
 
 export function isTestPath(sc: Scanner, rpath: string): boolean {
@@ -370,7 +388,10 @@ export function scanSource(sc: Scanner, rpath: string, entries: Entry[], scnName
     }
     const m = CODE_TAG.exec(line);
     if (m && !line.includes("Covers:")) {
-      entries.push(entry({ id: `${rpath}:${i}`, kind: "code", file: rpath, line: i, title: pyStrip(line), change: "main", status: "active", refs: [m[1]!] }));
+      const ids = [...new Set(line.slice(m.index).match(REQ_ID) ?? [])];
+      for (const rid of ids) {
+        entries.push(entry({ id: `${rpath}:${i}`, kind: "code", file: rpath, line: i, title: pyStrip(line), change: "main", status: "active", refs: [rid] }));
+      }
     }
   }
 }
