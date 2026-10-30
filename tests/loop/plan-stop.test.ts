@@ -1,4 +1,4 @@
-// Covers: REQ-LOOP-005, REQ-HND-002
+// Covers: REQ-LOOP-005, REQ-LOOP-009, REQ-HND-002
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync } from "node:fs";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
@@ -37,7 +37,10 @@ afterAll(() => {
 
 describe("the plan stop lives in the engine", () => {
   test("SCN-LOOP-005-1 handoff ask --change blocks the change with ask and human true", async () => {
-    expect((await next()).action).toBe("start");
+    // SCN-LOOP-009-1 the engine asks for the plan stop and prints the command
+    expect(await next()).toEqual({
+      action: "ask", attempt: 0, change: CHANGE, command: `specctx handoff ask --change ${CHANGE} "${Q}"`, human: true, max_attempts: 3, reason: Q, state: "plan_stop", task: null, tasks: [],
+    });
     const a = await p.run("handoff", "ask", "--change", CHANGE, Q);
     expect(a.code, a.err).toBe(0);
     expect(a.out).toBe("open question 1 added\n");
@@ -71,5 +74,20 @@ describe("the plan stop lives in the engine", () => {
     } finally {
       q.cleanup();
     }
+  });
+});
+
+describe("the plan stop rule", () => {
+  test("SCN-LOOP-009-3 no plan stop after the plan question, a started task, or a done task", async () => {
+    expect((await next()).state).toBe("task_open");
+    p.write(".ctx/questions.json", "[]\n");
+    expect((await next()).state).toBe("plan_stop");
+    // a current task of the change
+    expect((await p.run("task", "start", `${CHANGE}/1.1`)).code).toBe(0);
+    expect((await next()).state).toBe("task_started");
+    // a ticked task
+    p.write(TASKS, p.read(TASKS).replace("- [ ]", "- [x]"));
+    p.touchForward(TASKS);
+    expect((await next()).state).not.toBe("plan_stop");
   });
 });

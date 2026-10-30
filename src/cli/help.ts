@@ -71,8 +71,9 @@ export const TABLE: CommandHelp[] = [
       ["--budget <n>", "Stop at n characters. The default is 8000."],
       ["--depth <n>", "Follow links n steps. The default is 1."],
       ["--all", "Show all copies of an ID."],
+      ["--block", "Print only the requirement block, as it sits in the spec file. Each ID must be a requirement."],
     ],
-    exit: [OK, ["2", "A usage error or an unknown ID."], INTERNAL], example: "specctx bundle REQ-IDX-001 --budget 3000",
+    exit: [OK, ["2", "A usage error, an unknown ID, or an ID that is not a requirement."], INTERNAL], example: "specctx bundle REQ-IDX-001 --budget 3000",
   },
   {
     name: "check", group: "Read", args: "", summary: "Find ID and link errors.",

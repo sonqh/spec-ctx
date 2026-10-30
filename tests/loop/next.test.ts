@@ -147,7 +147,15 @@ describe("specctx next walks the decision order", () => {
     // SCN-LOOP-004-2 a real command clears the gap
     p.write(TASKS, p.read(TASKS).replace("Verify: `true`", "Verify: `bun test tests/a.test.ts`"));
     p.touchForward(TASKS, 6000);
+    // REQ-LOOP-009 SCN-LOOP-009-1 the plan stop comes first. SCN-LOOP-009-2 the printed command with a resolve ends it.
+    const text = `plan ready for ${CHANGE}. Approve to start the tasks?`;
+    expect(await next()).toEqual(base({
+      action: "ask", command: `specctx handoff ask --change ${CHANGE} "${text}"`, human: true, reason: text, state: "plan_stop",
+    }));
+    expect((await p.run("handoff", "ask", "--change", CHANGE, text)).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
     expect(await next()).toEqual(base({ action: "start", command: `specctx task start ${CHANGE}/1.1`, state: "task_open", task: `${CHANGE}/1.1` }));
+    rmSync(p.path(".ctx/questions.json"));
     p.write(TASKS, "# Tasks\n\n## 1. Second factor\n\n- [x] 1.1 Add the TOTP secret store [REQ-UA-001] Verify: `node -e 0`\n- [x] 1.2 Shorten the session timeout [REQ-UA-001] Verify: `node -e 0`\n- [ ] 1.3 Add the TOTP prompt to the login form [REQ-UA-001] Verify: `echo boom && exit 1`\n");
     p.touchForward(TASKS);
   });

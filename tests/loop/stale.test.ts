@@ -1,4 +1,4 @@
-// Covers: REQ-LOOP-008, REQ-CHK-003
+// Covers: REQ-LOOP-008, REQ-LOOP-010, REQ-CHK-003
 import { rmSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { OPENSPEC_STUB, Project } from "../helpers.ts";
@@ -73,5 +73,25 @@ describe("stale evidence in next", () => {
     expect(await next()).toMatchObject({ action: "start", task: "001/2.1" });
     const c = await p.run("check", "--strict");
     expect(c.out).not.toContain("stale-evidence");
+  });
+
+  test("SCN-LOOP-010-1 work names the stale tasks and keeps its fields", async () => {
+    await closeAlpha();
+    expect((await p.run("task", "start", "001/2.1")).code).toBe(0);
+    expect(await next()).toEqual({
+      action: "work", attempt: 0, change: "001-x", command: "specctx task done 001/2.1", human: false, max_attempts: 3,
+      reason: "stale waiting: 001/1.1, 001/1.2", state: "task_started", task: "001/2.1", tasks: ["001/2.1"],
+    });
+  });
+
+  test("SCN-LOOP-010-2 fix keeps its reason first", async () => {
+    await closeAlpha();
+    p.write("openspec/changes/001-x/tasks.md", p.read("openspec/changes/001-x/tasks.md").replace("- [ ] 2.1 C. [REQ-AAA-002] Verify: `test -d openspec`", "- [ ] 2.1 C. [REQ-AAA-002] Verify: `echo FAIL two && exit 1`"));
+    expect((await p.run("task", "start", "001/2.1")).code).toBe(0);
+    expect((await p.run("task", "done", "001/2.1")).code).toBe(1);
+    expect(await next()).toMatchObject({
+      action: "fix", task: "001/2.1", tasks: ["001/2.1"], command: "specctx task done 001/2.1",
+      reason: "Verify failed (exit 1): FAIL two. stale waiting: 001/1.1, 001/1.2",
+    });
   });
 });

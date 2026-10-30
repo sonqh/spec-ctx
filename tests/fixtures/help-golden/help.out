@@ -46,6 +46,7 @@ Command flags:
   `bundle --budget <n>`        Stop at n characters. The default is 8000.
   `bundle --depth <n>`         Follow links n steps. The default is 1.
   `bundle --all`               Show all copies of an ID.
+  `bundle --block`             Print only the requirement block, as it sits in the spec file. Each ID must be a requirement.
   `check --strict`             Also find gaps in tests and evidence.
   `gate --strict`              Run `check` and `openspec validate` in strict mode.
   `gate --markdown <globs>`    Lint these markdown globs instead of [gate] markdown. Separate them with spaces.

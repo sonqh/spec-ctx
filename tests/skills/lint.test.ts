@@ -58,7 +58,8 @@ describe("skills", () => {
 
   test("SCN-SKL-003-1 the plan action takes a kebab case name, reads through specctx, and ends with the plan stop question", () => {
     const text = readFileSync(file(RUN), "utf8");
-    for (const c of ["kebab case", "specctx bundle", "specctx query", "never `openspec show`", 'specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"']) expect(text, c).toContain(c);
+    for (const c of ["kebab case", "specctx bundle", "specctx query", "never `openspec show`", "specctx next --json"]) expect(text, c).toContain(c);
+    expect(text).not.toContain("plan ready for");
   });
 
   test("SCN-SKL-003-2 the archive action runs the guidance and the command field, with the default OpenSpec command", () => {

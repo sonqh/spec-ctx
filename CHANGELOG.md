@@ -4,7 +4,15 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+### Added
+
+- `specctx bundle <REQ...> --block` prints each requirement block as it sits in the spec file. It prints the header, the body, the Refs line, and every scenario. It prints no provenance line, no related entry, and no trailer. An ID that is not a requirement exits 2. An agent can write a MODIFIED delta from it. REQ-QRY-004.
+- `specctx next` owns the plan stop. When planning is complete, no task is `[x]`, no task is current, and no question has `stage: plan`, it returns `ask` with `human: true`, the state `plan_stop`, and the command `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. REQ-LOOP-009.
+
 ### Changed
+
+- `specctx next` names the stale tasks when a current task keeps `work`, `fix`, or the cap `ask`. The `reason` ends with `stale waiting: <t>, <t>`. `action`, `task`, `tasks`, and `command` stay. REQ-LOOP-010.
+- `specctx-run` runs the command that `next` prints at the plan stop. It names `bundle --block` and says that a MODIFIED block keeps every scenario title. It names the command that refreshes the skill copies, `bun run build && node dist/cli.js init --skills --force`. It warns that `gate` counts the Refs line, and that the CHANGELOG entry goes under `## Unreleased`. REQ-SKL-003, REQ-SKL-006.
 
 - `specctx next --json` has a tenth key `tasks`. It lists every task the action names, and `task` stays the first. For `repair` it lists all stale tasks. The `reason` joins `stale-evidence <t> <file>` per task with a comma. The `command` chains the reopen and done pair of each task with `&&`, so one turn repairs all. The action list does not change. REQ-LOOP-001, REQ-LOOP-008.
 - The question that `task done` writes at the attempt cap quotes the failing line of the tail, the same line as the `fix` reason. REQ-LOOP-002.

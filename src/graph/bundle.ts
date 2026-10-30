@@ -46,6 +46,12 @@ export function provenance(e: Entry, reason: string): string {
   return `-- ${e.id} | ${e.file}:${e.line} | ${e.status} | ${reason}\n`;
 }
 
+/** REQ-QRY-004 the canonical blocks of requirements, joined by one blank line, with no provenance line. */
+export function reqBlocks(root: string, reqs: Entry[]): string {
+  const files = new Lines(root);
+  return reqs.map((e) => blockText(e, files)).join("\n");
+}
+
 export interface BundleResult {
   text: string;
   omitted: string[];

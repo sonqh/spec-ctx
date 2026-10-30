@@ -1,4 +1,4 @@
-// Covers: REQ-QRY-003
+// Covers: REQ-QRY-003, REQ-QRY-004
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { Project, PARITY_FIXTURE } from "../helpers.ts";
@@ -102,5 +102,25 @@ describe("bundle", () => {
     const r = await p.run("bundle", "REQ-NOPE-001");
     expect(r.code).toBe(2);
     expect(r.err).toContain("unknown id(s): REQ-NOPE-001");
+  });
+
+  test("SCN-QRY-004-1 --block prints the requirement verbatim", async () => {
+    const out = await bundle(p, "REQ-APPLY-001", "--block");
+    const body = MAIN.split("### Requirement: REQ-APPLY-007")[0]!.slice(MAIN.indexOf("### Requirement: REQ-APPLY-001"));
+    expect(out).toBe(body.trimEnd() + "\n");
+    expect(out).toContain("#### Scenario: SCN-APPLY-001-9 No writes");
+  });
+
+  test("SCN-QRY-004-2 two IDs, one blank line, no provenance, no budget", async () => {
+    const out = await bundle(p, "REQ-APPLY-001", "REQ-APPLY-007", "--block", "--budget", "10");
+    expect(out).toContain("- **THEN** nothing is written\n\n### Requirement: REQ-APPLY-007 Revert");
+    expect(out.split("\n").some((l) => l.startsWith("-- "))).toBe(false);
+    expect(out).not.toContain("truncated:");
+  });
+
+  test("SCN-QRY-004-3 a scenario ID exits 2", async () => {
+    const r = await p.run("bundle", "SCN-APPLY-001-9", "--block");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("SCN-APPLY-001-9");
   });
 });

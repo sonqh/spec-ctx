@@ -283,5 +283,25 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review. Run the archive guidance, then the archive command next prints.",
     "resolved_at": "2026-10-30T02:42:05.219Z"
+  },
+  {
+    "n": 35,
+    "asked_at": "2026-10-30T02:59:38.305Z",
+    "task": "034-loop-stops",
+    "text": "plan ready for 034-loop-stops. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead. Keep the D1 guard: the plan stop fires only while no task is [x] and no current task exists. The stale suffix may apply at the cap ask too. No plan-stop config switch.",
+    "resolved_at": "2026-10-30T03:00:06.846Z"
+  },
+  {
+    "n": 36,
+    "asked_at": "2026-10-30T03:03:26.931Z",
+    "task": "034-loop-stops",
+    "text": "archive 034-loop-stops?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after diff review. Run the archive guidance, including the help-golden note in docs/verification/034.md, then the archive command next prints.",
+    "resolved_at": "2026-10-30T03:03:52.195Z"
   }
 ]

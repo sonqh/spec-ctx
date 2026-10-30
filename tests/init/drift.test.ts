@@ -15,7 +15,7 @@ describe("skill copies do not drift", () => {
         for (const f of readdirSync(src)) {
           const a = readFileSync(join(src, f));
           const b = readFileSync(join(REPO, d, s, f));
-          expect(b.equals(a), `${d}/${s}/${f} differs from skills/${s}/${f}. Run: node dist/cli.js init --skills --force`).toBe(true);
+          expect(b.equals(a), `${d}/${s}/${f} differs from skills/${s}/${f}. Run: bun run build && node dist/cli.js init --skills --force`).toBe(true);
         }
       }
     }

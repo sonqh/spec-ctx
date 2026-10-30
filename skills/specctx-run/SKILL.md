@@ -16,7 +16,7 @@ Run `specctx` as `npx spec-ctx` when it is not installed. `openspec` is the comm
 
 ## Actions
 
-- `plan`: take the change name from the request of the user in kebab case. That name is `<c>`. Follow the upstream `openspec-propose` skill for `<c>`. Read existing requirements with `specctx bundle <id>` or `specctx query`, never `openspec show`. Take every ID from `specctx id new REQ <CAP>` and `specctx id new SCN <CAP> --for <REQ>`. When the change needs several IDs of one kind, run `specctx id new --count <n>` once. Give every task a `[REQ-...]` citation and a `Verify:` code span. Then run `specctx check --strict` and `specctx gate --strict`. The gate runs the OpenSpec validate and the spec-length check. Fix every finding. Then run `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. This is the plan stop. `next` returns `ask` until the user resolves the question.
+- `plan`: take the change name from the request of the user in kebab case. That name is `<c>`. Follow the upstream `openspec-propose` skill for `<c>`. Read existing requirements with `specctx bundle <id>` or `specctx query`, never `openspec show`. Take every ID from `specctx id new REQ <CAP>` and `specctx id new SCN <CAP> --for <REQ>`. When the change needs several IDs of one kind, run `specctx id new --count <n>` once. Give every task a `[REQ-...]` citation and a `Verify:` code span. Then run `specctx check --strict` and `specctx gate --strict`. The gate runs the OpenSpec validate and the spec-length check. Fix every finding. Then run `specctx next --json` and run the command it prints. This is the plan stop. `next` returns `ask` with `human: true` until the user resolves the question.
 - `cite`: run `specctx query --change <c> --kind req`. Add the `[REQ-...]` citation and a `Verify:` code span to the task line named in `task`. Run `specctx check`. Continue.
 - `start`: run `specctx task start <t>`. Read the bundle it prints. Continue.
 - `work`: implement the task. Tag code with `// REQ-...`. Tag tests with `// Covers: REQ-...`. Then run `specctx task done <t>`.
@@ -33,6 +33,10 @@ Run `specctx` as `npx spec-ctx` when it is not installed. `openspec` is the comm
 - Never tick a checkbox by hand. `specctx task done` is the only way a task closes.
 - Never use `--manual` on a task with a Verify command.
 - Never call `/opsx:apply`. This skill replaces it.
+- To write a MODIFIED block, run `specctx bundle <REQ> --block`. It prints the block as it sits in the spec file. A MODIFIED block keeps every scenario title unchanged.
+- `gate` counts the Refs line in the 500 characters of a requirement.
+- The CHANGELOG entry goes under `## Unreleased`, never under a released version.
+- After an edit under `skills/`, run `bun run build && node dist/cli.js init --skills --force` to refresh the copies.
 - Never read `openspec/specs/` or `openspec/changes/*/specs/` directly. Use the bundle from `task start` or `specctx bundle <id>`.
 - Stop on any `action` not in the list above. Print the object and ask the user.
 - Keep no state in your context. A new session starts the same loop again with step 1.

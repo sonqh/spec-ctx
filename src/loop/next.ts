@@ -153,9 +153,27 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
 
   // step 5: a hand tick without evidence gets the repair run
   const tasks = tasksOf(entries).filter(ofChange).sort((a, b) => cmpTuple([a.file, a.line], [b.file, b.line]));
+
+  // REQ-LOOP-009 step 4b: the plan stop. It needs no [x] task, no current task, and no plan question, open or resolved (034/D1).
+  const cur0 = readCurrent(root);
+  const started = tasks.some((t) => t.status === "done") || (cur0?.task !== undefined && cur0.task.split("/")[0] === key);
+  if (!started && !qs.some((q) => q.stage === "plan" && q.task === folder)) {
+    const text = `plan ready for ${folder}. Approve to start the tasks?`;
+    return done({ action: "ask", command: `specctx handoff ask --change ${folder} "${text}"`, human: true, reason: text, state: "plan_stop" });
+  }
   const ticked = tasks.find((t) => t.status === "done" && !hasEvidence(root, t));
   if (ticked) return done({ action: "repair", command: `specctx task done ${ticked.id}`, state: "done_without_evidence", task: ticked.id });
 
+  // REQ-LOOP-008 the done tasks whose evidence went stale, earliest first (031/D4, 031/D5)
+  const stale: { id: string; path: string }[] = [];
+  for (const t of tasks) {
+    if (t.status !== "done") continue;
+    const path = staleOf(root, t.id);
+    if (path !== null) stale.push({ id: t.id, path });
+  }
+  // REQ-LOOP-010 a current task keeps its action. The reason names the stale tasks that wait (034/D4).
+  const waiting = stale.length ? `stale waiting: ${stale.map((x) => x.id).join(", ")}` : null;
+  const withWaiting = (r: string | null): string | null => (waiting === null ? r : r === null ? waiting : `${r}. ${waiting}`);
   // step 6: the current task of this change
   const cur = readCurrent(root);
   const current = cur?.task && cur.task.split("/")[0] === key ? tasks.find((t) => t.id === cur.task && t.status === "open") : undefined;
@@ -163,22 +181,16 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
     const fails = failsInWindow(root, current.id, qs);
     const last = fails.at(-1);
     // REQ-LOOP-006 the reason names the last fail line of the tail (029/D3)
-    const reason = last ? `Verify failed (exit ${last.file.verify.exit ?? "timeout"}): ${failLine(last.file.stderr_tail)}` : null;
+    const reason = withWaiting(last ? `Verify failed (exit ${last.file.verify.exit ?? "timeout"}): ${failLine(last.file.stderr_tail)}` : null);
     if (fails.length >= cfg.loop.max_attempts && !openQuestionFor(root, current.id, qs)) {
       const q = capQuestion(current.id, fails.length, last?.file.stderr_tail ?? "");
       return done({ action: "ask", attempt: fails.length, command: `specctx handoff ask "${q}"`, human: true, reason, state: "attempts_exhausted", task: current.id });
     }
     if (fails.length) return done({ action: "fix", attempt: fails.length, command: `specctx task done ${current.id}`, reason, state: "task_failed", task: current.id });
-    return done({ action: "work", command: `specctx task done ${current.id}`, state: "task_started", task: current.id });
+    return done({ action: "work", command: `specctx task done ${current.id}`, reason, state: "task_started", task: current.id });
   }
 
-  // REQ-LOOP-008 step 6b: the done tasks whose evidence went stale get the repair run, earliest first, after the current task (031/D4, 031/D5)
-  const stale: { id: string; path: string }[] = [];
-  for (const t of tasks) {
-    if (t.status !== "done") continue;
-    const path = staleOf(root, t.id);
-    if (path !== null) stale.push({ id: t.id, path });
-  }
+  // REQ-LOOP-008 step 6b: the stale tasks repair after the current task (031/D4, 031/D5)
   if (stale.length) {
     // REQ-LOOP-008 one turn repairs every stale task (033/D1)
     return done({

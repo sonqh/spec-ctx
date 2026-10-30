@@ -223,6 +223,19 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         io.err(`unknown id(s): ${unknown.join(", ")}\n`);
         return 2;
       }
+      // REQ-QRY-004 --block prints the requirement blocks verbatim and nothing else (034/D2)
+      if (f.block) {
+        const notReq = p.positional.filter((i) => ids.get(i)!.kind !== "req");
+        if (notReq.length) {
+          io.err(`not a requirement: ${notReq.join(", ")}\n`);
+          return 2;
+        }
+        const { reqBlocks } = await import("../graph/bundle.ts");
+        const text = reqBlocks(root, p.positional.map((i) => ids.get(i)!));
+        if (json) print({ text, omitted: [] });
+        else io.out(text);
+        return 0;
+      }
       const b = bundle(root, entries, p.positional, (f.budget as number | undefined) ?? cfg.bundle.budget,
         (f.depth as number | undefined) ?? cfg.bundle.depth, all);
       if (json) print(b);

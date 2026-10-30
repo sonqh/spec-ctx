@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-30T03:02:41.067Z",
+  "files": {
+    "src/handoff/handoff.ts": "7b028d547d53c9dabfdbd57878f26cafd56b2dcd457e2fc6fda9307b280fae22",
+    "src/loop/next.ts": "af36ef59cca51906620b766810de3e9d22818b5ce5f4dbbb0685dbfb020a5e89",
+    "tests/cli/nextstep.test.ts": "4d185cadb72f6cf208b451d00716dc4597507ab39bf74aa6b3a861f766ecebec",
+    "tests/loop/next.test.ts": "5b96fd31942ba7f87e43721b4899ca93aa1f89e2e72d53fa41886034ea543012",
+    "tests/loop/plan-stop.test.ts": "291636df814c0c051cc5234ac4f84a69b4510bf34150b991c8c0c87f15176adb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-009",
+    "REQ-LOOP-005"
+  ],
+  "task": "034/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/tasks tests/cli tests/gov",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 166 pass\n 0 fail\n 1180 expect() calls\nRan 166 tests across 28 files. [7.18s]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

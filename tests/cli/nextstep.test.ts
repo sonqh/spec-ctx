@@ -30,6 +30,9 @@ describe("next step lines", () => {
   test("SCN-CLI-007-2 status with an open task and no current task ends with the start command of next", async () => {
     p = new Project();
     p.write("openspec/changes/001-x/tasks.md", TASKS("- [ ] 1.1 A. [REQ-AAA-001] Verify: `test -d openspec`\n"));
+    // REQ-LOOP-009 the plan stop comes first, so a resolved plan question stands in for the approval
+    expect((await p.run("handoff", "ask", "--change", "001", "plan ready for 001-x. Approve to start the tasks?")).code).toBe(0);
+    expect((await p.run("handoff", "resolve", "1", "yes")).code).toBe(0);
     const r = await both(p);
     expect(r.status).toBe("next: specctx task start 001/1.1");
     expect(r.status).toBe(r.next);
