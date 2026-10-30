@@ -4,6 +4,12 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+Change 049-index-same-ms-stale.
+
+### Fixed
+
+- A write in the clock tick of `build` no longer leaves a stale index. `build` reads the file system clock before its walk and sets the mtime of `.ctx/index.json` to it. A load rebuilds when the newest file is not older than the index. `build` waits for the file clock to pass a newest file that sits 0 to 50 ms after it. The walk skips `.ctx`. The index bytes do not change. REQ-IDX-014.
+
 Change 048-review-fixes.
 
 ### Fixed

@@ -26,7 +26,7 @@ const COVER_TAG = /Covers:(.*)$/s;
 const REQ_ID = /\bREQ-[A-Z]{2,6}-\d{3}\b/g;
 const SENTENCE_END = new RegExp(`(?<=[.!?])${S}`);
 const COMMA = new RegExp(`${S}*,${S}*`);
-const SKIP_DIRS = new Set(["node_modules", ".git"]);
+const SKIP_DIRS = new Set(["node_modules", ".git", ".ctx"]);
 
 export type FileKind = "md" | "src";
 export interface ScanFile {

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T16:07:43.691Z",
+  "files": {
+    "src/index/build.ts": "7cb87249860e7c7bf7c624d60d203a2ce6b62ddf0da9b13847dcc0884b097a23",
+    "src/index/clock.ts": "6f1d669ecc84e180f50ebea00c9ae4b41ef29b6a71727ebc3e4e3971824dd12d",
+    "tests/index/same-tick.test.ts": "466bfab4a1d15337e3ed98deb2ceb45f62620c98390a68b8aab8f45e7151a544"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDX-014"
+  ],
+  "task": "049/2.1",
+  "tool_version": "0.4.0",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/049.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/049.md && grep -q \"## Before the fix\" docs/verification/049.md && grep -q \"## After the fix\" docs/verification/049.md && grep -q \"REQ-IDX-014\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "9cd4c1d7f3d47b047c4b324b6bc815c19dbe1fee792eae283715986b9ef96c41"
+  }
+}

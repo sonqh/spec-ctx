@@ -1,18 +1,12 @@
 # Handoff
 change: none
 current: none
-base: 2026-10-30T14:45:39.805Z
+base: 2026-10-30T16:07:43.691Z
 as_of: none
 done:
 reopened:
-- 048/2.1 stale evidence: src/handoff/handoff.ts (at 2026-10-30T14:55:17.711Z)
-- 048/3.1 stale evidence: src/handoff/handoff.ts (at 2026-10-30T14:55:30.928Z)
-- 048/4.1 stale evidence: tests/loop/plan-stop.test.ts (at 2026-10-30T14:55:53.219Z)
 open_questions:
 resolved:
-- Q61 task 045/4.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [824.55ms]. What should change? (task 045/4.1, 2026-10-30) answer: Lead: the cause is stale evidence of 045/1.1 after a test edit. Run task reopen 045/1.1 with that reason, task done 045/1.1, then task done 045/4.1.
-- Q62 archive 045-query-by-file? (task 045-query-by-file, 2026-10-30) answer: Approved by the lead after diff review.
-- Q63 plan ready for 046-structural-edges. Approve to start the tasks? (task 046-structural-edges, 2026-10-30) answer: Approved by the lead after product manager and architect review, with plan edits listed in the lead's brief to the implementing engineer: derive delta, cap and main links at query time; store only design links; cap to requirement only from a cap start; drop caps from query --change; tie rule for duplicate change keys; no cap or change entries in plain query results; budget classes made explicit; SCN-QRY-012-2 on a temp copy; record p95 and kept code and test lines.
 - Q64 task 046/3.2 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-1 a copy of this repository passes check --strict [808.79ms]. What should change? (task 046/3.2, 2026-10-30) answer: Verify passed. Resolved by task done.
 - Q65 archive 046-structural-edges? (task 046-structural-edges, 2026-10-30) answer: Approved by the lead after the architect diff review: no blocker.
 - Q66 plan ready for 047-context. Approve to start the tasks? (task 047-context, 2026-10-30) answer: Approved by the lead after product manager and architect review, with ten plan edits in the lead's brief to the implementing engineer.
@@ -20,6 +14,9 @@ resolved:
 - Q68 plan ready for 048-review-fixes. Approve to start the tasks? (task 048-review-fixes, 2026-10-30) answer: Approved by the lead after product manager and architect review, with plan edits in the lead's brief to the implementing engineer.
 - Q69 archive 048-review-fixes? (task 048-review-fixes, 2026-10-30) answer: Architect blocker: a plan rejection deadlocks a change once every task is [x], because stageOf stores stage archive even with --plan. Fix stageOf, REQ-LOOP-007, and extend SCN-LOOP-015-4.
 - Q70 archive 048-review-fixes? (task 048-review-fixes, 2026-10-30) answer: Approved by the lead after the architect blocker was fixed: stageOf returns plan first with --plan, and SCN-LOOP-015-4 covers reject, re-ask and approve.
-- and 60 more in .ctx/questions.json
+- Q71 plan ready for 049-flaky-run-prefix. Approve to start the tasks? (task 049-flaky-run-prefix, 2026-10-30) answer: Plan rejected after product manager and architect review: fix the engine freshness rule (layer 1), not the test helper. Re-plan as 049-index-same-ms-stale.
+- Q72 plan ready for 049-index-same-ms-stale. Approve to start the tasks? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after product manager and architect review, with the edits in the lead's brief to the implementing engineer: a pre-wait instead of rebuild rounds, clock fixes, skip .ctx in the walk, smaller test loops, honest before numbers.
+- Q73 archive 049-index-same-ms-stale? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after the architect diff review: no blocker.
+- and 63 more in .ctx/questions.json
 next: no open task
 evidence: 0 task(s), 0 command, 0 manual

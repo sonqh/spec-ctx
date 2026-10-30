@@ -643,5 +643,38 @@
     "verdict": "approved",
     "answer": "Approved by the lead after the architect blocker was fixed: stageOf returns plan first with --plan, and SCN-LOOP-015-4 covers reject, re-ask and approve.",
     "resolved_at": "2026-10-30T15:02:48.781Z"
+  },
+  {
+    "n": 71,
+    "asked_at": "2026-10-30T15:42:04.077Z",
+    "task": "049-flaky-run-prefix",
+    "text": "plan ready for 049-flaky-run-prefix. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "rejected",
+    "answer": "Plan rejected after product manager and architect review: fix the engine freshness rule (layer 1), not the test helper. Re-plan as 049-index-same-ms-stale.",
+    "resolved_at": "2026-10-30T15:46:03.158Z"
+  },
+  {
+    "n": 72,
+    "asked_at": "2026-10-30T15:53:40.061Z",
+    "task": "049-index-same-ms-stale",
+    "text": "plan ready for 049-index-same-ms-stale. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead after product manager and architect review, with the edits in the lead's brief to the implementing engineer: a pre-wait instead of rebuild rounds, clock fixes, skip .ctx in the walk, smaller test loops, honest before numbers.",
+    "resolved_at": "2026-10-30T15:57:25.868Z"
+  },
+  {
+    "n": 73,
+    "asked_at": "2026-10-30T16:12:48.186Z",
+    "task": "049-index-same-ms-stale",
+    "text": "archive 049-index-same-ms-stale?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect diff review: no blocker.",
+    "resolved_at": "2026-10-30T16:18:33.128Z"
   }
 ]
