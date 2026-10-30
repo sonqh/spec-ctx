@@ -1,22 +1,22 @@
 # Handoff
 change: none
 current: none
-base: 2026-10-30T03:38:55.358Z
+base: 2026-10-30T03:51:02.921Z
 as_of: none
 done:
 reopened:
 open_questions:
 resolved:
-- Q31 plan ready for 032-bracketed-templates. Approve to start the tasks? (task 032-bracketed-templates, 2026-10-30) answer: approved by the lead.
-- Q32 archive 032-bracketed-templates? (task 032-bracketed-templates, 2026-10-30) answer: archive approved by the lead. fresh-brackets.sh passed on upstream 1.15.0.
-- Q33 plan ready for 033-dogfood-friction. Approve to start the tasks? (task 033-dogfood-friction, 2026-10-30) answer: Approved by the lead. Keep the chained command in next for stale tasks. For task 5.1 run tests/parity/run.sh --record once before task done and write the note in docs/verification/033.md. Do not add a bundle command for full MODIFIED blocks in this change.
-- Q34 archive 033-dogfood-friction? (task 033-dogfood-friction, 2026-10-30) answer: Approved by the lead after diff review. Run the archive guidance, then the archive command next prints.
 - Q35 plan ready for 034-loop-stops. Approve to start the tasks? (task 034-loop-stops, 2026-10-30) answer: Approved by the lead. Keep the D1 guard: the plan stop fires only while no task is [x] and no current task exists. The stale suffix may apply at the cap ask too. No plan-stop config switch.
 - Q36 archive 034-loop-stops? (task 034-loop-stops, 2026-10-30) answer: Approved by the lead after diff review. Run the archive guidance, including the help-golden note in docs/verification/034.md, then the archive command next prints.
 - Q37 plan ready for 036-gate-rerun. Approve to start the tasks? (task 036-gate-rerun, 2026-10-30) answer: Approved by the lead. If the help goldens change in 3.1, re-record them and note it in docs/verification/036.md. Put the recursion guard test in 3.1.
 - Q38 archive 036-gate-rerun? (task 036-gate-rerun, 2026-10-30) answer: Approved by the lead after diff review. Archive with the command next prints, then validate, check --strict, build.
 - Q39 plan ready for 037-action-rerun. Approve to start the tasks? (task 037-action-rerun, 2026-10-30) answer: Approved by the lead. Keep --strict in rerun mode. Ignoring base when rerun is false is fine; say so in the input description.
 - Q40 archive 037-action-rerun? (task 037-action-rerun, 2026-10-30) answer: Approved by the lead after diff review. Archive with the command next prints, then build, validate, check --strict, handoff write, and gate --rerun --base a007225.
-- and 30 more in .ctx/questions.json
+- Q41 plan ready for 038-pre-archive-checks. Approve to start the tasks? (task 038-pre-archive-checks, 2026-10-30) answer: Approved by the lead with two edits before task 1.1. (1) Delete task 4.1. The archive guidance already writes the CHANGELOG entry and docs/verification/038.md, and a file-exists Verify proves nothing. (2) Item 2: drop the force condition. A run with --skills and without --schema skips the .gitignore write whenever spec-ctx.toml existed, with or without --force. Update design D3 and REQ-DIST-013 to match, then run gate --strict once.
+- Q42 task 038/2.1 failed Verify 3 times. Last: Ran 28 tests across 4 files. [294.00ms]. What should change? (task 038/2.1, 2026-10-30) answer: Lead reviewed the diff. The SCN-DIST-002-6 edits keep the same assertions on the --schema path, which still writes .gitignore. That is correct for the new behavior. Run task done 038/2.1 again.
+- Q43 archive 038-pre-archive-checks? (task 038-pre-archive-checks, 2026-10-30) answer: Not yet. The lead found one bug in 3.1: the new id error always names SCN. For id new REQ CLI-009 it must name id new REQ CLI. Reopen 038/3.1, fix it, add the REQ case to the test, close it with task done, then the archive stop comes again.
+- Q44 archive 038-pre-archive-checks? (task 038-pre-archive-checks, 2026-10-30) answer: Approved by the lead after review of the 3.1 fix. Run the archive guidance, then the archive command next prints, then check --strict, build, validate, and gate --rerun --base 0934b1a.
+- and 34 more in .ctx/questions.json
 next: no open task
 evidence: 0 task(s), 0 command, 0 manual

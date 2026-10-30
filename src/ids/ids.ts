@@ -47,6 +47,9 @@ export function newIds(root: string, cfg: Config, entries: Entry[], o: NewOpts):
   };
   const checkCap = (cap: string | undefined): string => {
     if (!cap) throw new UsageExit(`id new ${kind} needs a capability code`);
+    // REQ-IDS-005 a code with a number is a scenario number typed in the code slot (038/D4)
+    const num = /^([A-Z]{2,6})-\d+$/.exec(cap);
+    if (num) throw new UsageExit(`the capability code ${cap} holds a number. ${kind === "SCN" ? `Use id new SCN ${num[1]} --for REQ-${num[1]}-<NNN>.` : `Use id new ${kind} ${num[1]}.`}`);
     if (!/^[A-Z]{2,6}$/.test(cap)) throw new UsageExit(`the capability code ${cap} must be 2 to 6 upper case letters`);
     // REQ-IDS-001 an empty caps list accepts any code. A non-empty list must hold the code.
     if (cfg.ids.caps.length && !cfg.ids.caps.includes(cap)) {

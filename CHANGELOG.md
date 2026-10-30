@@ -6,6 +6,9 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ### Added
 
+- `check --strict` reports `scenario-untested` for a scenario in an ADDED or MODIFIED block of an active change, once the change has a task and no open task. The hint names the `// Covers: <SCN>` tag. Before that, the plan step stays green. REQ-CHK-008.
+- `init --skills` without `--schema` writes only the skill folders when `spec-ctx.toml` exists. It no longer appends `adopt-report.md` to `.gitignore`, with or without `--force`. Plain `init` keeps its lines. REQ-DIST-013.
+- `id new REQ CLI-009` and `id new SCN CLI-009` exit 2 and name the right command: `id new REQ CLI` or `id new SCN CLI --for REQ-CLI-<NNN>`. REQ-IDS-005.
 - The action takes the inputs `rerun` and `base`. With `rerun: true`, `action/run.sh` runs `gate --strict --rerun` and adds `--base <value>` when `base` has a value. It runs no other gate step. The script exits 1 with one line on `pull_request_target` when `rerun` is true. `ci.yml` has a job `rerun` for `pull_request` with `contents: read` and `fetch-depth: 0`. The README states the security boundary. REQ-DIST-010, REQ-DIST-011, REQ-DIST-012, REQ-GOV-010.
 - `specctx bundle <REQ...> --block` prints each requirement block as it sits in the spec file. It prints the header, the body, the Refs line, and every scenario. It prints no provenance line, no related entry, and no trailer. An ID that is not a requirement exits 2. An agent can write a MODIFIED delta from it. REQ-QRY-004.
 - `specctx next` owns the plan stop. When planning is complete, no task is `[x]`, no task is current, and no question has `stage: plan`, it returns `ask` with `human: true`, the state `plan_stop`, and the command `specctx handoff ask --change <c> "plan ready for <c>. Approve to start the tasks?"`. REQ-LOOP-009.

@@ -343,5 +343,44 @@
     "stage": "archive",
     "answer": "Approved by the lead after diff review. Archive with the command next prints, then build, validate, check --strict, handoff write, and gate --rerun --base a007225.",
     "resolved_at": "2026-10-30T03:43:01.356Z"
+  },
+  {
+    "n": 41,
+    "asked_at": "2026-10-30T03:46:30.414Z",
+    "task": "038-pre-archive-checks",
+    "text": "plan ready for 038-pre-archive-checks. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "answer": "Approved by the lead with two edits before task 1.1. (1) Delete task 4.1. The archive guidance already writes the CHANGELOG entry and docs/verification/038.md, and a file-exists Verify proves nothing. (2) Item 2: drop the force condition. A run with --skills and without --schema skips the .gitignore write whenever spec-ctx.toml existed, with or without --force. Update design D3 and REQ-DIST-013 to match, then run gate --strict once.",
+    "resolved_at": "2026-10-30T03:46:57.344Z"
+  },
+  {
+    "n": 42,
+    "asked_at": "2026-10-30T03:48:44.296Z",
+    "task": "038/2.1",
+    "text": "task 038/2.1 failed Verify 3 times. Last: Ran 28 tests across 4 files. [294.00ms]. What should change?",
+    "status": "resolved",
+    "answer": "Lead reviewed the diff. The SCN-DIST-002-6 edits keep the same assertions on the --schema path, which still writes .gitignore. That is correct for the new behavior. Run task done 038/2.1 again.",
+    "resolved_at": "2026-10-30T03:49:23.048Z"
+  },
+  {
+    "n": 43,
+    "asked_at": "2026-10-30T03:50:14.043Z",
+    "task": "038-pre-archive-checks",
+    "text": "archive 038-pre-archive-checks?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Not yet. The lead found one bug in 3.1: the new id error always names SCN. For id new REQ CLI-009 it must name id new REQ CLI. Reopen 038/3.1, fix it, add the REQ case to the test, close it with task done, then the archive stop comes again.",
+    "resolved_at": "2026-10-30T03:50:42.231Z"
+  },
+  {
+    "n": 44,
+    "asked_at": "2026-10-30T03:51:20.541Z",
+    "task": "038-pre-archive-checks",
+    "text": "archive 038-pre-archive-checks?",
+    "status": "resolved",
+    "stage": "archive",
+    "answer": "Approved by the lead after review of the 3.1 fix. Run the archive guidance, then the archive command next prints, then check --strict, build, validate, and gate --rerun --base 0934b1a.",
+    "resolved_at": "2026-10-30T03:51:37.343Z"
   }
 ]

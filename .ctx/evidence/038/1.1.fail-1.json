@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T03:47:49.430Z",
+  "attempt": 1,
+  "stderr_tail": "85 |     expect(r.out).toBe(golden);\n                       ^\nerror: expect(received).toBe(expected)\n\n@@ -287,3 +287,3 @@\n  scenario-id-mismatch  1  Give the scenario the number of its requirement.\n- scenario-untested  152  Name the scenario ID in a test.\n+ scenario-untested  152  Name the scenario ID in a test with a // Covers: <SCN> tag.\n  stale-evidence  1  Run specctx task reopen <task> <why>, then specctx task done <task>.\n\n- Expected  - 1\n+ Received  + 1\n\n      at <anonymous> (/home/claude/spec-ctx/tests/check/strict.test.ts:85:19)\n(fail) check strict rules > SCN-CHK-002-2 parity: the strict findings equal the Python golden [54.40ms]\n\n 54 pass\n 1 fail\n 195 expect() calls\nRan 55 tests across 7 files. [551.00ms]",
+  "task": "038/1.1",
+  "verify": {
+    "command": "bun run build && bun test tests/check",
+    "exit": 1
+  }
+}

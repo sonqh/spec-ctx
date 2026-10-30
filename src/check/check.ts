@@ -184,6 +184,21 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
       if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
       if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
     }
+    // REQ-CHK-008 a delta scenario needs a test once its change has no open task (038/D1, D2)
+    const tasksOf = new Map<string, { open: number; all: number }>();
+    for (const e of entries) {
+      if (e.kind !== "task" || e.change === "main" || e.file.includes("/archive/")) continue;
+      const t = tasksOf.get(e.change) ?? { open: 0, all: 0 };
+      t.all++;
+      if (e.status !== "done") t.open++;
+      tasksOf.set(e.change, t);
+    }
+    for (const e of entries) {
+      if (e.kind !== "scn" || e.change === "main" || (e.status !== "active" && e.status !== "modified")) continue;
+      const t = tasksOf.get(e.change);
+      if (!t || t.open > 0 || pending.has(e.id) || named.has(e.id)) continue;
+      findings.push([e.file, e.line, "scenario-untested", e.id]);
+    }
     findings.push(...evidenceFindings(root, entries, listEvidence(root)));
   }
   const uniq = new Map<string, Problem>();

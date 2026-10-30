@@ -429,7 +429,9 @@ export function runInit(root: string, o: InitOpts): InitResult {
   // REQ-CLI-007 every file present with the same bytes and no config key to add: nothing to do
   // an existing spec-ctx.toml counts as present, because the user owns it (014/D4)
   const same = files.every(([rel, data]) => existsSync(join(root, rel)) && (rel === CONFIG_FILE || readFileSync(join(root, rel)).equals(data)));
-  const ignoreDone = existsSync(join(root, GITIGNORE)) && GITIGNORE_LINES.every((l) => ignoreLines(readFileSync(join(root, GITIGNORE), "utf8")).has(l));
+  // REQ-DIST-013 a skills refresh in a project with spec-ctx.toml touches only the skill folders (038/D3)
+  const skillsOnly = o.skills && !o.schema && existsSync(join(root, CONFIG_FILE));
+  const ignoreDone = skillsOnly || existsSync(join(root, GITIGNORE)) && GITIGNORE_LINES.every((l) => ignoreLines(readFileSync(join(root, GITIGNORE), "utf8")).has(l));
   if (same && ignoreDone && !o.force) {
     const cfgPath = join(root, "openspec/config.yaml");
     const cur = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
@@ -480,9 +482,11 @@ export function runInit(root: string, o: InitOpts): InitResult {
     if (hasLegacySchema(cur)) res.notes.push(LEGACY_SCHEMA_NOTE);
   }
   // REQ-DIST-002 the four .gitignore lines (017/D2, 022/D5)
-  const added = writeGitignore(root);
-  if (added) res.written.push(`${GITIGNORE} (${added} line${added === 1 ? "" : "s"})`);
-  else res.kept.push(GITIGNORE);
+  if (!skillsOnly) {
+    const added = writeGitignore(root);
+    if (added) res.written.push(`${GITIGNORE} (${added} line${added === 1 ? "" : "s"})`);
+    else res.kept.push(GITIGNORE);
+  }
   // REQ-DIST-002 skills under an ignored .claude/ never reach git (017/D3)
   if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
   // REQ-SCH-003 the templates line comes last, right before next: (018/D5)

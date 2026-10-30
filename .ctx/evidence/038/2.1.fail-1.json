@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T03:48:22.161Z",
+  "attempt": 1,
+  "stderr_tail": "tests/init/init.test.ts:\n260 |     expect(r.code, r.err).toBe(0);\n261 |     expect(r.out).toContain(\"wrote .gitignore (4 lines)\\n\");\n262 |     expect(p.read(\".gitignore\")).toBe(four);\n263 |     const again = await p.run(\"init\", \"--skills\");\n264 |     expect(again.code).toBe(0);\n265 |     expect(again.out).toContain(\"kept .gitignore\\n\");\n                            ^\nerror: expect(received).toContain(expected)\n\nExpected to contain: \"kept .gitignore\\n\"\nReceived: \"wrote .claude/skills/specctx-bootstrap/SKILL.md\\nwrote .agents/skills/specctx-bootstrap/SKILL.md\\nwrote .claude/skills/specctx-done/SKILL.md\\nwrote .agents/skills/specctx-done/SKILL.md\\nwrote .claude/skills/specctx-next/SKILL.md\\nwrote .agents/skills/specctx-next/SKILL.md\\nwrote .claude/skills/specctx-run/SKILL.md\\nwrote .agents/skills/specctx-run/SKILL.md\\nkept spec-ctx.toml\\nnext: specctx status\\n\"\n\n      at <anonymous> (/home/claude/spec-ctx/tests/init/init.test.ts:265:23)\n(fail) init > SCN-DIST-002-6 init writes the four .gitignore lines once (022/D5) [5.08ms]\n\n 27 pass\n 1 fail\n 271 expect() calls\nRan 28 tests across 4 files. [321.00ms]",
+  "task": "038/2.1",
+  "verify": {
+    "command": "bun run build && bun test tests/init",
+    "exit": 1
+  }
+}

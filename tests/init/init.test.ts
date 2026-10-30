@@ -260,19 +260,19 @@ describe("init", () => {
     expect(r.code, r.err).toBe(0);
     expect(r.out).toContain("wrote .gitignore (4 lines)\n");
     expect(p.read(".gitignore")).toBe(four);
-    const again = await p.run("init", "--skills");
+    const again = await p.run("init", "--schema");
     expect(again.code).toBe(0);
     expect(again.out).toContain("kept .gitignore\n");
     expect(again.out).not.toContain("wrote .gitignore");
     expect(p.read(".gitignore")).toBe(four);
     // an existing file without a final newline, with three of the four lines present
     p.write(".gitignore", "node_modules/\n/adopt-report.md\n.ctx/current.json\n.ctx/gate-log.jsonl");
-    expect((await p.run("init", "--skills", "--force")).out).toContain("wrote .gitignore (1 line)\n");
+    expect((await p.run("init", "--schema", "--force")).out).toContain("wrote .gitignore (1 line)\n");
     expect(p.read(".gitignore")).toBe("node_modules/\n/adopt-report.md\n.ctx/current.json\n.ctx/gate-log.jsonl\n\n# spec-ctx\n.ctx/index.json\n");
-    const j = JSON.parse((await p.run("init", "--schema", "--json")).out);
+    const j = JSON.parse((await p.run("init", "--schema", "--force", "--json")).out);
     expect(j.kept).toContain(".gitignore");
     // nothing to do stays when every file and both lines are present
-    expect((await p.run("init", "--skills")).out).toContain("nothing to do\n");
+    expect((await p.run("init", "--schema")).out).toContain("nothing to do\n");
   });
 
   test("SCN-DIST-002-7 init notes a .gitignore that ignores .claude/", async () => {

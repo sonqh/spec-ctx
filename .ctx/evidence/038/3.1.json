@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-30T03:51:02.921Z",
+  "files": {
+    "src/ids/ids.ts": "540e40a695f733cabbe0fb6b9235d3e7745c23966955480adad35e6f681cdf59"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDS-005"
+  ],
+  "task": "038/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/ids",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 18 pass\n 0 fail\n 60 expect() calls\nRan 18 tests across 2 files. [143.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T03:48:02.594Z",
+  "bundle_chars": 4996,
+  "files": {
+    "src/check/check.ts": "bc8106642b8776aa6d8ceaab18e4633dd8d027413ec9e3d2ee23d4346493294f",
+    "tests/check/delta.test.ts": "164b51bc1d135a192e586137dc65a429febb9a719916446ef2cdcb2f6f6c0b00"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-008"
+  ],
+  "started_at": "2026-10-30T03:47:27.143Z",
+  "task": "038/1.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/check",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 55 pass\n 0 fail\n 202 expect() calls\nRan 55 tests across 7 files. [604.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

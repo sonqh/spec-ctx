@@ -1,4 +1,4 @@
-// Covers: REQ-IDS-001, REQ-IDS-002, REQ-IDS-004
+// Covers: REQ-IDS-001, REQ-IDS-002, REQ-IDS-004, REQ-IDS-005
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -134,5 +134,20 @@ describe("id new with [ids] brackets (027/D5)", () => {
     const bad = await p.run("id", "new", "SCN", "UA", "--for", "[REQ-UA-001");
     expect(bad.code).toBe(2);
     expect(bad.err).toContain("--for [REQ-UA-001 is not a REQ ID of UA");
+  });
+
+  test("SCN-IDS-005-1 a code with a number names the right command", async () => {
+    setup(null);
+    const r = await p.run("id", "new", "SCN", "UA-009");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("id new SCN UA --for REQ-UA-<NNN>");
+  });
+
+  test("SCN-IDS-005-2 a REQ code with a number names id new REQ", async () => {
+    setup(null);
+    const r = await p.run("id", "new", "REQ", "UA-009");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("Use id new REQ UA.");
+    expect(r.err).not.toContain("SCN");
   });
 });

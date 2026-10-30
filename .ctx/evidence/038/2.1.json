@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T03:49:38.431Z",
+  "bundle_chars": 5350,
+  "files": {
+    "src/init/init.ts": "40adf8f1dc13e735bbea26ba0026427329ba671bc5458d903296275cf655a9ce",
+    "tests/init/skills-refresh.test.ts": "3ad4e0335334b10d1de40fdef783bdeab15f196f640ae2caf339ad4c9cf69b78"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-013"
+  ],
+  "started_at": "2026-10-30T03:48:07.194Z",
+  "task": "038/2.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/init",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 28 pass\n 0 fail\n 277 expect() calls\nRan 28 tests across 4 files. [312.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

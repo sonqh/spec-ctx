@@ -20,7 +20,7 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "code-tag-no-canonical": { level: "hard", hint: "The tag names an archived requirement. Tag the current requirement." },
   "unknown-cap": { level: "hard", hint: "Add the code to caps under [ids] in spec-ctx.toml." },
   uncovered: { level: "hard", hint: "Add a test with a Covers tag for the requirement." },
-  "scenario-untested": { level: "hard", hint: "Name the scenario ID in a test." },
+  "scenario-untested": { level: "hard", hint: "Name the scenario ID in a test with a // Covers: <SCN> tag." },
   "done-without-evidence": { level: "hard", hint: "Run specctx task done. It runs the Verify command and writes the evidence." },
   // REQ-CHK-006 the hint names the why argument of task reopen (031/D8)
   "stale-evidence": { level: "hard", hint: "Run specctx task reopen <task> <why>, then specctx task done <task>." },

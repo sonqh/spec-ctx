@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-30T03:49:51.939Z",
+  "bundle_chars": 3633,
+  "files": {
+    "src/ids/ids.ts": "035987f11821c986432bd0058a688a0dddf030f933c05a1a263280c608bc053a"
+  },
+  "kind": "command",
+  "reason": "lead review: the error names SCN for a REQ",
+  "reqs": [
+    "REQ-IDS-005"
+  ],
+  "started_at": "2026-10-30T03:49:43.161Z",
+  "task": "038/3.1",
+  "tool_version": "0.3.0",
+  "verify": {
+    "command": "bun run build && bun test tests/ids",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 17 pass\n 0 fail\n 57 expect() calls\nRan 17 tests across 2 files. [140.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T03:48:44.295Z",
+  "attempt": 3,
+  "stderr_tail": "tests/init/init.test.ts:\n268 |     // an existing file without a final newline, with three of the four lines present\n269 |     p.write(\".gitignore\", \"node_modules/\\n/adopt-report.md\\n.ctx/current.json\\n.ctx/gate-log.jsonl\");\n270 |     expect((await p.run(\"init\", \"--schema\", \"--force\")).out).toContain(\"wrote .gitignore (1 line)\\n\");\n271 |     expect(p.read(\".gitignore\")).toBe(\"node_modules/\\n/adopt-report.md\\n.ctx/current.json\\n.ctx/gate-log.jsonl\\n\\n# spec-ctx\\n.ctx/index.json\\n\");\n272 |     const j = JSON.parse((await p.run(\"init\", \"--schema\", \"--json\")).out);\n273 |     expect(j.kept).toContain(\".gitignore\");\n                         ^\nerror: expect(received).toContain(expected)\n\nExpected to contain: \".gitignore\"\nReceived: []\n\n      at <anonymous> (/home/claude/spec-ctx/tests/init/init.test.ts:273:20)\n(fail) init > SCN-DIST-002-6 init writes the four .gitignore lines once (022/D5) [4.58ms]\n\n 27 pass\n 1 fail\n 276 expect() calls\nRan 28 tests across 4 files. [294.00ms]",
+  "task": "038/2.1",
+  "verify": {
+    "command": "bun run build && bun test tests/init",
+    "exit": 1
+  }
+}
