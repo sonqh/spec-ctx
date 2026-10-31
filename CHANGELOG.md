@@ -2,7 +2,7 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
-## Unreleased
+## 0.4.1
 
 Change 049-index-same-ms-stale.
 
