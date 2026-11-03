@@ -720,5 +720,13 @@
     "verdict": "approved",
     "answer": "Owner approved the archive on 2026-11-03.",
     "resolved_at": "2026-11-03T16:56:36.757Z"
+  },
+  {
+    "n": 78,
+    "asked_at": "2026-11-03T17:30:18.319Z",
+    "task": "053-try-offline",
+    "text": "plan ready for 053-try-offline. Approve to start the tasks?",
+    "status": "open",
+    "stage": "plan"
   }
 ]
