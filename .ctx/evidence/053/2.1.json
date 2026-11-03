@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-03T17:51:25.551Z",
+  "bundle_chars": 7985,
+  "files": {
+    "tests/gov/try-script.test.ts": "5c676ea13a75736de2a5f910129f4b8e738e3c8f2d6a3a62c0ae19f2cebcc616",
+    "tests/helpers.ts": "c02f052a4d4c65d9d58d10099403a77966d0e6e0875ef8e8ea15a32c307a09c7"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-013"
+  ],
+  "started_at": "2026-11-03T17:51:04.764Z",
+  "task": "053/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/053.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/053.md && grep -q \"## Before the fix\" docs/verification/053.md && grep -q \"## After the fix\" docs/verification/053.md && grep -q \"Change 053-try-offline.\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "c35a259353caaadb4b6d992b2c8a693fe791ba629d25c03417f5f892e55f1ec6"
+  }
+}

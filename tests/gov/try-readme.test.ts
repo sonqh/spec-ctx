@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileS
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { cleanEnv, REPO } from "../helpers.ts";
+import { cleanEnv, OPENSPEC_STUB, recordingNpx, REPO } from "../helpers.ts";
 
 const SPAWN_MS = 45_000;
 const TEST_MS = 60_000;
@@ -67,6 +67,7 @@ function shells(): string[] {
 
 const results: Result[] = [];
 let work = "";
+const npx = recordingNpx();
 
 describe("README try-it block", () => {
   beforeAll(() => {
@@ -77,12 +78,16 @@ describe("README try-it block", () => {
       spawnSync("mkdir", ["-p", dir]);
       const file = join(work, `block${i}.sh`);
       writeFileSync(file, script);
-      const r = spawnSync(shell, [file], { cwd: dir, env: cleanEnv({ TMPDIR: work, NODE_DISABLE_COMPILE_CACHE: "1" }), encoding: "utf8", timeout: SPAWN_MS });
+      // 053/D2 the stand-in for OpenSpec, so init and status run no npx. 053/D3 a recording npx first on the PATH proves it.
+      const env = cleanEnv({ TMPDIR: work, NODE_DISABLE_COMPILE_CACHE: "1", SPECCTX_OPENSPEC: OPENSPEC_STUB });
+      env.PATH = npx.path(env.PATH);
+      const r = spawnSync(shell, [file], { cwd: dir, env, encoding: "utf8", timeout: SPAWN_MS });
       results.push({ shell, code: r.status ?? -1, out: r.stdout ?? "", err: r.stderr ?? "" });
     }
   }, 120_000);
   afterAll(() => {
     if (work) rmSync(work, { recursive: true, force: true });
+    npx.cleanup();
   });
 
   test("SCN-GOV-012-1 the block exits 0 under each bash, prints the refusal and the done line, and context holds src/login.ts", () => {
@@ -121,4 +126,8 @@ describe("README try-it block", () => {
     expect(after.some((l) => l.includes("100 percent"))).toBe(true);
     expect(after.some((l) => l.includes("`next:`") && l.includes("specctx-run"))).toBe(true);
   }, TEST_MS);
+
+  test("SCN-GOV-012-4 the block makes no npx call in the test", () => {
+    expect(npx.calls()).toEqual([]);
+  });
 });
