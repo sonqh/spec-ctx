@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-03T17:51:04.395Z",
+  "bundle_chars": 7958,
+  "files": {
+    "tests/gov/try-script.test.ts": "5c676ea13a75736de2a5f910129f4b8e738e3c8f2d6a3a62c0ae19f2cebcc616",
+    "tests/helpers.ts": "c02f052a4d4c65d9d58d10099403a77966d0e6e0875ef8e8ea15a32c307a09c7"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-013"
+  ],
+  "started_at": "2026-11-03T17:44:33.542Z",
+  "task": "053/1.2",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && npx vitest run && bun test",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 713 pass\n 0 fail\n 3964 expect() calls\nRan 713 tests across 112 files. [30.08s]",
+    "stdout_sha256": "65296a2edc10219ae0d3962039d525d88ffb52bc205bd8034ba848676706493c"
+  }
+}

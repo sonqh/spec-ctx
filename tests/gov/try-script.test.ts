@@ -3,8 +3,8 @@ import { spawnSync } from "node:child_process";
 import { mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { beforeAll, describe, expect, test } from "vitest";
-import { cleanEnv, REPO } from "../helpers.ts";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { cleanEnv, recordingNpx, REPO } from "../helpers.ts";
 
 const SPAWN_MS = 45_000;
 const TEST_MS = 60_000;
@@ -19,6 +19,8 @@ let stderr = "";
 let before = "";
 let after = "";
 let tmpLeft: string[] = [];
+let npxCalls: string[] = [];
+const npx = recordingNpx();
 
 describe("scripts/try.sh", () => {
   beforeAll(() => {
@@ -26,7 +28,11 @@ describe("scripts/try.sh", () => {
     // NODE_DISABLE_COMPILE_CACHE stops Node from writing its own cache folder into that TMPDIR.
     const mine = mkdtempSync(join(tmpdir(), "specctx-try-"));
     before = porcelain();
-    const r = spawnSync("bash", [join(REPO, "scripts/try.sh")], { cwd: REPO, env: cleanEnv({ TMPDIR: mine, NODE_DISABLE_COMPILE_CACHE: "1" }), encoding: "utf8", timeout: SPAWN_MS });
+    // 053/D3 a recording npx first on the PATH, and a shell value of SPECCTX_OPENSPEC that would call it. try.sh must override it.
+    const env = cleanEnv({ TMPDIR: mine, NODE_DISABLE_COMPILE_CACHE: "1", SPECCTX_OPENSPEC: "npx -y @fission-ai/openspec@latest" });
+    env.PATH = npx.path(env.PATH);
+    const r = spawnSync("bash", [join(REPO, "scripts/try.sh")], { cwd: REPO, env, encoding: "utf8", timeout: SPAWN_MS });
+    npxCalls = npx.calls();
     after = porcelain();
     out = r.stdout ?? "";
     stderr = r.stderr ?? "";
@@ -34,6 +40,7 @@ describe("scripts/try.sh", () => {
     tmpLeft = readdirSync(mine);
     rmSync(mine, { recursive: true, force: true });
   }, TEST_MS);
+  afterAll(() => npx.cleanup());
 
   test("SCN-GOV-013-1 the story exits 0, shows the refusal and the done line, and context holds src/login.ts", () => {
     expect(code, stderr).toBe(0);
@@ -60,4 +67,8 @@ describe("scripts/try.sh", () => {
     expect(m, out).not.toBeNull();
     expect(Number(m![1])).toBeLessThan(25);
   }, TEST_MS);
+
+  test("SCN-GOV-013-4 the story makes no npx call, even with SPECCTX_OPENSPEC set in the shell", () => {
+    expect(npxCalls).toEqual([]);
+  });
 });
