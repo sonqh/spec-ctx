@@ -1,5 +1,5 @@
 // Test helpers. Every test project lives in a fresh temp dir. Nothing writes outside it.
-import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
+import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +13,23 @@ export const KEBAB_FIXTURE = join(REPO, "tests/fixtures/kebab-repo");
 export const DUP_KEY_FIXTURE = join(REPO, "tests/fixtures/dup-key-repo");
 /** REQ-CLI-007 a stand-in OpenSpec command that reports a complete plan, so status never reaches the network (030/D4). */
 export const OPENSPEC_STUB = "sh " + JSON.stringify(join(REPO, "tests/fixtures/openspec-stub.sh"));
+
+/**
+ * REQ-GOV-012 REQ-GOV-013 a recording `npx` in a fresh temp dir (053/D3). It appends its arguments to a log and exits 1,
+ * so a call that should not happen fails fast with no download. `path` puts the dir first on the PATH it gets.
+ */
+export function recordingNpx(): { dir: string; calls: () => string[]; path: (old?: string) => string; cleanup: () => void } {
+  const dir = mkdtempSync(join(tmpdir(), "specctx-npx-"));
+  const log = join(dir, "calls.log");
+  writeFileSync(join(dir, "npx"), `#!/bin/sh\nprintf '%s\\n' "$*" >> ${JSON.stringify(log)}\nexit 1\n`);
+  chmodSync(join(dir, "npx"), 0o755);
+  return {
+    dir,
+    calls: () => (existsSync(log) ? readFileSync(log, "utf8").split("\n").filter(Boolean) : []),
+    path: (old = process.env.PATH ?? "") => (old ? `${dir}:${old}` : dir),
+    cleanup: () => rmSync(dir, { recursive: true, force: true }),
+  };
+}
 
 /** Tag text built at run time, so the index of this repo does not read test data as tags. */
 export const TAG = "// " + "REQ-";

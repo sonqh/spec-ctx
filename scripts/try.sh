@@ -6,6 +6,9 @@ set -euo pipefail
 unset SPECCTX_RERUN
 root=$(cd "$(dirname "$0")/.." && pwd)
 cli="$root/dist/cli.js"
+# REQ-GOV-013 the story needs no network (053/D1). status and next run the OpenSpec stand-in, not the real OpenSpec.
+# The value overrides one from the shell. init writes it to spec-ctx.toml and runs no command.
+export SPECCTX_OPENSPEC="sh \"$root/tests/fixtures/openspec-stub.sh\""
 if [ ! -f "$cli" ]; then
   echo "try.sh: dist/cli.js is missing. Run: bun run build" >&2
   exit 1

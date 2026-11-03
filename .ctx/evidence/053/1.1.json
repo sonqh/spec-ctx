@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-03T17:44:27.940Z",
+  "bundle_chars": 8003,
+  "files": {
+    "tests/gov/try-readme.test.ts": "ae87fbe7a2346b84cc058e52a07e1efcc41fb3219f7dee27a15b4ffe70d44653",
+    "tests/gov/try-script.test.ts": "5c676ea13a75736de2a5f910129f4b8e738e3c8f2d6a3a62c0ae19f2cebcc616",
+    "tests/helpers.ts": "c02f052a4d4c65d9d58d10099403a77966d0e6e0875ef8e8ea15a32c307a09c7"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-012",
+    "REQ-GOV-013"
+  ],
+  "started_at": "2026-11-03T17:43:34.919Z",
+  "task": "053/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gov/try-readme.test.ts tests/gov/try-script.test.ts && npx vitest run tests/gov/try-readme.test.ts tests/gov/try-script.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 8 pass\n 0 fail\n 29 expect() calls\nRan 8 tests across 2 files. [2.13s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "d5da259f348023985b9d027017ede4a3e0306d02b7b2638897e1bb19967d94e9"
+  }
+}
