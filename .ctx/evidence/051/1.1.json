@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-03T16:40:21.314Z",
+  "bundle_chars": 7794,
+  "files": {
+    "tests/gov/try-script.test.ts": "7464e738cdd308cfa2a345bff727236718a6dbecc4cfbb985f4c2bdb8f34504d",
+    "tests/helpers.ts": "48f26d96e7ad293e6a3fa97119a3b994d801140a9908fb1b8eaa8b65c4aa023e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-013"
+  ],
+  "started_at": "2026-11-03T16:38:29.318Z",
+  "task": "051/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gov/try-script.test.ts && npx vitest run tests/gov/try-script.test.ts && bash scripts/try.sh > /dev/null && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 3 pass\n 0 fail\n 11 expect() calls\nRan 3 tests across 1 file. [1474.00ms]\nindex rebuilt\nindex rebuilt\nindex rebuilt\nindex rebuilt\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "0723d4e56ba303ad12439ec22d7c401f794ee331b4205e233405dfb90bfed528"
+  }
+}

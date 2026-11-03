@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-03T16:43:45.979Z",
+  "bundle_chars": 7909,
+  "files": {
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c",
+    "tests/gov/try-readme.test.ts": "21fc78cfb04183f71b89f9cf735885cb352783ace2dce6f087cc4622e8d724ec",
+    "tests/helpers.ts": "48f26d96e7ad293e6a3fa97119a3b994d801140a9908fb1b8eaa8b65c4aa023e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-012",
+    "REQ-GOV-003"
+  ],
+  "started_at": "2026-11-03T16:42:45.337Z",
+  "task": "051/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gov/try-readme.test.ts tests/gov/readme.test.ts tests/gov/readme-links.test.ts && npx vitest run tests/gov/try-readme.test.ts tests/gov/readme.test.ts tests/gov/readme-links.test.ts && node dist/cli.js lint tells --baseline 0 README.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 11 pass\n 0 fail\n 112 expect() calls\nRan 11 tests across 3 files. [1472.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "51f32ef10104beae35c5257a2c497b22fdaeca07caeb18fd3135553a6865820f"
+  }
+}

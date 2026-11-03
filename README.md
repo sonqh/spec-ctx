@@ -29,13 +29,78 @@ A later edit can break a task that passed. `check --strict` names each task whos
 
 No LLM call. No daemon. The same files give the same output.
 
+## Try it in two minutes
+
+Paste this block in a shell. It builds a toy project, then runs the loop on one task. It needs Node 22, `git`, and `npx`.
+
+<!-- try:begin -->
+```bash
+set -e
+mkdir -p spec-ctx-try && cd spec-ctx-try && git init -q
+mkdir -p openspec/specs/user-auth openspec/changes/add-mfa/specs/user-auth src tests
+cat > openspec/specs/user-auth/spec.md <<'MD'
+# user-auth
+
+## Requirements
+
+### Requirement: Login with a password
+The system SHALL let a user log in with a username and a password.
+
+#### Scenario: Correct password
+- **WHEN** a user enters a correct password
+- **THEN** the user is logged in
+MD
+cat > openspec/changes/add-mfa/proposal.md <<'MD'
+## Why
+Passwords alone are weak.
+
+## What Changes
+- Ask for a TOTP code after the password.
+MD
+cat > openspec/changes/add-mfa/specs/user-auth/spec.md <<'MD'
+## ADDED Requirements
+
+### Requirement: TOTP second factor
+The system SHALL ask for a TOTP code after a correct password.
+
+#### Scenario: Correct code
+- **WHEN** a user enters a correct TOTP code
+- **THEN** the user is logged in
+MD
+cat > openspec/changes/add-mfa/tasks.md <<'MD'
+## 1. Login
+
+- [ ] 1.1 Add the TOTP prompt to the login form
+MD
+printf '## Context\nThe login form has one step.\n' > openspec/changes/add-mfa/design.md
+printf 'export const prompt = "password";\n' > src/login.ts
+npx -y spec-ctx init --all
+npx -y spec-ctx adopt
+sed -i.bak 's/^- \[ \] 1.1 Add the TOTP prompt to the login form$/- [ ] 1.1 Add the TOTP prompt to the login form [REQ-UA-002] Verify: `grep -q totp src\/login.ts`/' openspec/changes/add-mfa/tasks.md && rm openspec/changes/add-mfa/tasks.md.bak
+printf '// Covers: REQ-UA-002\n' > tests/login.test.ts
+npx -y spec-ctx status
+npx -y spec-ctx task next
+npx -y spec-ctx task start add-mfa/1.1
+npx -y spec-ctx task done add-mfa/1.1 || echo "refused, as expected"
+printf '// REQ-UA-002\nexport const prompt = "password, then totp";\n' > src/login.ts
+npx -y spec-ctx task done add-mfa/1.1
+npx -y spec-ctx context add-mfa/1.1
+npx -y spec-ctx context src/login.ts
+npx -y spec-ctx handoff write
+```
+<!-- try:end -->
+
+On this toy project the bundle footer shows more than 100 percent of the spec text, because the tree is tiny. On a real repo the share is small. Step 4 of the next section shows 3.6 percent.
+
+`status` prints a `next:` line that asks for plan approval with `handoff ask --plan`. The `specctx-run` skill handles that step. This demo skips it.
+
 ## See it work
 
 Six commands on a small project. Each clip is one command.
 
 ### 1. Give every requirement an ID
 
-OpenSpec names a requirement by its header text. A reword breaks every link to it. `adopt` gives each requirement and scenario an ID that stays. Run it once on a project that has specs. A new project gets IDs from `init --all`.
+OpenSpec names a requirement by its header text. A reword breaks every link to it. `adopt` gives each requirement and scenario an ID that stays.
 
 ![The adopt dry run lists each header and its new ID](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/1-adopt.svg)
 
@@ -51,7 +116,7 @@ You see: one change, two tasks done, one open, and the hint.
 
 ### 3. What is next
 
-`task next` picks the first open task. It prints the requirement IDs the task cites and the Verify command, the shell command that proves the task is done.
+`task next` picks the first open task. It prints the requirements the task cites and its Verify command, the shell command that proves the task is done.
 
 ![Task add-mfa/1.3 with its requirement and Verify command](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/3-next.svg)
 
@@ -59,7 +124,7 @@ You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
 ### 4. Only the spec this task needs
 
-`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. The blocks fit a character budget. The task line always prints, also when it is longer than the budget. When a block does not fit, a `truncated:` line names it. When the kept blocks pass the budget, an `over budget:` line gives their size. These lines are not in the budget, so the output can be longer than the budget. The last line is the size of that text next to the size of all spec text.
+`task start` prints the context of the task. It holds the task line, the requirements it cites with their scenarios, the code and test lines that tag them, and the decisions. The blocks fit a character budget. The last line compares that size with all spec text.
 
 ![The bundle of one task and its size footer](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/4-start.svg)
 
@@ -67,7 +132,7 @@ You see: 711 characters, 3.6 percent of the tree. The agent reads this instead o
 
 ### 5. Done means Verify passed
 
-`task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that were checked. The agent cannot tick the box by hand.
+`task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that were checked.
 
 ![A refused done, the edit, and a passing done](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/5-done.svg)
 
@@ -75,24 +140,30 @@ You see: a red refusal, the edit, then a green done line.
 
 ### 6. Hand off to the next session
 
-`handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it. The questions live in `.ctx/questions.json`. `handoff ask` adds one and `handoff resolve <n>` answers it. A plan or archive question needs `--approve` or `--reject`, and a rejection keeps the stop.
+`handoff write` puts the state in one file: the change, the done tasks, the current task, and the open questions. The next session starts from it.
 
 ![The head of the handoff file](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/6-handoff.svg)
 
 You see: the head of `.ctx/handoff.md`.
 
-The transcript of all six clips is in `docs/demo/loop.txt`. The clips run on a copy of `tests/fixtures/no-id-repo` plus the six capabilities in `docs/demo/specs/`. `bash docs/demo/record.sh` records them again.
+The transcript of all six clips is in `docs/demo/loop.txt`. `bash docs/demo/record.sh` records them again.
 
 ## Quickstart
 
+spec-ctx needs Node 22. Run it in a project after `openspec init`.
+
 ```bash
 npx -y spec-ctx init --all              # config, ID templates, rules, and the agent skill
+npx -y spec-ctx adopt                   # only when your specs have no IDs yet
 npx -y spec-ctx task next               # the next task and the command that proves it
 npx -y spec-ctx task start <task>       # only the spec that this task needs
 npx -y spec-ctx task done <task>        # runs that command. A pass ticks the box.
 ```
 
-A project with specs but no IDs needs `specctx adopt` first. See [Two paths](#two-paths).
+- `adopt --dry-run` shows the ID that each header gets and writes nothing.
+- `adopt --dry-run` exits 1 when headers need IDs. A script with `set -e` must allow that code.
+- [`docs/getting-started.md`](https://github.com/sonqh/spec-ctx/blob/main/docs/getting-started.md) walks the fresh path with real output.
+- [`docs/reference.md`](https://github.com/sonqh/spec-ctx/blob/main/docs/reference.md) holds the install options, the path for an existing project, every command, and the config file.
 
 ## How it finds the context
 
@@ -105,29 +176,9 @@ graph LR
   R -->|"Covers:"| X["tests/login.test.ts"]
 ```
 
-The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. `bundle` walks the edges to the configured depth inside a character budget. A decision record joins the graph through its `Refs:` line. The demo fixture has none, so the graph above shows no decision.
+The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. A decision record joins the graph through its `Refs:` line.
 
-### Ask for the context
-
-`specctx context <task|ID|path|change>` is the one command to run before you edit. It takes one input and prints the spec text that relates to it, with one provenance line for each block. A task gets the requirements it cites and the code and test lines that tag them. It also gets the decisions that name them, and the deltas and designs of its change. A file gets the requirements it tags and the code and test lines of those requirements, so its own tests appear. `task start` prints this same answer. This is the output for task `045/2.1` of this repository, with the text of each block left out:
-
-```text
-$ specctx context 045/2.1
--- 045/2.1 | openspec/changes/archive/2026-10-30-045-query-by-file/tasks.md:11 | done | requested
--- 045/D2 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:22 | archived | design named in 045/2.1
--- 045/D3 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:23 | archived | design named in 045/2.1
--- REQ-IDX-008 | openspec/specs/index/spec.md:133 | active | delta in change of 045/2.1
--- REQ-IDX-009 | openspec/specs/index/spec.md:146 | active | delta in change of 045/2.1
--- REQ-QRY-005 | openspec/specs/query/spec.md:76 | active | delta in change of 045/2.1
--- REQ-QRY-006 | openspec/specs/query/spec.md:93 | active | ref from 045/2.1
--- REQ-QRY-008 | openspec/specs/query/spec.md:106 | active | delta in change of 045/2.1
--- src/graph/files.ts:1 | src/graph/files.ts:1 | active | implements REQ-QRY-006
--- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006
-```
-
-`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The requirements that a task cites go last. The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`. The `truncated:` line names each dropped block and is not in the budget. Read that line, and get each named ID with a second call. Do not take the output as a full answer when the line is there. With `--json`, the fields `chars`, `budget`, and `complete` give the same facts. `complete` is true when no block dropped.
-
-`specctx related` prints each neighbor of an ID and the reason for the link. This is the output for the demo project after its last step:
+`specctx context <task|ID|path|change>` is the one command to run before you edit. It walks the edges inside a character budget and prints one provenance line for each block. When a block does not fit, a `truncated:` line names it. `related` prints each neighbor and the reason for the link:
 
 ```text
 $ specctx related REQ-UA-004
@@ -138,212 +189,17 @@ code  src/login.ts:1  active  src/login.ts:1  implements REQ-UA-004
 test  tests/login.test.ts:1  active  tests/login.test.ts:1  covers REQ-UA-004
 ```
 
-### Ask about a file
-
-`related`, `context`, and `bundle` take a file path where they take an ID. Run it before you edit a file. The reason on each line tells you how strong the link is. `implements` comes from a code tag. `covers` comes from a `Covers:` tag. `mentions` comes from a path in backticks in a task line of an active change. This is the output for one file of this repository:
-
-```text
-$ specctx related src/util/hash.ts
-adr  ADR-004  active  decisions/ADR-004-tasks-md-is-the-view-evidence-is-the-record.md:1  ref from REQ-TASK-004
-req  REQ-CHK-003  active  openspec/specs/check/spec.md:64  ref to REQ-TASK-004
-req  REQ-STAT-002  active  openspec/specs/metrics/spec.md:19  ref to REQ-TASK-004
-req  REQ-TASK-004  active  openspec/specs/task-workflow/spec.md:89  implements, tag at src/util/hash.ts:1
-req  REQ-VER-004  active  openspec/specs/verify-runner/spec.md:37  ref to REQ-TASK-004
-scn  SCN-TASK-004-1  active  openspec/specs/task-workflow/spec.md:94  scenario of REQ-TASK-004
-task  002/3.3  done  openspec/changes/archive/2026-10-24-002-ids-and-tasks/tasks.md:17  task cites REQ-TASK-004
-```
-
-A path that is not a file in the repository exits 2. A file with no links prints `no links: <path>` and exits 0.
-
-### Ask about a change or a task
-
-`related`, `context`, and `bundle` take a change key or a folder name where they take an ID. A change reaches the requirements and scenarios of its delta specs and the capabilities they touch. This is the output for an archived change of this repository:
-
-```text
-$ specctx related 045
-req  REQ-IDX-008  active  openspec/specs/index/spec.md:133  delta in change/045
-req  REQ-IDX-009  active  openspec/specs/index/spec.md:146  delta in change/045
-req  REQ-QRY-005  active  openspec/specs/query/spec.md:76  delta in change/045
-req  REQ-QRY-006  active  openspec/specs/query/spec.md:93  delta in change/045
-req  REQ-QRY-008  active  openspec/specs/query/spec.md:106  delta in change/045
-scn  SCN-IDX-008-1  active  openspec/specs/index/spec.md:138  delta in change/045
-scn  SCN-IDX-008-2  active  openspec/specs/index/spec.md:142  delta in change/045
-scn  SCN-IDX-009-1  active  openspec/specs/index/spec.md:151  delta in change/045
-scn  SCN-IDX-009-2  active  openspec/specs/index/spec.md:155  delta in change/045
-scn  SCN-QRY-005-1  active  openspec/specs/query/spec.md:81  delta in change/045
-scn  SCN-QRY-005-2  active  openspec/specs/query/spec.md:85  delta in change/045
-scn  SCN-QRY-005-3  active  openspec/specs/query/spec.md:89  delta in change/045
-scn  SCN-QRY-006-1  active  openspec/specs/query/spec.md:98  delta in change/045
-scn  SCN-QRY-006-3  active  openspec/specs/query/spec.md:102  delta in change/045
-scn  SCN-QRY-008-1  active  openspec/specs/query/spec.md:111  delta in change/045
-scn  SCN-QRY-008-2  active  openspec/specs/query/spec.md:115  delta in change/045
-scn  SCN-QRY-008-3  active  openspec/specs/query/spec.md:119  delta in change/045
-scn  SCN-QRY-008-4  active  openspec/specs/query/spec.md:123  delta in change/045
-cap  cap/index  active  openspec/specs/index/spec.md:1  capability touched by change/045
-cap  cap/query  active  openspec/specs/query/spec.md:1  capability touched by change/045
-```
-
-A task reaches the same delta entries and the design decisions that its line names, for example `specctx related 045/2.1`. A requirement reaches its capability, and `related cap/query` lists the requirements of one capability. A modified requirement shows its main version beside the delta. The index stores only the `change` and `cap` entries and the design links of tasks. The other edges come from the folder structure when you ask. `query` hides the `change` and `cap` entries unless you pass `--kind change` or `--kind cap`.
+The reference has the budget rules and the lookups by file, by change, and by task.
 
 ## The life cycle for agents
 
 `init --all` installs one skill, `specctx-run`. The user types one prompt, such as "build this" or "continue". The skill loops until the change reaches the archive or a human must decide.
 
-- It runs `specctx next --json`. The engine reads the files on disk and prints one action: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`.
-- It acts on the action with the exact commands, runs `specctx handoff write`, and repeats.
-- It stops twice for a human by default: at the plan, and before archive. A Verify command that fails three times writes a question and stops too.
-- `specctx-bootstrap`, `specctx-next`, and `specctx-done` stay for one release as aliases. Each one says: run `specctx-run`.
+1. It runs `specctx next --json`. The engine reads the files on disk and prints one action, such as `start`, `fix`, or `archive`.
+2. It runs the exact commands of that action.
+3. It runs `specctx handoff write` and repeats.
 
-The commands the skill runs for one task:
-
-```bash
-specctx init --all             # config, ID templates, rules, and the skill
-specctx next --json            # the next action, its task, and its command
-specctx task start <task>      # the bundle of that task and its size
-specctx task done <task>       # run Verify, write evidence, set the checkbox
-specctx gate --strict          # check, baseline, linters, openspec validate, length
-specctx handoff write          # .ctx/handoff.md for the next session
-```
-
-The rule: the agent never opens `openspec/specs/` by hand. It uses `task start` or `context`. It never ticks a checkbox and never runs `/opsx:apply`. The skill is in [`skills/`](https://github.com/sonqh/spec-ctx/blob/main/skills/). Install it alone with `npx skills add sonqh/spec-ctx` or `specctx init --skills`.
-
-## Install
-
-spec-ctx needs Node 22. Run it in a project after `openspec init`.
-
-```bash
-npx -y spec-ctx init --all                           # from npm
-npm install -g spec-ctx                              # puts specctx on your path
-npx -y github:sonqh/spec-ctx#<sha> init --all        # from git, for an unreleased commit
-```
-
-The git form builds the package on install with Node only. Pin a commit SHA. A branch name such as `main` also works, but it moves.
-
-The command writes `spec-ctx.toml`, copies the templates with ID placeholders to `openspec/templates/spec-driven-ids/`, adds the spec-ctx `rules` and `operations` to `openspec/config.yaml`, and installs the `specctx-run` skill and its three aliases into `.claude/skills/` and `.agents/skills/`. The project keeps the stock `schema: spec-driven`. Upstream OpenSpec injects the rules into every artifact instruction. It pins the OpenSpec version it finds in `[gate] openspec`. It adds four lines to `.gitignore`: `.ctx/index.json`, `adopt-report.md`, `.ctx/current.json`, and `.ctx/gate-log.jsonl`. The rest of `.ctx/` is meant for git, `questions.json` included.
-
-The examples below use `specctx`. With `npx`, write `npx -y spec-ctx` in its place. Each GitHub release also carries a single binary for Linux and macOS.
-
-## Two paths
-
-[`docs/getting-started.md`](https://github.com/sonqh/spec-ctx/blob/main/docs/getting-started.md) walks the fresh path on upstream OpenSpec with real output, for a developer who knows OpenSpec.
-
-### Fresh project
-
-```bash
-npx -y @fission-ai/openspec@latest init --tools <tool>
-npx spec-ctx init --all
-specctx gate --strict
-```
-
-`--tools <tool>` names your agent, such as `claude`, and skips the interactive picker. `--no-animation` keeps logs clean. `init --all` merges the ID rules into an existing `rules` key of `openspec/config.yaml` item by item and prints `merged openspec/config.yaml rules (<n> added)`.
-
-### Existing OpenSpec project
-
-```bash
-npx spec-ctx init --all
-specctx adopt --dry-run                 # the ID that each header gets. Writes nothing.
-specctx adopt                           # writes the IDs into main specs and active deltas
-specctx baseline write
-specctx gate --strict
-```
-
-- `adopt --dry-run` exits 1 when headers need IDs. A script with `set -e` must allow that code.
-- `adopt` gives an ID to every requirement and scenario header without one, in `openspec/specs/` and in the deltas of active changes. A delta header gets the main ID by its text or through its RENAMED line. A delta header that matches neither keeps its text and goes into `adopt-report.md`.
-- `adopt` derives a capability code from each folder name, for example `UA` for `user-auth`. It writes the codes into `spec-ctx.toml`. Rename a code there before the IDs spread.
-- `adopt` runs `check` before and after the write. A finding that the write added undoes every file. A second run prints `nothing to adopt`.
-- `baseline write` records the debt of the day in `.ctx/baseline.json`. The debt has five kinds. Ticked tasks without evidence. Legacy tasks without a citation or a Verify code span. Delta headers that match no main requirement. Hard lint findings per file and rule on the gate globs. `check` hides that debt and prints `baselined: <n>`. `gate` fails the lint step only when a count rises. New debt still shows.
-- `gate` compares `.ctx/baseline.json` with the copy at the merge base of `HEAD` and `[gate] base`, default `origin/main`. A new entry fails the `baseline` step. Commit a grown baseline with a subject that starts with `baseline:` to pass once. In CI, check out with `fetch-depth: 0`, so the merge base exists. Without git or a merge base the step prints `skipped`.
-- `[gate] markdown` in `spec-ctx.toml` names the markdown globs that `gate` lints. `init` writes `[]`, so the gate lints nothing until you opt in. The comment in the file names the globs this repository uses.
-- Legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a `Verify:` code span. `specctx baseline prune` then drops them. No command adds a single entry.
-
-Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` and `tests/paths/existing.sh`. `tests/paths/rules-only.sh` shows that the merged `rules` reach the stock `spec-driven` schema.
-
-## Commands
-
-| Command | Use |
-| --- | --- |
-| `build` | Write `.ctx/index.json`. Every other command rebuilds a stale index first. |
-| `status` | Active changes with task counts, the current task, and open questions. |
-| `next` | The next action of the loop from the files on disk: `plan`, `cite`, `start`, `work`, `fix`, `repair`, `gate`, `archive`, `ask`, or `stop`. `--json` prints one object. Flag: `--change`. |
-| `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
-| `context <task\|ID\|path\|change>` | The spec text, code lines, and test lines that relate to one input, in a budget. `task start` prints the same answer. Flags: `--budget`, `--depth`. |
-| `related <ID\|path\|change>` | Linked entries with the reason for each link. A file path or a change works too. Flags: `--depth`, `--all`. |
-| `bundle <ID\|path\|change...>` | The answer of `context` for several inputs. Flags: `--budget`, `--depth`, `--all`, `--block`. |
-| `check` | ID and link integrity. `--strict` adds test coverage and evidence. For an active change, the coverage rules start when the change has no open task. A clean result while tasks are open does not show that the tests are complete. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
-| `id new`, `id retire` | Allocate and retire IDs. |
-| `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
-| `handoff write`, `ask`, `resolve` | The session handoff and its open questions in `.ctx/questions.json`. |
-| `init` | Config file, ID templates and rules, and skills. Flags: `--schema`, `--skills`, `--all`, `--force`. |
-| `adopt` | IDs for a project without them. `--dry-run` writes nothing. |
-| `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
-| `gate` | `check`, the baseline against the merge base, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
-| `lint tells`, `lint ste` | The two markdown linters. Flags: `--baseline`, `--disable`, `--json`, `--selftest`. |
-| `help <command>` | The page of one command. `specctx <command> --help` prints the same page. |
-
-Every command takes `--root <path>` and `--json`. A task ID takes the change key, such as `008/1.1` or `add-mfa/1.1`, or the full folder name. Outside an OpenSpec project every command but `init` exits 2. Exit codes: 0 for success, 1 for findings or a failed Verify command, 2 for a usage error, 3 for an internal error.
-
-## Config reference
-
-`spec-ctx.toml` sits at the project root. Every key is optional.
-
-```toml
-[scan]
-specs = ["openspec/specs/**/*.md"]      # main specs
-changes = ["openspec/changes/**/*.md"]  # active and archived changes
-decisions = ["decisions/*.md"]          # decision records
-code = ["src/**"]                       # files with code tags
-tests = ["tests/**"]                    # files with Covers tags and scenario IDs
-ignore = []                             # globs that the scan skips
-
-[ids]
-caps = []                               # capability codes. Empty means any code is valid.
-task_pattern = '\d+\.\d+'               # the task number in a tasks.md checkbox
-brackets = false                        # true: adopt, id new, and init --schema write [REQ-UA-001] in headers. The scan reads both forms.
-
-[ids.paths]
-UA = "user-auth"                        # capability path of each code. adopt writes the derived ones.
-
-[bundle]
-budget = 8000                           # characters
-depth = 1
-
-[verify]
-timeout_s = 600
-
-[gate]
-markdown = []                           # globs that gate lints. Empty means no lint. This repo opts in.
-openspec = "npx -y @fission-ai/openspec@1.15.0"  # the command that runs OpenSpec. init pins the version it found.
-base = "origin/main"  # the ref whose merge base holds the baseline that gate compares with
-
-[loop]
-max_attempts = 3                        # Verify failures on one task before task done writes a question
-archive = "ask"                         # "ask" stops before archive for a human. "auto" lets the loop archive.
-
-[cli]
-run = "specctx"                         # the prefix of every command that spec-ctx prints. init writes npx -y spec-ctx@<version> under npx.
-```
-
-With `brackets = true`, `init --schema` installs templates with `[REQ-<CAP>-NNN]` and `[SCN-<CAP>-NNN-N]` in the headers. The merged rules show the same form. Task citations, `Refs:` lines, and tags stay bare. After you change the value, run `specctx init --schema` again. It switches each template and rule that you did not edit. It keeps the ones you edited, unless you add `--force`.
-
-Two environment variables change the engine:
-
-| Variable | Effect |
-| --- | --- |
-| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate` and `next` runs for `openspec status`. It overrides `[gate] openspec` for one run. At `init` time it is written into the file as it is, and no version detection runs. Tests and offline machines set it. |
-| `SPECCTX_BASELINE_SUBJECT` | The commit subject that the `baseline` step of `gate` tests for `baseline:`. It replaces the subject of `HEAD`. Tests set it. |
-
-## Markdown linters
-
-`specctx lint tells` and `specctx lint ste` replace `scripts/tells-lint.py` and `scripts/ste-lint.py` from the ste-humanize skill. They take the same flags and give the same output and exit codes. They need Node only.
-
-```bash
-# before
-python3 scripts/tells-lint.py --baseline 0 README.md
-python3 scripts/ste-lint.py --baseline 0 --disable synonym-rotation README.md
-# after
-npx spec-ctx lint tells --baseline 0 README.md
-npx spec-ctx lint ste --baseline 0 --disable synonym-rotation README.md
-```
+It stops for a human at the plan and before archive. A Verify command that fails three times writes a question and stops too. The agent never opens `openspec/specs/` by hand, never ticks a checkbox, and never runs `/opsx:apply`. `specctx-bootstrap`, `specctx-next`, and `specctx-done` stay for one release as aliases of `specctx-run`. The skill is in [`skills/`](https://github.com/sonqh/spec-ctx/blob/main/skills/).
 
 ## GitHub Action
 
@@ -354,29 +210,7 @@ npx spec-ctx lint ste --baseline 0 --disable synonym-rotation README.md
     strict: true
 ```
 
-The action runs `specctx gate`: `check --strict`, both markdown linters, `openspec validate --all --strict`, and the length check.
-
-### Rerun
-
-```yaml
-on: pull_request
-permissions:
-  contents: read
-jobs:
-  rerun:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: sonqh/spec-ctx@v0
-        with:
-          rerun: true
-          base: origin/${{ github.base_ref }}
-```
-
-With `rerun: true` the action runs `specctx gate --rerun` and no other step. It runs the Verify command of each task that the pull request closed and compares the exit code with the evidence. `base` is the ref for the merge base. Without `rerun`, the action ignores `base`.
-
-On `push`, the default base gives a merge base equal to HEAD, so the rerun compares nothing. It prints one line and passes. Pass `base: ${{ github.event.before }}` on push. A push that creates a branch gives forty zeros. The rerun prints `rerun: base is the zero commit (a new branch), nothing to compare` and passes. After a force push the old commit may be missing from the clone. The rerun then prints `rerun: base <ref> is not in this clone. Fetch it or use fetch-depth: 0` and exits 1.
+The action runs `specctx gate`: `check --strict`, both markdown linters, `openspec validate --all --strict`, and the length check. With `rerun: true` it runs the Verify command of each task that the pull request closed. The reference has the full workflow.
 
 A Verify command is code from the pull request. The boundary:
 
@@ -387,12 +221,13 @@ A Verify command is code from the pull request. The boundary:
 - For fork pull requests, turn on the repository setting that asks for approval before a workflow runs.
 - Check out with `fetch-depth: 0`. The merge base needs full history.
 
+Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenSpec.
+
 ## Status
 
-- Published: `spec-ctx@0.4.1` on npm, with tags `v0.4.1` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 050. No change is open. See `CHANGELOG.md` for each release.
-- A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
-- Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
+- Published: `spec-ctx@0.4.1` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 051. No change is open.
+- Upstream: the ID scheme is proposed in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured
 
@@ -400,15 +235,15 @@ A Verify command is code from the pull request. The boundary:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0185 (n=138) | 0.94 (239/255) | 65 (of 118 reopens) | 58 (n=138) | 0 (0 baselined + 0 new) |
+| total | 0.0181 (n=142) | 0.94 (243/259) | 65 (of 118 reopens) | 61 (n=142) | 0 (0 baselined + 0 new) |
 
-- `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. The meaning changed on 2026-10-30 with change 047-context. Before, `task start` printed the cited requirements. Now it prints the `context` answer, which holds more. `bundle_chars` in the evidence of older tasks keeps the old size, so the two do not compare.
-- `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.
-- `stale_catches`: reopened tasks that `check --strict` flagged as stale, out of all reopened tasks. A higher share means the check found the drift before a person did.
-- `cycle_time_median_s`: the median number of seconds from `task start` to `task done`. Lower is faster.
+- `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
+- `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.
+- `stale_catches`: reopened tasks that `check --strict` flagged as stale, out of all reopened tasks.
+- `cycle_time_median_s`: the median seconds from `task start` to `task done`.
 - `debt`: findings that the baseline hides plus new findings. Zero is the goal.
 
-The value in brackets is the count of inputs. A value without inputs reads n/a.
+The value in brackets is the count of inputs.
 
 ## Contribute
 
