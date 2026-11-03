@@ -45,7 +45,8 @@ describe("check summary", () => {
     const lines = r.out.trimEnd().split("\n");
     const at = lines.findIndex((l) => /^\d+ findings? in /.test(l));
     expect(lines[at - 1]).toBe("");
-    const rules = lines.slice(at + 1);
+    // REQ-CHK-010 the deferred lines and the baselined line may follow the rule lines
+    const rules = lines.slice(at + 1).filter((l) => !/^(deferred|baselined): /.test(l));
     for (const l of rules) {
       const [rule, n, hint] = l.split("  ");
       expect(Number(n)).toBeGreaterThan(0);

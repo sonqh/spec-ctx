@@ -720,5 +720,27 @@
     "verdict": "approved",
     "answer": "Owner approved the archive on 2026-11-03.",
     "resolved_at": "2026-11-03T16:56:36.757Z"
+  },
+  {
+    "n": 78,
+    "asked_at": "2026-11-03T15:55:56.451Z",
+    "task": "052-check-deferred",
+    "text": "plan ready for 052-check-deferred. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Owner approved 2026-11-03. Include the change with deltas and no task. Edit the two baseline.test.ts assertions, do not change fixtures. 051 merges first.",
+    "resolved_at": "2026-11-03T16:37:21.339Z"
+  },
+  {
+    "n": 79,
+    "asked_at": "2026-11-03T16:45:21.168Z",
+    "task": "052-check-deferred",
+    "text": "archive 052-check-deferred?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Owner approved the archive on 2026-11-03.",
+    "resolved_at": "2026-11-03T16:56:36.829Z"
   }
 ]
