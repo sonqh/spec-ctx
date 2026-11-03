@@ -4,6 +4,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. The owner accepted it on 2026-11-04.
+
 Change 052-check-deferred.
 
 ### Added
@@ -21,7 +23,7 @@ Change 051-try-it.
 
 ### Changed
 
-- The README is shorter, 253 lines instead of 419. These sections moved to `docs/reference.md`: install, the path for an existing project, the context budget rules, and the commands. The config reference, the environment variables, the markdown linters, and the Action rerun moved too. The reference text moves. The README keeps shorter forms of the demo steps and drops the long sample output of `related 045`. REQ-GOV-006.
+- The README is shorter, 254 lines instead of 419. These sections moved to `docs/reference.md`: install, the path for an existing project, the context budget rules, and the commands. The config reference, the environment variables, the markdown linters, and the Action rerun moved too. The reference text moves. The README keeps shorter forms of the demo steps and drops the long sample output of `related 045`. REQ-GOV-006.
 
 Change 050-requested-context-always-kept.
 
