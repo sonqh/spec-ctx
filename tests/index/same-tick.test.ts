@@ -96,6 +96,9 @@ describe("the index mtime", () => {
 
   test("SCN-IDX-014-3 an old mtime with the same count is not seen, and a new file is", async () => {
     p.write(TASKS, OPEN);
+    // a later file holds the newest mtime. On a file system with fine mtimes, TASKS is otherwise the newest file,
+    // and its old mtime would change the newest mtime of the walk.
+    p.write("openspec/changes/001-x/proposal.md", "# Proposal\n");
     await p.build();
     p.write(TASKS, DONE);
     utimesSync(p.path(TASKS), 1000, 1000);

@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-03T14:28:16.570Z",
+  "bundle_chars": 8033,
+  "files": {
+    "src/cli/commands.ts": "78786c39e0a45df4ba7cf0fc43de67ebfb17b8540884eae06aeeda2966c3ec49",
+    "src/graph/bundle.ts": "a36ccb81352359df53035339d6e3f32aeb415f2d77e019256e35eba9e4605619",
+    "tests/query/context.test.ts": "ae7789472bec81970dbaac1164ed33dc5ae1adfb8ffcbe57267b8a06497b64fe",
+    "tests/query/requested.test.ts": "4f8d0e86d1360e240ea852d0a67c2e2a010ab5e67f69e16037885b2be9627137",
+    "tests/tasks/start.test.ts": "4b51d3594eba3ce79b4e73921b28b3b7b00973781183a4aa1b4a1232021b902f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-018",
+    "REQ-QRY-019"
+  ],
+  "started_at": "2026-11-03T14:28:09.928Z",
+  "task": "050/3.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/050.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/050.md && grep -q \"## Before the fix\" docs/verification/050.md && grep -q \"## After the fix\" docs/verification/050.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "568292046b2c6b4831eef5afadcda6bf94a18b53919978fbfb3fff0779ee74dc"
+  }
+}

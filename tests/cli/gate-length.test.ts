@@ -21,7 +21,7 @@ describe("gate spec length", () => {
   test("SCN-CLI-005-1 a requirement of 535 characters fails the fourth step", async () => {
     p = new Project();
     p.write(DELTA, delta(535));
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const r = await p.run("gate", "--strict", "--markdown", "decisions/*.md");
     expect(r.out).toContain("validate: ok (strict)\nspec-length: fail REQ-AAA-009 535 chars\n");
     expect(r.code).toBe(1);
@@ -30,7 +30,7 @@ describe("gate spec length", () => {
   test("SCN-CLI-005-2 requirements of at most 500 characters pass", async () => {
     p = new Project();
     p.write(DELTA, delta(500));
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const r = await p.run("gate", "--markdown", "decisions/*.md");
     expect(r.out).toMatch(/validate: ok\nspec-length: ok\n$/);
     expect(r.code).toBe(0);
@@ -46,7 +46,7 @@ describe("gate spec length", () => {
   test("an archived change is not read", async () => {
     p = new Project();
     p.write("openspec/changes/archive/2026-01-01-old/specs/alpha/spec.md", delta(600));
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     expect((await p.run("gate", "--markdown", "decisions/*.md")).out).toContain("spec-length: ok\n");
   });
 });

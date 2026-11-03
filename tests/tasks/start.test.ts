@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-002, REQ-STAT-002
+// Covers: REQ-TASK-002, REQ-STAT-002, REQ-QRY-018
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync } from "node:fs";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
@@ -92,7 +92,9 @@ describe("task start", () => {
     p = setup();
     p.write("spec-ctx.toml", "[bundle]\nbudget = 60\n");
     const r = await p.run("task", "start", "002/2.1");
-    expect(r.out.startsWith("truncated: ")).toBe(true);
+    // REQ-QRY-018 the task line stays over the budget, and the over budget line says so
+    expect(r.out.startsWith("-- 002/2.1 |")).toBe(true);
+    expect(r.out).toMatch(/^truncated: .*\nover budget: \d+ of 60 characters\n/m);
   });
 
   test("SCN-TASK-002-2 a done task exits 2", async () => {

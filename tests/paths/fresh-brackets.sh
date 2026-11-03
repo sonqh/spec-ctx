@@ -60,7 +60,7 @@ printf '\n#### Scenario: %s No name\n- **WHEN** the caller passes nothing\n- **T
 sed -e 's|^## 1\. <!-- Task group name -->|## 1. Greeting|' \
     -e "s|^- \[ \] 1.1 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.1 Add \`greet(name)\` [$bare] Verify: \`node -e 0\`|" \
     -e "s|^- \[ \] 1.2 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.2 Cover both scenarios [$bare] Verify: \`node -e 0\`|" \
-    -e '/^## 2\./,$d' "$tpl/tasks.md" | sed -e '${/^$/d}' > "$chg/tasks.md"
+    -e '/^## 2\./,$d' "$tpl/tasks.md" | sed -e '${/^$/d;}' > "$chg/tasks.md"
 ! grep -q '<!--' "$chg/proposal.md" "$chg/design.md" "$chg/specs/greeting/spec.md" "$chg/tasks.md" || { echo "a template comment is left"; grep -n '<!--' "$chg"/*.md "$chg"/specs/*/*.md; exit 1; }
 grep -q "\[$bare\] Verify: \`node -e 0\`" "$chg/tasks.md"
 mkdir -p src tests

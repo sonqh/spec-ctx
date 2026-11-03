@@ -251,6 +251,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { bundle } = await import("../graph/bundle.ts");
       const { resolveInputs } = await import("../graph/input.ts");
       const ids = canon(entries);
+      // REQ-QRY-018 a negative budget is a usage error (050/D11)
+      if (f.budget !== undefined && (f.budget as number) < 0) throw new UsageExit("--budget must be 0 or more");
       // REQ-QRY-005 an input that is no known ID is a path in the repository
       const { wanted, paths, errors, taskId } = resolveInputs(root, io.cwd, entries, p.positional);
       if (errors.length) {
@@ -266,7 +268,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         }
         const { reqBlocks } = await import("../graph/bundle.ts");
         const text = reqBlocks(root, p.positional.map((i) => ids.get(i)!));
-        if (json) print({ text, omitted: [] });
+        // REQ-QRY-019 block mode has no budget, so budget is null and the text is complete (050/D6)
+        if (json) print({ text, omitted: [], chars: (await import("../util/pystr.ts")).cpLen(text), budget: null, complete: true });
         else io.out(text);
         return 0;
       }

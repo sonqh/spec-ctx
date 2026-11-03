@@ -38,7 +38,7 @@ describe("config", () => {
     expect(loadConfig(p.root).gate.markdown).toEqual(["docs/*.md"]);
     // a project without the key lints no file
     p.write("spec-ctx.toml", "");
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const r = await p.run("gate");
     delete process.env.SPECCTX_OPENSPEC;
     expect(r.code, r.out).toBe(0);

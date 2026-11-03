@@ -74,7 +74,7 @@ describe("baseline", () => {
     const r = await p.run("check", "--strict");
     expect(r.code, r.out).toBe(0);
     // the gate must not reach the network: parallel npx installs race in CI
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const g = await p.run("gate", "--strict");
     delete process.env.SPECCTX_OPENSPEC;
     expect(g.code, g.out).toBe(0);
@@ -102,7 +102,7 @@ describe("baseline", () => {
     const list = JSON.parse(p.read(".ctx/baseline.json")) as string[];
     expect(list).toContain("lint docs/notes.md tells:dash 1");
     expect(list).toContain("lint docs/notes.md ste:semicolon 1");
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const g = await p.run("gate", "--strict");
     delete process.env.SPECCTX_OPENSPEC;
     expect(g.code, g.out).toBe(0);

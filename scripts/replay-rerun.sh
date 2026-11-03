@@ -100,7 +100,8 @@ while IFS='|' read -r c parents date; do
       files+=("$rd/run$i")
     done
   fi
-  agg "$short" "$date" "$runs" "$err" "${files[@]}" >> "$out/replay.jsonl"
+  # bash 3.2 (macOS) calls an empty array unbound under set -u. This form expands to nothing.
+  agg "$short" "$date" "$runs" "$err" ${files[@]+"${files[@]}"} >> "$out/replay.jsonl"
   git -C "$repo" worktree remove --force "$wt" > /dev/null 2>&1
   git -C "$repo" worktree prune > /dev/null 2>&1
 done < <(git -C "$repo" log --first-parent --reverse --since="$since" --format='%H|%P|%cI')

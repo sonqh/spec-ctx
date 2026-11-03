@@ -2,6 +2,17 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+Change 050-requested-context-always-kept.
+
+### Changed
+
+- The help of `context` and `bundle` and the README say that `--budget` limits the blocks. The `truncated:` line is not in the limit, so the output can be longer than the budget. The output does not change. The help golden has a new record for this text. REQ-QRY-003.
+- A requested block always prints, also when it is longer than `--budget`. This holds for `context`, `bundle`, and `task start`, so the task line always prints. Before, the input dropped while smaller neighbors stayed. The main version of a requested ID stays too, so no requested ID is ever in the `truncated:` line. When the kept blocks pass the budget, the output ends with `over budget: <used> of <budget> characters`. A requested decision prints once. A negative `--budget` exits 2. When every block fits, the text does not change. REQ-QRY-018, REQ-QRY-014.
+- `bundle --json` and `context --json` add `chars`, `budget`, and `complete`. `text` and `omitted` do not change. `bundle --block --json` gives `budget: null`. REQ-QRY-019.
+- The README says that `check --strict` checks the coverage of an active change only when the change has no open task. REQ-CHK-008, REQ-CHK-009.
+
 ## 0.4.1
 
 Change 049-index-same-ms-stale.

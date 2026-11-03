@@ -24,11 +24,13 @@ steps=(
 )
 # SPECCTX_CI_STEPS_FILE replaces the step list, one step per line. Only the gate log test uses it.
 if [ -n "${SPECCTX_CI_STEPS_FILE:-}" ]; then
-  mapfile -t steps < "$SPECCTX_CI_STEPS_FILE"
+  # a read loop, not mapfile, so bash 3.2 (macOS) runs it too
+  steps=()
+  while IFS= read -r line || [ -n "$line" ]; do steps+=("$line"); done < "$SPECCTX_CI_STEPS_FILE"
 fi
 
 # REQ-STAT-005 specctx gate writes the gate log line. This script appends none, so one run is one line.
-for s in "${steps[@]}"; do
+for s in ${steps[@]+"${steps[@]}"}; do
   echo "ci-local: $s"
   if ! bash -c "$s" > "$log" 2>&1; then
     tail -40 "$log"

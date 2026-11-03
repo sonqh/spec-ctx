@@ -195,7 +195,7 @@ describe("retitle-needs-renamed", () => {
     for (const f of JSON.parse(ran.out).findings) expect(f).not.toHaveProperty("detail");
     // the real OpenSpec CLI, only when the env var names it
     const cmd = process.env.SPECCTX_OPENSPEC;
-    if (cmd && cmd !== "/bin/true" && cmd !== "/bin/false") {
+    if (cmd && cmd !== "true" && cmd !== "/bin/false") {
       const v = spawnSync("/bin/sh", ["-c", `${cmd} validate add-mfa --strict --no-interactive`], { cwd: p.root, encoding: "utf8" });
       expect(v.status, v.stdout + v.stderr).toBe(0);
     }
