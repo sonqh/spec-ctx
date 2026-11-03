@@ -1,6 +1,6 @@
 # ADR-008 A stranger first
 
-Status: proposed. Date: 2026-11-03. It replaces the order of work of ADR-007. Every decision item of ADR-007 and ADR-006 stays in force.
+Status: accepted. Date: 2026-11-03. The owner accepted it on 2026-11-04. It replaces the order of work of ADR-007. Every decision item of ADR-007 and ADR-006 stays in force.
 
 ## Context
 
