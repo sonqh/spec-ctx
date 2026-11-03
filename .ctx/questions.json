@@ -737,7 +737,10 @@
     "asked_at": "2026-11-03T17:51:38.207Z",
     "task": "053-try-offline",
     "text": "archive 053-try-offline?",
-    "status": "open",
-    "stage": "archive"
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Owner approved the merge of the 053 PR after its archive stop on 2026-11-04. Architect: ready to archive, no blocker.",
+    "resolved_at": "2026-11-03T17:52:34.485Z"
   }
 ]
