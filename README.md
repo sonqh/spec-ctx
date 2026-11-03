@@ -59,7 +59,7 @@ You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
 ### 4. Only the spec this task needs
 
-`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. All of it fits a character budget. The last line is the size of that text next to the size of all spec text.
+`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. The blocks fit a character budget. When a block does not fit, a `truncated:` line names it. That line is not in the budget, so the output can be longer than the budget. The last line is the size of that text next to the size of all spec text.
 
 ![The bundle of one task and its size footer](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/4-start.svg)
 
@@ -125,7 +125,7 @@ $ specctx context 045/2.1
 -- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006
 ```
 
-`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The input and the requirements it cites stay.
+`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The input and the requirements it cites go last. A block that is longer than the budget drops even when it is the input. The `truncated:` line names each dropped block and is not in the budget. Read that line, and get each named ID with a second call. Do not take the output as a full answer when the line is there.
 
 `specctx related` prints each neighbor of an ID and the reason for the link. This is the output for the demo project after its last step:
 
@@ -269,7 +269,7 @@ Both paths have an end to end test on upstream OpenSpec: `tests/paths/fresh.sh` 
 | `context <task\|ID\|path\|change>` | The spec text, code lines, and test lines that relate to one input, in a budget. `task start` prints the same answer. Flags: `--budget`, `--depth`. |
 | `related <ID\|path\|change>` | Linked entries with the reason for each link. A file path or a change works too. Flags: `--depth`, `--all`. |
 | `bundle <ID\|path\|change...>` | The answer of `context` for several inputs. Flags: `--budget`, `--depth`, `--all`, `--block`. |
-| `check` | ID and link integrity. `--strict` adds test coverage and evidence. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
+| `check` | ID and link integrity. `--strict` adds test coverage and evidence. For an active change, the coverage rules start when the change has no open task. A clean result while tasks are open does not show that the tests are complete. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
 | `handoff write`, `ask`, `resolve` | The session handoff and its open questions in `.ctx/questions.json`. |

@@ -67,7 +67,7 @@ Usage:
   `specctx context <task|ID|path|change> [flags]`
 
 Flags:
-  `--budget <n>`               Stop at n characters. The default is 8000.
+  `--budget <n>`               Keep the blocks to n characters. The truncated line is not in this limit. The default is 8000.
   `--depth <n>`                Follow links n steps. The default is 1.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
@@ -109,7 +109,7 @@ Usage:
   `specctx bundle <ID|path|change...> [flags]`
 
 Flags:
-  `--budget <n>`               Stop at n characters. The default is 8000.
+  `--budget <n>`               Keep the blocks to n characters. The truncated line is not in this limit. The default is 8000.
   `--depth <n>`                Follow links n steps. The default is 1.
   `--all`                      Show all copies of an ID.
   `--block`                    Print only the requirement block, as it sits in the spec file. Each ID must be a requirement.

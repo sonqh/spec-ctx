@@ -2,6 +2,14 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+### Changed
+
+- The help of `context` and `bundle` and the README say that `--budget` limits the blocks. The `truncated:` line is not in the limit, so the output can be longer than the budget. The output does not change. The help golden has a new record for this text. REQ-QRY-003.
+- The README says that a block longer than the budget drops even when it is the input. REQ-QRY-012.
+- The README says that `check --strict` checks the coverage of an active change only when the change has no open task. REQ-CHK-008, REQ-CHK-009.
+
 ## 0.4.1
 
 Change 049-index-same-ms-stale.
