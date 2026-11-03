@@ -25,7 +25,7 @@ Refs: REQ-GOV-008, REQ-GOV-003
 - **THEN** the recording `npx` gets no call
 
 ### Requirement: REQ-GOV-013 try.sh story
-`scripts/try.sh` SHALL run the story of the README block against the local `dist/cli.js` in a temp dir. It copies `tests/fixtures/no-id-repo` and `docs/demo/specs/`, prints a `== ` heading before each step, runs `context add-mfa/1.3` after the passing `task done`, removes the temp dir on exit, and exits 0. It needs no network and no asciinema. It sets `SPECCTX_OPENSPEC` to `tests/fixtures/openspec-stub.sh`.
+`scripts/try.sh` SHALL run the story of the README block against the local `dist/cli.js` in a temp dir. It copies `tests/fixtures/no-id-repo` and `docs/demo/specs/`, prints a `== ` heading before each step, runs `context add-mfa/1.3` after the passing `task done`, removes the temp dir on exit, and exits 0. It needs no network and no asciinema.
 
 Refs: REQ-GOV-008, REQ-GOV-012
 

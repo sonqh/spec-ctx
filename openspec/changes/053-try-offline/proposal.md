@@ -6,7 +6,7 @@ CI fails on `main` since change 051. The `code (node)` job of the run on c4e3449
 
 The cause is in the two tests that 051 added. `tests/gov/try-readme.test.ts` runs the README block, and `tests/gov/try-script.test.ts` runs `scripts/try.sh`. Both spawn the CLI with `cleanEnv()`, and `SPECCTX_OPENSPEC` is not set. So `init` runs `npx -y @fission-ai/openspec@latest --version`, and `status` runs `npx -y @fission-ai/openspec@<version> status`. A full `npx vitest run` with a logging `npx` on the `PATH` records five OpenSpec calls. One comes from `write.test.ts`. The other four come from the two try tests. Vitest runs test files in parallel workers. Two `npx` calls with the same package spec install into the same `_npx` directory at the same time, and npm fails. `bun test` runs files one after the other, so only the node leg fails.
 
-This also breaks two rules that exist. REQ-GOV-013 says that `scripts/try.sh` needs no network. Decision 022/D3 says that tests never hit the network.
+This also breaks two rules that exist. REQ-GOV-013 says that `scripts/try.sh` needs no network. Decision 022/D3 says that tests never hit the network. ADR-008 item 4 allows bug fixes during the freeze, and this is one.
 
 ## What changes
 
