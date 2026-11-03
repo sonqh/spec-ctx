@@ -25,7 +25,7 @@ Three things go wrong.
 | Each session starts cold. | `status`, `task next`, and the generated handoff say where the work stands. |
 | The agent ticks `[x]` by hand. | `[x]` appears only after the Verify command of the task exits 0. The run leaves an evidence file. |
 
-A later edit can break a task that passed. `check --strict` names each task whose files changed after its Verify passed.
+A later edit can break a task that passed. `check --strict` names each task whose files changed after its Verify passed. While a change has an open task or no task, it prints a `deferred:` line for the delta items it did not test yet.
 
 No LLM call. No daemon. The same files give the same output.
 
