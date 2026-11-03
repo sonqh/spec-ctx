@@ -16,7 +16,7 @@ Load only what one task needs. The engine is `node dist/cli.js`. Run `bun run bu
 4. Pick the task. Use the handoff, then the user's message, then `node dist/cli.js task next`.
 5. Run `node dist/cli.js task start <task>`. It prints the bundle for the REQ IDs the task cites and sets the current task. Read the output. That is your spec context.
 6. Each block in the bundle starts with a provenance line: `-- <id> | <file>:<line> | <status> | <reason>`. A `modified` status means an active change holds the pending text of that requirement. Trust that text over the main spec.
-7. If the output ends with `truncated: N entries omitted: <ids>`, print those IDs. Bundle them one at a time only when the task needs them. `node dist/cli.js related <first ID>` shows how they connect and why.
+7. If the output has the line `truncated: N entries omitted: <ids>`, print those IDs. An `over budget:` line can follow it. It gives the size of the blocks that always print. Bundle them one at a time only when the task needs them. `node dist/cli.js related <first ID>` shows how they connect and why.
 8. Read `openspec/changes/<change>/design.md` only for the Decisions section that names the task's area. The bundle already holds the decisions whose `Refs:` name your IDs.
 9. Say in one line which change and task you are on, and which IDs you loaded. Then start the task.
 

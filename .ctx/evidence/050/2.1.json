@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-03T14:27:51.618Z",
+  "bundle_chars": 8012,
+  "files": {
+    "src/cli/commands.ts": "78786c39e0a45df4ba7cf0fc43de67ebfb17b8540884eae06aeeda2966c3ec49",
+    "src/graph/bundle.ts": "a36ccb81352359df53035339d6e3f32aeb415f2d77e019256e35eba9e4605619",
+    "tests/query/context.test.ts": "ae7789472bec81970dbaac1164ed33dc5ae1adfb8ffcbe57267b8a06497b64fe",
+    "tests/query/requested.test.ts": "4f8d0e86d1360e240ea852d0a67c2e2a010ab5e67f69e16037885b2be9627137",
+    "tests/tasks/start.test.ts": "4b51d3594eba3ce79b4e73921b28b3b7b00973781183a4aa1b4a1232021b902f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-018",
+    "REQ-QRY-019"
+  ],
+  "started_at": "2026-11-03T14:27:00.322Z",
+  "task": "050/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/cli/help.test.ts && node dist/cli.js --help | node dist/cli.js lint ste --baseline 0 && node dist/cli.js bundle --help | node dist/cli.js lint ste --baseline 0 && node dist/cli.js context --help | node dist/cli.js lint ste --baseline 0 && node dist/cli.js lint tells --baseline 0 README.md && grep -q \"REQ-QRY-018\" CHANGELOG.md && ! grep -q \"drops even when it is the input\" README.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 9 pass\n 0 fail\n 116 expect() calls\nRan 9 tests across 1 file. [19.00ms]",
+    "stdout_sha256": "bcd447f85fa6a002e3c28e685da4b74f25f73d4ddaac0029716a97da8e5e394a"
+  }
+}

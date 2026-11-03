@@ -53,9 +53,15 @@ export function reqBlocks(root: string, reqs: Entry[]): string {
   return reqs.map((e) => blockText(e, files)).join("\n");
 }
 
+// REQ-QRY-019 the completeness fields. complete says that no block dropped, not that the text fits.
 export interface BundleResult {
   text: string;
   omitted: string[];
+  /** The code point length of text, with the trailer lines. */
+  chars: number;
+  /** null in block mode, where no budget applies (050/D6). */
+  budget: number | null;
+  complete: boolean;
 }
 
 /** REQ-QRY-012 the budget class of a block (046/D7). A lower class keeps its place first. */
@@ -128,12 +134,15 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
     const m = all ? undefined : mainVersion(entries, i);
     if (m) blocks.push([m, `main version of ${i}`, 0]);
   }
+  // REQ-QRY-018 the count of blocks that the loop above pushed. They print first and always stay.
+  const pinned = blocks.length;
   const found = new Map<string, Hit>();
   for (const i of wanted) {
     // decisions that reference a requested ID are included at every depth, as depth 1.
     // REQ-QRY-016 They replace a deeper hit, which the walk for an earlier requested ID can leave (048/D1).
     for (const e of entries) {
-      if (e.kind !== "decision" || !e.refs.includes(i)) continue;
+      // REQ-QRY-014 a requested decision prints once, as requested (050/D10)
+      if (e.kind !== "decision" || !e.refs.includes(i) || wanted.includes(e.id)) continue;
       const cur = found.get(e.id);
       if (!cur || cur.depth > 1) found.set(e.id, { reason: `decision for ${i}`, depth: 1 });
     }
@@ -151,7 +160,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   }
   for (const c of r.cited) {
     for (const e of entries) {
-      if (e.kind !== "decision" || !e.refs.includes(c)) continue;
+      if (e.kind !== "decision" || !e.refs.includes(c) || wanted.includes(e.id)) continue;
       const cur = found.get(e.id);
       if (!cur || cur.depth > 1) found.set(e.id, { reason: `decision for ${c}`, depth: 1 });
     }
@@ -177,11 +186,13 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
     // a blank line closes a block with a body. Code and test paths stay one line each.
     return provenance(e, reason) + body + (body ? "\n" : "");
   });
-  // fill the budget class by class, in print order inside a class, and skip a block that does not fit
-  const keep = blocks.map(() => false);
+  // REQ-QRY-018 the blocks of the first loop always stay: each requested block and the main version of a requested ID (050/D2, 050/D3)
+  const keep = blocks.map((_, k) => k < pinned);
   let used = 0;
+  for (let k = 0; k < pinned; k++) used += cpLen(texts[k]!);
+  // fill the budget class by class, in print order inside a class, and skip a block that does not fit
   for (let cls = 0; cls <= 3; cls++) {
-    for (let k = 0; k < blocks.length; k++) {
+    for (let k = pinned; k < blocks.length; k++) {
       if (blocks[k]![2] !== cls) continue;
       const n = cpLen(texts[k]!);
       if (used + n > budget) continue;
@@ -192,5 +203,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   const omitted = blocks.filter((_, k) => !keep[k]).map(([e]) => e.id);
   let text = texts.filter((_, k) => keep[k]).join("");
   if (omitted.length) text += `truncated: ${omitted.length} entries omitted: ${omitted.join(", ")}\n`;
-  return { text, omitted };
+  // REQ-QRY-018 the over budget line goes last, so the 0.4.1 output stays a prefix (050/D4)
+  if (used > budget) text += `over budget: ${used} of ${budget} characters\n`;
+  return { text, omitted, chars: cpLen(text), budget, complete: omitted.length === 0 };
 }

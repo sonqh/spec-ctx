@@ -59,7 +59,7 @@ You see: task `add-mfa/1.3`, its requirement, and `grep -q totp src/login.ts`.
 
 ### 4. Only the spec this task needs
 
-`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. The blocks fit a character budget. When a block does not fit, a `truncated:` line names it. That line is not in the budget, so the output can be longer than the budget. The last line is the size of that text next to the size of all spec text.
+`task start` prints the `context` answer for the task. It holds the task line and the requirements it cites with their scenarios. It holds the code and test lines that tag them, the decisions, and the deltas and designs of its change. The blocks fit a character budget. The task line always prints, also when it is longer than the budget. When a block does not fit, a `truncated:` line names it. When the kept blocks pass the budget, an `over budget:` line gives their size. These lines are not in the budget, so the output can be longer than the budget. The last line is the size of that text next to the size of all spec text.
 
 ![The bundle of one task and its size footer](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/4-start.svg)
 
@@ -125,7 +125,7 @@ $ specctx context 045/2.1
 -- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006
 ```
 
-`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The input and the requirements it cites go last. A block that is longer than the budget drops even when it is the input. The `truncated:` line names each dropped block and is not in the budget. Read that line, and get each named ID with a second call. Do not take the output as a full answer when the line is there.
+`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order. First go the archived decisions and the entries two steps away. Then go the specs. Then go the code and test lines. The requirements that a task cites go last. The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`. The `truncated:` line names each dropped block and is not in the budget. Read that line, and get each named ID with a second call. Do not take the output as a full answer when the line is there. With `--json`, the fields `chars`, `budget`, and `complete` give the same facts. `complete` is true when no block dropped.
 
 `specctx related` prints each neighbor of an ID and the reason for the link. This is the output for the demo project after its last step:
 
@@ -390,17 +390,17 @@ A Verify command is code from the pull request. The boundary:
 ## Status
 
 - Published: `spec-ctx@0.4.1` on npm, with tags `v0.4.1` and `v0` and binaries on the GitHub release.
-- Archived: 001 to 025, 027 to 034, and 036 to 049. No change is open. See `CHANGELOG.md` for each release.
+- Archived: 001 to 025, 027 to 034, and 036 to 050. No change is open. See `CHANGELOG.md` for each release.
 - A version bump on `main` publishes the next release. See `docs/CONTRIBUTING.md`.
 - Upstream: the ID scheme is proposed as a comment on [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is submitted to the community table in [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157). No pull request until a maintainer asks.
 
 ## Measured
 
-`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-10-30.md`. Its total row:
+`specctx stats --write` measures this repository after each change. The newest file is `docs/metrics/2026-11-03.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0189 (n=135) | 0.94 (236/252) | 65 (of 118 reopens) | 60 (n=135) | 0 (0 baselined + 0 new) |
+| total | 0.0185 (n=138) | 0.94 (239/255) | 65 (of 118 reopens) | 58 (n=138) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. The meaning changed on 2026-10-30 with change 047-context. Before, `task start` printed the cited requirements. Now it prints the `context` answer, which holds more. `bundle_chars` in the evidence of older tasks keeps the old size, so the two do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. The rest have a manual note. Higher is better.

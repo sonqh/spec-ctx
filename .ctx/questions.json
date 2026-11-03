@@ -676,5 +676,27 @@
     "verdict": "approved",
     "answer": "Approved by the lead after the architect diff review: no blocker.",
     "resolved_at": "2026-10-30T16:18:33.128Z"
+  },
+  {
+    "n": 74,
+    "asked_at": "2026-11-03T14:10:39.299Z",
+    "task": "050-requested-context-always-kept",
+    "text": "plan ready for 050-requested-context-always-kept. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead. D3 keep the main version. D10 print a requested decision once. D11 a negative --budget exits 2. Keep the tool light and easy to use.",
+    "resolved_at": "2026-11-03T14:20:51.111Z"
+  },
+  {
+    "n": 75,
+    "asked_at": "2026-11-03T14:28:45.862Z",
+    "task": "050-requested-context-always-kept",
+    "text": "archive 050-requested-context-always-kept?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect review of the diff. ci:local passes.",
+    "resolved_at": "2026-11-03T14:35:23.832Z"
   }
 ]

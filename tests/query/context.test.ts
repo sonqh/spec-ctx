@@ -1,4 +1,4 @@
-// Covers: REQ-QRY-015, REQ-QRY-017
+// Covers: REQ-QRY-015, REQ-QRY-017, REQ-QRY-019
 import { cpSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
@@ -32,6 +32,8 @@ describe("context", () => {
       const bj = JSON.parse((await p.run("bundle", input, "--json")).out);
       expect(cj.text).toBe(bj.text);
       expect(cj.omitted).toEqual(bj.omitted);
+      for (const k of ["chars", "budget", "complete"]) expect(cj[k], k).toEqual(bj[k]);
+      expect(cj.chars).toBe([...cj.text].length);
     }
     const small = await p.run("context", "009/1.1", "--budget", "200", "--depth", "2");
     expect(small.out).toBe((await p.run("bundle", "009/1.1", "--budget", "200", "--depth", "2")).out);
