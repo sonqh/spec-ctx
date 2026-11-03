@@ -21,7 +21,7 @@ describe("evidence rules", () => {
     expect((await p.run("task", "done", "002/2.1")).code).toBe(0);
     const r = await p.run("check", "--strict");
     // the base fixture evidence for 001/1.1 is manual, so strict prints its warning
-    expect(r.out).toBe("warning: manual-evidence 001/1.1\n\n1 finding in 1 file (0 hard, 1 advisory)\nmanual-evidence  1  Give the task a Verify command and run specctx task done again.\n");
+    expect(r.out).toBe("warning: manual-evidence 001/1.1\n\n1 finding in 1 file (0 hard, 1 advisory)\nmanual-evidence  1  Give the task a Verify command and run specctx task done again.\ndeferred: 001-x  2 untested delta items, 1 open task\n");
   });
 
   test("SCN-CHK-003-2 a task ticked by hand is done-without-evidence", async () => {

@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-03T16:47:55.043Z",
+  "bundle_chars": 8433,
+  "files": {
+    "src/check/check.ts": "d612af651d5cc8934f68e24a46f1c12e9732d5d3aa0e92b56a344fcf4554f1ec",
+    "src/check/hints.ts": "fe7d93c8ed0d5bbc8b1a348a16a5db1794da89e192b9235e05d81f76dd8b8799",
+    "src/cli/commands.ts": "9acd77f3b4d3918b5b66f59a8d1dac8a87e46df1574b166954f8e1063eb4c707",
+    "tests/check/deferred.test.ts": "e8a0a0e270037ad9eb803c0647d297b7b882051732399d51bf1ecfd9819618d4",
+    "tests/check/delta-req.test.ts": "65a436c5f75017ea25f246b7161f0ef93e46f06e782657d01d641ce4207304d4",
+    "tests/check/delta.test.ts": "164b51bc1d135a192e586137dc65a429febb9a719916446ef2cdcb2f6f6c0b00",
+    "tests/check/dupkey.test.ts": "a2ec63895bc25d74e2fc1ead967bbeee0d59f5fef5c12a9119a50fa8da101045",
+    "tests/gov/governance.test.ts": "62bd67595aa172b9342ec7e9edbe2e8bad92b913911c0c83cf60714aae66f22c"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-010",
+    "REQ-CHK-004",
+    "REQ-CHK-008",
+    "REQ-CHK-009"
+  ],
+  "started_at": "2026-11-03T16:47:49.189Z",
+  "task": "052/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/check tests/baseline tests/cli tests/stats && tests/parity/run.sh && grep -q \"^deferred: 007-parity-plant\" tests/fixtures/parity-golden/check-strict.out && ! grep -q \"^deferred:\" tests/fixtures/parity-golden/check.out && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 192 pass\n 0 fail\n 897 expect() calls\nRan 192 tests across 28 files. [4.02s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

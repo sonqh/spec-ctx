@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-03T16:42:59.668Z",
+  "bundle_chars": 7958,
+  "files": {
+    "src/check/check.ts": "d612af651d5cc8934f68e24a46f1c12e9732d5d3aa0e92b56a344fcf4554f1ec",
+    "src/cli/commands.ts": "eeb3b99f85293873d4fad4cdecbf5b33505c23606a7fd87f8ce5e51905fbfea7",
+    "tests/check/deferred.test.ts": "d7a8ac240916634b70ab86a243f753be0649bd9114ffe6a95558e7a61f99be2c",
+    "tests/check/dupkey.test.ts": "a2ec63895bc25d74e2fc1ead967bbeee0d59f5fef5c12a9119a50fa8da101045"
+  },
+  "kind": "command",
+  "reason": "plural form and baseline note",
+  "reqs": [
+    "REQ-CHK-010"
+  ],
+  "started_at": "2026-11-03T16:42:09.699Z",
+  "task": "052/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md docs/verification/052.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/052.md && grep -q \"REQ-CHK-010\" CHANGELOG.md && grep -q \"## Before the fix\" docs/verification/052.md && grep -q \"## After the fix\" docs/verification/052.md && grep -q \"deferred:\" README.md && grep -q \"no task\" README.md && grep -q \"0 open tasks\" docs/verification/052.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "ca2a16f6a2d5bf4796aa5feef115220d4952426d6a4b8acdd66f2099ca209081"
+  }
+}

@@ -31,12 +31,13 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
  * REQ-CHK-004 the findings, then a blank line, the summary line, and one line per rule with its hint.
  * A warning counts as advisory. The `baselined` line stays last (REQ-CHK-002).
  */
-export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string; hint?: string }[]; warnings: string[]; baselined: number }, tty?: boolean, run = "specctx"): string {
+export function checkText(r: { findings: { file: string; line: number; rule: string; id: string; detail?: string; hint?: string }[]; warnings: string[]; baselined: number }, tty?: boolean, run = "specctx", deferred: { change: string; untested: number; open: number }[] = []): string {
   // REQ-CLI-008 every finding of check is hard, so every finding line is red. stale-evidence is one of them.
   // REQ-CHK-001 a finding with a detail, such as a retitle, carries it after the ID (021/D2)
   const body = r.findings.map((x) => paint("fail", `${x.file}:${x.line}  ${x.rule}  ${x.id}${x.detail ? `  ${x.detail}` : ""}\n`, tty)).join("")
     + r.warnings.map((w) => `warning: ${w}\n`).join("");
-  const base = r.baselined ? `baselined: ${r.baselined}\n` : "";
+  // REQ-CHK-010 a deferred line is not a finding. It comes before the baselined line, which stays last (052/D3).
+  const base = deferred.map((d) => `deferred: ${d.change}  ${d.untested} untested delta item${d.untested === 1 ? "" : "s"}, ${d.open} open task${d.open === 1 ? "" : "s"}\n`).join("") + (r.baselined ? `baselined: ${r.baselined}\n` : "");
   const n = r.findings.length + r.warnings.length;
   if (!n) return paint("dim", "0 findings\n", tty) + base;
   const files = new Set(r.findings.map((x) => x.file));
@@ -302,8 +303,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const r = await runCheck(root, cfg, data, !!f.strict);
       // REQ-CHK-004 REQ-CHK-006 the JSON keeps its shape. A finding hint is for the human form only (031/D6).
       const findings = r.findings.map(({ hint: _hint, ...rest }) => rest);
-      if (json) print({ baselined: r.baselined, count: findings.length, findings, warnings: r.warnings });
-      else io.out(checkText(r, io.tty, cfg.cli.run));
+      // REQ-CHK-010 only this case computes the deferred notice. runCheck and gate stay as they are (052/D5).
+      const deferred = f.strict ? (await import("../check/check.ts")).deferredOf(entries, data) : [];
+      if (json) print({ baselined: r.baselined, count: findings.length, findings, warnings: r.warnings, ...(f.strict ? { deferred } : {}) });
+      else io.out(checkText(r, io.tty, cfg.cli.run, deferred));
       return r.findings.length ? 1 : 0;
     }
   }

@@ -8,6 +8,13 @@ ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <t
 
 Change 053-try-offline. CI is green again. The two try-it tests of 051 reached the network through `npx` and raced with `tests/adopt/write.test.ts` in the parallel vitest run, so npm failed with `ENOTEMPTY`. `scripts/try.sh` now sets `SPECCTX_OPENSPEC` to the OpenSpec stand-in, as REQ-GOV-013 asks. The README block test does the same. A recording `npx` in both tests guards against a new call. REQ-GOV-012, REQ-GOV-013.
 
+Change 052-check-deferred.
+
+### Added
+
+- `check --strict` prints a `deferred:` line for each active change that has an open task or no task, and delta requirements or scenarios with no test. The test rules wait for the last task of a change. Before, a clean result hid what they left unchecked. The line reads `deferred: <change>  <n> untested delta items, <k> open tasks`. A count of 1 is singular. The count ignores the baseline. It sits before the `baselined:` line. It is not a finding, and the exit code does not change. `check --strict --json` always holds a `deferred` array of `{ change, untested, open }`. `gate` prints no `deferred:` line. A change with delta items and no task is now reported, with `0 open tasks`. REQ-CHK-010.
+- REQ-CHK-004 now says that only the `deferred:` lines and the `baselined:` line may follow the rule lines. It also says that the JSON stays as it was, except for REQ-CHK-010.
+
 Change 051-try-it.
 
 ### Added

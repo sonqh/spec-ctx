@@ -293,3 +293,4 @@ uncovered  104  Add a test with a Covers tag for the requirement.
 unknown-cap  1  Add the code to caps under [ids] in spec-ctx.toml.
 unknown-task-req  1  The task cites an ID that the index does not hold. Fix the ID on the task line.
 weak-verify  4  Name a test file or a command whose exit code proves the task.
+deferred: 007-parity-plant  4 untested delta items, 4 open tasks

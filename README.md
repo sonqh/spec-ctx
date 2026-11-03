@@ -25,7 +25,7 @@ Three things go wrong.
 | Each session starts cold. | `status`, `task next`, and the generated handoff say where the work stands. |
 | The agent ticks `[x]` by hand. | `[x]` appears only after the Verify command of the task exits 0. The run leaves an evidence file. |
 
-A later edit can break a task that passed. `check --strict` names each task whose files changed after its Verify passed.
+A later edit can break a task that passed. `check --strict` names each task whose files changed after its Verify passed. While a change has an open task or no task, it prints a `deferred:` line for the delta items it did not test yet.
 
 No LLM call. No daemon. The same files give the same output.
 
@@ -226,7 +226,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 ## Status
 
 - Published: `spec-ctx@0.4.1` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
-- Archived: 001 to 025, 027 to 034, 036 to 051, and 053. No change is open.
+- Archived: 001 to 025, 027 to 034, and 036 to 053. No change is open.
 - Upstream: the ID scheme is proposed in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured
@@ -235,7 +235,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0180 (n=145) | 0.94 (246/262) | 65 (of 120 reopens) | 55 (n=145) | 0 (0 baselined + 0 new) |
+| total | 0.0177 (n=147) | 0.94 (248/264) | 65 (of 122 reopens) | 54 (n=147) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.

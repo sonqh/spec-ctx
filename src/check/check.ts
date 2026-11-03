@@ -128,6 +128,71 @@ export function weakVerifyWarnings(entries: Entry[]): string[] {
   return weakVerifyFindings(entries).map((f) => `weak-verify ${f.id} ${f.file}:${f.line}`);
 }
 
+/** The delta items of one change that have no test, and the task counts of the change. */
+export interface DeltaGaps {
+  open: number;
+  all: number;
+  gaps: Problem[];
+}
+
+/**
+ * REQ-CHK-010 REQ-CHK-008 REQ-CHK-009 one predicate for the delta test rule and the deferred notice (052/D1).
+ * A gap is a delta requirement or scenario of an active change that no test names. The rule reports the gaps of
+ * a change that has a task and no open task. The notice lists the gaps that an open task or a missing task hides.
+ */
+export function deltaGaps(entries: Entry[], data: Index): Map<string, DeltaGaps> {
+  const covered = new Set(entries.filter((e) => e.kind === "test").flatMap((e) => e.refs));
+  const named = new Set(data.scn_named ?? []);
+  // an ID that a REMOVED block of an active change names waits for archive, so it needs no test
+  const pending = new Set<string>();
+  for (const e of entries) {
+    if (e.status !== "removed") continue;
+    pending.add(e.id);
+    for (const sc of e.scenarios ?? []) pending.add(sc);
+  }
+  const out = new Map<string, DeltaGaps>();
+  const slot = (change: string): DeltaGaps => {
+    let g = out.get(change);
+    if (!g) out.set(change, (g = { open: 0, all: 0, gaps: [] }));
+    return g;
+  };
+  for (const e of entries) {
+    if (e.kind !== "task" || e.change === "main" || e.file.includes("/archive/")) continue;
+    const g = slot(e.change);
+    g.all++;
+    if (e.status !== "done") g.open++;
+  }
+  const seen = new Set<string>();
+  for (const e of entries) {
+    if ((e.kind !== "scn" && e.kind !== "req") || e.change === "main" || (e.status !== "active" && e.status !== "modified")) continue;
+    if (pending.has(e.id)) continue;
+    const rule = e.kind === "req" ? (covered.has(e.id) ? null : "uncovered") : named.has(e.id) ? null : "scenario-untested";
+    if (!rule) continue;
+    const gap: Problem = [e.file, e.line, rule, e.id];
+    const key = e.change + JSON.stringify(gap);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    slot(e.change).gaps.push(gap);
+  }
+  return out;
+}
+
+/** REQ-CHK-010 the changes whose tests the open tasks, or a missing task, put off: no task or an open task, and a gap. */
+export interface Deferred {
+  change: string;
+  untested: number;
+  open: number;
+}
+
+export function deferredOf(entries: Entry[], data: Index): Deferred[] {
+  const out: Deferred[] = [];
+  for (const [change, g] of deltaGaps(entries, data)) {
+    // 052/D1 to include a change that has no task, the condition is `g.all === 0 || g.open > 0`
+    if ((g.all === 0 || g.open > 0) && g.gaps.length) out.push({ change, untested: g.gaps.length, open: g.open });
+  }
+  return out.sort((x, y) => cmpTuple([x.change], [y.change]));
+}
+
 /** Sorted, unique findings. The scan never reads .ctx/, so evidence adds no index entry. */
 export function check(root: string, cfg: Config, data: Index, strict: boolean): Finding[] {
   const entries = data.entries;
@@ -184,23 +249,8 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
       if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
       if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
     }
-    // REQ-CHK-008 a delta scenario needs a test once its change has no open task (038/D1, D2)
-    const tasksOf = new Map<string, { open: number; all: number }>();
-    for (const e of entries) {
-      if (e.kind !== "task" || e.change === "main" || e.file.includes("/archive/")) continue;
-      const t = tasksOf.get(e.change) ?? { open: 0, all: 0 };
-      t.all++;
-      if (e.status !== "done") t.open++;
-      tasksOf.set(e.change, t);
-    }
-    for (const e of entries) {
-      if ((e.kind !== "scn" && e.kind !== "req") || e.change === "main" || (e.status !== "active" && e.status !== "modified")) continue;
-      const t = tasksOf.get(e.change);
-      if (!t || t.open > 0 || pending.has(e.id)) continue;
-      // REQ-CHK-009 a delta requirement needs a Covers tag on the same terms (039/D2)
-      if (e.kind === "req" && !covered.has(e.id)) findings.push([e.file, e.line, "uncovered", e.id]);
-      if (e.kind === "scn" && !named.has(e.id)) findings.push([e.file, e.line, "scenario-untested", e.id]);
-    }
+    // REQ-CHK-008 REQ-CHK-009 a delta item needs a test once its change has a task and no open task (038/D1, 038/D2, 039/D2)
+    for (const g of deltaGaps(entries, data).values()) if (g.open === 0 && g.all > 0) findings.push(...g.gaps);
     findings.push(...evidenceFindings(root, entries, listEvidence(root)));
   }
   const uniq = new Map<string, Problem>();
