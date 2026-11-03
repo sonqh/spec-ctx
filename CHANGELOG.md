@@ -4,6 +4,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. It is proposed, and the owner accepts it in the pull request.
+
 Change 050-requested-context-always-kept.
 
 ### Changed

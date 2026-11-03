@@ -13,6 +13,7 @@ The owner set this direction in `decisions/ADR-007-query-first.md`. It binds eve
 - Tasks, Verify, evidence, `check`, the gate, and the Action keep the links true. They are not the headline.
 - Every proposal names its layer and its benefit. The product manager and the architect agents in `.claude/agents/` review each plan stop against this section before the lead approves.
 - Adjust existing work to serve the two layers. Do not remove it.
+- `decisions/ADR-008-stranger-first.md` sets the order of work for 30 days from 2026-11-03. A stranger gets a useful `context <task>` on their own repo within 5 minutes. No new gate, lint, Action, or loop features. Bug fixes only.
 
 ## First thing in every session
 
