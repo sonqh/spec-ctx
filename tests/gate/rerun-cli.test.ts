@@ -71,7 +71,7 @@ describe("gate --rerun", () => {
 
   test("SCN-CLI-009-1 the default gate does not run the rerun", async () => {
     const p = setup([{ num: "1.1", command: "exit 0" }]);
-    process.env.SPECCTX_OPENSPEC = "/bin/true";
+    process.env.SPECCTX_OPENSPEC = "true";
     const r = await p.run("gate");
     expect(r.out).not.toContain("rerun");
     const log = lines(readFileSync(p.path(".ctx/gate-log.jsonl"), "utf8")).map((l) => JSON.parse(l));

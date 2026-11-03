@@ -37,7 +37,7 @@ code=$?
 set -e
 [ "$code" = 1 ] || { echo "guard exit was $code"; exit 1; }
 [ ! -s "$FAKE_LOG" ] || { echo "the guard still called specctx"; exit 1; }
-[ "$(wc -l < "$work/err")" = 1 ] || { cat "$work/err"; exit 1; }
+[ "$(wc -l < "$work/err" | tr -d " ")" = 1 ] || { cat "$work/err"; exit 1; }
 echo "ok: pull_request_target is refused with one line"
 
 # SCN-DIST-011-2 the other events
@@ -57,7 +57,7 @@ for ev in workflow_run schedule workflow_dispatch ""; do
   set -e
   [ "$code" = 1 ] || { echo "guard exit was $code on '$ev'"; exit 1; }
   [ ! -s "$FAKE_LOG" ] || { echo "the guard still called specctx on '$ev'"; exit 1; }
-  [ "$(wc -l < "$work/err")" = 1 ] || { cat "$work/err"; exit 1; }
+  [ "$(wc -l < "$work/err" | tr -d " ")" = 1 ] || { cat "$work/err"; exit 1; }
 done
 echo "ok: other events are refused with one line"
 

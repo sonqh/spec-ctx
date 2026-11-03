@@ -65,7 +65,7 @@ describe("init writes [cli] run under npx", () => {
 
   test("SCN-DIST-015-1 the built CLI under npm_command=exec writes the key", () => {
     p = fresh(null);
-    const env: NodeJS.ProcessEnv = { ...process.env, npm_command: "exec", SPECCTX_OPENSPEC: "/bin/true", HOME: p.root };
+    const env: NodeJS.ProcessEnv = { ...process.env, npm_command: "exec", SPECCTX_OPENSPEC: "true", HOME: p.root };
     delete env.SPECCTX_RERUN;
     const r = spawnSync(process.execPath, [join(REPO, "dist/cli.js"), "init", "--root", p.root], { encoding: "utf8", env });
     expect(r.status, r.stderr).toBe(0);

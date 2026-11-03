@@ -16,7 +16,7 @@ run() { # subject
   set +e; out=$(bash scripts/version-guard.sh "$f" 2>&1); code=$?; set -e; rm -f "$f"
 }
 # SCN-GOV-007-1
-sed -i 's/"0.1.0"/"0.1.1"/' package.json; git add package.json
+perl -pi -e 's/"0.1.0"/"0.1.1"/' package.json; git add package.json
 run "fix typo"
 [ "$code" = 1 ] || fail "SCN-GOV-007-1 exit $code"
 [ "$out" = "$msg" ] || fail "SCN-GOV-007-1 message: $out"
@@ -28,7 +28,7 @@ run "release: 0.1.1"
 [ "$code" = 0 ] || fail "SCN-GOV-007-2 exit $code: $out"
 git reset -q --hard
 # SCN-GOV-007-3
-sed -i 's/"a": "x"/"a": "y"/' package.json; git add package.json
+perl -pi -e 's/"a": "x"/"a": "y"/' package.json; git add package.json
 run "fix typo"
 [ "$code" = 0 ] || fail "SCN-GOV-007-3 exit $code: $out"
 echo "version guard: ok"

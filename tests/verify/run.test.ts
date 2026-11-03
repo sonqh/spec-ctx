@@ -1,6 +1,6 @@
 // Covers: REQ-VER-001, REQ-VER-003
 import { afterEach, describe, expect, test } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { runVerify, tail } from "../../src/verify/run.ts";
 import { Project } from "../helpers.ts";
 
@@ -14,7 +14,8 @@ describe("Verify runner", () => {
     p = new Project();
     const r = await runVerify("pwd && echo err >&2 && exit 3", p.path("src"), 10);
     expect(r.exit).toBe(3);
-    expect(r.stdout.toString().trim()).toBe(p.path("src"));
+    // macOS links /var to /private/var, so the test compares real paths
+    expect(realpathSync(r.stdout.toString().trim())).toBe(realpathSync(p.path("src")));
     expect(r.stderr.toString()).toBe("err\n");
     expect(r.timedOut).toBe(false);
   });

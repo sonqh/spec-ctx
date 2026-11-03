@@ -16,7 +16,7 @@ function runLocal(steps: string[]): { code: number; out: string } {
   writeFileSync(p.path("steps.txt"), steps.join("\n") + "\n");
   const r = spawnSync("bash", [p.path("scripts/ci-local.sh")], {
     encoding: "utf8",
-    env: { ...process.env, SPECCTX_OPENSPEC: "/bin/true", SPECCTX_CI_STEPS_FILE: p.path("steps.txt") },
+    env: { ...process.env, SPECCTX_OPENSPEC: "true", SPECCTX_CI_STEPS_FILE: p.path("steps.txt") },
   });
   return { code: r.status ?? -1, out: r.stdout + r.stderr };
 }

@@ -57,7 +57,7 @@ printf '\n#### Scenario: %s No name\n- **WHEN** the caller passes nothing\n- **T
 sed -e 's|^## 1\. <!-- Task group name -->|## 1. Greeting|' \
     -e "s|^- \[ \] 1.1 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.1 Add \`greet(name)\` [$req] Verify: \`node -e 0\`|" \
     -e "s|^- \[ \] 1.2 <!-- Task description --> \[REQ-<CAP>-NNN\] Verify: \`<!-- command -->\`|- [ ] 1.2 Cover both scenarios [$req] Verify: \`node -e 0\`|" \
-    -e '/^## 2\./,$d' "$tpl/tasks.md" | sed -e '${/^$/d}' > "$chg/tasks.md"
+    -e '/^## 2\./,$d' "$tpl/tasks.md" | sed -e '${/^$/d;}' > "$chg/tasks.md"
 grep -q "^### Requirement: $req Greet by name" "$chg/specs/greeting/spec.md"
 grep -q "^#### Scenario: $scn1 " "$chg/specs/greeting/spec.md"
 grep -q "^#### Scenario: $scn2 " "$chg/specs/greeting/spec.md"
