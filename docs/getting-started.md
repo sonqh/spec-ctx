@@ -200,7 +200,7 @@ All six exit 0. `openspec/specs/greeting/spec.md` carries `REQ-GRT-001` with its
 - Run `specctx init --all`, then `specctx adopt --dry-run` to see the ID each header gets.
 - Run `specctx adopt` to write them. It derives the capability code from the folder name.
 - Run `specctx baseline write` to record the debt of the day, then `specctx gate --strict`.
-- The full path with its rules is in the README under [Two paths](../README.md#two-paths).
+- The full path with its rules is in [`docs/reference.md`](reference.md#two-paths).
 
 ## Things to know
 

@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-03T16:50:55.119Z",
+  "bundle_chars": 7744,
+  "files": {
+    "tests/gov/try-readme.test.ts": "21fc78cfb04183f71b89f9cf735885cb352783ace2dce6f087cc4622e8d724ec",
+    "tests/gov/try-script.test.ts": "7464e738cdd308cfa2a345bff727236718a6dbecc4cfbb985f4c2bdb8f34504d",
+    "tests/helpers.ts": "48f26d96e7ad293e6a3fa97119a3b994d801140a9908fb1b8eaa8b65c4aa023e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-012",
+    "REQ-GOV-013"
+  ],
+  "started_at": "2026-11-03T16:50:54.196Z",
+  "task": "051/3.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/051.md CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/051.md CHANGELOG.md && grep -q \"REQ-GOV-012\" CHANGELOG.md && grep -q \"REQ-GOV-013\" CHANGELOG.md && grep -q \"Change 051-try-it\" CHANGELOG.md && grep -q \"## Before\" docs/verification/051.md && grep -q \"## After\" docs/verification/051.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "db515c0d18de1b42fb429a2a5b981152ca5daad70e87d8929c61f33f784f5977"
+  }
+}

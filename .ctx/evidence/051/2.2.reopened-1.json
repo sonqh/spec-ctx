@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-03T16:45:54.687Z",
+  "bundle_chars": 7979,
+  "files": {
+    "tests/gov/readme.test.ts": "84171c06e37fb68c76bab07d1085cbae79bc1400a704d6ecb05b6f3c5d7acb72",
+    "tests/gov/try-readme.test.ts": "21fc78cfb04183f71b89f9cf735885cb352783ace2dce6f087cc4622e8d724ec",
+    "tests/helpers.ts": "48f26d96e7ad293e6a3fa97119a3b994d801140a9908fb1b8eaa8b65c4aa023e"
+  },
+  "kind": "command",
+  "reason": "restore three facts from the old README",
+  "reqs": [
+    "REQ-GOV-006",
+    "REQ-GOV-012"
+  ],
+  "started_at": "2026-11-03T16:44:27.430Z",
+  "task": "051/2.2",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gov && npx vitest run tests/gov && bash tests/action/rerun-docs.sh && node dist/cli.js lint tells --baseline 0 README.md docs/reference.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md docs/reference.md && grep -q \"^## Commands\" docs/reference.md && grep -q \"^## Config reference\" docs/reference.md && grep -q \"^## Try it in two minutes\" README.md && test $(wc -l < README.md) -lt 280",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 31 pass\n 0 fail\n 245 expect() calls\nRan 31 tests across 10 files. [4.92s]",
+    "stdout_sha256": "61ef56179dc9d20286a62ef2c197f7fd45548cfc039aff25cde79d1af816dd2b"
+  }
+}

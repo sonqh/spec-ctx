@@ -4,6 +4,18 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+Change 051-try-it.
+
+### Added
+
+- The README has a section `## Try it in two minutes` with one block to paste. It builds a toy project and runs `init`, `adopt`, `status`, `task next`, `task start`, a refused and a passing `task done`, `context add-mfa/1.1`, `context src/login.ts`, and `handoff write`. A test runs the block with the local build under bash. REQ-GOV-012.
+- `scripts/try.sh` tells the same story from a clone, on the demo project, with the local `dist/cli.js`. It ends with `context add-mfa/1.3` and removes its temp dir. A test runs it. REQ-GOV-013.
+- `tests/helpers.ts` has `cleanEnv()`, which drops `SPECCTX_RERUN` and every `GIT_*` variable from the environment of a spawned run.
+
+### Changed
+
+- The README is shorter, 253 lines instead of 419. These sections moved to `docs/reference.md`: install, the path for an existing project, the context budget rules, and the commands. The config reference, the environment variables, the markdown linters, and the Action rerun moved too. The reference text moves. The README keeps shorter forms of the demo steps and drops the long sample output of `related 045`. REQ-GOV-006.
+
 Change 050-requested-context-always-kept.
 
 ### Changed

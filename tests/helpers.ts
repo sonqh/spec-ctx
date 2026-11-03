@@ -18,6 +18,13 @@ export const OPENSPEC_STUB = "sh " + JSON.stringify(join(REPO, "tests/fixtures/o
 export const TAG = "// " + "REQ-";
 export const COVERS = "Cov" + "ers: ";
 
+/** REQ-GOV-012 REQ-GOV-013 a copy of the environment without SPECCTX_RERUN and without every GIT_ variable, so a spawned run also passes inside a git hook. */
+export function cleanEnv(extra: Record<string, string> = {}): Record<string, string> {
+  const env: Record<string, string> = {};
+  for (const [k, v] of Object.entries(process.env)) if (v !== undefined && k !== "SPECCTX_RERUN" && !k.startsWith("GIT_")) env[k] = v;
+  return { ...env, ...extra };
+}
+
 export interface Run {
   code: number;
   out: string;
