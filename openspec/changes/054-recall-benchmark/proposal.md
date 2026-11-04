@@ -14,7 +14,7 @@ Two facts from the planning probe:
 ## What changes
 
 - A new script, `scripts/recall.mjs`. It reads a label file, runs `node dist/cli.js context <task>` once per labelled task, and compares the printed entries with the labels. It reports recall within the budget, the bundle size, and the p95 time. It is a script, not a CLI command. The CLI surface does not change.
-- A wrapper, `scripts/recall.sh`. It clones the fixture read only at the pinned commit into a temp dir, then runs the script on this repo and on the clone. It is the only part that uses the network.
+- A wrapper, `scripts/recall.sh`. It clones the fixture read only at the pinned commit into a temp dir, then runs the script on this repo and on the clone. It and the label work of task 2.2 are the only parts that use the network.
 - Two label files, `bench/recall/spec-ctx.json` and `bench/recall/openspec-fixture.json`, with 20 tasks each. A seeded sample picks the tasks. The lead drafts the labels by hand. The owner reviews them. After the review they stay frozen for D and F.
 - The first report, `docs/metrics/recall-2026-11-04.md` and `docs/metrics/recall-2026-11-04.json`. This is the baseline before D and F.
 - Spec: a new requirement REQ-STAT-006 in `metrics`, with five scenarios.
@@ -27,6 +27,6 @@ Two facts from the planning probe:
 
 ## Out of scope
 
-- Any change to `context`, `bundle`, the index, or `init`. The two findings above go to D and E.
+- Any change to `context`, `bundle`, the index, or `init`. The `test/` scan finding goes to E. The `scripts/` scan finding is a one-line config change after the baseline.
 - A CI job for the benchmark. The timing depends on the machine, and the fixture needs the network.
 - A version bump.

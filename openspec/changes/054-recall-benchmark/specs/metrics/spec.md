@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: REQ-STAT-006 Recall benchmark
-`scripts/recall.mjs` SHALL read a label file and run `context <task>` once per labelled task. It SHALL report recall within the budget, recall by kind, bundle chars, and p95 time to `docs/metrics/recall-<date>.md` and `.json`. Only entries in the text count. It SHALL exit 2 on a wrong commit, an unknown task, or a bad label file. Each report SHALL print the sha256 of each label file.
+`scripts/recall.mjs` SHALL read a label file and run `context <task>` once per labelled task. It SHALL report recall within the budget, recall by kind, bundle chars, and p95 time to `recall-<date>.md` and `.json`. Only the `-- ` header lines of the text count. It SHALL exit 2 on a wrong commit, an unknown task, or a bad label file. Each report SHALL print the sha256 of each label file.
 
 Refs: ADR-007, ADR-008, REQ-QRY-015
 
@@ -10,11 +10,11 @@ Refs: ADR-007, ADR-008, REQ-QRY-015
 - **THEN** the recall, the recall of each kind, and the misses of each task in the JSON equal the expected values
 
 #### Scenario: SCN-STAT-006-2 Omitted entries are misses
-- **WHEN** a labelled entry is in the `omitted` list of `context` because of the budget
-- **THEN** the script counts it as a miss
+- **WHEN** a labelled entry is cut by the budget, and only the `truncated:` line names it
+- **THEN** the script counts it as a miss, and a main version that printed still matches its requirement
 
 #### Scenario: SCN-STAT-006-3 Bad input
-- **WHEN** the label file names a task that is not in the index, misses a field, or sets a `commit` that is not HEAD
+- **WHEN** the label file has an unknown task, a missing field, a `commit` that is not HEAD, or tasks that the seed does not pick
 - **THEN** the script exits 2, names the cause, and writes no report
 
 #### Scenario: SCN-STAT-006-4 Same input, same result
