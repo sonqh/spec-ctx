@@ -1,11 +1,10 @@
 # Handoff
 change: 054-recall-benchmark
-current: none
-base: none
-as_of: 2026-11-05T04:02:15.225Z
+current: 054/2.2
+base: 2026-11-05T04:02:15.225Z
+as_of: 2026-11-05T04:03:18.900Z
 done:
-- 054/1.1
-- 054/1.2
+- 054/2.1
 reopened:
 open_questions:
 resolved:
@@ -20,5 +19,5 @@ resolved:
 - Q83 archive 055-governance-deferred? (task 055-governance-deferred, 2026-11-05) answer: Owner approved on 2026-11-05 the archive and the merge of 055 into main. Architect: ready to archive, no blocker.
 - Q84 plan ready for 054-recall-benchmark. Approve to start the tasks? (task 054-recall-benchmark, 2026-11-04) answer: Owner approved on 2026-11-05 with the lead's recommendations: the governance test bug is a separate change 055 that merges first, the fixture labels come from done tasks of archived fixture changes with real commits, the fixture runs as committed.
 - and 74 more in .ctx/questions.json
-next: 054/2.1  Write `bench/recall/spec-ctx.json`. Run `node scripts/recall.mjs --root . --sample 20 --seed 54` and take the 20 task IDs it prints. Fill each task as 054/D6 says. Leave `commit` out, as 054/D4 says.
-evidence: 2 task(s), 2 command, 0 manual
+next: 054/2.2  Clone the fixture at 8899171 with history into a temp dir. Write `bench/recall/openspec-fixture.json` there the same way, with the done tasks of its archived changes as candidates. Set `commit` to the full sha. Run `--check` against the clone. Then run `node dist/cli.js handoff ask --change 054-recall-benchmark "review the labels in bench/recall/ before the baseline run"` and stop. Task 3.1 starts only after the owner approves.
+evidence: 3 task(s), 3 command, 0 manual
