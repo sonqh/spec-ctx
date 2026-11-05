@@ -6,6 +6,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. The owner accepted it on 2026-11-04.
 
+Change 055-governance-deferred. `bun run ci:local` passes again while a change is open. The governance test SCN-GOV-001-1 did not know the `deferred:` notice of 052. So it failed on every branch with an active change that held an open task. The test now treats the notice as advisory, as REQ-CHK-010 says. A new case, SCN-GOV-001-2, adds an open change to a copy of the repository, so the test holds on `main` too. REQ-GOV-001.
+
 Change 053-try-offline. CI is green again. The two try-it tests of 051 reached the network through `npx` and raced with `tests/adopt/write.test.ts` in the parallel vitest run, so npm failed with `ENOTEMPTY`. `scripts/try.sh` now sets `SPECCTX_OPENSPEC` to the OpenSpec stand-in, as REQ-GOV-013 asks. The README block test does the same. A recording `npx` in both tests guards against a new call. REQ-GOV-012, REQ-GOV-013.
 
 Change 052-check-deferred.

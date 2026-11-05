@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-05T03:47:45.424Z",
+  "bundle_chars": 3680,
+  "files": {
+    "tests/gov/governance.test.ts": "57087715961f5df9bd484bbe319da52442503c10a5b9c398885bcb5fedaa39eb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-11-05T03:46:51.642Z",
+  "task": "055/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/gov/governance.test.ts && npx vitest run tests/gov/governance.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 6 pass\n 0 fail\n 29 expect() calls\nRan 6 tests across 1 file. [2.01s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "0380f19af5e37c91fde230d89a489b8c36b744679f9843dc4984bfe799edb4df"
+  }
+}

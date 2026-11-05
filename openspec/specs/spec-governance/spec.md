@@ -14,6 +14,10 @@ Refs: ADR-002
 - **WHEN** `specctx check --strict` runs on this repository before archive
 - **THEN** it prints `0 findings`
 
+#### Scenario: SCN-GOV-001-2 Check passes with an open change
+- **WHEN** `specctx check --strict` runs on a copy of this repository with an active change that holds an open task
+- **THEN** it exits 0, prints `0 findings`, and the only other lines are `manual-evidence` warnings and `deferred:` notices, one of them for that change
+
 ### Requirement: REQ-GOV-002 IDs never reused
 A removed ID SHALL be added to `decisions/retired-ids.md` with date and reason. `check` SHALL report `reused-id` when a retired ID appears as a canonical entry.
 
