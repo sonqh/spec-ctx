@@ -1,4 +1,4 @@
-// REQ-LOOP-002 fail files under .ctx/evidence/<change>/<task>.fail-<n>.json and the attempt window (024/D4, 024/D5).
+// REQ-LOOP-002 REQ-LOOP-017 REQ-LOOP-018 fail files under .ctx/evidence/<change>/<task>.fail-<n>.json and the attempt window (024/D4, 024/D5).
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { readQuestions, type Question } from "../handoff/questions.ts";
@@ -8,6 +8,8 @@ import { runCommand } from "../runcmd.ts";
 import { dumps } from "../util/json.ts";
 import { cmpStr } from "../util/pystr.ts";
 import { isoNow } from "../util/time.ts";
+
+const CURRENT = ".ctx/current.json";
 
 export interface FailFile {
   at: string;
@@ -37,17 +39,19 @@ export function readFails(root: string, task: string): { rel: string; file: Fail
 }
 
 /**
- * The start of the attempt window of a task: `current.json.started_at` when the file names the task, else the
- * start of time. A resolved question for the task moves the start to its `resolved_at`, so a resolve resets the count.
+ * REQ-LOOP-018 the start of the attempt window of a task: `current.json.started_at` when the file names the task, else
+ * null, and no fail file counts (056/D4). A resolved question for the task moves the start to its `resolved_at`, so a
+ * resolve resets the count. `fallback` gives the start of time instead of null, for a current.json that could not be written.
  */
-export function windowStart(root: string, task: string, questions?: Question[]): string {
-  let start = "";
+export function windowStart(root: string, task: string, questions?: Question[], fallback = false): string | null {
+  let start: string | null = fallback ? "" : null;
   try {
-    const cur = JSON.parse(readFileSync(join(root, ".ctx/current.json"), "utf8")) as { task?: string; started_at?: unknown };
+    const cur = JSON.parse(readFileSync(join(root, CURRENT), "utf8")) as { task?: string; started_at?: unknown };
     if (cur.task === task && typeof cur.started_at === "string") start = cur.started_at;
   } catch {
     // no current task
   }
+  if (start === null) return null;
   for (const q of questions ?? safeQuestions(root)) {
     if (q.task === task && q.status === "resolved" && typeof q.resolved_at === "string" && cmpStr(q.resolved_at, start) > 0) start = q.resolved_at;
   }
@@ -62,9 +66,10 @@ function safeQuestions(root: string): Question[] {
   }
 }
 
-/** The fail files of a task inside its window, in `at` order. */
-export function failsInWindow(root: string, task: string, questions?: Question[]): { rel: string; file: FailFile }[] {
-  const start = windowStart(root, task, questions);
+/** REQ-LOOP-018 the fail files of a task inside its window, in `at` order. None without a window. */
+export function failsInWindow(root: string, task: string, questions?: Question[], fallback = false): { rel: string; file: FailFile }[] {
+  const start = windowStart(root, task, questions, fallback);
+  if (start === null) return [];
   return readFails(root, task).filter((f) => cmpStr(f.file.at, start) >= 0);
 }
 
@@ -81,9 +86,51 @@ export function isCapQuestion(q: Question, task: string): boolean {
   return q.status === "open" && q.task === task && q.stage === "cap";
 }
 
+/**
+ * REQ-LOOP-018 a failed run with no current.json for the task opens its window first (056/D4). The file has only
+ * `started_at` and `task`: no `verify`, so a later Verify edit is not refused, and no `bundle_chars`, so stats keeps
+ * cycle time for runs that began with task start. Returns false when the write fails.
+ */
+export function openWindow(root: string, task: string): boolean {
+  try {
+    const cur = JSON.parse(readFileSync(join(root, CURRENT), "utf8")) as { task?: string; started_at?: unknown };
+    if (cur.task === task && typeof cur.started_at === "string") return true;
+  } catch {
+    // absent or damaged: write a new one
+  }
+  try {
+    mkdirSync(join(root, ".ctx"), { recursive: true });
+    writeFileSync(join(root, CURRENT), dumps({ started_at: isoNow(), task }) + "\n");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** REQ-LOOP-017 the line that keeps fail files out of git, in `.ctx/evidence/.gitignore` (056/D1). */
+export const FAIL_IGNORE = "*.fail-*.json";
+
+/**
+ * REQ-LOOP-017 make sure `.ctx/evidence/.gitignore` has the fail file line. Create the file or append the line. Other
+ * lines keep their bytes and order. A write error changes nothing (056/D1).
+ */
+export function ensureFailIgnore(root: string): void {
+  const p = join(root, ".ctx/evidence/.gitignore");
+  try {
+    const cur = existsSync(p) ? readFileSync(p, "utf8") : "";
+    if (cur.split(/\r?\n/).some((l) => l.trim() === FAIL_IGNORE)) return;
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, (cur === "" || cur.endsWith("\n") ? cur : cur + "\n") + FAIL_IGNORE + "\n");
+  } catch {
+    // a read-only tree keeps its fail files tracked
+  }
+}
+
 /** Write the next fail file of a task. The attempt counts the window, the file number counts every fail file. */
 export function writeFail(root: string, task: string, verify: FailFile["verify"], tail: string): { rel: string; file: FailFile } {
-  const attempt = failsInWindow(root, task).length + 1;
+  // REQ-LOOP-018 when current.json cannot be written, count as before (056/D4)
+  const opened = openWindow(root, task);
+  const attempt = failsInWindow(root, task, undefined, !opened).length + 1;
   const rel = evidenceRel({ id: task });
   const base = rel.slice(0, -".json".length);
   let n = 1;
@@ -92,6 +139,7 @@ export function writeFail(root: string, task: string, verify: FailFile["verify"]
   const file: FailFile = { at: isoNow(), attempt, stderr_tail: tail, task, verify };
   mkdirSync(dirname(join(root, target)), { recursive: true });
   writeFileSync(join(root, target), dumps(file) + "\n");
+  ensureFailIgnore(root);
   return { rel: target, file };
 }
 
