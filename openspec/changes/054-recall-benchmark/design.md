@@ -30,7 +30,7 @@
   - The tasks are not the ones that `sample` and `seed` give (D5).
 
   `--check-schema` checks only the fields. `--check` checks all four cases and writes no report. Refs: REQ-STAT-006
-- D5 Selection. `scripts/recall.mjs --root <dir> --sample <n> --seed <s>` lists the candidate tasks, sorts them by ID, and picks n with a seeded shuffle. `--check` runs the same pick again, so the label file proves that the lead did not choose the tasks. A candidate is a done task of an archived change. The commits of that change must edit a file under the `code` or `tests` globs. The script reads that from `git log`, never from tags or evidence. On this repo the archived changes are 045 to 053. The fixture candidates depend on the owner question in the Open questions section. Refs: REQ-STAT-006
+- D5 Selection. `scripts/recall.mjs --root <dir> --sample <n> --seed <s>` lists the candidate tasks, sorts them by ID, and picks n with a seeded shuffle. `--check` runs the same pick again, so the label file proves that the lead did not choose the tasks. A candidate is a done task of an archived change. The commits of that change must edit a file under the `code` or `tests` globs. The script reads that from `git log`, never from tags or evidence. On this repo the archived changes are 045 to 053. The fixture candidates are chosen the same way, from its archived changes. Refs: REQ-STAT-006
 - D6 Labels. A label path must sit under the `code` or `tests` globs of the root. `.ctx/`, `docs/`, `CHANGELOG.md`, `README.md`, and `openspec/` are never labels. A file goes to a task in three cases. The task text names it. Its Verify command runs it. The commit that closed the task edited it. A file that fits none of these stays out, so sibling tasks do not share labels by default. The requirements are the ones that the task text names. When the text names none, they are the delta requirements of its change. The evidence `files` are not used. Every label has a `note` with its source. The owner reviews both label files before the baseline run. Then they stay frozen. Every report prints the sha256 of each label file. Refs: REQ-STAT-006
 - D7 Time. The script spawns the `dist/cli.js` of this repo by absolute path, with `cwd` at the root of the label file. It runs one process at a time, with `SPECCTX_RERUN` and the `GIT_` variables cleared. Each task gets 1 scored run and then 5 timed runs, after one warm-up per repo. It uses `process.hrtime.bigint()`. p95 is over the timed runs of a repo. The report names the machine, the Node version, and the commit of both repos. A test does not assert a time. Refs: REQ-STAT-006
 - D8 The fixture. `scripts/recall.sh` builds this repo. Then it clones `sonqh/OpenSpec-spec-ctx`, branch `spec-ctx-adopt`, into a temp dir. The clone keeps enough history for `git log`. It checks that HEAD is the `commit` of the label file. Then it runs the script. It never pushes and removes the dir on exit. The clone in `recall.sh` and the clone in task 2.2 are the two parts of this change that use the network. Refs: REQ-STAT-006
@@ -42,10 +42,10 @@
 - The fixture `spec-ctx.toml` scans `tests/**`, but the fixture keeps its tests in `test/`. This goes to change E: `init` warns when a scan path matches no file.
 - This repo does not scan `scripts/`, so `context 053/1.1` does not show `scripts/try.sh`. A one-line `spec-ctx.toml` change fixes it, after the baseline. `docs/verification/054.md` records it.
 
-## Open questions
+## Owner decisions at the plan stop
 
-- The source of the fixture labels. Open tasks have no code yet, so their file labels would be guesses. Archived fixture changes have real commits.
-- Whether the fixture runs as committed, or after a fresh `init` on a clone at 8899171.
+- The fixture candidates are done tasks of archived fixture changes, as on this repo. Their commits show the real files. The open tasks get no file labels, because their code does not exist yet. Change D counts its own acceptance on the open tasks.
+- The fixture runs as committed. D and F are measured against the same frozen state. Change E is measured by the north star, not by this benchmark.
 
 ## Risks / Trade-offs
 

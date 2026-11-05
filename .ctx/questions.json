@@ -770,7 +770,10 @@
     "asked_at": "2026-11-04T02:00:38.965Z",
     "task": "054-recall-benchmark",
     "text": "plan ready for 054-recall-benchmark. Approve to start the tasks?",
-    "status": "open",
-    "stage": "plan"
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Owner approved on 2026-11-05 with the lead's recommendations: the governance test bug is a separate change 055 that merges first, the fixture labels come from done tasks of archived fixture changes with real commits, the fixture runs as committed.",
+    "resolved_at": "2026-11-05T03:32:14.902Z"
   }
 ]
