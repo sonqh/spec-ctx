@@ -1,14 +1,15 @@
 # Handoff
 change: 055-governance-deferred
 current: none
-base: 2026-11-03T17:51:25.551Z
-as_of: none
+base: none
+as_of: 2026-11-05T03:50:29.310Z
 done:
+- 055/1.1
+- 055/2.1
 reopened:
 open_questions:
-- Q82 plan ready for 055-governance-deferred. Approve to start the tasks? (task 055-governance-deferred, 2026-11-05)
+- Q83 archive 055-governance-deferred? (task 055-governance-deferred, 2026-11-05)
 resolved:
-- Q72 plan ready for 049-index-same-ms-stale. Approve to start the tasks? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after product manager and architect review, with the edits in the lead's brief to the implementing engineer: a pre-wait instead of rebuild rounds, clock fixes, skip .ctx in the walk, smaller test loops, honest before numbers.
 - Q73 archive 049-index-same-ms-stale? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after the architect diff review: no blocker.
 - Q74 plan ready for 050-requested-context-always-kept. Approve to start the tasks? (task 050-requested-context-always-kept, 2026-11-03) answer: Approved by the lead. D3 keep the main version. D10 print a requested decision once. D11 a negative --budget exits 2. Keep the tool light and easy to use.
 - Q75 archive 050-requested-context-always-kept? (task 050-requested-context-always-kept, 2026-11-03) answer: Approved by the lead after the architect review of the diff. ci:local passes.
@@ -18,6 +19,7 @@ resolved:
 - Q79 archive 053-try-offline? (task 053-try-offline, 2026-11-03) answer: Owner approved the merge of the 053 PR after its archive stop on 2026-11-04. Architect: ready to archive, no blocker.
 - Q80 plan ready for 052-check-deferred. Approve to start the tasks? (task 052-check-deferred, 2026-11-03) answer: Owner approved 2026-11-03. Include the change with deltas and no task. Edit the two baseline.test.ts assertions, do not change fixtures. 051 merges first.
 - Q81 archive 052-check-deferred? (task 052-check-deferred, 2026-11-03) answer: Owner approved the archive on 2026-11-03.
-- and 71 more in .ctx/questions.json
-next: 055/1.1  Write SCN-GOV-001-2 in `tests/gov/governance.test.ts` first, as 055/D2 says, and add `Covers: REQ-GOV-001` if it is missing. Run the file on the current code. The new case must fail on the `deferred:` line. Then drop the `deferred: ` lines in both cases, as 055/D1 says.
-evidence: 0 task(s), 0 command, 0 manual
+- Q82 plan ready for 055-governance-deferred. Approve to start the tasks? (task 055-governance-deferred, 2026-11-05) answer: Owner approved the 055 plan on 2026-11-05, with the edits of both reviews. Merge 055 into main after its archive stop.
+- and 72 more in .ctx/questions.json
+next: no open task
+evidence: 2 task(s), 2 command, 0 manual
