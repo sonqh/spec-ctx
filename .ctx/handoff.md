@@ -1,11 +1,12 @@
 # Handoff
-change: none
+change: 055-governance-deferred
 current: none
 base: 2026-11-03T17:51:25.551Z
 as_of: none
 done:
 reopened:
 open_questions:
+- Q82 plan ready for 055-governance-deferred. Approve to start the tasks? (task 055-governance-deferred, 2026-11-05)
 resolved:
 - Q72 plan ready for 049-index-same-ms-stale. Approve to start the tasks? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after product manager and architect review, with the edits in the lead's brief to the implementing engineer: a pre-wait instead of rebuild rounds, clock fixes, skip .ctx in the walk, smaller test loops, honest before numbers.
 - Q73 archive 049-index-same-ms-stale? (task 049-index-same-ms-stale, 2026-10-30) answer: Approved by the lead after the architect diff review: no blocker.
@@ -18,5 +19,5 @@ resolved:
 - Q80 plan ready for 052-check-deferred. Approve to start the tasks? (task 052-check-deferred, 2026-11-03) answer: Owner approved 2026-11-03. Include the change with deltas and no task. Edit the two baseline.test.ts assertions, do not change fixtures. 051 merges first.
 - Q81 archive 052-check-deferred? (task 052-check-deferred, 2026-11-03) answer: Owner approved the archive on 2026-11-03.
 - and 71 more in .ctx/questions.json
-next: no open task
+next: 055/1.1  Write SCN-GOV-001-2 in `tests/gov/governance.test.ts` first, as 055/D2 says, and add `Covers: REQ-GOV-001` if it is missing. Run the file on the current code. The new case must fail on the `deferred:` line. Then drop the `deferred: ` lines in both cases, as 055/D1 says.
 evidence: 0 task(s), 0 command, 0 manual
