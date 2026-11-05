@@ -1,9 +1,11 @@
 # Handoff
 change: 054-recall-benchmark
-current: 054/1.1
-base: 2026-11-05T03:50:29.310Z
-as_of: none
+current: none
+base: none
+as_of: 2026-11-05T04:02:15.225Z
 done:
+- 054/1.1
+- 054/1.2
 reopened:
 open_questions:
 resolved:
@@ -18,5 +20,5 @@ resolved:
 - Q83 archive 055-governance-deferred? (task 055-governance-deferred, 2026-11-05) answer: Owner approved on 2026-11-05 the archive and the merge of 055 into main. Architect: ready to archive, no blocker.
 - Q84 plan ready for 054-recall-benchmark. Approve to start the tasks? (task 054-recall-benchmark, 2026-11-04) answer: Owner approved on 2026-11-05 with the lead's recommendations: the governance test bug is a separate change 055 that merges first, the fixture labels come from done tasks of archived fixture changes with real commits, the fixture runs as committed.
 - and 74 more in .ctx/questions.json
-next: 054/1.1  Write `tests/stat/recall.test.ts` first, with `Covers: REQ-STAT-006`. It holds one case for each scenario of REQ-STAT-006. The cases build a temp project from `tests/fixtures/ctx-repo`, init git in it with two commits, and write a label file there. SCN-STAT-006-1 has one task that matches every label and one with a code miss and a test miss. SCN-STAT-006-2 sets a small `budget`, so one labelled entry is in the `truncated:` line and a delta version is cut while its main version prints. SCN-STAT-006-3 covers the four causes of exit 2. SCN-STAT-006-4 runs the script twice into two dirs. SCN-STAT-006-5 runs the sample twice with one seed and once with another. Run the file before the script exists. Every case must fail. Then write `scripts/recall.mjs` with Node APIs only, as 054/D1 to 054/D5, 054/D7, and 054/D9 say. Tag it with `// REQ-STAT-006`.
-evidence: 0 task(s), 0 command, 0 manual
+next: 054/2.1  Write `bench/recall/spec-ctx.json`. Run `node scripts/recall.mjs --root . --sample 20 --seed 54` and take the 20 task IDs it prints. Fill each task as 054/D6 says. Leave `commit` out, as 054/D4 says.
+evidence: 2 task(s), 2 command, 0 manual

@@ -11,7 +11,7 @@ Refs: ADR-007, ADR-008, REQ-QRY-015
 
 #### Scenario: SCN-STAT-006-2 Omitted entries are misses
 - **WHEN** a labelled entry is cut by the budget, and only the `truncated:` line names it
-- **THEN** the script counts it as a miss, and a main version that printed still matches its requirement
+- **THEN** the script counts it as a miss, and a labelled entry that printed still matches
 
 #### Scenario: SCN-STAT-006-3 Bad input
 - **WHEN** the label file has an unknown task, a missing field, a `commit` that is not HEAD, or tasks that the seed does not pick
