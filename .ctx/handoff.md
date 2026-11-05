@@ -1,11 +1,12 @@
 # Handoff
 change: 054-recall-benchmark
 current: 054/2.2
-base: 2026-11-05T04:02:15.225Z
-as_of: 2026-11-05T04:03:18.900Z
+base: 2026-11-05T04:03:18.900Z
+as_of: 2026-11-05T04:05:13.438Z
 done:
-- 054/2.1
+- 054/1.1
 reopened:
+- 054/1.1 task 1.2 added the recall.sh case to tests/stat/recall.test.ts (at 2026-11-05T04:05:02.250Z)
 open_questions:
 resolved:
 - Q75 archive 050-requested-context-always-kept? (task 050-requested-context-always-kept, 2026-11-03) answer: Approved by the lead after the architect review of the diff. ci:local passes.
