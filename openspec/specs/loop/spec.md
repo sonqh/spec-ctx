@@ -41,7 +41,7 @@ Refs: ADR-006, REQ-TASK-003, REQ-HND-002
 
 #### Scenario: SCN-LOOP-002-3 Attempt window
 - **WHEN** two fail files of `002/2.2` exist from before `current.json.started_at`, or `handoff resolve` closed the question of the cap
-- **THEN** the next failure writes `attempt: 1`, and without `current.json` every fail file of the task counts
+- **THEN** the next failure writes `attempt: 1`, and without `current.json` no earlier fail file of the task counts
 
 #### Scenario: SCN-LOOP-002-4 Fail files are not evidence
 - **WHEN** `.ctx/evidence/002/2.2.fail-1.json` exists and `002/2.2` is open
@@ -300,3 +300,37 @@ Refs: REQ-LOOP-015, REQ-LOOP-009, REQ-LOOP-007
 #### Scenario: SCN-LOOP-016-3 A started change is not stopped again
 - **WHEN** a task of `002-ids` has `[x]`, or a current task exists, and the newest plan question has no `verdict`
 - **THEN** `next --json` does not print `state: plan_stop`
+
+### Requirement: REQ-LOOP-017 Fail files stay out of git
+When `task done` writes a fail file, it SHALL make sure `.ctx/evidence/.gitignore` has the line `*.fail-*.json`. It creates the file when absent and appends the line when absent. It SHALL keep every other line and its order. A write error SHALL not change the output or the exit code of `task done`.
+
+Refs: REQ-LOOP-002
+
+#### Scenario: SCN-LOOP-017-1 Ignore file created
+- **WHEN** `.ctx/evidence/.gitignore` is absent and `task done 002/2.2` fails Verify
+- **THEN** `.ctx/evidence/.gitignore` reads `*.fail-*.json` and a newline, and `git check-ignore` reports `.ctx/evidence/002/2.2.fail-1.json` as ignored
+
+#### Scenario: SCN-LOOP-017-2 Ignore file kept
+- **WHEN** `.ctx/evidence/.gitignore` holds `keep.json` with no final newline, or already holds `*.fail-*.json`, and `task done` fails Verify twice
+- **THEN** the file holds `keep.json` first and `*.fail-*.json` once, and a second failure leaves it byte-identical
+
+### Requirement: REQ-LOOP-018 Attempt window without a current task
+When `.ctx/current.json` does not name the task, no fail file SHALL count toward its attempts. A failed `task done` for such a task SHALL first write `current.json` with only `started_at` and `task`, so its fail file is attempt 1 and later failures count. It SHALL replace a `current.json` that names another task. Fail files from another clone SHALL not raise the cap question.
+
+Refs: REQ-LOOP-002, REQ-TASK-002
+
+#### Scenario: SCN-LOOP-018-1 Fresh clone
+- **WHEN** two fail files of `002/2.2` from another clone exist, no `.ctx/current.json` exists, and `task done 002/2.2` fails Verify
+- **THEN** the new fail file has `attempt: 1`, `task done` writes no question, `.ctx/current.json` names `002/2.2`, and `next --json` returns `fix` with `attempt: 1`
+
+#### Scenario: SCN-LOOP-018-2 Cap without task start
+- **WHEN** no `.ctx/current.json` exists and `task done 002/2.2` fails Verify three times with `[loop] max_attempts = 3`
+- **THEN** the third failure has `attempt: 3` and writes the cap question
+
+#### Scenario: SCN-LOOP-018-3 Current task is another task
+- **WHEN** `task start 002/2.1` ran and `task done 002/2.2` fails Verify
+- **THEN** the fail file has `attempt: 1`, `.ctx/current.json` names `002/2.2` with no `bundle_chars` and no `verify`, and `next --json` returns `fix` for `002/2.2` with `attempt: 1`
+
+#### Scenario: SCN-LOOP-018-4 Cycle time needs task start
+- **WHEN** a failed `task done 002/2.2` with no `task start` wrote `current.json`, and a later `task done 002/2.2` passes
+- **THEN** the evidence has no `started_at` and no `bundle_chars`, and after `task start` a pass copies both

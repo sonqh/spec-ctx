@@ -803,7 +803,10 @@
     "asked_at": "2026-11-05T08:51:51.661Z",
     "task": "056-evidence-hygiene",
     "text": "archive 056-evidence-hygiene?",
-    "status": "open",
-    "stage": "archive"
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect review of the diff: ready to archive, no blocker. ci:local passes 14 steps. Follow-up: a window test for the current.json write failure path.",
+    "resolved_at": "2026-11-05T08:56:35.985Z"
   }
 ]
