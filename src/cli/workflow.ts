@@ -163,10 +163,13 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         // REQ-LOOP-002 the fail file is the retry record. At the cap, one question stops the loop (024/D4, 024/D5).
         const { writeFail, openQuestionFor, capQuestion, blockedLine } = await import("../loop/fails.ts");
         const { addQuestion } = await import("../handoff/questions.ts");
-        const fail = writeFail(c.root, t.id, { command: t.verify.command, exit: r.timedOut ? null : r.exit }, outTail);
+        // REQ-TASK-008 the fail file and the cap question hold no machine path. The printed tail stays as it is (056/D5).
+        const { redactPaths } = await import("../util/redact.ts");
+        const kept = redactPaths(outTail, c.root);
+        const fail = writeFail(c.root, t.id, { command: t.verify.command, exit: r.timedOut ? null : r.exit }, kept);
         let question: number | null = openQuestionFor(c.root, t.id)?.n ?? null;
         if (question === null && fail.file.attempt >= c.cfg.loop.max_attempts) {
-          question = addQuestion(c.root, t.id, capQuestion(t.id, fail.file.attempt, outTail), "cap").n;
+          question = addQuestion(c.root, t.id, capQuestion(t.id, fail.file.attempt, kept), "cap").n;
         }
         if (c.json) print(c, { attempt: fail.file.attempt, command: t.verify.command, error: msg, exit: r.exit, fail: fail.rel, question, tail: outTail, task: t.id });
         else c.io.out(outTail ? outTail + "\n" : "");
@@ -183,8 +186,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       // the Verify command can change tagged files, so the digests come from the tree after the run
       const { loadIndex } = await import("../index/build.ts");
       const after = loadIndex(c.root, c.cfg).data.entries;
+      // REQ-TASK-008 the stderr tail holds no machine path. verify.command stays as the task line has it (056/D5, 056/D6).
+      const { redactPaths } = await import("../util/redact.ts");
       const rel = writeEvidence(c.root, t, after, {
-        command: t.verify.command, exit: 0, stdout_sha256: sha256(r.stdout), stderr_tail: tail(r.stderr.toString("utf8")),
+        command: t.verify.command, exit: 0, stdout_sha256: sha256(r.stdout), stderr_tail: redactPaths(tail(r.stderr.toString("utf8")), c.root),
       }, "command", undefined, t.verify.cwd);
       setBox(c.root, t, true);
       clearCurrent(c.root, t.id);
