@@ -4,7 +4,7 @@
 
 - `src/cli.ts` is the only entry that touches `process`. It awaits `main()` and sets `process.exitCode`. Tests call `main()` in process and spawn `dist/cli.js`.
 - `main()` in `src/main.ts` dispatches. `run()` in `src/cli/commands.ts` finds the root, calls `requireOpenSpec` (lines 74 and 75), loads the config, and runs the command. `init` returns before the root check.
-- `bundle()` returns `text`, `omitted`, `chars`, `budget`, and `complete`. It does not return the kinds of the kept blocks. Each block starts with a line `-- <id> | <file>:<line> | <status> | <reason>`.
+- `bundle()` returns `text`, `omitted`, `chars`, `budget`, and `complete`. It does not return the kinds of the kept blocks. Each block starts with a line made by `provenance()`: `-- <id> | <file>:<line> | <status> | <reason>`.
 - The exit 3 path in `main()` prints `specctx: internal error: <stack>`. `tests/cli/cli.test.ts` asserts `internal error` in `err`.
 - `tests/cli/run-source.test.ts` fails on a bare `specctx <word>` in any source file outside its allowlist (REQ-CLI-010).
 - 24 test files spawn the CLI. Only some use `cleanEnv`. Some run `status --root <this repo>` with `process.env`.
@@ -30,7 +30,7 @@
   - Rejected: write inside `main()`. It would make every in-process test write, and a `finally` block would hide a rethrow.
 - D2 Where and when. Refs: REQ-JRN-001, REQ-JRN-003
   - `sink.root` is set after `requireOpenSpec` passes in `run()`, and after `runInit` succeeds in `init()`. A usage error before the root check leaves `root` unset, so nothing is written.
-  - A usage error in `main()` before `run()`, such as an unknown command, leaves `root` unset. When the exit code is not 0 and `root` is unset, `src/cli.ts` calls `findRoot(cwd)` with no `--root` and uses that result. `appendRun` still writes only when `<root>/openspec` is a directory. A run with exit 0 and no `root`, such as help, version, or `lint`, never gets this fallback. So it writes nothing.
+  - A usage error in `main()` before `run()`, such as an unknown command, leaves `root` unset. `main()` notes `cmd` as `?` in the parse error, group, and unknown command branches. Only then, and only when `argv` has no `--root`, `src/cli.ts` calls `findRoot(cwd)` and uses that result (lead decision, question 86). `appendRun` still writes only when `<root>/openspec` is a directory. Help, version, and `lint` never get this fallback. So it writes nothing.
   - `appendRun` checks that `<root>/openspec` is a directory before it creates `.ctx/local`. It writes `.ctx/local/.gitignore` with `*` when absent.
   - `GITIGNORE_LINES` stays as it is. `init`, its tests, and its docs do not change. The `.gitignore` inside the folder covers the file, and `*` covers the `.gitignore` too.
   - Rotation: when `runs.jsonl` is over 256 KB, `renameSync` it to `runs.1.jsonl`, then append. One `try`/`catch` wraps the whole call and prints nothing.
@@ -38,19 +38,19 @@
   - Line: `{at, cmd, exit, ms, signals, v: 1, version}`. It goes through `dumps` of the repo with indent removed, so keys sort. A new `dumpLine` in `src/journal/journal.ts` does `JSON.stringify` over the sorted value. The line has no newline inside. If it is over 4 KB, `appendRun` drops `err.frames` to 5 entries, then drops `err`.
   - `cmd` is `parsed.command` when `COMMANDS` holds it, and `?` otherwise. An unknown command gives `?`. A group with no subcommand (`task`) gives `?`.
   - The set is closed and `v` versions it: `init-ok`, `context-has-code-or-test`, `empty-context`, `truncated-context`, `usage-error`, `internal-error`. `note` ignores a value outside the set.
-  - `context-has-code-or-test` for `context` and `bundle`: the helper `contextSignals(entries, b)` in `src/journal/signals.ts` reads the provenance lines of `b.text`. It looks up each ID in `canon(entries)`. A kind of `code` or `test` gives the signal. A run with no provenance line in `b.text` gives `empty-context`. `b.complete === false` gives `truncated-context`. A `--block` run gives none of the three.
-  - This reads the printed text and does not edit `src/graph/bundle.ts`. The provenance format is covered by tests of layer 1, so a change there breaks `tests/journal/signals.test.ts` first.
+  - Only `context` emits `context-has-code-or-test`, `empty-context`, and `truncated-context`. `bundle` emits none. The helper `contextSignals(entries, b)` in `src/journal/signals.ts` reads the provenance lines of `b.text` through `parseProvenance`. It looks up each ID in `canon(entries)`. `commands.ts` runs it only when `io.journal` is set. A kind of `code` or `test` gives the signal. A run with no provenance line in `b.text` gives `empty-context`. `b.complete === false` gives `truncated-context`.
+  - `src/graph/bundle.ts` exports `parseProvenance(line)` next to `provenance`. It anchors on `^-- (\S+) \| ` and returns the ID or `null`. `BundleResult` gets no new field. A test pairs it with `provenance`, so a format change breaks that test first. Task 1.1 adds the export and its test.
   - `init-ok` is set when `runInit` returns, for the `init` command only.
   - `usage-error` is exit 2 and `internal-error` is exit 3. `src/cli.ts` adds both from the exit code, so no catch site needs a note. Unknown commands exit 2 in `main()`.
 - D4 The `err` object. Refs: REQ-JRN-002
   - `main()` notes `err` in its exit 3 branch. The wrapper in `src/cli.ts` notes it for a rejection.
   - `name` is `error.name`. `code` is `error.code` when it is an all-capital token such as `ERR_X`, else `null`. The message never goes in.
-  - `frames` come from `error.stack`. Keep a frame only when its file is under the package root and has no `node_modules` part. The package root is two folders above `src/journal/journal.ts`, and the same in `dist`. Each frame is `<path relative to the package>:<line>`. No column. At most 10 frames.
+  - `frames` come from `error.stack`. Skip stack line 1, which holds the message. Convert a `file://` URL with `fileURLToPath`. Make the path relative to the package root first, then drop a frame that starts with `..` or has a `node_modules` part. The package root is two folders above `src/journal/journal.ts`, and the same in `dist`. Each frame is `<path relative to the package>:<line>`. No column. At most 10 frames.
   - A non-`Error` throw gives `name: "NonError"`, `code: null`, `frames: []`.
 - D5 The off switch and test isolation. Refs: REQ-JRN-003
   - `SPECCTX_JOURNAL=0` and only that value turns it off. `appendRun` reads `process.env` at call time.
   - `cleanEnv()` in `tests/helpers.ts` sets `SPECCTX_JOURNAL` to `0`. `tests/parity/run.sh` exports it.
-  - 24 test files spawn the CLI and several bypass `cleanEnv`. Some run on this repository. A new preload `tests/preload.ts` sets `process.env.SPECCTX_JOURNAL = "0"`. `bunfig.toml` (`preload`) and `vitest.config.ts` (`setupFiles`) load it. One test turns the journal on with an explicit `env`, under a temp dir.
+  - 24 test files spawn the CLI and several bypass `cleanEnv`. Some run on this repository. A new preload `tests/preload.ts` sets `process.env.SPECCTX_JOURNAL = "0"`. `bunfig.toml` (`preload`) and `vitest.config.ts` (`setupFiles`) load it. Every test that needs the journal passes `SPECCTX_JOURNAL=1` in its own `env`, under a temp dir. Lead decision, question 86: the preload stays.
   - Rejected: edit each spawning test. It touches 20 files for one line each.
 - D6 The `report` command. Refs: REQ-JRN-004, REQ-JRN-005
   - `src/journal/report.ts` exports `buildReport(root, now)` as a pure function of the journal files and `spec-ctx.toml`. `commands.ts` calls it right after `requireOpenSpec` and before the config load, so a broken config still reports.

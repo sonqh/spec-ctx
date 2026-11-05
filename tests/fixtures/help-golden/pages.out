@@ -232,6 +232,25 @@ Exit codes:
 Example:
   `specctx stats --write`
 
+== report
+specctx report: Print a bug report from the run journal in .ctx/local. Review it, then file it with `gh issue create`. Write nothing.
+
+Usage:
+  `specctx report [flags]`
+
+Flags:
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error.
+  `3` An internal error.
+
+Example:
+  `specctx report > report.md`
+
 == lint tells
 specctx lint tells: Find the AI writing tells in markdown files. Read stdin when no file is given.
 

@@ -18,7 +18,7 @@ Refs: ADR-009, REQ-CLI-001
 - **THEN** no journal file appears, and an unknown command gives `cmd` of `?` only through the CLI entry
 
 ### Requirement: REQ-JRN-002 Signals
-`signals` SHALL hold only values of this set: `init-ok`, `context-has-code-or-test`, `empty-context`, `truncated-context`, `usage-error`, `internal-error`. A kept block of kind code or test in `context` or `bundle` output gives the first. Exit 2 gives `usage-error`. Exit 3 gives `internal-error` and an `err` object with `name`, `code`, and `frames`. A frame is a spec-ctx path and a line. It holds no message.
+`signals` SHALL hold only values of this set: `init-ok`, `context-has-code-or-test`, `empty-context`, `truncated-context`, `usage-error`, `internal-error`. A kept block of kind code or test in `context` output gives the first. `bundle` gives none of the three signals about blocks. Exit 2 gives `usage-error`. Exit 3 gives `internal-error` and an `err` object with `name`, `code`, and `frames`. A frame is a spec-ctx path and a line. It holds no message.
 
 Refs: REQ-JRN-001, ADR-009
 
@@ -27,7 +27,7 @@ Refs: REQ-JRN-001, ADR-009
 - **THEN** the first line has `context-has-code-or-test` and the second has `empty-context`
 
 #### Scenario: SCN-JRN-002-2 Usage and truncation
-- **WHEN** an unknown command runs, then `bundle` runs with a budget that omits blocks
+- **WHEN** an unknown command runs, then `context` runs with a budget that omits blocks
 - **THEN** the first line has `usage-error`, exit 2, and `cmd` of `?`. The second has `truncated-context`
 
 #### Scenario: SCN-JRN-002-3 Internal error

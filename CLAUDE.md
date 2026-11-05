@@ -13,7 +13,7 @@ The owner set this direction in `decisions/ADR-007-query-first.md`. It binds eve
 - Tasks, Verify, evidence, `check`, the gate, and the Action keep the links true. They are not the headline.
 - Every proposal names its layer and its benefit. The product manager and the architect agents in `.claude/agents/` review each plan stop against this section before the lead approves.
 - Adjust existing work to serve the two layers. Do not remove it.
-- `decisions/ADR-008-stranger-first.md` sets the order of work for 30 days from 2026-11-03. A stranger gets a useful `context <task>` on their own repo within 5 minutes. `decisions/ADR-009-run-journal.md` lifted the freeze of item 4 on 2026-11-05. Gate, lint, Action, and loop features are in scope again. The 5-minute stranger goal stays.
+- `decisions/ADR-008-stranger-first.md` sets the order of work for 30 days from 2026-11-03. A stranger gets a useful `context <task>` on their own repo within 5 minutes. `decisions/ADR-009-run-journal.md` lifted the freeze of item 4 on 2026-11-05. Gate, lint, Action, and loop features are in scope again. The 5-minute stranger goal stays. The scope rules of ADR-007 and the priority of layer 1 still apply.
 
 ## First thing in every session
 

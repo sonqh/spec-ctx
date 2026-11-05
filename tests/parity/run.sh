@@ -12,6 +12,7 @@ ts="node $here/dist/cli.js"
 # status runs the decision of next, which runs the OpenSpec status command. The stand-in answers it
 # with a complete plan, so the harness never reaches the network (030/D5).
 export SPECCTX_OPENSPEC="sh $here/tests/fixtures/openspec-stub.sh"
+export SPECCTX_JOURNAL=0
 record=0
 [ "${1:-}" = "--record" ] && record=1
 
