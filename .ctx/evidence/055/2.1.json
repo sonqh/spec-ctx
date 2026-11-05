@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-05T03:50:29.310Z",
+  "bundle_chars": 3263,
+  "files": {
+    "tests/gov/governance.test.ts": "57087715961f5df9bd484bbe319da52442503c10a5b9c398885bcb5fedaa39eb"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-001"
+  ],
+  "started_at": "2026-11-05T03:47:51.713Z",
+  "task": "055/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 docs/verification/055.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/055.md && grep -q \"## Before the fix\" docs/verification/055.md && grep -q \"Change 055-governance-deferred.\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "274f0bf2ecf09f77f9015beaf3ce45e0b54948178e7680e498b5e50e952505ee"
+  }
+}

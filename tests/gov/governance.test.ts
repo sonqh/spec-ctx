@@ -9,18 +9,48 @@ let p: Project;
 afterEach(() => p?.cleanup());
 
 describe("spec governance", () => {
+  /** A copy of this repository in a temp project, for check --strict. */
+  function copyRepo(): Project {
+    const pr = new Project(null);
+    for (const d of ["openspec", "decisions", "src", "spec-ctx.toml"]) cpSync(join(REPO, d), pr.path(d), { recursive: true });
+    if (existsSync(join(REPO, ".ctx/evidence"))) cpSync(join(REPO, ".ctx/evidence"), pr.path(".ctx/evidence"), { recursive: true });
+    cpSync(join(REPO, "tests"), pr.path("tests"), { recursive: true, filter: (s) => !s.includes("/tests/fixtures") });
+    return pr;
+  }
+
   test("SCN-GOV-001-1 a copy of this repository passes check --strict", async () => {
-    p = new Project(null);
-    for (const d of ["openspec", "decisions", "src", "spec-ctx.toml"]) cpSync(join(REPO, d), p.path(d), { recursive: true });
-    if (existsSync(join(REPO, ".ctx/evidence"))) cpSync(join(REPO, ".ctx/evidence"), p.path(".ctx/evidence"), { recursive: true });
-    cpSync(join(REPO, "tests"), p.path("tests"), { recursive: true, filter: (s) => !s.includes("/tests/fixtures") });
+    p = copyRepo();
     await p.build();
     const r = await p.run("check", "--strict");
     // warning lines for manual evidence are no findings (REQ-CHK-003)
     // REQ-CHK-004 a manual-evidence warning is advisory. No hard finding may stay.
-    expect(r.out.split("\n").filter((l) => l.includes("  ") && !l.startsWith("manual-evidence  "))).toEqual([]);
-    expect(r.out).toMatch(/^0 findings\n$|\(0 hard, \d+ advisory\)/);
+    // 055/D1 a deferred: notice of an active change (REQ-CHK-010) is advisory too.
+    const rest = r.out.split("\n").filter((l) => !l.startsWith("deferred: "));
+    expect(rest.filter((l) => l.includes("  ") && !l.startsWith("manual-evidence  ")), r.out).toEqual([]);
+    expect(rest.join("\n")).toMatch(/^0 findings\n$|\(0 hard, \d+ advisory\)/);
     expect(r.code).toBe(0);
+  });
+
+  test("SCN-GOV-001-2 check --strict passes with an active change that holds an open task (055/D2)", async () => {
+    p = copyRepo();
+    // the scenario ID is built from two strings, so the scanner does not count it as tested and the change keeps a gap
+    const untested = "SCN-GOV-001-" + "99";
+    p.write("openspec/changes/zz-open/proposal.md", "# Proposal\n\n## Why\n\nA test change.\n\n## What changes\n\n- One open task.\n");
+    p.write("openspec/changes/zz-open/tasks.md", "# Tasks\n\n## 1. Open\n\n- [ ] 1.1 Do the open work. [REQ-GOV-001] Verify: `bun test tests/gov/governance.test.ts`\n");
+    p.write(
+      "openspec/changes/zz-open/specs/spec-governance/spec.md",
+      "## MODIFIED Requirements\n\n### Requirement: REQ-GOV-001 ID on every artifact\nEvery requirement SHALL carry an ID.\n\nRefs: ADR-002\n\n" +
+        `#### Scenario: ${untested} Open\n- **WHEN** a test runs\n- **THEN** it passes\n`,
+    );
+    await p.build();
+    const r = await p.run("check", "--strict");
+    const lines = r.out.split("\n");
+    expect(lines.some((l) => l.startsWith("deferred: zz-open  ")), r.out).toBe(true);
+    // 055/D1 a deferred: notice (REQ-CHK-010) is advisory, not a finding
+    const rest = lines.filter((l) => !l.startsWith("deferred: "));
+    expect(rest.filter((l) => l.includes("  ") && !l.startsWith("manual-evidence  ")), r.out).toEqual([]);
+    expect(rest.join("\n")).toMatch(/^0 findings\n$|\(0 hard, \d+ advisory\)/);
+    expect(r.code, r.out).toBe(0);
   });
 
   test("SCN-GOV-003-1 a markdown file with a semicolon fails the lint that CI runs", () => {
