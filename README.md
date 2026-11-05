@@ -226,7 +226,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 ## Status
 
 - Published: `spec-ctx@0.4.1` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
-- Archived: 001 to 025, 027 to 034, 036 to 053, 055, and 056. No change is open.
+- Archived: 001 to 025, 027 to 034, 036 to 053, and 055 to 057. No change is open.
 - Upstream: the ID scheme is proposed in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured
@@ -235,7 +235,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0170 (n=152) | 0.94 (253/269) | 65 (of 122 reopens) | 58 (n=152) | 0 (0 baselined + 0 new) |
+| total | 0.0164 (n=154) | 0.94 (257/273) | 65 (of 122 reopens) | 61 (n=154) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.
@@ -244,6 +244,21 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 - `debt`: findings that the baseline hides plus new findings. Zero is the goal.
 
 The value in brackets is the count of inputs.
+
+## Report a bug
+
+spec-ctx keeps a small run journal on your machine. It helps the team see where first runs fail. Nothing leaves your machine unless you file a report.
+
+- What it holds: one JSON line per command in `.ctx/local/runs.jsonl`. Each line has the time, the version, the command name, the exit code, the run time, and signals such as `init-ok` or `empty-context`.
+- What it never holds: flag values, paths, IDs, change names, spec text, or error messages.
+- Where it is: `.ctx/local/` in the project root. A `.gitignore` of `*` in that folder keeps it out of git. The file rotates at 256 KB.
+- How to turn it off: set `SPECCTX_JOURNAL=0`.
+- How to file a bug:
+  1. Run `specctx report > report.md`.
+  2. Read `report.md`. Remove what you do not want to share.
+  3. Run `gh issue create -R sonqh/spec-ctx --body-file report.md`.
+
+`specctx report` only prints. It never runs `gh` and never uses the network.
 
 ## Contribute
 

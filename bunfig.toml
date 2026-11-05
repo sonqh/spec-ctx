@@ -1,4 +1,5 @@
 [test]
+preload = ["./tests/preload.ts"]
 root = "tests"
 timeout = 20000
 pathIgnorePatterns = ["tests/fixtures/**"]

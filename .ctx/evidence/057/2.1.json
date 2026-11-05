@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-05T13:26:38.217Z",
+  "files": {
+    "src/journal/report.ts": "26605e0f78194e0dd776b1abc8ba6959d01aefeddff1550068089af4e21b458f",
+    "tests/journal/report.test.ts": "48fbd4514d93545e3d85fbf4582e0b1cabd935e3654024e841febc3398060320"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-JRN-004",
+    "REQ-JRN-005"
+  ],
+  "task": "057/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/journal/report.test.ts && npx vitest run tests/journal/report.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 8 pass\n 0 fail\n 30 expect() calls\nRan 8 tests across 1 file. [27.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b110e9dae7d94e0d8962e9f3e4fadd1e8681383774317994f94e0be91551e098"
+  }
+}

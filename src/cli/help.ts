@@ -114,6 +114,11 @@ export const TABLE: CommandHelp[] = [
     exit: PLAIN, example: "specctx stats --write",
   },
   {
+    name: "report", group: "Read", args: "", summary: "Print a bug report from the run journal in .ctx/local. Review it, then file it with `gh issue create`. Write nothing.",
+    flags: [],
+    exit: [OK, ["2", "A usage error."], INTERNAL], example: "specctx report > report.md",
+  },
+  {
     name: "lint tells", group: "Read", args: "<file...>", summary: "Find the AI writing tells in markdown files. Read stdin when no file is given.",
     flags: LINT_FLAGS, exit: LINT_EXIT, example: "specctx lint tells --baseline 0 README.md",
   },

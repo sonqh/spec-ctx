@@ -47,6 +47,12 @@ export function provenance(e: Entry, reason: string): string {
   return `-- ${e.id} | ${e.file}:${e.line} | ${e.status} | ${reason}\n`;
 }
 
+/** REQ-JRN-002 the ID of a provenance line, or null. It anchors on the start of `provenance()` (057/D3). */
+export function parseProvenance(line: string): string | null {
+  const m = /^-- (\S+) \| /.exec(line);
+  return m ? m[1]! : null;
+}
+
 /** REQ-QRY-004 the canonical blocks of requirements, joined by one blank line, with no provenance line. */
 export function reqBlocks(root: string, reqs: Entry[]): string {
   const files = new Lines(root);

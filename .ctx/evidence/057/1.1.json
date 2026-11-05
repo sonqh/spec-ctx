@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-05T13:25:34.734Z",
+  "bundle_chars": 7685,
+  "files": {
+    "src/cli.ts": "a3b2eb8a031874b3e056d87f8e44fd50a3962e8d87829a90b46206a938a255a9",
+    "src/graph/bundle.ts": "2af6877f3eec6bf91bd036933c29c81687b0b141545b42663f8f9f3a8cd52aba",
+    "src/journal/journal.ts": "004bde4c121b528b3ee4d66e382cd22742622703a8dff09b2667549f14789a47",
+    "src/journal/note.ts": "0fe4554214f0c1deaa26669091147caa0990b26ca175e585f1f35d7b641b2707",
+    "src/journal/signals.ts": "723f20dbaba31b54d934b8e4483ae963171d1bcae9cb11f555372980f52e906c",
+    "src/main.ts": "d43c7b5c5e2d61db5ce12b2ee3394590384158a1f8131a3ba2cbde42bd008ebc",
+    "tests/journal/entry.test.ts": "b29e21a9be28c08d0bb38e9594361563873e43ed02ccfbbfce052612faa1015c",
+    "tests/journal/journal.test.ts": "80ce70e83a2d259d70228d20321e64ced1b779ff3f175a7931cd822e4fb2345d",
+    "tests/preload.ts": "0595b3a0e88fbf1def6cf4294bd69df1040a2756cb108a3a60ae0a3d9a1e8358"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-JRN-001",
+    "REQ-JRN-002",
+    "REQ-JRN-003"
+  ],
+  "started_at": "2026-11-05T13:23:09.220Z",
+  "task": "057/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/journal/journal.test.ts tests/journal/entry.test.ts tests/cli tests/gov/ci-parity.test.ts && npx vitest run tests/journal/journal.test.ts tests/journal/entry.test.ts tests/cli/startup.test.ts && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 123 pass\n 0 fail\n 605 expect() calls\nRan 123 tests across 17 files. [4.55s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "c68737521ffa8136cf2a52abf107456cc2174ef4abdb70966829db648b9d84e9"
+  }
+}
