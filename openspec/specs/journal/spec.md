@@ -1,7 +1,7 @@
 # journal Specification
 
 ## Purpose
-TBD - created by archiving change 057-run-journal. Update Purpose after archive.
+The run journal records each spec-ctx run in a project on the local machine. `specctx report` turns the journal into a redacted bug report and computes the north star of ADR-008. The journal holds no repo content and never leaves the machine. See ADR-009.
 
 ## Requirements
 
