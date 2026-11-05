@@ -825,7 +825,10 @@
     "asked_at": "2026-11-05T13:33:21.958Z",
     "task": "057-run-journal",
     "text": "archive 057-run-journal?",
-    "status": "open",
-    "stage": "archive"
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.",
+    "resolved_at": "2026-11-05T13:37:50.785Z"
   }
 ]
