@@ -6,6 +6,7 @@ as_of: none
 done:
 reopened:
 open_questions:
+- Q86 plan ready for 057-run-journal. Approve to start the tasks? (task 057-run-journal, 2026-11-05)
 resolved:
 - Q76 plan ready for 051-try-it. Approve to start the tasks? (task 051-try-it, 2026-11-03) answer: Owner approved 2026-11-03. Add context add-mfa/1.1 to the README block. The try.sh test requires src/login.ts. One manual run against spec-ctx@0.4.1 is enough. Owner also asked to shorten the README: new task 2.2.
 - Q77 archive 051-try-it? (task 051-try-it, 2026-11-03) answer: Owner approved the archive on 2026-11-03.
