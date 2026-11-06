@@ -5,6 +5,7 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     exclude: ["tests/fixtures/**", "**/node_modules/**"],
     environment: "node",
+    setupFiles: ["tests/preload.ts"],
     testTimeout: 20000,
   },
 });

@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-05T13:29:10.623Z",
+  "files": {
+    "src/cli/commands.ts": "4909fec65912dce1287748de134a30e014f108c3145fdbc2e1dc338fd846fd19",
+    "src/journal/report.ts": "26605e0f78194e0dd776b1abc8ba6959d01aefeddff1550068089af4e21b458f",
+    "tests/journal/cli-report.test.ts": "5822a2aa0afcb3a956267d570737556a512296063a498cb0f568856e6445bd9d",
+    "tests/journal/read-rule.test.ts": "803a2c10000d8abfab3cb776e1cb0036e5496d21c5a205f8beb24a2e96a5a0d9",
+    "tests/journal/report.test.ts": "48fbd4514d93545e3d85fbf4582e0b1cabd935e3654024e841febc3398060320"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-JRN-004",
+    "REQ-JRN-005"
+  ],
+  "task": "057/4.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && node dist/cli.js lint tells --baseline 0 README.md docs/verification/057.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md docs/verification/057.md && grep -q \"## Report a bug\" README.md && grep -q \"SPECCTX_JOURNAL=0\" README.md && grep -q \"Change 057-run-journal.\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "ac908eeb0c825082011b8fe5967cfd03908a7737c92d7fb8aedbbd5b5f267240"
+  }
+}

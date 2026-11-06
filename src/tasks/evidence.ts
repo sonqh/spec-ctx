@@ -52,8 +52,9 @@ export function writeEvidence(root: string, t: Task, entries: Entry[], verify: E
   // REQ-STAT-002 copy the bundle size and the start time that task start wrote for this task
   try {
     const cur = JSON.parse(readFileSync(join(root, ".ctx/current.json"), "utf8")) as { task?: string; bundle_chars?: unknown; started_at?: unknown };
-    if (cur.task === t.id) {
-      if (typeof cur.bundle_chars === "number") ev.bundle_chars = cur.bundle_chars;
+    // REQ-LOOP-018 started_at only with bundle_chars, so a window that a failed run opened gives no cycle time (056/D4)
+    if (cur.task === t.id && typeof cur.bundle_chars === "number") {
+      ev.bundle_chars = cur.bundle_chars;
       if (typeof cur.started_at === "string") ev.started_at = cur.started_at;
     }
   } catch {

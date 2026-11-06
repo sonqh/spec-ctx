@@ -789,6 +789,50 @@
   },
   {
     "n": 84,
+    "asked_at": "2026-11-05T08:23:51.103Z",
+    "task": "056-evidence-hygiene",
+    "text": "plan ready for 056-evidence-hygiene. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead after PM and architect reviews, with edits. D2 yes: the lead untracks the 30 committed fail files with git rm --cached at commit. D6 and D7 accepted. D5 redaction: strip a trailing slash from root and home, add the realpath of root, replace the longest path first, match only when the character before is not a letter, digit, dot, underscore, or dash, wrap realpathSync in try/catch, state Windows is out of scope. Add a macOS realpath unit case. D4: add a scenario for current.json that names another task. writeEvidence copies started_at only when bundle_chars is present, so cycle time keeps its meaning. If the current.json write fails, count fail files as before and say so in design. Cut SCN-TASK-008-3. Task 1.1 Verify adds plan-stop, repair-verify, and stats metrics tests. Task 3.1 Verify adds a grep that .ctx/evidence/056 holds no /home/ or /Users/ path.",
+    "resolved_at": "2026-11-05T08:34:45.077Z"
+  },
+  {
+    "n": 85,
+    "asked_at": "2026-11-05T08:51:51.661Z",
+    "task": "056-evidence-hygiene",
+    "text": "archive 056-evidence-hygiene?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect review of the diff: ready to archive, no blocker. ci:local passes 14 steps. Follow-up: a window test for the current.json write failure path.",
+    "resolved_at": "2026-11-05T08:56:35.985Z"
+  },
+  {
+    "n": 86,
+    "asked_at": "2026-11-05T13:16:44.577Z",
+    "task": "057-run-journal",
+    "text": "plan ready for 057-run-journal. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead after PM and architect reviews, with edits. ADR-009 states the owner decisions. Add an ADR-009 pointer to the ADR-008 Consequences line about the 30 day stop, and add to the CLAUDE.md Direction bullet: ADR-007 scope rules and layer 1 priority still apply. D2: keep the fallback for bug intake, but only when main set cmd to ? in the parse error, group, or unknown command branch, and never when argv has --root. lint and help never get it. D3: only context emits context-has-code-or-test, bundle emits none. Export parseProvenance next to provenance in src/graph/bundle.ts, anchored on ^-- (\\S+) \\| , no new BundleResult field. Run contextSignals only when io.journal is set. D4: make frames relative to the package root before the node_modules test, convert file URLs with fileURLToPath, skip stack line 1. D5: the preload stays. Journal-on tests pass SPECCTX_JOURNAL=1 explicitly. Drop the timing assertion in 3.1 and record on and off timing in docs/verification/057.md.",
+    "resolved_at": "2026-11-05T13:21:56.512Z"
+  },
+  {
+    "n": 87,
+    "asked_at": "2026-11-05T13:33:21.958Z",
+    "task": "057-run-journal",
+    "text": "archive 057-run-journal?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.",
+    "resolved_at": "2026-11-05T13:37:50.785Z"
+  },
+  {
+    "n": 88,
     "asked_at": "2026-11-04T02:00:38.965Z",
     "task": "054-recall-benchmark",
     "text": "plan ready for 054-recall-benchmark. Approve to start the tasks?",

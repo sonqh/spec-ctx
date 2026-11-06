@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-05T08:43:11.497Z",
+  "bundle_chars": 8132,
+  "files": {
+    "src/cli/workflow.ts": "c4a0122d14c8b18a8f1db20ac572fb1db71c6f2b8f3d97e77e91aa37b8f1029d",
+    "src/loop/fails.ts": "cc15f0820fb41d3e308be51f7a8a285fc4cd08de7b61521136a1e507a13fc28d",
+    "src/stats/stats.ts": "28a3901ecf30a37b4f353e3a0f45e8874bba6eeb71980dd1cad52a426fc3d060",
+    "src/tasks/evidence.ts": "f48429e953e9e0850467becaaced90a5e9fda5ccac378f5dcf5646a9f2bdbe29",
+    "src/util/redact.ts": "48708945a37453757ea656c83aea818eb47402cf320517fbe1330b4bcf83a18b",
+    "tests/loop/cap-resolve.test.ts": "edbbfe9f90c6901263f6d1bc50f77ecd8d94dee823d0850250ce0fafb372538a",
+    "tests/loop/fail-ignore.test.ts": "f48208792d42218e61262e5c731f5a4a8b22deef1bdab12e2f5adf8985dc837c",
+    "tests/loop/fails.test.ts": "b48835367924b514b832320298f151479aa54e8753a7de52c00cc912f3c58d10",
+    "tests/loop/window.test.ts": "6e71dad909746f3fff4e30be845d2c2a7f922caa59383e99ed01f9fb39786637",
+    "tests/tasks/done.test.ts": "a7396a93102e1776eed23b5b6d8672fafd070ea4c3572117877a98caa372bf26",
+    "tests/tasks/redact.test.ts": "c7f8fcb4c3e21e51d84eceb8cfb49c3af2cda9925328b5525a9f95a74ed843d2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-008",
+    "REQ-LOOP-002"
+  ],
+  "started_at": "2026-11-05T08:41:07.270Z",
+  "task": "056/2.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/redact.test.ts tests/tasks/evidence.test.ts tests/tasks/done.test.ts tests/loop/fails.test.ts && npx vitest run tests/tasks/redact.test.ts tests/tasks/evidence.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 31 pass\n 0 fail\n 154 expect() calls\nRan 31 tests across 4 files. [740.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "a5320dffb8231174d3ee31502d670dcb4ec83e0bc6e8a75529830a7f9fac9d8d"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-05T08:41:01.108Z",
+  "bundle_chars": 7670,
+  "files": {
+    "src/loop/fails.ts": "cc15f0820fb41d3e308be51f7a8a285fc4cd08de7b61521136a1e507a13fc28d",
+    "src/tasks/evidence.ts": "f48429e953e9e0850467becaaced90a5e9fda5ccac378f5dcf5646a9f2bdbe29",
+    "tests/loop/fail-ignore.test.ts": "f48208792d42218e61262e5c731f5a4a8b22deef1bdab12e2f5adf8985dc837c",
+    "tests/loop/fails.test.ts": "b48835367924b514b832320298f151479aa54e8753a7de52c00cc912f3c58d10",
+    "tests/loop/window.test.ts": "6e71dad909746f3fff4e30be845d2c2a7f922caa59383e99ed01f9fb39786637"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-LOOP-018",
+    "REQ-LOOP-017"
+  ],
+  "started_at": "2026-11-05T08:37:35.862Z",
+  "task": "056/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/loop/window.test.ts tests/loop/fail-ignore.test.ts tests/loop/fails.test.ts tests/loop/next.test.ts tests/loop/stale.test.ts tests/loop/cap-resolve.test.ts tests/loop/fail-reason.test.ts tests/loop/plan-stop.test.ts tests/loop/repair-verify.test.ts tests/stats/metrics.test.ts tests/tasks/done.test.ts && npx vitest run tests/loop/window.test.ts tests/loop/fail-ignore.test.ts tests/loop/fails.test.ts tests/tasks/done.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 73 pass\n 0 fail\n 638 expect() calls\nRan 73 tests across 11 files. [2.77s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "debcd5f5c6e0fc8b18245d95ee7c1de70392c97a2be66ca8507bc8c8d33c8850"
+  }
+}

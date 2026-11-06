@@ -15,6 +15,7 @@ Read:
   `task next`                  Show the next open task.
   `task verify <task>`         Run the `Verify:` command of a task. Write nothing.
   `stats`                      Show five metrics for each change and the gate runs.
+  `report`                     Print a bug report from the run journal in .ctx/local. Review it, then file it with `gh issue create`. Write nothing.
   `lint tells <file...>`       Find the AI writing tells in markdown files. Read stdin when no file is given.
   `lint ste <file...>`         Find the breaks of the structural STE rules in markdown files. Read stdin when no file is given.
 

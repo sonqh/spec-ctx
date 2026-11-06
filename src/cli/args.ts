@@ -16,6 +16,7 @@ export const COMMAND_FLAGS: Record<string, FlagSpec> = {
   bundle: { budget: "int", depth: "int", all: "bool", block: "bool" },
   context: { budget: "int", depth: "int" },
   check: { strict: "bool" },
+  report: {},
   stats: { change: "string", write: "bool" },
   gate: { strict: "bool", markdown: "string", rerun: "bool", base: "string" },
   "id new": { for: "string", count: "int" },

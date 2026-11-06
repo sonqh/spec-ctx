@@ -1,6 +1,6 @@
 // Covers: REQ-LOOP-002, REQ-TASK-003, REQ-HND-002
 import { afterEach, describe, expect, test } from "vitest";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, rmSync } from "node:fs";
 import { Project } from "../helpers.ts";
 
 let p: Project;
@@ -81,19 +81,22 @@ describe("fail files", () => {
     expect(qs[0].text).toBe("task 002/2.2 failed Verify 3 times. Last: FAIL two. What should change?");
   });
 
-  test("SCN-LOOP-002-3 fail files before task start do not count, a resolve resets, and no current.json counts all", async () => {
+  test("SCN-LOOP-002-3 fail files before task start do not count, a resolve resets, and without current.json no earlier fail file counts", async () => {
     p = setup();
-    // two failures with no current task
+    // two fail files from another clone, and no current task
+    for (const n of [1, 2]) {
+      p.write(`.ctx/evidence/002/2.2.fail-${n}.json`, JSON.stringify({ at: `2026-10-0${n}T00:00:00.000Z`, attempt: n, stderr_tail: "bad", task: "002/2.2", verify: { command: "x", exit: 1 } }) + "\n");
+    }
     process.env.SPECCTX_NOW = "2026-10-28T10:00:00.000Z";
     expect(JSON.parse((await p.run("task", "done", "002/2.2", "--json")).out).attempt).toBe(1);
-    expect(JSON.parse((await p.run("task", "done", "002/2.2", "--json")).out).attempt).toBe(2);
+    rmSync(p.path(".ctx/current.json"));
     // task start opens a new window, and the file name keeps counting
     process.env.SPECCTX_NOW = "2026-10-28T11:00:00.000Z";
     await p.run("task", "start", "002/2.2");
     process.env.SPECCTX_NOW = "2026-10-28T11:01:00.000Z";
     const r = JSON.parse((await p.run("task", "done", "002/2.2", "--json")).out);
     expect(r.attempt).toBe(1);
-    expect(r.fail).toBe(".ctx/evidence/002/2.2.fail-3.json");
+    expect(r.fail).toBe(".ctx/evidence/002/2.2.fail-4.json");
     // reach the cap, resolve, and the next failure is attempt 1 again
     process.env.SPECCTX_NOW = "2026-10-28T11:02:00.000Z";
     await p.run("task", "done", "002/2.2");
@@ -119,7 +122,9 @@ describe("fail files", () => {
     expect(s.rows.find((r: { change: string }) => r.change === "002-t")).toBeUndefined();
     const h = await p.run("handoff", "write");
     expect(h.code).toBe(0);
-    expect(p.read(".ctx/handoff.md")).not.toContain("2.2");
+    // REQ-LOOP-018 the failed run opened the window, so 2.2 is the current task, never done (056/D4)
+    expect(p.read(".ctx/handoff.md")).toContain("current: 002/2.2\n");
+    expect(p.read(".ctx/handoff.md").replace("current: 002/2.2\n", "")).not.toContain("2.2");
     // a passing run writes the evidence and keeps the fail file
     p.write(TASKS, BODY.replace("Verify: `echo first && echo bad && exit 1`", "Verify: `true`"));
     p.touchForward(TASKS);
