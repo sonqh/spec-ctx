@@ -235,7 +235,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0161 (n=156) | 0.94 (262/278) | 68 (of 126 reopens) | 61 (n=156) | 0 (0 baselined + 0 new) |
+| total | 0.0161 (n=159) | 0.94 (262/278) | 68 (of 131 reopens) | 54 (n=159) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.
