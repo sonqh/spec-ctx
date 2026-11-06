@@ -960,5 +960,16 @@
     "verdict": "approved",
     "answer": "Approved by the lead on 2026-11-07, same grounds as Q97. Every task has fresh evidence after the lead's fixes.",
     "resolved_at": "2026-11-06T17:21:30.885Z"
+  },
+  {
+    "n": 100,
+    "asked_at": "2026-11-06T18:13:43.273Z",
+    "task": "061-one-path",
+    "text": "plan ready for 061-one-path. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-07 after PM and architect reviews, with edits. (1) Add MODIFIED REQ-CLI-007: drop init from the fixed-table sentence, say init follows REQ-DIST-017; cite it in task 2.1. (2) Add MODIFIED REQ-ADOPT-006: the existing path is init --all, adopt, context <task>, then baseline write as the gate step; cite it in task 4.1. (3) Keep the subject rule in the adopt line: 'To gate the old debt later, run <run> baseline write and commit it with a subject that starts with baseline:'. (4) Cut files and caps from init --json; needs_id and next only. (5) D1 blocker: buildIndex always writes .ctx/index.json, so there is no in-memory build. Use loadIndex(root, cfg) in init and in the adopt tail, and rewrite D1 and the test to say init may write the gitignored .ctx/index.json. (6) Narrow the fallback to UsageExit and ConfigError so a TypeError still surfaces. (7) Do not claim the first open task equals what next picks; say it is nextTask's deterministic pick by file and line in the lowest active change. (8) Name tests/init/run-key.test.ts (lines 42 and 63 assert the old status tail) in task 2.1. (9) Task 5.1 times init on the OpenSpec fork fixture too (clone sonqh/OpenSpec-spec-ctx at 8899171), not only on this repo.",
+    "resolved_at": "2026-11-06T18:15:40.486Z"
   }
 ]
