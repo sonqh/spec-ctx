@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-06T15:00:12.696Z",
+  "files": {
+    "tests/stat/recall.test.ts": "6a0e45e2ee89e379baeaf96595578f2c3465de8fe29fcf1f22694382e9cc9f9a"
+  },
+  "kind": "command",
+  "reason": "\\",
+  "reqs": [
+    "REQ-STAT-006"
+  ],
+  "task": "054/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "node scripts/recall.mjs --labels bench/recall/spec-ctx.json --root . --check",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "8eb47408d0124a25c2071045a8c598a25c0a9c2010426f8bd157a38e9ca342cd"
+  }
+}
