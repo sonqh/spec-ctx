@@ -44,7 +44,7 @@
 
 ## Owner decisions at the plan stop
 
-- The fixture candidates are done tasks of archived fixture changes, as on this repo. Their commits show the real files. The open tasks get no file labels, because their code does not exist yet. Change D counts its own acceptance on the open tasks.
+- The plan stop set archived fixture tasks as candidates. The revision below replaced that. The fixture candidates are open tasks. They get a file label only when the task text names the file. Change D counts its own acceptance on these open tasks.
 - Revised on 2026-11-06 by the lead, under the authority the owner gave: the fixture candidates are open tasks, as D5 now says. The archived fixture tasks have no requirement ID to recall, so their recall would sit near 0 and no later change could move it. A file label on an open task needs the task text to name the file.
 - The fixture runs as committed. D and F are measured against the same frozen state. Change E is measured by the north star, not by this benchmark.
 

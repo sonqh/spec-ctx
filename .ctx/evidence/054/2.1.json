@@ -1,12 +1,14 @@
 {
-  "at": "2026-11-06T15:00:12.696Z",
+  "at": "2026-11-06T15:12:11.271Z",
+  "bundle_chars": 7538,
   "files": {
-    "tests/stat/recall.test.ts": "6a0e45e2ee89e379baeaf96595578f2c3465de8fe29fcf1f22694382e9cc9f9a"
+    "tests/stat/recall.test.ts": "16aa904c76ad3864cef7da08e51d005041a18e60c3de1b06754e50367b19adc4"
   },
   "kind": "command",
   "reqs": [
     "REQ-STAT-006"
   ],
+  "started_at": "2026-11-06T15:12:10.727Z",
   "task": "054/2.1",
   "tool_version": "0.5.0",
   "verify": {

@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-06T15:12:17.705Z",
+  "bundle_chars": 7981,
+  "files": {
+    "tests/stat/recall.test.ts": "16aa904c76ad3864cef7da08e51d005041a18e60c3de1b06754e50367b19adc4"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-006"
+  ],
+  "started_at": "2026-11-06T15:12:14.421Z",
+  "task": "054/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && ls docs/metrics/recall-*.json && grep -q \"same recall, same misses\" docs/verification/054.md && node dist/cli.js lint tells --baseline 0 docs/verification/054.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/054.md && grep -q \"Change 054-recall-benchmark.\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs",
+    "stdout_sha256": "eeff9df4c0958ed5aebd711e44cf5bef2cd637c1d5fe6cb32a6a27a784aeefb3"
+  }
+}

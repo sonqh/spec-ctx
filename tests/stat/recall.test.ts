@@ -180,15 +180,29 @@ describe("scripts/recall.mjs", () => {
       { task: "004/1.1", reqs: ["REQ-AAA-001"], code: [], tests: [], note: "the task text names it" },
       { task: "004/1.3", reqs: ["REQ-AAA-002"], code: [], tests: [], note: "the task text names it" },
     ];
-    const ok = run("--labels", labels(root, open, { changes: undefined, candidates: "open", seed: 7 }, "open.json"), "--root", root, "--check");
+    const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout.trim();
+    const noCommit = run("--labels", labels(root, open, { changes: undefined, candidates: "open", seed: 7 }, "open-nocommit.json"), "--check-schema");
+    expect(noCommit.code).toBe(2);
+    expect(noCommit.err).toContain("candidates open needs the field commit");
+    const ok = run("--labels", labels(root, open, { changes: undefined, candidates: "open", seed: 7, commit: head }, "open.json"), "--root", root, "--check");
     expect(ok.code, ok.err).toBe(0);
     expect(ok.out).toContain("check ok: open.json");
-    const archived = run("--labels", labels(root, [T11, T12], { changes: undefined, candidates: "open" }, "open-bad.json"), "--root", root, "--check");
+    const archived = run("--labels", labels(root, [T11, T12], { changes: undefined, candidates: "open", commit: head }, "open-bad.json"), "--root", root, "--check");
     expect(archived.code).toBe(2);
     expect(archived.err).toContain("004/1.1, 004/1.3");
     const bad = run("--root", root, "--sample", "2", "--seed", "7", "--candidates", "all");
     expect(bad.code).toBe(2);
     expect(bad.err).toContain("archived or open");
+  }, TEST_MS);
+
+  test("SCN-STAT-006-5 a shallow clone fails the archived sample", () => {
+    const root = project();
+    const shallow = join(root, "..", "shallow-" + Date.now());
+    const c = spawnSync("git", ["clone", "--quiet", "--depth", "1", "file://" + root, shallow], { encoding: "utf8" });
+    expect(c.status, c.stderr).toBe(0);
+    const r = run("--root", shallow, "--sample", "2", "--seed", "7");
+    expect(r.code).toBe(2);
+    expect(r.err).toContain("shallow clone");
   }, TEST_MS);
 
   test("SCN-STAT-006-1 recall.sh prints its usage and runs no clone with --help", () => {

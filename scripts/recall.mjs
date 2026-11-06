@@ -158,6 +158,7 @@ function checkSchema(file) {
   if (d.commit !== undefined && typeof d.commit !== "string") fail(`${name}: the field commit must be a string`);
   if (d.changes !== undefined && !isStrings(d.changes)) fail(`${name}: the field changes must be a list of strings`);
   if (d.candidates !== undefined && !CANDIDATES.includes(d.candidates)) fail(`${name}: the field candidates must be archived or open`);
+  if (d.candidates === "open" && typeof d.commit !== "string") fail(`${name}: candidates open needs the field commit. The open tasks change as the project moves on`);
   if (!Array.isArray(d.tasks) || d.tasks.length === 0) fail(`${name}: the field tasks must be a list that is not empty`);
   for (const t of d.tasks) {
     if (typeof t.task !== "string") fail(`${name}: a task misses the field task`);

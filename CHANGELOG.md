@@ -2,6 +2,10 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+Change 054-recall-benchmark. A new script, `scripts/recall.sh`, measures how many expected entries a `context <task>` prints within 8,000 characters. It runs on this repo and on a frozen clone of `sonqh/OpenSpec-spec-ctx`. It reads 20 hand labelled tasks per repo from `bench/recall/` and writes a Markdown and a JSON report to `docs/metrics/`. It adds no CLI command and no runtime dependency. The first baseline is in `docs/metrics/recall-2026-11-06.md`. New REQ-STAT-006.
+
 ## 0.5.0
 
 ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. The owner accepted it on 2026-11-04.
