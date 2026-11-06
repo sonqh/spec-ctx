@@ -21,7 +21,7 @@ Read:
 
 Write:
   `build`                      Write the index to .ctx/index.json.
-  `id new <kind> <code>`       Print the next free ID. The kind is REQ, SCN, ADR, or DEC.
+  `id new <kind> <code>`       Print the next free ID. The kind is REQ, SCN, ADR, or DEC. A second call before `build` prints the same ID.
   `id retire <ID> <reason>`    Add an ID to decisions/retired-ids.md.
   `task start <task>`          Print the bundle of a task and set it as the current task.
   `task done <task>`           Run the `Verify:` command. On success, write the evidence and set the checkbox.
@@ -61,7 +61,7 @@ Command flags:
   `stats --change <name>`      Show only this change.
   `stats --write`              Also write docs/metrics/<date>.md.
   `id new --for <REQ-ID>`      Give the requirement of a new scenario.
-  `id new --count <n>`         Print n IDs in sequence.
+  `id new --count <n>`         Print n IDs in sequence. Use it to get several IDs before `build`.
   `task done --manual <note>`  Record a manual note. A task with no `Verify:` command needs this flag.
   `handoff ask --change <name>`
                                Give the question to this change, not to the current task. The key or the full folder name works.

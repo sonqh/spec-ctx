@@ -1,4 +1,4 @@
-// Covers: REQ-SKL-005, REQ-SKL-006
+// Covers: REQ-SKL-005, REQ-SKL-006, REQ-IDS-006
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
@@ -15,6 +15,11 @@ describe("specctx-run overrides", () => {
   test("SCN-SKL-005-2 the gate bullet routes stale evidence to repair", () => {
     const bullet = text.split("\n").find((l) => l.startsWith("- `gate`"))!;
     for (const s of ["stale-evidence", "step 1", "repair"]) expect(bullet, s).toContain(s);
+  });
+
+  test("SCN-IDS-006-2 the plan item says a repeat call returns the same ID and names --count", () => {
+    const plan = text.split("\n").find((l) => l.startsWith("- `plan`"))!;
+    for (const s of ["A second call before `specctx build` returns the same ID", "specctx id new --count <n>"]) expect(plan, s).toContain(s);
   });
 
   test("SCN-SKL-005-3 the packaged copy equals the file", () => {

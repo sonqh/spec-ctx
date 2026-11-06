@@ -116,7 +116,7 @@ export const TABLE: CommandHelp[] = [
   {
     name: "report", group: "Read", args: "", summary: "Print a bug report from the run journal in .ctx/local. Review it, then file it with `gh issue create`. Write nothing.",
     flags: [],
-    exit: [OK, ["2", "A usage error."], INTERNAL], example: "specctx report > report.md",
+    exit: [OK, ["2", "A usage error. The command has no JSON output."], INTERNAL], example: "specctx report > report.md",
   },
   {
     name: "lint tells", group: "Read", args: "<file...>", summary: "Find the AI writing tells in markdown files. Read stdin when no file is given.",
@@ -129,8 +129,8 @@ export const TABLE: CommandHelp[] = [
   // Write
   { name: "build", group: "Write", args: "", summary: "Write the index to .ctx/index.json.", flags: [], exit: PLAIN, example: "specctx build" },
   {
-    name: "id new", group: "Write", args: "<kind> <code>", summary: "Print the next free ID. The kind is REQ, SCN, ADR, or DEC.",
-    flags: [["--for <REQ-ID>", "Give the requirement of a new scenario."], ["--count <n>", "Print n IDs in sequence."]],
+    name: "id new", group: "Write", args: "<kind> <code>", summary: "Print the next free ID. The kind is REQ, SCN, ADR, or DEC. A second call before `build` prints the same ID.",
+    flags: [["--for <REQ-ID>", "Give the requirement of a new scenario."], ["--count <n>", "Print n IDs in sequence. Use it to get several IDs before `build`."]],
     exit: [OK, ["2", "A usage error or an unknown code."], INTERNAL], example: "specctx id new REQ IDX",
   },
   {
@@ -234,7 +234,9 @@ export const HELP = overview();
 /** REQ-CLI-006 the page of one command: Usage, Flags, Exit codes, Example. */
 export function commandPage(c: CommandHelp): string {
   const lint = c.name.startsWith("lint ");
-  const flags = lint ? c.flags : [...c.flags, ...GLOBAL];
+  // REQ-JRN-008 the report page lists no --json, because report has no JSON output
+  const global = c.name === "report" ? GLOBAL.filter(([f]) => f !== "--json") : GLOBAL;
+  const flags = lint ? c.flags : [...c.flags, ...global];
   const out = [
     `specctx ${c.name}: ${c.summary}`,
     "",
