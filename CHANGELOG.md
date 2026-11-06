@@ -2,7 +2,7 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
-## Unreleased
+## 0.5.0
 
 ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. The owner accepted it on 2026-11-04.
 
