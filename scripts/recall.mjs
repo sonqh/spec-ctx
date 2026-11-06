@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// REQ-STAT-006 the recall benchmark of ADR-007 item 6 (change 054).
+// REQ-STAT-006 REQ-STAT-007 the recall benchmark of ADR-007 item 6 (change 054).
 // It runs `context <task>` of this repository's dist/cli.js once per labelled task and compares the printed entries with the labels.
 // Node APIs only (ADR-001). See openspec/changes/archive/*-054-recall-benchmark/design.md for D1 to D10.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -194,7 +194,10 @@ async function checkAgainst(file, d, root) {
   return head;
 }
 
-/** 054/D2 the header lines of the text: [id, path]. The truncated line never matches. */
+/**
+ * 054/D2 the header lines of the text. The truncated line never matches.
+ * REQ-STAT-007 a header also says if its line ends with the marker and if it is a `named by` card (060/D7).
+ */
 function headers(text) {
   const out = [];
   for (const line of text.split("\n")) {
@@ -202,7 +205,7 @@ function headers(text) {
     const f = line.slice(3).split(" | ");
     const loc = f[1] ?? "";
     const at = loc.lastIndexOf(":");
-    out.push([f[0], at < 0 ? loc : loc.slice(0, at)]);
+    out.push({ id: f[0], path: at < 0 ? loc : loc.slice(0, at), marked: line.endsWith(" | body omitted"), named: (f[3] ?? "").startsWith("named by "), reason: f[3] ?? "" });
   }
   return out;
 }
@@ -237,12 +240,17 @@ function score(file, d, root, head, runs) {
   const perTask = [];
   const labels = { total: 0, reqs: 0, code: 0, tests: 0 };
   const matched = { total: 0, reqs: 0, code: 0, tests: 0 };
+  // REQ-STAT-007 the matches whose header ends with the marker, and the matches that need no `named by` card
+  const cardOnly = { total: 0, reqs: 0, code: 0, tests: 0 };
+  const unnamed = { total: 0, reqs: 0, code: 0, tests: 0 };
+  let citedBodyLost = 0;
   context(root, d.tasks[0].task, d.budget); // warm-up
   for (const t of d.tasks) {
     const { json } = context(root, t.task, d.budget);
     const h = headers(json.text);
-    const ids = new Set(h.map(([id]) => id));
-    const paths = new Set(h.map(([, p]) => p));
+    // a cited requirement of this task whose card lost its body
+    const lost = h.filter((x) => x.marked && x.reason === `ref from ${t.task}`).length;
+    citedBodyLost += lost;
     const misses = [];
     let hit = 0;
     let all = 0;
@@ -251,14 +259,23 @@ function score(file, d, root, head, runs) {
         all++;
         labels.total++;
         labels[k]++;
-        if (k === "reqs" ? ids.has(label) : paths.has(label)) {
+        const found = h.filter((x) => (k === "reqs" ? x.id === label : x.path === label));
+        if (found.length) {
           hit++;
           matched.total++;
           matched[k]++;
+          if (found.every((x) => x.marked)) {
+            cardOnly.total++;
+            cardOnly[k]++;
+          }
+          if (found.some((x) => !x.named)) {
+            unnamed.total++;
+            unnamed[k]++;
+          }
         } else misses.push(label);
       }
     for (let i = 0; i < runs; i++) timed.push(context(root, t.task, d.budget).ms);
-    perTask.push({ task: t.task, chars: json.chars, matched: hit, total: all, misses });
+    perTask.push({ task: t.task, chars: json.chars, matched: hit, total: all, cited_body_lost: lost, misses });
   }
   const chars = perTask.map((t) => t.chars);
   return {
@@ -272,6 +289,11 @@ function score(file, d, root, head, runs) {
     matched,
     recall: ratio(matched.total, labels.total),
     recall_by_kind: Object.fromEntries(KINDS.map((k) => [k, ratio(matched[k], labels[k])])),
+    card_only: cardOnly,
+    cited_body_lost: citedBodyLost,
+    matched_without_named: unnamed,
+    recall_without_named: ratio(unnamed.total, labels.total),
+    recall_without_named_by_kind: Object.fromEntries(KINDS.map((k) => [k, ratio(unnamed[k], labels[k])])),
     complete: perTask.filter((t) => t.misses.length === 0).length,
     chars: { median: median(chars), max: Math.max(...chars) },
     runs,
@@ -291,11 +313,13 @@ function markdown(r) {
     out.push(`## ${x.repo}`, "");
     out.push(`- Root commit: ${x.root_commit}. Labels: \`${x.labels_file}\`, sha256 ${x.labels_sha256}.`);
     out.push(`- Budget: ${x.budget} chars. Timed runs per task: ${x.runs}.`, "");
-    out.push("| recall | reqs | code | tests | complete tasks | labels | median chars | max chars | p95 ms |");
-    out.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+    out.push("| recall | reqs | code | tests | card_only | complete tasks | labels | median chars | max chars | p95 ms |");
+    out.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+    const co = x.card_only;
     out.push(
-      `| ${show(x.recall)} (${x.matched.total}/${x.labels.total}) | ${show(x.recall_by_kind.reqs)} (${x.matched.reqs}/${x.labels.reqs}) | ${show(x.recall_by_kind.code)} (${x.matched.code}/${x.labels.code}) | ${show(x.recall_by_kind.tests)} (${x.matched.tests}/${x.labels.tests}) | ${x.complete} of ${x.tasks} | ${x.labels.total} | ${x.chars.median} | ${x.chars.max} | ${x.p95_ms} |`,
+      `| ${show(x.recall)} (${x.matched.total}/${x.labels.total}) | ${show(x.recall_by_kind.reqs)} (${x.matched.reqs}/${x.labels.reqs}) | ${show(x.recall_by_kind.code)} (${x.matched.code}/${x.labels.code}) | ${show(x.recall_by_kind.tests)} (${x.matched.tests}/${x.labels.tests}) | ${co.total} (reqs ${co.reqs}, code ${co.code}, tests ${co.tests}) | ${x.complete} of ${x.tasks} | ${x.labels.total} | ${x.chars.median} | ${x.chars.max} | ${x.p95_ms} |`,
     );
+    out.push("", `Without the \`named by\` cards: recall ${show(x.recall_without_named)} (${x.matched_without_named.total}/${x.labels.total}), code ${show(x.recall_without_named_by_kind.code)}, tests ${show(x.recall_without_named_by_kind.tests)}. Cited requirements that lost their body: ${x.cited_body_lost}.`);
     out.push("", "| task | matched | chars | misses |", "| --- | --- | --- | --- |");
     for (const t of x.per_task) out.push(`| ${t.task} | ${t.matched} of ${t.total} | ${t.chars} | ${t.misses.length ? t.misses.map((m) => `\`${m}\``).join(", ") : "none"} |`);
     out.push("");

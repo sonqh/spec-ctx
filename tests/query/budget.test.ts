@@ -34,9 +34,10 @@ describe("budget order", () => {
     const b = JSON.parse(r.out) as { text: string; omitted: string[] };
     const h = heads(b.text);
     for (const f of ["src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"]) expect(h).toContain(f);
-    expect(b.omitted.length).toBeGreaterThan(0);
-    expect(b.omitted.every((i) => /^\d+\/\d/.test(i) || i.startsWith("REQ-"))).toBe(true);
-    expect(b.omitted.some((i) => /^\d+\/\d/.test(i))).toBe(true);
+    // REQ-QRY-020 a neighbor prints its card or is in the omitted list, so no neighbor vanishes
+    const b2 = b as { text: string; omitted: string[]; body_omitted: string[] };
+    for (const id of ["REQ-TH-002", "009/1.1"]) expect(heads(b.text).includes(id) || b.omitted.includes(id), id).toBe(true);
+    expect(b2.body_omitted.length + b.omitted.length).toBeGreaterThan(0);
   });
 
   test("SCN-QRY-012-2 this repository, on a temp copy", async () => {

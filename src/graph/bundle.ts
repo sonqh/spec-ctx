@@ -1,5 +1,6 @@
 // REQ-QRY-003 canonical text with one provenance line per block, in a fixed order, within a budget.
-import { join } from "node:path";
+import { statSync } from "node:fs";
+import { isAbsolute, join, normalize } from "node:path";
 import { canon, poolOf } from "../index/canonical.ts";
 import { blockRange, readText } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
@@ -59,10 +60,13 @@ export function reqBlocks(root: string, reqs: Entry[]): string {
   return reqs.map((e) => blockText(e, files)).join("\n");
 }
 
-// REQ-QRY-019 the completeness fields. complete says that no block dropped, not that the text fits.
+// REQ-QRY-019 the completeness fields. complete says that no card and no body dropped, not that the text fits.
 export interface BundleResult {
   text: string;
+  /** The IDs that lost their card, in print order. */
   omitted: string[];
+  /** REQ-QRY-020 the IDs whose card ends with the marker, in print order. */
+  body_omitted: string[];
   /** The code point length of text, with the trailer lines. */
   chars: number;
   /** null in block mode, where no budget applies (050/D6). */
@@ -187,29 +191,119 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
     if (m) blocks.push([m, `main version of ${r2}`, cls]);
   }
   const files = new Lines(root);
-  const texts = blocks.map(([e, reason]) => {
+  // REQ-QRY-020 one state per block: 0 none, 1 card, 2 full. The fill sets it and the output reads it in print order.
+  const blk: Blk[] = blocks.map(([e, reason, cls]) => {
     const body = blockText(e, files);
-    // a blank line closes a block with a body. Code and test paths stay one line each.
-    return provenance(e, reason) + body + (body ? "\n" : "");
+    return { id: e.id, head: provenance(e, reason), body: body ? body + "\n" : "", cls, st: 0 };
   });
-  // REQ-QRY-018 the blocks of the first loop always stay: each requested block and the main version of a requested ID (050/D2, 050/D3)
-  const keep = blocks.map((_, k) => k < pinned);
-  let used = 0;
-  for (let k = 0; k < pinned; k++) used += cpLen(texts[k]!);
-  // fill the budget class by class, in print order inside a class, and skip a block that does not fit
-  for (let cls = 0; cls <= 3; cls++) {
-    for (let k = pinned; k < blocks.length; k++) {
-      if (blocks[k]![2] !== cls) continue;
-      const n = cpLen(texts[k]!);
-      if (used + n > budget) continue;
-      keep[k] = true;
-      used += n;
+  // REQ-QRY-021 the files that a requested task names, as class 1 cards after the code and test lines (060/D4)
+  const named: Blk[] = [];
+  if (depth >= 1) {
+    const taken = new Set(blocks.filter(([e]) => e.kind === "code" || e.kind === "test").map(([e]) => e.file));
+    for (const t of wanted) {
+      const te = ids.get(t);
+      if (te?.kind !== "task") continue;
+      for (const path of te.paths ?? []) {
+        if (taken.has(path) || !isFile(root, path)) continue;
+        taken.add(path);
+        named.push({ id: path, head: `-- ${path} | ${path} | active | named by ${t}\n`, body: "", cls: 1, st: 0 });
+      }
     }
   }
-  const omitted = blocks.filter((_, k) => !keep[k]).map(([e]) => e.id);
-  let text = texts.filter((_, k) => keep[k]).join("");
+  // the pinned blocks can hold a change, whose rank is above test, so the search starts after them
+  let at = blocks.findIndex(([e], k) => k >= pinned && (KIND_RANK[e.kind] ?? 9) > KIND_RANK.test!);
+  if (at < 0) at = blk.length;
+  blk.splice(Math.max(at, pinned), 0, ...named);
+  // REQ-QRY-018 the pinned blocks always stay, with their bodies (050/D2, 050/D3)
+  for (let k = 0; k < pinned; k++) blk[k]!.st = 2;
+  let used = 0;
+  for (let k = 0; k < pinned; k++) used += cpLen(render(blk[k]!));
+  const cost = (b: Blk, st: number): number => cpLen(renderAs(b, st));
+  // fill in five steps, in print order inside each: cards of class 0, cards of class 1, bodies of class 0, cards of class 2, bodies of class 2
+  const cards = (cls: number): void => {
+    for (let k = pinned; k < blk.length; k++) {
+      const b = blk[k]!;
+      if (b.cls !== cls || b.st) continue;
+      const st = b.body ? 1 : 2;
+      const n = cost(b, st);
+      if (used + n > budget) continue;
+      b.st = st;
+      used += n;
+    }
+  };
+  const bodies = (cls: number): void => {
+    for (let k = pinned; k < blk.length; k++) {
+      const b = blk[k]!;
+      if (b.cls !== cls || b.st !== 1) continue;
+      const d = cost(b, 2) - cost(b, 1);
+      if (used + d > budget) continue;
+      b.st = 2;
+      used += d;
+    }
+  };
+  cards(0);
+  cards(1);
+  bodies(0);
+  cards(2);
+  bodies(2);
+  // class 3 fills as a whole block
+  for (let k = pinned; k < blk.length; k++) {
+    const b = blk[k]!;
+    if (b.cls !== 3) continue;
+    const n = cost(b, 2);
+    if (used + n > budget) continue;
+    b.st = 2;
+    used += n;
+  }
+  const omitted = blk.filter((b) => !b.st).map((b) => b.id);
+  const bodyOmitted = blk.filter((b) => b.st === 1).map((b) => b.id);
+  // REQ-QRY-022 the note of the first requested task with no requirement that the index holds. It prints after the pinned blocks.
+  let note = "";
+  if (depth >= 1) {
+    const t = wanted.find((w) => {
+      const te = ids.get(w);
+      return te?.kind === "task" && !te.refs.some((x) => ids.get(x)?.kind === "req");
+    });
+    if (t) note = `note: ${t} cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.\n`;
+  }
+  const out = blk.map((b) => render(b));
+  let text = out.slice(0, pinned).join("") + note + out.slice(pinned).join("");
+  // the budget counts the blocks, so the figure of the over budget line is their length
+  used = out.reduce((n, x) => n + cpLen(x), 0);
   if (omitted.length) text += `truncated: ${omitted.length} entries omitted: ${omitted.join(", ")}\n`;
   // REQ-QRY-018 the over budget line goes last, so the 0.4.1 output stays a prefix (050/D4)
   if (used > budget) text += `over budget: ${used} of ${budget} characters\n`;
-  return { text, omitted, chars: cpLen(text), budget, complete: omitted.length === 0 };
+  return { text, omitted, body_omitted: bodyOmitted, chars: cpLen(text), budget, complete: omitted.length === 0 && bodyOmitted.length === 0 };
+}
+
+/** REQ-QRY-020 a block with its head, its body, and its state: 0 none, 1 card, 2 full. */
+interface Blk {
+  id: string;
+  head: string;
+  body: string;
+  cls: number;
+  st: number;
+}
+
+const MARKER = " | body omitted";
+
+function renderAs(b: Blk, st: number): string {
+  if (st === 0) return "";
+  if (st === 1 && b.body) return b.head.slice(0, -1) + MARKER + "\n";
+  return b.head + b.body;
+}
+
+function render(b: Blk): string {
+  return renderAs(b, b.st);
+}
+
+/** REQ-QRY-021 true when the path is a file under the root. */
+function isFile(root: string, path: string): boolean {
+  const n = normalize(path);
+  if (isAbsolute(n) || n.startsWith("..")) return false;
+  try {
+    return statSync(join(root, n)).isFile();
+  } catch {
+    return false;
+  }
 }

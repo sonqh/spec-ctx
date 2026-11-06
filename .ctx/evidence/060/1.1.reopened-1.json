@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-06T16:04:45.611Z",
+  "bundle_chars": 7802,
+  "files": {
+    "src/graph/files.ts": "cfd765ddd6b1dddee3b548bac53acf768a1ea3efdfa150ee60a44ad058e4b866",
+    "src/index/scan.ts": "433cf47b70011a4e1d5af811453b8a77cbbf82c42a2ea232b4cf920bae91ac11",
+    "src/index/types.ts": "0b80da4b3c355d589379a567dde53155af229e73bda57b8daf459342ccc68902",
+    "tests/index/taskpaths.test.ts": "a77ac191125e225fcb75ceb8b1bcba2144588bde68db473924067503d27f807f",
+    "tests/query/file-edges.test.ts": "bee3a8e939cf611b9022c46397529bf5ce09e8f8d20aedb8abab58bdc3292872",
+    "tests/query/file-mentions.test.ts": "e8f07ba2166c758749cb66dbaaf1c3eee64f5eed1e98a356855d1d3189d7f290"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/graph/files.ts",
+  "reqs": [
+    "REQ-IDX-009",
+    "REQ-QRY-021",
+    "REQ-QRY-006"
+  ],
+  "started_at": "2026-11-06T16:03:56.415Z",
+  "task": "060/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/index tests/query && npx vitest run tests/index/taskpaths.test.ts tests/query/file-mentions.test.ts && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 156 pass\n 0 fail\n 927 expect() calls\nRan 156 tests across 24 files. [2.29s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "0b18888ae74dae74ac9fdf5b8d592aa82325056ff2d99d549d1fab6a05f4ff51"
+  }
+}

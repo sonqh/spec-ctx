@@ -26,13 +26,13 @@ Refs: REQ-QRY-003, REQ-QRY-012, REQ-QRY-018
 - **THEN** no card ends with the marker, and the output has no `truncated:` line
 
 ### Requirement: REQ-QRY-021 Task named paths
-For a requested task at depth 1 or more, `bundle` SHALL print one class 1 card for each path in `paths` of the task. The reason is `named by <task>`. These cards print before the `implements` and `covers` lines. A path that is no file, or that already has a line in the output, prints no card. `related` of a file SHALL list only tasks of active changes as `mentions`.
+For a requested task at depth 1 or more, `bundle` SHALL print one class 1 card for each path in `paths` of the task. The reason is `named by <task>`. These cards print after the `implements` and `covers` lines. A path that is no file, or that already has a line in the output, prints no card. `related` of a file SHALL list only tasks of active changes as `mentions`.
 
 Refs: REQ-QRY-006, REQ-QRY-012, REQ-IDX-009
 
 #### Scenario: SCN-QRY-021-1 Named file
 - **WHEN** a task line names `src/a.ts`, a file with no tag, and `context` runs on the task
-- **THEN** the output holds the line `-- src/a.ts | src/a.ts | active | named by <task>`, before any `implements` line
+- **THEN** the output holds the line `-- src/a.ts | src/a.ts | active | named by <task>`, after any `implements` and `covers` line
 
 #### Scenario: SCN-QRY-021-2 Missing path and duplicate
 - **WHEN** a task line names `src/zz.ts`, which is no file, and a file that already has an `implements` line in the output
@@ -47,13 +47,13 @@ Refs: REQ-QRY-006, REQ-QRY-012, REQ-IDX-009
 - **THEN** the output lists only the active task, with the reason `mentions, in task line`
 
 ### Requirement: REQ-QRY-022 Uncited task label
-When the index holds no requirement that a task cites, `bundle` and `context` SHALL start the output with the line `note: <task> cites no requirement. The blocks come from its change. Add a [REQ-...] citation.` The note is no block. It does not count toward the budget and is no entry of `omitted`.
+When a requested task cites no requirement that the index holds, `bundle` and `context` SHALL print one line after the blocks of REQ-QRY-018. The line is for the first such task: `note: <task> cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.` The note is no block. It does not count toward the budget and is no entry of `omitted`.
 
-Refs: REQ-QRY-016, REQ-QRY-015
+Refs: REQ-QRY-016, REQ-QRY-018
 
 #### Scenario: SCN-QRY-022-1 Uncited task
 - **WHEN** a task line has no `[REQ-...]` citation, and `context` runs on it
-- **THEN** the first line is the `note:` line with the task ID, and the blocks that follow are the deltas and designs of its change
+- **THEN** the `note:` line with the task ID follows the task block, and the deltas and designs of its change follow it
 
 #### Scenario: SCN-QRY-022-2 Cited task
 - **WHEN** a task cites a requirement that the index holds
@@ -61,7 +61,11 @@ Refs: REQ-QRY-016, REQ-QRY-015
 
 #### Scenario: SCN-QRY-022-3 Unknown citation
 - **WHEN** a task cites only an ID that the index lacks
-- **THEN** the first line is the `note:` line, and `omitted` does not list it
+- **THEN** the output has the `note:` line, and `omitted` does not list it
+
+#### Scenario: SCN-QRY-022-4 Several tasks
+- **WHEN** `bundle` runs for two uncited tasks
+- **THEN** the output has one `note:` line, and it names the first task
 
 ## MODIFIED Requirements
 
@@ -119,7 +123,7 @@ Refs: REQ-QRY-003, REQ-QRY-012, REQ-QRY-018
 - **THEN** the decision block prints once, with the reason `requested`
 
 ### Requirement: REQ-QRY-019 Completeness fields
-`bundle --json` and `context --json` SHALL print `text`, `omitted`, `body_omitted`, `chars`, `budget`, and `complete`. `chars` is the length of `text` in code points. `body_omitted` lists the IDs with the `| body omitted` marker. `complete` is true only when `omitted` and `body_omitted` are empty. With `--block`, `budget` is null, `complete` is true, and both lists are empty. `task start --json` SHALL hold the same fields in `bundle`.
+`bundle --json` and `context --json` SHALL print `text`, `omitted`, `body_omitted`, `chars`, `budget`, and `complete`. `chars` counts the code points of `text`. `body_omitted` lists the IDs with the marker. `complete` is true only when `omitted` and `body_omitted` are empty. A named path that loses its card is in `omitted`. `--block` sets `budget` null, `complete` true, and both lists empty. `task start --json` holds them in `bundle`.
 
 Refs: REQ-QRY-003, REQ-QRY-015, REQ-QRY-018
 

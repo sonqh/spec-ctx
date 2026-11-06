@@ -38,7 +38,7 @@ Refs: ADR-003
 - **THEN** every line has a reason from the list and `SCN-APPLY-005-1` has `scenario of`
 
 ### Requirement: REQ-QRY-003 bundle
-`specctx bundle <ID...> [--budget N] [--depth D] [--all]` SHALL print the canonical text of each named ID, its scenarios, the decisions that reference it, and related entries to depth D. Each block SHALL start with `-- <id> | <file>:<line> | <status> | <reason>`. Order: requested IDs, ADRs, decisions, related REQs, tasks, code and test paths. It SHALL fit the blocks in N characters (default 8000), except the blocks of REQ-QRY-018, and print `truncated: <count> entries omitted: <ids>`.
+`specctx bundle <ID...> [--budget N] [--depth D] [--all]` SHALL print the canonical text of each named ID, its scenarios, the decisions that reference it, and related entries to depth D. Each block SHALL start with `-- <id> | <file>:<line> | <status> | <reason>`. Order: requested IDs, ADRs, decisions, REQs, tasks, code and test paths. It SHALL fit the blocks in N characters (default 8000), except REQ-QRY-018 blocks, and print `truncated: <count> entries omitted: <ids>` for entries with no card.
 
 #### Scenario: SCN-QRY-003-1 Budget respected
 - **WHEN** `specctx bundle REQ-APPLY-001 --budget 2000` runs
@@ -168,13 +168,13 @@ Refs: REQ-IDX-010, REQ-QRY-005
 - **THEN** both outputs are equal and list the capabilities of the change with `capability touched by change/009`
 
 ### Requirement: REQ-QRY-012 Budget order
-When a bundle passes its budget, `bundle` SHALL keep entries by class. Class 0 holds the requested IDs and the main version of each, which always stay. Class 1 holds code and test lines at depth 1. Class 2 holds ADRs, active decisions, requirements, capabilities, changes, and tasks at depth 1. Class 3 holds archived decisions and entries from depth 2. A decision that names a requested ID counts as depth 1. The print order of REQ-QRY-003 does not change.
+When a bundle passes its budget, `bundle` SHALL keep entries by class. Class 0 holds the requested IDs and the main version of each, which always stay. Class 1 holds code and test lines at depth 1. Class 2 holds ADRs, active decisions, requirements, capabilities, changes, and tasks at depth 1. Class 3 holds archived decisions and entries from depth 2. A decision that names a requested ID counts as depth 1. REQ-QRY-020 sets cards and bodies. The print order stays.
 
 Refs: REQ-QRY-003, REQ-QRY-018
 
 #### Scenario: SCN-QRY-012-1 Code and test lines first
 - **WHEN** a requirement has 3 code lines, 2 test lines, and neighbors that fill the budget
-- **THEN** all 5 lines are in the output and the omitted IDs are neighbor requirements or tasks
+- **THEN** all 5 lines are in the output, and each neighbor requirement or task prints its card or is in the omitted list
 
 #### Scenario: SCN-QRY-012-2 This repository
 - **WHEN** `bundle REQ-LOOP-001` runs at the default budget on a temp copy of this repository
@@ -198,12 +198,12 @@ Refs: REQ-QRY-001, REQ-IDX-010
 - **THEN** the first lists `cap/thing` and the second lists `change/009`
 
 ### Requirement: REQ-QRY-014 Omitted trailer
-The `truncated:` trailer of `bundle` SHALL list the omitted IDs in print order, not in class order. It SHALL never list a requested ID, because the blocks of REQ-QRY-018 always print.
+The `truncated:` trailer of `bundle` SHALL list the IDs that lost their card, in print order, not in class order. An entry that kept its card with `| body omitted` is not in it. It SHALL never list a requested ID, because the blocks of REQ-QRY-018 always print.
 
 Refs: REQ-QRY-003, REQ-QRY-012, REQ-QRY-018
 
 #### Scenario: SCN-QRY-014-1 Print order
-- **WHEN** a bundle omits a task and a requirement that sit in different classes
+- **WHEN** a bundle drops the cards of a task and a requirement that sit in different classes
 - **THEN** the trailer lists the requirement before the task, as the blocks print
 
 #### Scenario: SCN-QRY-014-2 Requested ID never omitted
@@ -303,7 +303,7 @@ Refs: REQ-QRY-003, REQ-QRY-012, REQ-QRY-014
 - **THEN** the first run prints the requested block, the `truncated:` line, and the `over budget:` line, and exits 0. The second run exits 2 and prints no block.
 
 ### Requirement: REQ-QRY-019 Completeness fields
-`bundle --json` and `context --json` SHALL print `text`, `omitted`, `chars`, `budget`, and `complete`. `chars` is the length of `text` in code points. `budget` is the budget in force. `complete` is true only when `omitted` is empty. It says that no block dropped, not that the text fits. With `--block`, `budget` is null and `complete` is true. `task start --json` SHALL hold the same fields in `bundle`.
+`bundle --json` and `context --json` SHALL print `text`, `omitted`, `body_omitted`, `chars`, `budget`, and `complete`. `chars` counts the code points of `text`. `body_omitted` lists the IDs with the marker. `complete` is true only when `omitted` and `body_omitted` are empty. A named path that loses its card is in `omitted`. `--block` sets `budget` null, `complete` true, and both lists empty. `task start --json` holds them in `bundle`.
 
 Refs: REQ-QRY-003, REQ-QRY-015, REQ-QRY-018
 
@@ -313,8 +313,75 @@ Refs: REQ-QRY-003, REQ-QRY-015, REQ-QRY-018
 
 #### Scenario: SCN-QRY-019-2 Block mode
 - **WHEN** `bundle REQ-TH-001 --block --json` runs
-- **THEN** `budget` is null, `complete` is true, `omitted` is empty, and `chars` equals the code point length of `text`
+- **THEN** `budget` is null, `complete` is true, `omitted` and `body_omitted` are empty, and `chars` equals the code point length of `text`
 
 #### Scenario: SCN-QRY-019-3 Task start
 - **WHEN** `task start <task> --json` runs
 - **THEN** its `bundle` object holds `chars`, `budget`, and `complete` with the same rules
+
+### Requirement: REQ-QRY-020 Cards before bodies
+`bundle`, `context`, and `task start` SHALL print the card of each entry of class 0, 1, and 2 before the body of any block that is not requested. The card is the line `-- <id> | <file>:<line> | <status> | <reason>`. An entry whose body does not fit keeps its card, which then ends with `| body omitted`. A card that does not fit goes to `truncated:`. The print order does not change.
+
+Refs: REQ-QRY-003, REQ-QRY-012, REQ-QRY-018
+
+#### Scenario: SCN-QRY-020-1 Cards survive long bodies
+- **WHEN** a task cites 5 requirements whose bodies fill the budget, and they have 3 code lines and 2 test lines
+- **THEN** all 5 code and test lines print, and every cited requirement has its card
+
+#### Scenario: SCN-QRY-020-2 Body omitted marker
+- **WHEN** the body of a depth 1 requirement does not fit
+- **THEN** its card ends with `| body omitted`, its body is absent, and its ID is not in `omitted`
+
+#### Scenario: SCN-QRY-020-3 Many deltas
+- **WHEN** the change of a task holds 14 delta requirements that cannot all fit at the default budget
+- **THEN** the output holds 14 delta cards, and the trailer names none of them
+
+#### Scenario: SCN-QRY-020-4 Card lost
+- **WHEN** `context` runs with `--budget 0` on a task with depth 1 entries
+- **THEN** the task block prints, the trailer names the depth 1 entries, and no card ends with the marker
+
+#### Scenario: SCN-QRY-020-5 Everything fits
+- **WHEN** every block fits in the budget
+- **THEN** no card ends with the marker, and the output has no `truncated:` line
+
+### Requirement: REQ-QRY-021 Task named paths
+For a requested task at depth 1 or more, `bundle` SHALL print one class 1 card for each path in `paths` of the task. The reason is `named by <task>`. These cards print after the `implements` and `covers` lines. A path that is no file, or that already has a line in the output, prints no card. `related` of a file SHALL list only tasks of active changes as `mentions`.
+
+Refs: REQ-QRY-006, REQ-QRY-012, REQ-IDX-009
+
+#### Scenario: SCN-QRY-021-1 Named file
+- **WHEN** a task line names `src/a.ts`, a file with no tag, and `context` runs on the task
+- **THEN** the output holds the line `-- src/a.ts | src/a.ts | active | named by <task>`, after any `implements` and `covers` line
+
+#### Scenario: SCN-QRY-021-2 Missing path and duplicate
+- **WHEN** a task line names `src/zz.ts`, which is no file, and a file that already has an `implements` line in the output
+- **THEN** the output has no card for `src/zz.ts` and one line for the other file
+
+#### Scenario: SCN-QRY-021-3 Archived task
+- **WHEN** `context` runs on a task of an archived change whose line names an existing file
+- **THEN** the output holds the `named by` card of that file
+
+#### Scenario: SCN-QRY-021-4 Related of a file
+- **WHEN** an archived task and an active task name `src/a.ts`, and `related src/a.ts` runs
+- **THEN** the output lists only the active task, with the reason `mentions, in task line`
+
+### Requirement: REQ-QRY-022 Uncited task label
+When a requested task cites no requirement that the index holds, `bundle` and `context` SHALL print one line after the blocks of REQ-QRY-018. The line is for the first such task: `note: <task> cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.` The note is no block. It does not count toward the budget and is no entry of `omitted`.
+
+Refs: REQ-QRY-016, REQ-QRY-018
+
+#### Scenario: SCN-QRY-022-1 Uncited task
+- **WHEN** a task line has no `[REQ-...]` citation, and `context` runs on it
+- **THEN** the `note:` line with the task ID follows the task block, and the deltas and designs of its change follow it
+
+#### Scenario: SCN-QRY-022-2 Cited task
+- **WHEN** a task cites a requirement that the index holds
+- **THEN** the output has no `note:` line
+
+#### Scenario: SCN-QRY-022-3 Unknown citation
+- **WHEN** a task cites only an ID that the index lacks
+- **THEN** the output has the `note:` line, and `omitted` does not list it
+
+#### Scenario: SCN-QRY-022-4 Several tasks
+- **WHEN** `bundle` runs for two uncited tasks
+- **THEN** the output has one `note:` line, and it names the first task

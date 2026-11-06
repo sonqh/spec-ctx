@@ -148,7 +148,7 @@ Refs: REQ-IDX-001, REQ-IDX-007
 - **THEN** the first line records REQ-AB-001 only, and the Covers line records no code entry
 
 ### Requirement: REQ-IDX-009 Task paths
-For a task in an active change, `specctx build` SHALL record the paths that its line names in backticks. A path is a code span with no space and no `*` that holds a `/` or a `.`. `./` at the start of a path does not count. The index stores them in `paths` of the task entry and omits the key when it is empty. A task under `archive/` records none.
+For a task of any change, active or archived, `specctx build` SHALL record the paths that its line names in backticks. A path is a code span with no space and no `*` that holds a `/` or a `.`. `./` at the start of a path does not count. The index stores them in `paths` of the task entry and omits the key when it is empty.
 
 Refs: REQ-IDX-001
 
@@ -158,7 +158,7 @@ Refs: REQ-IDX-001
 
 #### Scenario: SCN-IDX-009-2 Archived task
 - **WHEN** a task line under `openspec/changes/archive/` names `src/a.ts`
-- **THEN** the task entry has no `paths` key
+- **THEN** the task entry has `paths` equal to `src/a.ts`
 
 ### Requirement: REQ-IDX-010 Change and capability entries
 `build` SHALL write a `change` entry for each change folder, with the ID `change/<key>`. It SHALL write a `cap` entry for each capability that has a `specs/<cap>/spec.md` file, with the ID `cap/<name>`. Both kinds join the kind list of REQ-IDX-002. Both are canonical, and `check` ignores them. The index SHALL hold no `delta:`, `cap:`, or `main:` link. Those edges come from the `change`, `file`, and `status` fields at query time.

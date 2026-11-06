@@ -1,4 +1,4 @@
-// Covers: REQ-STAT-006
+// Covers: REQ-STAT-007, REQ-STAT-006, SCN-STAT-007-1, SCN-STAT-007-2
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -121,11 +121,51 @@ describe("scripts/recall.mjs", () => {
     const out = temp("specctx-recall-out-");
     const t11 = { ...T11, reqs: ["REQ-AAA-001", "REQ-BBB-001"], code: [], tests: ["tests/a.cases.ts"] };
     const t12 = { ...T12, code: [], tests: [] };
-    const r = run("--labels", labels(root, [t11, t12], { budget: 500 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    const r = run("--labels", labels(root, [t11, t12], { budget: 250 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
     expect(r.code, r.err).toBe(0);
     const t = report(out).repos[0].per_task.find((x: any) => x.task === "001/1.1");
     expect(t.misses).toEqual(["REQ-BBB-001", "tests/a.cases.ts"]);
     expect(t.matched).toBe(1);
+  }, TEST_MS);
+
+  test("SCN-STAT-007-1 a card with the marker and a plain card both match, and card_only counts the first", () => {
+    const root = project();
+    const out = temp("specctx-recall-out-");
+    // at 400 the card of REQ-AAA-001 has no body, and the code and test lines are plain cards
+    const t11 = { ...T11, code: ["src/a.ts"], tests: ["tests/a.cases.ts"] };
+    const t12 = { ...T12, reqs: [], code: [], tests: [] };
+    const r = run("--labels", labels(root, [t11, t12], { budget: 400 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const repo = report(out).repos[0];
+    expect(repo.matched).toEqual({ total: 3, reqs: 1, code: 1, tests: 1 });
+    expect(repo.card_only).toEqual({ total: 1, reqs: 1, code: 0, tests: 0 });
+    // task 001/1.1 cites one requirement and task 001/1.2 cites two, and no body fits
+    expect(repo.cited_body_lost).toBe(3);
+    expect(readFileSync(join(out, "recall-2026-01-04.md"), "utf8")).toContain("card_only");
+  }, TEST_MS);
+
+  test("SCN-STAT-007-2 every body prints, so card_only is 0 for each kind", () => {
+    const root = project();
+    const out = temp("specctx-recall-out-");
+    const r = run("--labels", labels(root, [T11, T12], { budget: 100000 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const repo = report(out).repos[0];
+    expect(repo.card_only).toEqual({ total: 0, reqs: 0, code: 0, tests: 0 });
+    expect(repo.cited_body_lost).toBe(0);
+  }, TEST_MS);
+
+  test("REQ-STAT-007 a file that only a named by card shows is a match, and not a match without the named cards", () => {
+    const root = project();
+    const out = temp("specctx-recall-out-");
+    const tasks = join(root, "openspec/changes/archive/2026-01-01-001-x/tasks.md");
+    writeFileSync(tasks, readFileSync(tasks, "utf8").replace("1.2 ", "1.2 Edit `src/b.ts`. "));
+    const t12 = { ...T12, reqs: [], tests: [] };
+    const r = run("--labels", labels(root, [T11, t12], { budget: 100000 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const repo = report(out).repos[0];
+    expect(repo.matched.code).toBe(2);
+    expect(repo.matched_without_named.code).toBe(1);
+    expect(repo.recall_without_named_by_kind.code).toBe(0.5);
   }, TEST_MS);
 
   test("SCN-STAT-006-3 bad input exits 2, names the cause, and writes no report", () => {

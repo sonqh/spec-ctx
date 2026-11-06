@@ -24,7 +24,10 @@ export function fileEdges(entries: Entry[], path: string): [string, string][] {
     const verb = e.kind === "code" ? "implements" : "covers";
     for (const r of e.refs) push(g, r, `${verb}, tag at ${e.file}:${e.line}`);
   }
-  const mentions = entries.filter((e) => e.kind === "task" && e.canonical && (e.paths ?? []).includes(path));
+  // REQ-QRY-021 an archived task names paths too, but it is no mention
+  const mentions = entries.filter(
+    (e) => e.kind === "task" && e.canonical && !e.file.includes("/archive/") && (e.paths ?? []).includes(path),
+  );
   for (const e of mentions) push(2, e.id, "mentions, in task line");
   return groups.flatMap((g) => g.sort((a, b) => cmpStr(a[0], b[0])));
 }

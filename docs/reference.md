@@ -86,14 +86,21 @@ $ specctx context 045/2.1
 
 ### The budget
 
-`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. When the text passes the budget, blocks drop in this order:
+`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. Every entry has a card, which is its provenance line. When the text passes the budget, the output fills in five steps. Each step runs in print order.
 
-1. The archived decisions and the entries two steps away.
-2. The specs.
-3. The code and test lines.
-4. The requirements that a task cites.
+1. The cards of the requirements that a task cites.
+2. The code and test cards.
+3. The bodies of those requirements.
+4. The cards of the specs, the decisions, the tasks, and the changes.
+5. The bodies of those entries.
 
-The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`. The `truncated:` line names each dropped block and is not in the budget. Read that line, and get each named ID with a second call. Do not take the output as a full answer when the line is there. With `--json`, the fields `chars`, `budget`, and `complete` give the same facts. `complete` is true when no block dropped.
+Then the archived decisions and the entries two steps away print whole or not at all.
+
+A card whose body did not fit ends with `| body omitted`. Run `bundle <ID>` to get that body. The `truncated:` line names only the entries that lost their card, and is not in the budget. The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`.
+
+For a task, `bundle` also prints one card for each file that the task line names in backticks. The reason is `named by <task>`. These cards print after the `implements` and `covers` lines. A path that is no file, or that already has a line, prints no card. A task that cites no requirement that the index holds gets one line after its block: `note: <task> cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.` The note is outside the budget.
+
+Do not take the output as a full answer when the `truncated:` line or a marker is there. With `--json`, the fields `omitted`, `body_omitted`, `chars`, `budget`, and `complete` give the same facts. `omitted` lists the entries with no card. `body_omitted` lists the entries with the marker. `complete` is true when both lists are empty.
 
 ### Ask about a file
 
@@ -201,7 +208,7 @@ Two environment variables change the engine:
 
 | Variable | Effect |
 | --- | --- |
-| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate` and `next` runs for `openspec status`. It overrides `[gate] openspec` for one run. At `init` time it is written into the file as it is, and no version detection runs. Tests and offline machines set it. |
+| `SPECCTX_OPENSPEC` | The command that `gate` runs for `openspec validate` and `next` runs for `openspec status`. It overrides `[gate] openspec` for one run. `init` writes it into the file as it is, and no version detection runs. Tests and offline machines set it. |
 | `SPECCTX_BASELINE_SUBJECT` | The commit subject that the `baseline` step of `gate` tests for `baseline:`. It replaces the subject of `HEAD`. Tests set it. |
 
 ## Markdown linters

@@ -11,7 +11,7 @@ export const KIND_RANK: Record<string, number> = { adr: 0, decision: 1, req: 2, 
 
 export const REASONS = [
   "scenario of", "ref from", "ref to", "decision for", "task cites", "implements", "covers", "mentions",
-  "delta in", "design named in", "task names", "capability of", "requirement in", "capability touched by", "main version of",
+  "delta in", "design named in", "task names", "capability of", "requirement in", "capability touched by", "main version of", "named by",
 ];
 
 /** REQ-QRY-012 the reason and the distance from the start. A seed of a path has depth 1. */
