@@ -847,7 +847,9 @@
     "asked_at": "2026-11-06T15:00:18.900Z",
     "task": "054-recall-benchmark",
     "text": "review the labels in bench/recall/ before the baseline run",
-    "status": "open",
-    "stage": "design"
+    "status": "resolved",
+    "stage": "design",
+    "answer": "Approved by the lead on 2026-11-06 under the authority the owner gave. Fixture labels use candidates open, seed 54, sample 20: 196 requirement labels, 1 code label, 0 test labels. Known limit: the fixture scans tests/** but its tests sit in test/, so test recall is n/a there (finding for the one-path change).",
+    "resolved_at": "2026-11-06T15:01:18.159Z"
   }
 ]
