@@ -1,0 +1,29 @@
+{
+  "at": "2026-11-06T15:30:04.600Z",
+  "bundle_chars": 7586,
+  "files": {
+    "src/cli/commands.ts": "4909fec65912dce1287748de134a30e014f108c3145fdbc2e1dc338fd846fd19",
+    "src/graph/bundle.ts": "2af6877f3eec6bf91bd036933c29c81687b0b141545b42663f8f9f3a8cd52aba",
+    "src/journal/note.ts": "522650d2676e3cc84e875cea419b8db40e2e95d59e64028f6e07fbf9796cb0c4",
+    "src/journal/signals.ts": "723f20dbaba31b54d934b8e4483ae963171d1bcae9cb11f555372980f52e906c",
+    "src/main.ts": "d43c7b5c5e2d61db5ce12b2ee3394590384158a1f8131a3ba2cbde42bd008ebc",
+    "tests/journal/entry.test.ts": "b29e21a9be28c08d0bb38e9594361563873e43ed02ccfbbfce052612faa1015c",
+    "tests/journal/journal.test.ts": "fbd644129f0bff18f86a353fbfaa96fdfad00e7cc655d4280d9222e27750f879",
+    "tests/journal/signals.test.ts": "7661bea5e38e4ef573a643833b63a95b293b6a3560248116b7c6745d892a3f9c"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/cli/commands.ts",
+  "reqs": [
+    "REQ-JRN-007",
+    "REQ-JRN-002"
+  ],
+  "started_at": "2026-11-06T15:29:57.425Z",
+  "task": "059/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/journal/journal.test.ts && npx vitest run tests/journal/journal.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 15 pass\n 0 fail\n 34 expect() calls\nRan 15 tests across 1 file. [18.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "07c2f947299c1b7546fe6363de51f6950b7c55b4b46962bc3866c8e931a160da"
+  }
+}

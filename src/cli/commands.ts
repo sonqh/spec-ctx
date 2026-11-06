@@ -79,6 +79,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   // REQ-JRN-004 report runs before the config load, so a broken config still reports
   if (cmd === "report") {
     if (p.positional.length) throw new UsageExit("report takes no arguments");
+    // REQ-JRN-008 report prints Markdown only
+    if (json) throw new UsageExit("report takes no --json flag");
     const { buildReport } = await import("../journal/report.ts");
     const { VERSION } = await import("../version.ts");
     io.out(buildReport(root, new Date(), { version: VERSION, node: process.version, platform: process.platform, arch: process.arch }).text);

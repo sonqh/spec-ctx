@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-06T15:31:33.782Z",
+  "bundle_chars": 3654,
+  "files": {
+    "tests/ids/new.test.ts": "47ef6fa2fb4fb5f7f29f43ebe9b94c054e3e4d18c2fb442a5d2527b6600ef33f",
+    "tests/skills/overrides.test.ts": "1e3fce061f2a8b2ba4952fd7618ea6f63b463389a781d81e3be934c02d3c18ac"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDS-006"
+  ],
+  "started_at": "2026-11-06T15:31:03.557Z",
+  "task": "059/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/skills tests/init/drift.test.ts tests/init/skills-refresh.test.ts tests/schema/strings.test.ts && node dist/cli.js lint tells --baseline 0 skills/specctx-run/SKILL.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation skills/specctx-run/SKILL.md && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 27 pass\n 0 fail\n 156 expect() calls\nRan 27 tests across 5 files. [292.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "22250bb8e827e3a3d74b2cae1dc4967abadafd44a134fb890b81fefdb9ec3a81"
+  }
+}

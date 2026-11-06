@@ -10,10 +10,10 @@ Three GitHub issues from the ADR-009 bug intake.
 
 ## What changes
 
-- #13. The help page of `id new` and the `specctx-run` skill say that a second call before `build` returns the same ID, and that `--count <n>` gets several. The skill copies under `.claude/skills` and `.agents/skills` are refreshed. The code of `id new` does not change.
+- #13. The help page of `id new` and the `specctx-run` skill say that a second call before `build` returns the same ID, and that `--count <n>` gets several. The skill copies under `.claude/skills` and `.agents/skills` get the same text. The code of `id new` does not change.
 - #15. `errInfo` skips a frame whose file is not absolute, after the URL conversion. One test case in the journal tests.
-- #16. `report --json` exits 2 with a usage error. The exit 2 line of the `report` page says so. One test.
-- The help golden is re-recorded for the two changed pages, with `SPECCTX_HELP_RECORD=1 bun test tests/cli/help.test.ts`. The note goes in the verification record. No parity golden changes.
+- #16. `report --json` exits 2 with a usage error. The `report` page drops `--json` from its flags, as the lint pages do, and its exit 2 line says so. One test.
+- The help golden is re-recorded for the changed pages and summary lines, with `SPECCTX_HELP_RECORD=1 bun test tests/cli/help.test.ts`. The note goes in the verification record. No parity golden changes.
 - A CHANGELOG entry under `## Unreleased` names the three issues.
 
 ## Capabilities
@@ -31,7 +31,7 @@ No existing requirement states the wrong behavior, so no MODIFIED block.
 
 ## Layer and benefit
 
-- Layer: layer 2, bug fixes from the ADR-009 bug intake (ADR-007 item 3 and item 7). It changes no retrieval output.
+- Layer: layer 2, bug fixes from the ADR-009 bug intake and ADR-007 item 3 (a layer 2 change that fixes a bug is in scope). It changes no retrieval output.
 - Benefit: the `plan` action of `specctx-run` and any agent stop allocating duplicate IDs. The journal keeps only package frames, as its rule says. The `report` page stops promising output that it does not give.
 
 ## Out of scope

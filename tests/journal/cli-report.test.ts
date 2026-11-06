@@ -1,7 +1,7 @@
-// Covers: REQ-JRN-004, REQ-JRN-005
+// Covers: REQ-JRN-004, REQ-JRN-005, REQ-JRN-008
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { cleanEnv, OPENSPEC_STUB, REPO } from "../helpers.ts";
@@ -51,6 +51,20 @@ describe("report through the CLI", () => {
     writeFileSync(join(d, "spec-ctx.toml"), "[[[bad");
     expect(cli(d, ["report"]).status).toBe(0);
     expect(cli(d, ["report", "x"]).status).toBe(2);
+  });
+
+  test("SCN-JRN-008-1 report --json exits 2 and the page lists no --json", () => {
+    const d = repo();
+    const r = cli(d, ["report", "--json"], "1");
+    expect(r.status).toBe(2);
+    expect(r.stdout).toBe("");
+    expect(r.stderr).toContain("--json");
+    // note() runs before the report branch, so the run is in the journal
+    const lines = readFileSync(join(d, ".ctx/local/runs.jsonl"), "utf8").trim().split("\n");
+    expect(JSON.parse(lines[lines.length - 1]!).exit).toBe(2);
+    const page = cli(REPO, ["report", "--help"]);
+    expect(page.stdout).not.toContain("--json");
+    expect(page.stdout).toContain("--root");
   });
 
   test("report --help prints its page", () => {

@@ -1,8 +1,8 @@
-// Covers: REQ-JRN-001, REQ-JRN-002, REQ-JRN-003
+// Covers: REQ-JRN-001, REQ-JRN-002, REQ-JRN-003, REQ-JRN-007
 import { afterEach, describe, expect, test } from "vitest";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { appendRun, journalLine } from "../../src/journal/journal.ts";
 import { errInfo, note, type JournalSink } from "../../src/journal/note.ts";
 import { provenance, parseProvenance } from "../../src/graph/bundle.ts";
@@ -120,6 +120,19 @@ describe("err frames", () => {
     ].join("\n");
     (e as { code?: string }).code = "ERR_X";
     expect(errInfo(e, "/pkg")).toEqual({ name: "Error", code: "ERR_X", frames: ["src/main.ts:80", "dist/cli/commands.js:12", "src/util/a.ts:7"] });
+  });
+
+  test("SCN-JRN-007-1 frames with no absolute path are skipped under the working directory", () => {
+    // the working directory sits under pkgRoot, so a relative file would look like a package path
+    const root = dirname(process.cwd());
+    const e = new Error("x");
+    e.stack = [
+      "Error: x",
+      "    at node:internal/modules/run_main:12:1",
+      "    at <anonymous>:1:1",
+      `    at f (${join(root, "src", "a.ts")}:5:2)`,
+    ].join("\n");
+    expect(errInfo(e, root).frames).toEqual(["src/a.ts:5"]);
   });
 
   test("a message line with a frame look is skipped and a bad code is null", () => {

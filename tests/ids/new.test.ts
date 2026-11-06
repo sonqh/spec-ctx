@@ -1,4 +1,4 @@
-// Covers: REQ-IDS-001, REQ-IDS-002, REQ-IDS-004, REQ-IDS-005
+// Covers: REQ-IDS-001, REQ-IDS-002, REQ-IDS-004, REQ-IDS-005, REQ-IDS-006
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -38,6 +38,14 @@ describe("id new", () => {
     p.append("decisions/retired-ids.md", "\n| ID | Date | Reason |\n| --- | --- | --- |\n| REQ-IDX-006 | 2026-10-24 | merged |\n");
     const r = await p.run("id", "new", "REQ", "IDX");
     expect(r).toMatchObject({ code: 0, out: "REQ-IDX-007\n" });
+  });
+
+  test("SCN-IDS-006-1 a repeat call before build prints the same ID, and --count prints several", async () => {
+    const a = await p.run("id", "new", "SCN", "IDX", "--for", "REQ-IDX-004");
+    const b = await p.run("id", "new", "SCN", "IDX", "--for", "REQ-IDX-004");
+    expect(a.out).toBe("SCN-IDX-004-4\n");
+    expect(b.out).toBe(a.out);
+    expect((await p.run("id", "new", "SCN", "IDX", "--for", "REQ-IDX-004", "--count", "2")).out).toBe("SCN-IDX-004-4\nSCN-IDX-004-5\n");
   });
 
   test("archived entries count toward the next number", async () => {

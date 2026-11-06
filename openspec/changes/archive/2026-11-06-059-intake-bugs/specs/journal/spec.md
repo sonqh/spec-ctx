@@ -10,10 +10,11 @@ Refs: REQ-JRN-002
 - **THEN** `err.frames` holds only the package frame
 
 ### Requirement: REQ-JRN-008 Report takes no JSON flag
-`specctx report` SHALL exit 2 with a usage error when it gets `--json`. It SHALL print nothing to stdout. The help page of `report` SHALL say that exit 2 covers this case. Without the flag, `report` prints Markdown as REQ-JRN-004 says.
+`specctx report` SHALL exit 2 with a usage error when it gets `--json`. It SHALL print nothing to stdout. The help page of `report` SHALL not list `--json`. Its exit 2 line SHALL say that the command has no JSON output. Without the flag, `report` prints Markdown as REQ-JRN-004 says.
 
 Refs: REQ-JRN-004
 
 #### Scenario: SCN-JRN-008-1 Report with the JSON flag
 - **WHEN** `specctx report --json` runs in a repository with `openspec/`
 - **THEN** it exits 2, stdout is empty, and stderr names the flag
+- **THEN** the help page of `report` does not list `--json`

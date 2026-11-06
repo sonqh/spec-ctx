@@ -1,5 +1,5 @@
 // REQ-JRN-001 REQ-JRN-002 the sink that main() fills. It has no fs import, so a --version run loads no write code (057/D1).
-import { dirname, relative, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** REQ-JRN-002 the closed set of signals. The line version `v` versions it. */
@@ -59,6 +59,8 @@ export function errInfo(e: unknown, pkgRoot = PACKAGE_ROOT): JournalErr {
     } catch {
       continue;
     }
+    // REQ-JRN-007 a frame like node:internal/... or <anonymous> is no path in the package
+    if (!isAbsolute(file)) continue;
     const rel = relative(pkgRoot, file);
     if (rel === "" || rel.startsWith("..") || rel.split(/[\\/]/).includes("node_modules") || resolve(rel) === rel) continue;
     frames.push(`${rel.split("\\").join("/")}:${m[2]}`);

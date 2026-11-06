@@ -240,12 +240,11 @@ Usage:
 
 Flags:
   `--root <path>`              Use this project root.
-  `--json`                     Print one JSON document.
   `--help`                     Show this help.
 
 Exit codes:
   `0` Success.
-  `2` A usage error.
+  `2` A usage error. The command has no JSON output.
   `3` An internal error.
 
 Example:
@@ -313,14 +312,14 @@ Example:
   `specctx build`
 
 == id new
-specctx id new: Print the next free ID. The kind is REQ, SCN, ADR, or DEC.
+specctx id new: Print the next free ID. The kind is REQ, SCN, ADR, or DEC. A second call before `build` prints the same ID.
 
 Usage:
   `specctx id new <kind> <code> [flags]`
 
 Flags:
   `--for <REQ-ID>`             Give the requirement of a new scenario.
-  `--count <n>`                Print n IDs in sequence.
+  `--count <n>`                Print n IDs in sequence. Use it to get several IDs before `build`.
   `--root <path>`              Use this project root.
   `--json`                     Print one JSON document.
   `--help`                     Show this help.

@@ -10,5 +10,5 @@ Refs: REQ-IDS-001, REQ-IDS-002, ADR-003
 - **THEN** both calls print the same ID, and `--count 2` prints two different IDs
 
 #### Scenario: SCN-IDS-006-2 Help and skill name the count flag
-- **WHEN** `specctx id new --help` runs and the `specctx-run` skill is read
+- **WHEN** `specctx id new --help` runs and the `specctx-run` skill is open
 - **THEN** both say that a repeat call before `build` prints the same ID, and both name `--count`
