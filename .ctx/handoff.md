@@ -1,14 +1,19 @@
 # Handoff
 change: 054-recall-benchmark
 current: none
-base: none
-as_of: 2026-11-05T04:05:13.438Z
+base: 2026-11-05T04:05:13.438Z
+as_of: 2026-11-06T15:00:12.696Z
 done:
 - 054/1.1
 - 054/1.2
 - 054/2.1
+- 054/2.2
 reopened:
+- 054/1.1 stale evidence: tests/stat/recall.test.ts (at 2026-11-06T14:59:26.914Z)
+- 054/1.2 stale evidence: tests/stat/recall.test.ts (at 2026-11-06T14:59:42.942Z)
+- 054/2.1 stale evidence: tests/stat/recall.test.ts (at 2026-11-06T14:59:49.157Z)
 open_questions:
+- Q89 review the labels in bench/recall/ before the baseline run (task 054-recall-benchmark, 2026-11-06)
 resolved:
 - Q79 archive 053-try-offline? (task 053-try-offline, 2026-11-03) answer: Owner approved the merge of the 053 PR after its archive stop on 2026-11-04. Architect: ready to archive, no blocker.
 - Q80 plan ready for 052-check-deferred. Approve to start the tasks? (task 052-check-deferred, 2026-11-03) answer: Owner approved 2026-11-03. Include the change with deltas and no task. Edit the two baseline.test.ts assertions, do not change fixtures. 051 merges first.
@@ -21,5 +26,5 @@ resolved:
 - Q87 archive 057-run-journal? (task 057-run-journal, 2026-11-05) answer: Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.
 - Q88 plan ready for 054-recall-benchmark. Approve to start the tasks? (task 054-recall-benchmark, 2026-11-04) answer: Owner approved on 2026-11-05 with the lead's recommendations: the governance test bug is a separate change 055 that merges first, the fixture labels come from done tasks of archived fixture changes with real commits, the fixture runs as committed.
 - and 78 more in .ctx/questions.json
-next: 054/2.2  Clone the fixture at 8899171 with history into a temp dir. Write `bench/recall/openspec-fixture.json` there the same way, with the done tasks of its archived changes as candidates. Set `commit` to the full sha. Run `--check` against the clone. Then run `node dist/cli.js handoff ask --change 054-recall-benchmark "review the labels in bench/recall/ before the baseline run"` and stop. Task 3.1 starts only after the owner approves.
-evidence: 3 task(s), 3 command, 0 manual
+next: 054/3.1  Run `bash scripts/recall.sh --out docs/metrics --date <today>`. Run it again with `--out` set to a temp dir. Compare recall, misses, and sha256 of the two JSON files (SCN-STAT-006-4 on the real data). Write `docs/verification/054.md` with the two tables, the label sha256 values, the machine, the Node version, the result of the compare, and the findings of 054 design. Add a paragraph under `## Unreleased` in `CHANGELOG.md`, headed `Change 054-recall-benchmark.`, that names REQ-STAT-006. Both files follow the writing rules of `CLAUDE.md`.
+evidence: 4 task(s), 4 command, 0 manual

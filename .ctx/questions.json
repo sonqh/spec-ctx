@@ -841,5 +841,13 @@
     "verdict": "approved",
     "answer": "Owner approved on 2026-11-05 with the lead's recommendations: the governance test bug is a separate change 055 that merges first, the fixture labels come from done tasks of archived fixture changes with real commits, the fixture runs as committed.",
     "resolved_at": "2026-11-05T03:32:14.902Z"
+  },
+  {
+    "n": 89,
+    "asked_at": "2026-11-06T15:00:18.900Z",
+    "task": "054-recall-benchmark",
+    "text": "review the labels in bench/recall/ before the baseline run",
+    "status": "open",
+    "stage": "design"
   }
 ]

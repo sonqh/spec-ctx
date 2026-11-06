@@ -1,20 +1,18 @@
 {
-  "at": "2026-11-05T04:02:15.225Z",
-  "bundle_chars": 7356,
+  "at": "2026-11-06T14:59:48.877Z",
   "files": {
-    "tests/stat/recall.test.ts": "c4980ad046f2f888fc63399f19a75212e5f81f91b65e0b6dba37ff9cef6593fc"
+    "tests/stat/recall.test.ts": "6a0e45e2ee89e379baeaf96595578f2c3465de8fe29fcf1f22694382e9cc9f9a"
   },
   "kind": "command",
   "reqs": [
     "REQ-STAT-006"
   ],
-  "started_at": "2026-11-05T04:02:10.931Z",
   "task": "054/1.2",
-  "tool_version": "0.4.1",
+  "tool_version": "0.5.0",
   "verify": {
     "command": "bun run build && bun test tests/stat/recall.test.ts && bash -n scripts/recall.sh",
     "exit": 0,
-    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 6 pass\n 0 fail\n 54 expect() calls\nRan 6 tests across 1 file. [1.74s]",
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 7 pass\n 0 fail\n 62 expect() calls\nRan 7 tests across 1 file. [2.82s]",
     "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
   }
 }

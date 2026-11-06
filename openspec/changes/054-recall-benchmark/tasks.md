@@ -10,7 +10,7 @@ Run `bun run build` before every Verify. Tests write only under a temp dir. They
 ## 2. The labels
 
 - [x] 2.1 Write `bench/recall/spec-ctx.json`. Run `node scripts/recall.mjs --root . --sample 20 --seed 54` and take the 20 task IDs it prints. Fill each task as 054/D6 says. Leave `commit` out, as 054/D4 says. [REQ-STAT-006] Verify: `node scripts/recall.mjs --labels bench/recall/spec-ctx.json --root . --check`
-- [ ] 2.2 Clone the fixture at 8899171 with history into a temp dir. Write `bench/recall/openspec-fixture.json` there the same way, with the done tasks of its archived changes as candidates. Set `commit` to the full sha. Run `--check` against the clone. Then run `node dist/cli.js handoff ask --change 054-recall-benchmark "review the labels in bench/recall/ before the baseline run"` and stop. Task 3.1 starts only after the owner approves. [REQ-STAT-006] Verify: `node scripts/recall.mjs --labels bench/recall/openspec-fixture.json --check-schema`
+- [x] 2.2 Clone the fixture at 8899171 with history into a temp dir. Add the `candidates` field of 054/D5 to `scripts/recall.mjs` and a case for `open` to `tests/stat/recall.test.ts`. Write `bench/recall/openspec-fixture.json` with `candidates` set to `open`, from `--sample 20 --seed 54` on the clone, and fill it as 054/D6 says for open tasks. Set `commit` to the full sha. Run `--check` against the clone. Then run `node dist/cli.js handoff ask --change 054-recall-benchmark "review the labels in bench/recall/ before the baseline run"` and stop. Task 3.1 starts only after the owner approves. [REQ-STAT-006] Verify: `node scripts/recall.mjs --labels bench/recall/openspec-fixture.json --check-schema`
 
 ## 3. The baseline
 

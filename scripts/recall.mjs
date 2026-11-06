@@ -13,12 +13,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
 const CLI = join(REPO, "dist/cli.js");
 const KINDS = ["reqs", "code", "tests"];
+const CANDIDATES = ["archived", "open"];
 
 const USAGE = `usage:
   recall.mjs --labels <file> --root <dir> [--labels <file> --root <dir>] [--out <dir>] [--date <yyyy-mm-dd>] [--runs <n>]
   recall.mjs --labels <file> --root <dir> --check
   recall.mjs --labels <file> --check-schema
-  recall.mjs --root <dir> --sample <n> --seed <s> [--changes <key,key>]
+  recall.mjs --root <dir> --sample <n> --seed <s> [--candidates archived|open] [--changes <key,key>]
 Exit codes: 0 success, 2 bad input, 3 internal error.`;
 
 class InputError extends Error {}
@@ -27,7 +28,7 @@ const fail = (msg) => {
 };
 
 function parseArgs(argv) {
-  const a = { labels: [], roots: [], out: null, date: null, runs: 5, sample: null, seed: null, changes: null, check: false, checkSchema: false };
+  const a = { labels: [], roots: [], out: null, date: null, runs: 5, sample: null, seed: null, changes: null, candidates: "archived", check: false, checkSchema: false };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     const v = () => {
@@ -42,6 +43,7 @@ function parseArgs(argv) {
     else if (k === "--sample") a.sample = Number(v());
     else if (k === "--seed") a.seed = Number(v());
     else if (k === "--changes") a.changes = v().split(",").filter(Boolean);
+    else if (k === "--candidates") a.candidates = v();
     else if (k === "--check") a.check = true;
     else if (k === "--check-schema") a.checkSchema = true;
     else if (k === "--help" || k === "-h") a.help = true;
@@ -49,6 +51,7 @@ function parseArgs(argv) {
   }
   if (a.date !== null && !/^\d{4}-\d{2}-\d{2}$/.test(a.date)) fail(`--date must be yyyy-mm-dd, not ${a.date}`);
   if (!Number.isInteger(a.runs) || a.runs < 1) fail("--runs must be a whole number of 1 or more");
+  if (!CANDIDATES.includes(a.candidates)) fail(`--candidates must be archived or open, not ${a.candidates}`);
   return a;
 }
 
@@ -94,10 +97,14 @@ function loadIndex(root) {
 const keyOf = (task) => task.slice(0, task.indexOf("/"));
 
 /**
- * The candidate tasks (054/D5): done tasks of archived changes whose commits edit a file under the code or tests globs.
- * It reads the commits from git log, never from tags or evidence.
+ * The candidate tasks (054/D5). Mode archived: done tasks of archived changes whose commits edit a file under the code or tests globs.
+ * It reads the commits from git log, never from tags or evidence. Mode open: open tasks of active changes, with no commit filter.
  */
-function candidates(root, entries, scan, changes) {
+function candidates(root, entries, scan, changes, mode = "archived") {
+  if (mode === "open") {
+    const out = entries.filter((e) => e.kind === "task" && e.status !== "done" && !e.file.includes("/changes/archive/") && (!changes || changes.includes(keyOf(e.id)))).map((e) => e.id);
+    return [...new Set(out)].sort();
+  }
   if (git(root, "rev-parse", "--is-shallow-repository").trim() === "true") fail(`${root} is a shallow clone. The sample needs the full history`);
   const byFolder = new Map();
   for (const e of entries) {
@@ -150,6 +157,7 @@ function checkSchema(file) {
   for (const [k, t] of [["repo", "string"], ["budget", "number"], ["seed", "number"], ["sample", "number"]]) if (typeof d[k] !== t) fail(`${name}: the field ${k} must be a ${t}`);
   if (d.commit !== undefined && typeof d.commit !== "string") fail(`${name}: the field commit must be a string`);
   if (d.changes !== undefined && !isStrings(d.changes)) fail(`${name}: the field changes must be a list of strings`);
+  if (d.candidates !== undefined && !CANDIDATES.includes(d.candidates)) fail(`${name}: the field candidates must be archived or open`);
   if (!Array.isArray(d.tasks) || d.tasks.length === 0) fail(`${name}: the field tasks must be a list that is not empty`);
   for (const t of d.tasks) {
     if (typeof t.task !== "string") fail(`${name}: a task misses the field task`);
@@ -179,7 +187,7 @@ async function checkAgainst(file, d, root) {
         if (kindOf(f, scan) !== k) fail(`${name}: task ${t.task} lists ${f} under ${k}, but the scan globs make it ${kindOf(f, scan) ?? "no scanned file"}`);
       }
   }
-  const want = pick(candidates(root, entries, scan, d.changes ?? null), d.sample, d.seed);
+  const want = pick(candidates(root, entries, scan, d.changes ?? null, d.candidates ?? "archived"), d.sample, d.seed);
   const have = d.tasks.map((t) => t.task).sort();
   if (want.join(",") !== have.join(",")) fail(`${name}: the tasks are not the seeded sample. sample ${d.sample} seed ${d.seed} gives ${want.join(", ")}`);
   return head;
@@ -311,7 +319,7 @@ async function main(argv) {
     if (a.roots.length !== 1 || !Number.isInteger(a.seed) || !Number.isInteger(a.sample)) fail("--sample needs one --root, a whole --sample, and a whole --seed");
     const root = a.roots[0];
     const scan = await scanConfig(root);
-    process.stdout.write(pick(candidates(root, loadIndex(root), scan, a.changes), a.sample, a.seed).map((t) => t + "\n").join(""));
+    process.stdout.write(pick(candidates(root, loadIndex(root), scan, a.changes, a.candidates), a.sample, a.seed).map((t) => t + "\n").join(""));
     return 0;
   }
   if (a.labels.length === 0) fail("give --labels <file>");

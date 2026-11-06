@@ -169,6 +169,28 @@ describe("scripts/recall.mjs", () => {
     expect(picks.size).toBeGreaterThan(1);
   }, TEST_MS);
 
+  test("SCN-STAT-006-5 candidates open picks the open tasks of active changes with no commit filter", () => {
+    const root = project();
+    // An active change with two open tasks and one done task. It has no commit, so the git log holds nothing for it.
+    put(root, "openspec/changes/004-z/tasks.md", "# Tasks\n\n## 1. Z\n\n- [ ] 1.1 Add z. [REQ-AAA-001] Verify: `true`\n- [x] 1.2 Done z. [REQ-AAA-001] Verify: `true`\n- [ ] 1.3 Doc z. [REQ-AAA-002] Verify: `true`\n");
+    const r = run("--root", root, "--sample", "5", "--seed", "7", "--candidates", "open");
+    expect(r.code, r.err).toBe(0);
+    expect(r.out.split("\n").filter(Boolean)).toEqual(["004/1.1", "004/1.3"]);
+    const open: Label[] = [
+      { task: "004/1.1", reqs: ["REQ-AAA-001"], code: [], tests: [], note: "the task text names it" },
+      { task: "004/1.3", reqs: ["REQ-AAA-002"], code: [], tests: [], note: "the task text names it" },
+    ];
+    const ok = run("--labels", labels(root, open, { changes: undefined, candidates: "open", seed: 7 }, "open.json"), "--root", root, "--check");
+    expect(ok.code, ok.err).toBe(0);
+    expect(ok.out).toContain("check ok: open.json");
+    const archived = run("--labels", labels(root, [T11, T12], { changes: undefined, candidates: "open" }, "open-bad.json"), "--root", root, "--check");
+    expect(archived.code).toBe(2);
+    expect(archived.err).toContain("004/1.1, 004/1.3");
+    const bad = run("--root", root, "--sample", "2", "--seed", "7", "--candidates", "all");
+    expect(bad.code).toBe(2);
+    expect(bad.err).toContain("archived or open");
+  }, TEST_MS);
+
   test("SCN-STAT-006-1 recall.sh prints its usage and runs no clone with --help", () => {
     const r = spawnSync("bash", [join(REPO, "scripts/recall.sh"), "--help"], { cwd: REPO, env: cleanEnv(), encoding: "utf8" });
     expect(r.status, r.stderr).toBe(0);

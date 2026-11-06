@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-05T04:05:13.438Z",
+  "files": {
+    "tests/stat/recall.test.ts": "c4980ad046f2f888fc63399f19a75212e5f81f91b65e0b6dba37ff9cef6593fc"
+  },
+  "kind": "command",
+  "reason": "stale evidence: tests/stat/recall.test.ts",
+  "reqs": [
+    "REQ-STAT-006"
+  ],
+  "task": "054/1.1",
+  "tool_version": "0.4.1",
+  "verify": {
+    "command": "bun run build && bun test tests/stat/recall.test.ts && npx vitest run tests/stat/recall.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 6 pass\n 0 fail\n 54 expect() calls\nRan 6 tests across 1 file. [1.81s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "c4e87ce80170630275ad0f04548acc010269fdc4b91e1ec20409e8153ddcf104"
+  }
+}
