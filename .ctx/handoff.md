@@ -1,13 +1,12 @@
 # Handoff
-change: 058-nested-npx-env
+change: none
 current: none
-base: 2026-11-05T13:29:10.623Z
+base: 2026-11-06T15:05:54.855Z
 as_of: none
 done:
 reopened:
 open_questions:
 resolved:
-- Q79 archive 053-try-offline? (task 053-try-offline, 2026-11-03) answer: Owner approved the merge of the 053 PR after its archive stop on 2026-11-04. Architect: ready to archive, no blocker.
 - Q80 plan ready for 052-check-deferred. Approve to start the tasks? (task 052-check-deferred, 2026-11-03) answer: Owner approved 2026-11-03. Include the change with deltas and no task. Edit the two baseline.test.ts assertions, do not change fixtures. 051 merges first.
 - Q81 archive 052-check-deferred? (task 052-check-deferred, 2026-11-03) answer: Owner approved the archive on 2026-11-03.
 - Q82 plan ready for 055-governance-deferred. Approve to start the tasks? (task 055-governance-deferred, 2026-11-05) answer: Owner approved the 055 plan on 2026-11-05, with the edits of both reviews. Merge 055 into main after its archive stop.
@@ -17,6 +16,7 @@ resolved:
 - Q86 plan ready for 057-run-journal. Approve to start the tasks? (task 057-run-journal, 2026-11-05) answer: Approved by the lead after PM and architect reviews, with edits. ADR-009 states the owner decisions. Add an ADR-009 pointer to the ADR-008 Consequences line about the 30 day stop, and add to the CLAUDE.md Direction bullet: ADR-007 scope rules and layer 1 priority still apply. D2: keep the fallback for bug intake, but only when main set cmd to ? in the parse error, group, or unknown command branch, and never when argv has --root. lint and help never get it. D3: only context emits context-has-code-or-test, bundle emits none. Export parseProvenance next to provenance in src/graph/bundle.ts, anchored on ^-- (\S+) \| , no new BundleResult field. Run contextSignals only when io.journal is set. D4: make frames relative to the package root before the node_modules test, convert file URLs with fileURLToPath, skip stack line 1. D5: the preload stays. Journal-on tests pass SPECCTX_JOURNAL=1 explicitly. Drop the timing assertion in 3.1 and record on and off timing in docs/verification/057.md.
 - Q87 archive 057-run-journal? (task 057-run-journal, 2026-11-05) answer: Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.
 - Q88 plan ready for 058-nested-npx-env. Approve to start the tasks? (task 058-nested-npx-env, 2026-11-06) answer: Approved by the lead on 2026-11-06 after PM and architect reviews, with edits. Tests that set npm_config_package or npm_config_call on process.env save each value first and restore it in afterEach, as tests/gate/rerun-*.test.ts does for SPECCTX_RERUN. Build the env for the init spawn with cleanEnv({...}), not a hand-made object. The gate stub tests ${npm_config_package+x}. Fix the design Context bullet: npx --package exports npm_config_package and npm_config_yes, not npm_config_call (call is exported only for -c), but still strip call. Drop the process.env default check from SCN-DIST-016-5, SCN-DIST-016-4 covers it. Add one proposal line naming next and task done as the loop commands that gain. Put SCN-DIST-016-3 in an existing tests/loop file.
-- and 78 more in .ctx/questions.json
-next: 058/1.1  Add `src/util/env.ts` per 058/D1. It exports `NESTED_NPX_VARS` and `childEnv(base = process.env)`. The function returns a copy of `base` without `npm_config_package` and `npm_config_call` and never writes to `base`. Tag it with `REQ-DIST-016`. Write `tests/util/env.test.ts` for SCN-DIST-016-5: both variables gone, `npm_command` and `PATH` kept with the same values, the input unchanged, and the default argument reads `process.env`.
+- Q89 archive 058-nested-npx-env? (task 058-nested-npx-env, 2026-11-06) answer: Approved by the lead on 2026-11-06 after the architect diff review: no blocker. childEnv is pure, rerun keeps CI and SPECCTX_RERUN, tests restore the vars, stubs cannot pass vacuously, no golden changed.
+- and 79 more in .ctx/questions.json
+next: no open task
 evidence: 0 task(s), 0 command, 0 manual

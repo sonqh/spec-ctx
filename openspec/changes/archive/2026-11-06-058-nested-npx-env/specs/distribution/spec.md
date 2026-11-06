@@ -23,4 +23,4 @@ Refs: REQ-DIST-002, REQ-CLI-004, REQ-LOOP-001, REQ-VER-001
 
 #### Scenario: SCN-DIST-016-5 The helper
 - **WHEN** the helper gets an object with the two variables, `npm_command`, and `PATH`
-- **THEN** the result lacks the two variables, keeps `npm_command` and `PATH` with the same values, and the input object keeps every key. With no argument the helper reads `process.env`
+- **THEN** the result lacks the two variables, keeps `npm_command` and `PATH` with the same values, and the input object keeps every key

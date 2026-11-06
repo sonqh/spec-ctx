@@ -2,6 +2,10 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+Change 058-nested-npx-env. GitHub issue #19. Under `npx --package=<spec> specctx ...`, npm sets `npm_config_package` and may set `npm_config_call`. A nested `npx` read them and ran the OpenSpec package string as a command. `init` fell back to `@latest` and `gate --strict` failed at the validate step. A new function, `childEnv`, copies the environment without the two variables. Four child processes use it: the validate step of `gate`, the `init` version probe, the status probe of `next`, and the Verify runner. A Verify command no longer sees the two variables. The git spawns do not change. New REQ-DIST-016.
+
 ## 0.5.0
 
 ADR-008 sets the order of work for 30 days: a stranger gets a useful `context <task>` on their own repo within 5 minutes. The owner accepted it on 2026-11-04.
