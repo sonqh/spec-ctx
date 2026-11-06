@@ -4,6 +4,7 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+Change 058-nested-npx-env. GitHub issue #19. Under `npx --package=<spec> specctx ...`, npm sets `npm_config_package` and may set `npm_config_call`. A nested `npx` read them and ran the OpenSpec package string as a command. `init` fell back to `@latest` and `gate --strict` failed at the validate step. A new function, `childEnv`, copies the environment without the two variables. Four child processes use it: the validate step of `gate`, the `init` version probe, the status probe of `next`, and the Verify runner. A Verify command no longer sees the two variables. The git spawns do not change. New REQ-DIST-016.
 Change 054-recall-benchmark. A new script, `scripts/recall.sh`, measures how many expected entries a `context <task>` prints within 8,000 characters. It runs on this repo and on a frozen clone of `sonqh/OpenSpec-spec-ctx`. It reads 20 hand labelled tasks per repo from `bench/recall/` and writes a Markdown and a JSON report to `docs/metrics/`. It adds no CLI command and no runtime dependency. The first baseline is in `docs/metrics/recall-2026-11-06.md`. New REQ-STAT-006.
 
 ## 0.5.0

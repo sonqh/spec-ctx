@@ -1,0 +1,29 @@
+{
+  "at": "2026-11-06T15:05:54.855Z",
+  "bundle_chars": 6473,
+  "files": {
+    "src/cli/gate.ts": "29ca135ecb18258a89b41645d180b2a8d8f64ed95fe5560266316eff72ea5e38",
+    "src/init/init.ts": "85567f9b041585297bc32c859fa5f23b61a13ad887eb49a7d92dcccf93df2c07",
+    "src/loop/openspec.ts": "2dcdb7f03f33a42d5946adf830f3a6643328e107e7dcb41b69b2872a07568344",
+    "src/util/env.ts": "0323610e94b45b4eb157de80531d565ca7bfcf7a1af8310faf527709c4ee3b1c",
+    "src/verify/run.ts": "334b697bd342b00daf0cc81dfc294ad09f49a602793157bea224858d2a809037",
+    "tests/cli/gate-npx.test.ts": "a1b61f6a267dc1a98f10efcd13083473a91b75d6ae57f7acf8ec385d3580611d",
+    "tests/init/npx-env.test.ts": "9510c932b2510776150583a754597b0fe08277a856fc657a096a6038553a9016",
+    "tests/loop/next.test.ts": "b1f047f98f2ff805c6f6bd8b95e9dcf11c20283dd33c4dfb399cbaa89bffad44",
+    "tests/util/env.test.ts": "dde2a5cf5db0419e3c4e4ffa0bebedc050153e32a234f1f3bf6e81b9f7835b9e",
+    "tests/verify/run.test.ts": "06b2a627467b06fc074c7488e9c948e802a28889d88c681098a5e0d816d888e6"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-016"
+  ],
+  "started_at": "2026-11-06T15:05:45.025Z",
+  "task": "058/4.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation CHANGELOG.md && grep -q \"^## Unreleased\" CHANGELOG.md && grep -q \"Change 058-nested-npx-env.\" CHANGELOG.md && grep -q \"#19\" CHANGELOG.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "762361b35703ce8e7418c361572b9c1f6a3867fe3ba304f96216085ab98f2fb8"
+  }
+}

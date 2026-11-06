@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-06T15:04:18.381Z",
+  "bundle_chars": 7373,
+  "files": {
+    "src/util/env.ts": "0323610e94b45b4eb157de80531d565ca7bfcf7a1af8310faf527709c4ee3b1c",
+    "tests/util/env.test.ts": "dde2a5cf5db0419e3c4e4ffa0bebedc050153e32a234f1f3bf6e81b9f7835b9e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-016"
+  ],
+  "started_at": "2026-11-06T15:04:05.481Z",
+  "task": "058/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/util/env.test.ts && npx vitest run tests/util/env.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 1 pass\n 0 fail\n 7 expect() calls\nRan 1 test across 1 file. [5.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "efe2bb18b69243e7078828cb9aa4fabd203a85ebef91467399941131b12ecd8b"
+  }
+}

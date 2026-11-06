@@ -1,8 +1,9 @@
-// Covers: REQ-LOOP-001, REQ-LOOP-003, REQ-CLI-007, REQ-LOOP-004
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+// Covers: REQ-LOOP-001, REQ-LOOP-003, REQ-CLI-007, REQ-LOOP-004, REQ-DIST-016, SCN-DIST-016-3
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { chmodSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { ACTIONS, KEYS } from "../../src/loop/next.ts";
+import { openspecStatus } from "../../src/loop/openspec.ts";
 import { lintSte } from "../../src/lint/ste.ts";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
 
@@ -248,5 +249,31 @@ describe("specctx next walks the decision order", () => {
     expect(r.err).toContain("next takes no arguments");
     expect((await p.run("next", "--change")).code).toBe(2);
     expect((await p.run("next", "--change", CHANGE, "--json")).code).toBe(0);
+  });
+});
+
+describe("the status probe under a nested npx", () => {
+  const savedPackage = process.env.npm_config_package;
+  const savedCall = process.env.npm_config_call;
+  afterEach(() => {
+    if (savedPackage === undefined) delete process.env.npm_config_package;
+    else process.env.npm_config_package = savedPackage;
+    if (savedCall === undefined) delete process.env.npm_config_call;
+    else process.env.npm_config_call = savedCall;
+  });
+
+  test("SCN-DIST-016-3 the stub sees neither variable", () => {
+    const q = new Project(null);
+    try {
+      q.write("stub.sh", `#!/bin/sh\nif [ "\${npm_config_package+x}" = x ]; then exit 1; fi\nprintf '%s\\n' '${COMPLETE}'\n`);
+      chmodSync(q.path("stub.sh"), 0o755);
+      process.env.npm_config_package = "@fission-ai/openspec@1.0.0";
+      process.env.npm_config_call = "specctx next";
+      const r = openspecStatus(q.root, q.path("stub.sh"), "x");
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.state.isPlanningComplete).toBe(true);
+    } finally {
+      q.cleanup();
+    }
   });
 });

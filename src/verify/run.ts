@@ -1,5 +1,6 @@
 // REQ-VER-001 REQ-VER-003 run a Verify command with sh -c in the project root, with a timeout.
 import { spawn } from "node:child_process";
+import { childEnv } from "../util/env.ts";
 
 export interface RunResult {
   exit: number | null;
@@ -21,7 +22,7 @@ export function tail(text: string, n = TAIL_LINES): string {
 export function runVerify(command: string, cwd: string, timeoutS: number, env?: NodeJS.ProcessEnv): Promise<RunResult> {
   return new Promise((resolve, reject) => {
     // a new process group, so the timeout stops the children of sh too
-    const child = spawn("sh", ["-c", command], { cwd, detached: true, ...(env ? { env } : {}), stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn("sh", ["-c", command], { cwd, detached: true, env: childEnv(env), /* REQ-DIST-016 */ stdio: ["ignore", "pipe", "pipe"] });
     const out: Buffer[] = [];
     const err: Buffer[] = [];
     let output = "";

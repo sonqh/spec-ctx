@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
 import type { Io } from "../main.ts";
+import { childEnv } from "../util/env.ts";
 import { anyMatch, globRe } from "../util/glob.ts";
 import { cmpStr } from "../util/pystr.ts";
 
@@ -114,7 +115,7 @@ async function gateSteps(root: string, o: GateOpts, io: Io, ran: Step[]): Promis
 
   ran.push("validate");
   // gate 4: openspec validate with the command the caller resolved (018/D2)
-  const v = spawnSync("/bin/sh", ["-c", `${o.openspec} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8" });
+  const v = spawnSync("/bin/sh", ["-c", `${o.openspec} validate --all${o.strict ? " --strict" : ""} --no-interactive`], { cwd: root, encoding: "utf8", env: childEnv() /* REQ-DIST-016 */ });
   if (v.status !== 0) {
     io.out("validate: fail\n" + (v.stdout ?? "") + (v.stderr ?? ""));
     return "validate";

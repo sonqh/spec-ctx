@@ -1,5 +1,6 @@
 // REQ-LOOP-001 the one OpenSpec call of next: status --change <c> --json, two keys read (024/D3, ADR-006 item 2).
 import { spawnSync } from "node:child_process";
+import { childEnv } from "../util/env.ts";
 
 export interface PlanningState {
   isPlanningComplete: boolean;
@@ -30,7 +31,7 @@ function errorMessage(stdout: string): string {
 
 /** Run `<openspec> status --change <folder> --json` in the root. A failure of any kind is a reason, never a throw. */
 export function openspecStatus(root: string, openspec: string, folder: string): StatusResult {
-  const r = spawnSync("/bin/sh", ["-c", `${openspec} status --change ${folder} --json`], { cwd: root, encoding: "utf8", timeout: TIMEOUT_MS });
+  const r = spawnSync("/bin/sh", ["-c", `${openspec} status --change ${folder} --json`], { cwd: root, encoding: "utf8", timeout: TIMEOUT_MS, env: childEnv() /* REQ-DIST-016 */ });
   if (r.error && (r.error as NodeJS.ErrnoException).code === "ETIMEDOUT") {
     return { ok: false, reason: `openspec status timed out after ${TIMEOUT_MS / 1000}s` };
   }

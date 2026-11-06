@@ -6,6 +6,7 @@ import { ASSETS } from "../assets.generated.ts";
 import { UsageExit } from "../cli/errors.ts";
 import { CONFIG_FILE, DEFAULT_OPENSPEC, INIT_TEXT } from "../config.ts";
 import { loadConfigOrExit } from "../cli/config.ts";
+import { childEnv } from "../util/env.ts";
 import { VERSION } from "../version.ts";
 
 export const SCHEMA = "spec-driven-ids";
@@ -51,7 +52,7 @@ export function detectOpenspec(timeoutMs = DETECT_TIMEOUT_MS): { command: string
   const env = process.env.SPECCTX_OPENSPEC;
   if (env !== undefined && env.trim()) return { command: env };
   const [cmd, ...args] = DEFAULT_OPENSPEC.split(" ");
-  const r = spawnSync(cmd!, [...args, "--version"], { encoding: "utf8", timeout: timeoutMs, stdio: ["ignore", "pipe", "ignore"] });
+  const r = spawnSync(cmd!, [...args, "--version"], { encoding: "utf8", timeout: timeoutMs, stdio: ["ignore", "pipe", "ignore"], env: childEnv() /* REQ-DIST-016 */ });
   const m = r.status === 0 && !r.error ? /\d+\.\d+\.\d+/.exec(r.stdout ?? "") : null;
   if (!m) return { command: DEFAULT_OPENSPEC, note: OPENSPEC_NOTE };
   return { command: `npx -y @fission-ai/openspec@${m[0]}` };
