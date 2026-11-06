@@ -1,4 +1,4 @@
-// Covers: REQ-JRN-001, REQ-JRN-002, REQ-JRN-006
+// Covers: REQ-JRN-001, REQ-JRN-002, REQ-JRN-006, REQ-QRY-019
 import { afterEach, describe, expect, test } from "vitest";
 import { spawnSync } from "node:child_process";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -62,6 +62,20 @@ describe("journal through the CLI", () => {
     const [ctx, bun] = journalOf(d);
     expect(ctx!.signals).toContain("truncated-context");
     expect(bun).toMatchObject({ cmd: "bundle", signals: [] });
+  });
+
+  test("SCN-JRN-002-2 a card with the marker and no omitted entry gives truncated-context", () => {
+    const d = repo();
+    // the largest budget whose output holds a marker and no trailer: the answer is incomplete through body_omitted only
+    let found = 0;
+    for (let n = 3000; n >= 100 && !found; n -= 50) {
+      const r = cli(d, ["bundle", "REQ-AAA-001", "--budget", String(n)]);
+      if (r.stdout.includes(" | body omitted\n") && !r.stdout.includes("truncated:")) found = n;
+    }
+    expect(found).toBeGreaterThan(0);
+    cli(d, ["context", "REQ-AAA-001", "--budget", String(found)]);
+    const last = journalOf(d).filter((l) => l.cmd === "context").pop()!;
+    expect(last.signals).toContain("truncated-context");
   });
 
   test("SCN-JRN-002-2 a usage error with a known command keeps its name and gives usage-error", () => {

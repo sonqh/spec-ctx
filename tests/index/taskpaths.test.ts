@@ -33,7 +33,7 @@ describe("task paths", () => {
     expect(await pathsOf("openspec/changes/001-x", "Do it. [REQ-AB-001] Verify: `true`")).toBeUndefined();
   });
 
-  test("SCN-IDX-009-2 an archived task has no paths key", async () => {
-    expect(await pathsOf("openspec/changes/archive/2026-10-30-001-x", "Edit `src/a.ts`. [REQ-AB-001] Verify: `true`")).toBeUndefined();
+  test("SCN-IDX-009-2 an archived task has paths", async () => {
+    expect(await pathsOf("openspec/changes/archive/2026-10-30-001-x", "Edit `src/a.ts`. [REQ-AB-001] Verify: `true`")).toEqual(["src/a.ts"]);
   });
 });

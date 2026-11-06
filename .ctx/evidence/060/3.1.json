@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-06T16:11:44.416Z",
+  "bundle_chars": 8049,
+  "files": {
+    "tests/stat/recall.test.ts": "2b9118b63930fdde114f657565f2ea2c99bb04e0386527b1875c5ab9fd5781f1"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-007",
+    "REQ-STAT-006"
+  ],
+  "started_at": "2026-11-06T16:10:11.985Z",
+  "task": "060/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/stat && npx vitest run tests/stat && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 28 pass\n 0 fail\n 184 expect() calls\nRan 28 tests across 3 files. [5.65s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "4858b8333c562f614b221a70eeab8f1aee14c0303d1f702e8ec1c7cd6b97467c"
+  }
+}

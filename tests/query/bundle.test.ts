@@ -1,4 +1,4 @@
-// Covers: REQ-QRY-003, REQ-QRY-004
+// Covers: REQ-QRY-003, REQ-QRY-004, REQ-QRY-014, REQ-QRY-020
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { Project, PARITY_FIXTURE } from "../helpers.ts";
@@ -53,6 +53,20 @@ describe("bundle", () => {
       expect([...body].length).toBeLessThanOrEqual(2000);
       if (m) expect(m[2]!.split(", ")).toHaveLength(Number(m[1]));
     }
+  });
+
+  test("SCN-QRY-014-1 the trailer names only entries with no card, and a marker card is not in it", async () => {
+    // at 3000 every card fits, so the marker replaces the trailer
+    const wide = (await bundle(par, "REQ-APPLY-001", "--budget", "3000")).split("\n");
+    expect(wide.some((l) => l.startsWith("truncated: "))).toBe(false);
+    expect(wide.some((l) => l.startsWith("-- ADR-002 | ") && l.endsWith(" | body omitted"))).toBe(true);
+    // at 1500 some cards drop. The trailer lists them, and no listed ID has a card
+    const ls = (await bundle(par, "REQ-APPLY-001", "--budget", "1500")).split("\n");
+    const tr = ls.find((l) => l.startsWith("truncated: "))!;
+    expect(tr).toBeDefined();
+    const ids = tr.split(": ")[2]!.split(", ");
+    const cards = ls.filter((l) => l.startsWith("-- ")).map((l) => l.split(" | ")[0]!.slice(3));
+    for (const id of ids) expect(cards, id).not.toContain(id);
   });
 
   test("SCN-QRY-003-2 code entries print file:line only, in the fixed order", async () => {

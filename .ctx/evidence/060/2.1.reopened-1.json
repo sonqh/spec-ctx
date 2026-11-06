@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-06T16:09:51.464Z",
+  "bundle_chars": 8705,
+  "files": {
+    "src/cli/commands.ts": "2a7f07a7c045b66eb0e33b0df4e03a91996829ebf6d1e5d8c258a538e81f1013",
+    "src/config.ts": "72550253e8bf6f3a42cee4df366369b79b89d280e62b230af1c3461a163f9c6e",
+    "src/graph/bundle.ts": "b374a288fc30290a73519511febb7caa83b431676e1454823ce374bb097b0c82",
+    "src/graph/files.ts": "cfd765ddd6b1dddee3b548bac53acf768a1ea3efdfa150ee60a44ad058e4b866",
+    "src/graph/related.ts": "9df425c86395ae0500182d524e2226f9b8e4b68c6e341ceb1f9d5b094ea43242",
+    "tests/gov/governance.test.ts": "5ba26a6e1e65cef37bed31469549eee805dff6f717b33fb5c19786437e6bce04",
+    "tests/journal/signals.test.ts": "78937a222e729923b4bdc9e049c4fb903049d749ef42e1304a2262e70c48dbb7",
+    "tests/query/budget.test.ts": "c38130bf5b14cd92c13ab81523a864fead860429a9568e160e290d28b07fdbba",
+    "tests/query/bundle.test.ts": "c5265da746823fe1c0fef15d7cae9a5f47ff7d17f599db7ed01477a2063b47c1",
+    "tests/query/cards.test.ts": "0d689bbbb16a809c9da13084138afa0678c7a36520505a25004e83b2a3c64799",
+    "tests/query/context.test.ts": "ae7789472bec81970dbaac1164ed33dc5ae1adfb8ffcbe57267b8a06497b64fe",
+    "tests/query/file-mentions.test.ts": "e8f07ba2166c758749cb66dbaaf1c3eee64f5eed1e98a356855d1d3189d7f290",
+    "tests/query/named-paths.test.ts": "78be4a5e405b28a4139268c1b90f35ad58a689a0fb7aac3af86d581dac40c80e",
+    "tests/query/requested.test.ts": "4f8d0e86d1360e240ea852d0a67c2e2a010ab5e67f69e16037885b2be9627137",
+    "tests/query/uncited-note.test.ts": "b742e93e6ceff5eb030156d586bc6e14b9114dfe45c5758d8344f09d6740bc94"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/graph/bundle.ts",
+  "reqs": [
+    "REQ-QRY-020",
+    "REQ-QRY-021",
+    "REQ-QRY-022",
+    "REQ-QRY-019",
+    "REQ-QRY-014",
+    "REQ-QRY-012",
+    "REQ-QRY-003"
+  ],
+  "started_at": "2026-11-06T16:04:50.791Z",
+  "task": "060/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/index tests/journal tests/stats tests/loop tests/gov && npx vitest run tests/query tests/tasks && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 392 pass\n 0 fail\n 2308 expect() calls\nRan 392 tests across 66 files. [19.97s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "a21b16dbb44272a591f253f927dc18876a1d475a41d6936dc3e87d5f47f62675"
+  }
+}

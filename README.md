@@ -116,7 +116,7 @@ You see: one change, two tasks done, one open, and the hint.
 
 ### 3. What is next
 
-`task next` picks the first open task. It prints the requirements the task cites and its Verify command, the shell command that proves the task is done.
+`task next` picks the first open task. It prints the requirements the task cites and its Verify command, the shell command that proves the task works.
 
 ![Task add-mfa/1.3 with its requirement and Verify command](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/3-next.svg)
 
@@ -132,7 +132,7 @@ You see: 711 characters, 3.6 percent of the tree. The agent reads this instead o
 
 ### 5. Done means Verify passed
 
-`task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that were checked.
+`task done` runs the Verify command. On exit 1 the box stays open. On exit 0 the box flips to `[x]` and an evidence file records the files that it checked.
 
 ![A refused done, the edit, and a passing done](https://raw.githubusercontent.com/sonqh/spec-ctx/main/docs/demo/clips/5-done.svg)
 
@@ -178,7 +178,7 @@ graph LR
 
 The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. A decision record joins the graph through its `Refs:` line.
 
-`specctx context <task|ID|path|change>` is the one command to run before you edit. It walks the edges inside a character budget and prints one provenance line for each block. When a block does not fit, a `truncated:` line names it. `related` prints each neighbor and the reason for the link:
+`specctx context <task|ID|path|change>` is the one command to run before you edit. It walks the edges inside a character budget and prints one provenance line for each block. Each entry prints its card first. A card ends with `| body omitted` when its body does not fit, and `bundle <ID>` gets the body. A `truncated:` line names an entry that has no card. A task that cites no requirement gets a `note:` line. A task also gets one card for each file that its line names, with the reason `named by <task>`. `related` prints each neighbor and the reason for the link:
 
 ```text
 $ specctx related REQ-UA-004
@@ -226,8 +226,8 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 ## Status
 
 - Published: `spec-ctx@0.5.0` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
-- Archived: 001 to 025, 027 to 034, and 036 to 059. No change is open.
-- Upstream: the ID scheme is proposed in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
+- Archived: 001 to 025, 027 to 034, and 036 to 060. No change is open.
+- Upstream: the ID scheme has a proposal in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured
 
@@ -235,7 +235,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0157 (n=165) | 0.94 (269/285) | 69 (of 132 reopens) | 52 (n=165) | 0 (0 baselined + 0 new) |
+| total | 0.0153 (n=166) | 0.94 (274/290) | 71 (of 136 reopens) | 53 (n=166) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.

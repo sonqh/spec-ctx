@@ -1,4 +1,4 @@
-// Covers: REQ-GOV-001, REQ-GOV-003, REQ-DIST-003, REQ-DIST-007
+// Covers: REQ-GOV-001, REQ-GOV-003, REQ-DIST-003, REQ-DIST-007, REQ-QRY-020
 import { afterEach, describe, expect, test } from "vitest";
 import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -77,6 +77,12 @@ describe("spec governance", () => {
     expect(r.stdout).toContain("parity: 7 commands identical");
     expect(r.status).toBe(0);
   }, 60000);
+
+  test("REQ-QRY-020 the bundle golden holds marker cards and no trailer, because every card fits", () => {
+    const out = readFileSync(join(REPO, "tests/fixtures/parity-golden/bundle.out"), "utf8").split("\n");
+    expect(out.some((l) => l.startsWith("-- ") && l.endsWith(" | body omitted"))).toBe(true);
+    expect(out.some((l) => l.startsWith("truncated: "))).toBe(false);
+  });
 
   test("SCN-DIST-003-2 the harness catches drift and names the command", () => {
     if (!existsSync(join(REPO, "dist/cli.js"))) execFileSync("bun", ["run", "build"], { cwd: REPO });

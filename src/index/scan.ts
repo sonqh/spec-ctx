@@ -318,8 +318,8 @@ export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], probl
         id: tid, kind: "task", file: rpath, line: i, title: pyStrip(body), change,
         status: pyStrip(box).toLowerCase() === "x" ? "done" : "open", refs: reqs,
       });
-      // REQ-IDX-009 an active task records the paths that its line names in backticks
-      const paths = status === "archived" ? [] : taskPaths(body);
+      // REQ-IDX-009 a task of any change records the paths that its line names in backticks
+      const paths = taskPaths(body);
       if (paths.length) t.paths = paths;
       entries.push(t);
     }

@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-06T17:20:31.694Z",
+  "files": {
+    "src/graph/bundle.ts": "4fa40672e46ae736bbe88be079f56f8eca021377486f331727b5f3be08ff3798",
+    "tests/gov/governance.test.ts": "5ba26a6e1e65cef37bed31469549eee805dff6f717b33fb5c19786437e6bce04",
+    "tests/query/budget.test.ts": "c38130bf5b14cd92c13ab81523a864fead860429a9568e160e290d28b07fdbba",
+    "tests/query/bundle.test.ts": "c5265da746823fe1c0fef15d7cae9a5f47ff7d17f599db7ed01477a2063b47c1",
+    "tests/query/cards.test.ts": "0d689bbbb16a809c9da13084138afa0678c7a36520505a25004e83b2a3c64799",
+    "tests/stat/recall.test.ts": "2b9118b63930fdde114f657565f2ea2c99bb04e0386527b1875c5ab9fd5781f1"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-006",
+    "REQ-STAT-007",
+    "REQ-QRY-020"
+  ],
+  "task": "060/5.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "test -s docs/metrics/recall-2026-11-06.json && test -s docs/metrics/recall-baseline-054.json && grep -q \"card_only\" docs/metrics/recall-2026-11-06.json && grep -q \"p95\" docs/verification/060.md && grep -q \"REQ-QRY-020\" CHANGELOG.md && git diff --quiet -- bench/recall && node dist/cli.js lint tells --baseline 0 docs/verification/060.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/060.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "bf4ea846a725ee1245c418e2c2ec5b509658d99154cc8b1836c1fbbc86a2554d"
+  }
+}

@@ -12,34 +12,21 @@ Refs: ADR-002, REQ-ADPT-006, REQ-APPLY-005
 - **WHEN** the last apply wrote `rules/lang-python.md` and the profile no longer lists python
 - **THEN** `plan` lists `rules/lang-python.md` as `remove`
 
--- ADR-002 | decisions/ADR-002-no-llm-in-compile.md:1 | active | ref from REQ-APPLY-001
-# ADR-002 No LLM in the compile and apply path
-
-Status: accepted. Date: 2026-10-23.
-
-## Decision
-
-`compile`, `render`, `plan`, `apply` are deterministic. Same profile, same catalog digests, same output bytes. An LLM may assist `elicit` through an explicit `--assist` flag. Its output is a profile draft that goes through the same deterministic compile.
-
-## Why
-
-- Golden-file tests need stable output.
-- Users must trust what gets written into `~/.claude` and `~/.codex`. A diff they can read beats a model they cannot audit.
-
-## Consequences
-
-- The mapping from profile fields to artifacts is a table in code, not a prompt.
-- New behavior means a new mapping row and a new golden file.
-
-Refs: REQ-IC-001, REQ-APPLY-001, ADR-001
-
+-- ADR-002 | decisions/ADR-002-no-llm-in-compile.md:1 | active | ref from REQ-APPLY-001 | body omitted
 -- 007/D2 | openspec/changes/007-parity-plant/design.md:6 | active | decision for REQ-APPLY-001
 - The second decision spans
   two lines! It refs a plan. Refs: REQ-APPLY-001, ADR-004.
 
--- 002/1.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:5 | done | task cites REQ-APPLY-001
-- [x] 1.1 Implement `src/apply/plan.ts`: compile, render, read, classify create/update/unchanged/skip. [REQ-APPLY-001] Verify: `tests/apply/plan.test.ts` covers SCN-APPLY-001-1 and asserts no filesystem writes with a temp home.
+-- REQ-ADPT-006 | openspec/specs/adapter-contract/spec.md:57 | active | ref from REQ-APPLY-001 | body omitted
+-- REQ-APPLY-005 | openspec/changes/007-parity-plant/specs/apply-pipeline/spec.md:3 | modified | ref from REQ-APPLY-001 | body omitted
+-- REQ-APPLY-005 | openspec/specs/apply-pipeline/spec.md:54 | active | main version of REQ-APPLY-005 | body omitted
+-- 002/1.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:5 | done | task cites REQ-APPLY-001 | body omitted
+-- 002/5.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:42 | done | task cites REQ-APPLY-001 | body omitted
+-- 005/1.1 | openspec/changes/archive/2026-10-24-005-ux-polish/tasks.md:5 | done | task cites REQ-APPLY-001 | body omitted
+-- 007/1.2 | openspec/changes/007-parity-plant/tasks.md:6 | open | task cites REQ-APPLY-001
+- [ ] 1.2 Open task that cites two IDs. [REQ-APPLY-001, REQ-ZZZ-001] Verify: `true`
 
+-- 007/1.4 | openspec/changes/007-parity-plant/tasks.md:8 | open | task cites REQ-APPLY-001 | body omitted
 -- src/apply/pipeline.ts:160 | src/apply/pipeline.ts:160 | active | implements REQ-APPLY-001
 -- src/cli/commands.ts:115 | src/cli/commands.ts:115 | active | implements REQ-APPLY-001
 -- src/plant.ts:4 | src/plant.ts:4 | active | implements REQ-APPLY-001
@@ -48,4 +35,4 @@ Refs: REQ-IC-001, REQ-APPLY-001, ADR-001
 -- tests/apply/plan.test.ts:37 | tests/apply/plan.test.ts:37 | active | covers REQ-APPLY-001
 -- tests/apply/plan.test.ts:48 | tests/apply/plan.test.ts:48 | active | covers REQ-APPLY-001
 -- tests/e2e/init.test.ts:6 | tests/e2e/init.test.ts:6 | active | covers REQ-APPLY-001
-truncated: 8 entries omitted: REQ-ADPT-006, REQ-APPLY-005, REQ-APPLY-005, 002/5.1, 005/1.1, 007/1.2, 007/1.4, cap/apply-pipeline
+-- cap/apply-pipeline | openspec/specs/apply-pipeline/spec.md:1 | active | capability of REQ-APPLY-001
