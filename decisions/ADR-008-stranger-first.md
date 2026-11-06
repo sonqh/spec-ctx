@@ -1,6 +1,6 @@
 # ADR-008 A stranger first
 
-Status: accepted. Date: 2026-11-03. The owner accepted it on 2026-11-04. It replaces the order of work of ADR-007. Every decision item of ADR-007 and ADR-006 stays in force.
+Status: accepted. Date: 2026-11-03. The owner accepted it on 2026-11-04. It replaces the order of work of ADR-007. Every decision item of ADR-007 and ADR-006 stays in force. ADR-009 replaces item 4 of the Decision section (the freeze) on 2026-11-05.
 
 ## Context
 
@@ -43,7 +43,7 @@ Items 5 and 7 both touch `adopt` and `init`. They run one after the other. The u
 ## Consequences
 
 - Layer 1 keeps its priority. Items 3, 4, and 6 make retrieval better. Items 1, 2, 5, and 7 make the first run reach layer 1.
-- Work on the loop, the gate, and the Action stops for 30 days, except for bugs.
+- Work on the loop, the gate, and the Action stops for 30 days, except for bugs. ADR-009 lifted this stop on 2026-11-05.
 - A fallback answer is weaker than a cited one. Its label tells the agent to cite the task.
 
 Refs: ADR-003, ADR-006, ADR-007

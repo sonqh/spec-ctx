@@ -808,5 +808,27 @@
     "verdict": "approved",
     "answer": "Approved by the lead after the architect review of the diff: ready to archive, no blocker. ci:local passes 14 steps. Follow-up: a window test for the current.json write failure path.",
     "resolved_at": "2026-11-05T08:56:35.985Z"
+  },
+  {
+    "n": 86,
+    "asked_at": "2026-11-05T13:16:44.577Z",
+    "task": "057-run-journal",
+    "text": "plan ready for 057-run-journal. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead after PM and architect reviews, with edits. ADR-009 states the owner decisions. Add an ADR-009 pointer to the ADR-008 Consequences line about the 30 day stop, and add to the CLAUDE.md Direction bullet: ADR-007 scope rules and layer 1 priority still apply. D2: keep the fallback for bug intake, but only when main set cmd to ? in the parse error, group, or unknown command branch, and never when argv has --root. lint and help never get it. D3: only context emits context-has-code-or-test, bundle emits none. Export parseProvenance next to provenance in src/graph/bundle.ts, anchored on ^-- (\\S+) \\| , no new BundleResult field. Run contextSignals only when io.journal is set. D4: make frames relative to the package root before the node_modules test, convert file URLs with fileURLToPath, skip stack line 1. D5: the preload stays. Journal-on tests pass SPECCTX_JOURNAL=1 explicitly. Drop the timing assertion in 3.1 and record on and off timing in docs/verification/057.md.",
+    "resolved_at": "2026-11-05T13:21:56.512Z"
+  },
+  {
+    "n": 87,
+    "asked_at": "2026-11-05T13:33:21.958Z",
+    "task": "057-run-journal",
+    "text": "archive 057-run-journal?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.",
+    "resolved_at": "2026-11-05T13:37:50.785Z"
   }
 ]

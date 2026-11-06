@@ -39,7 +39,7 @@ export const COVERS = "Cov" + "ers: ";
 export function cleanEnv(extra: Record<string, string> = {}): Record<string, string> {
   const env: Record<string, string> = {};
   for (const [k, v] of Object.entries(process.env)) if (v !== undefined && k !== "SPECCTX_RERUN" && !k.startsWith("GIT_")) env[k] = v;
-  return { ...env, ...extra };
+  return { ...env, SPECCTX_JOURNAL: "0", ...extra };
 }
 
 export interface Run {

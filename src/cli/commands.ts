@@ -8,6 +8,7 @@ import { defaults } from "../config.ts";
 import { hintOf } from "../check/hints.ts";
 import { paint } from "./color.ts";
 import { runCommand } from "../runcmd.ts";
+import { note } from "../journal/note.ts";
 
 /** check with warnings and the baseline filter. Strict mode adds the strict rules and the warnings. */
 async function runCheck(root: string, cfg: import("../config.ts").Config, data: import("../index/types.ts").Index, strict: boolean) {
@@ -73,8 +74,20 @@ export async function run(p: Parsed, io: Io): Promise<number> {
   if (cmd === "init") return init(p, io);
   const root = findRoot(io.cwd, f.root as string | undefined);
   requireOpenSpec(root);
+  // REQ-JRN-001 the root is known now, so the bin entry may write the journal
+  note(io, { root });
+  // REQ-JRN-004 report runs before the config load, so a broken config still reports
+  if (cmd === "report") {
+    if (p.positional.length) throw new UsageExit("report takes no arguments");
+    const { buildReport } = await import("../journal/report.ts");
+    const { VERSION } = await import("../version.ts");
+    io.out(buildReport(root, new Date(), { version: VERSION, node: process.version, platform: process.platform, arch: process.arch }).text);
+    return 0;
+  }
   const { loadConfigOrExit } = await import("./config.ts");
   const cfg = loadConfigOrExit(root);
+  // REQ-JRN-006 the exit 3 line names the report command with this prefix
+  note(io, { run: cfg.cli.run });
   const { dumps } = await import("../util/json.ts");
   const print = (v: unknown): void => io.out(dumps(v) + "\n");
   if (cmd === "build") {
@@ -278,6 +291,11 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const task = taskId === undefined ? undefined : (await import("../tasks/tasks.ts")).findTask(root, entries, taskId).entry;
       const b = bundle(root, entries, wanted, (f.budget as number | undefined) ?? cfg.bundle.budget,
         (f.depth as number | undefined) ?? cfg.bundle.depth, { all, task });
+      // REQ-JRN-002 only context emits the block signals. The sink is set only for the bin entry.
+      if (cmd === "context" && io.journal) {
+        const { contextSignals } = await import("../journal/signals.ts");
+        for (const signal of contextSignals(entries, b)) note(io, { signal });
+      }
       if (json) print(b);
       else if (b.text === "" && wanted.every((w) => paths.has(w))) io.out(wanted.map((w) => `no links: ${w}\n`).join(""));
       else io.out(b.text);
