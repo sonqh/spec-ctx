@@ -1,0 +1,19 @@
+# Tasks
+
+Run `bun run build` before every Verify. Tests write only under a temp dir, never reach the network, and clear `SPECCTX_RERUN`. `src/util/env.ts` and `tests/util/env.test.ts` change only in task 1.1. `src/cli/gate.ts`, `src/verify/run.ts`, `tests/cli/gate-npx.test.ts`, and `tests/verify/run.test.ts` change only in task 2.1. `src/init/init.ts`, `src/loop/openspec.ts`, `tests/init/npx-env.test.ts`, and `tests/loop/npx-env.test.ts` change only in task 3.1. `CHANGELOG.md` changes only in task 4.1.
+
+## 1. Helper
+
+- [ ] 1.1 Add `src/util/env.ts` per 058/D1. It exports `NESTED_NPX_VARS` and `childEnv(base = process.env)`. The function returns a copy of `base` without `npm_config_package` and `npm_config_call` and never writes to `base`. Tag it with `REQ-DIST-016`. Write `tests/util/env.test.ts` for SCN-DIST-016-5: both variables gone, `npm_command` and `PATH` kept with the same values, the input unchanged, and the default argument reads `process.env`. [REQ-DIST-016] Verify: `bun run build && bun test tests/util/env.test.ts && npx vitest run tests/util/env.test.ts && bun run typecheck`
+
+## 2. Gate and Verify
+
+- [ ] 2.1 Pass `childEnv()` to the validate spawn in `src/cli/gate.ts` and `childEnv(env)` to the spawn in `runVerify` of `src/verify/run.ts`, per 058/D2. Tag both lines with `REQ-DIST-016`. Write `tests/cli/gate-npx.test.ts` for SCN-DIST-016-1 per 058/D4. It writes a stub under the temp project that exits 1 when `npm_config_package` is in its environment. It spawns `dist/cli.js gate --strict` with both variables and `SPECCTX_OPENSPEC` in `cleanEnv`. It expects the line `validate: ok (strict)` and exit 0. A second case proves that the stub exits 1 with the variable. Add one case to `tests/verify/run.test.ts` for SCN-DIST-016-4: `test -z "$npm_config_package" && test -z "$npm_config_call"` exits 0 with no env passed and with an env that holds both. Check that `tests/cli/gate.test.ts`, `tests/verify`, and `tests/gate` stay green. [REQ-DIST-016, REQ-CLI-004, REQ-VER-001] Verify: `bun run build && bun test tests/cli/gate-npx.test.ts tests/verify tests/cli/gate.test.ts tests/gate && npx vitest run tests/cli/gate-npx.test.ts tests/verify/run.test.ts && bun run typecheck`
+
+## 3. Init and the status probe
+
+- [ ] 3.1 Pass `childEnv()` to the version probe in `detectOpenspec` of `src/init/init.ts` and to the spawn in `openspecStatus` of `src/loop/openspec.ts`, per 058/D2. Tag both lines with `REQ-DIST-016`. Write `tests/init/npx-env.test.ts` for SCN-DIST-016-2 per 058/D4. It puts a fake `npx` first on `PATH`. The fake exits 1 when `npm_config_package` is in its environment and prints `9.9.9` otherwise. It spawns `dist/cli.js init --root <root>` with both variables. It expects `openspec = "npx -y @fission-ai/openspec@9.9.9"` in `spec-ctx.toml` and no `note:` line. Write `tests/loop/npx-env.test.ts` for SCN-DIST-016-3. It calls `openspecStatus` in process with both variables on `process.env`. The stub exits 1 with the variable and prints a complete plan otherwise. It expects `ok: true` with `isPlanningComplete: true`. Check that `tests/init` and `tests/loop` stay green. [REQ-DIST-016, REQ-DIST-002, REQ-LOOP-001] Verify: `bun run build && bun test tests/init tests/loop && npx vitest run tests/init/npx-env.test.ts tests/loop/npx-env.test.ts && bun run typecheck`
+
+## 4. Record
+
+- [ ] 4.1 Add a `## Unreleased` heading above `## 0.5.0` in `CHANGELOG.md` and one paragraph under it, headed `Change 058-nested-npx-env.`. It names issue #19, the two variables, the four sites, and REQ-DIST-016. It says that a Verify command no longer sees the two variables. The paragraph follows the writing rules of `CLAUDE.md`. [REQ-DIST-016] Verify: `node dist/cli.js lint tells --baseline 0 CHANGELOG.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation CHANGELOG.md && grep -q "^## Unreleased" CHANGELOG.md && grep -q "Change 058-nested-npx-env." CHANGELOG.md && grep -q "#19" CHANGELOG.md`

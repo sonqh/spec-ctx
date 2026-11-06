@@ -830,5 +830,16 @@
     "verdict": "approved",
     "answer": "Approved by the lead after the architect diff review: ready to archive, no blocker. Follow-ups filed as issues: non-absolute frames in errInfo, and report ignores --json.",
     "resolved_at": "2026-11-05T13:37:50.785Z"
+  },
+  {
+    "n": 88,
+    "asked_at": "2026-11-06T15:00:54.365Z",
+    "task": "058-nested-npx-env",
+    "text": "plan ready for 058-nested-npx-env. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-06 after PM and architect reviews, with edits. Tests that set npm_config_package or npm_config_call on process.env save each value first and restore it in afterEach, as tests/gate/rerun-*.test.ts does for SPECCTX_RERUN. Build the env for the init spawn with cleanEnv({...}), not a hand-made object. The gate stub tests ${npm_config_package+x}. Fix the design Context bullet: npx --package exports npm_config_package and npm_config_yes, not npm_config_call (call is exported only for -c), but still strip call. Drop the process.env default check from SCN-DIST-016-5, SCN-DIST-016-4 covers it. Add one proposal line naming next and task done as the loop commands that gain. Put SCN-DIST-016-3 in an existing tests/loop file.",
+    "resolved_at": "2026-11-06T15:03:15.468Z"
   }
 ]
