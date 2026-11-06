@@ -1,0 +1,360 @@
+{
+  "repo": "OpenSpec-spec-ctx",
+  "commit": "88991711f000a349714a6639523425dc4739b52a",
+  "budget": 8000,
+  "seed": 54,
+  "sample": 20,
+  "candidates": "open",
+  "tasks": [
+    {
+      "task": "add-change-stacking-awareness/2.1",
+      "reqs": [
+        "REQ-CC-005",
+        "REQ-CC-006",
+        "REQ-CHC-003",
+        "REQ-CSW-001",
+        "REQ-CSW-002",
+        "REQ-CSW-003",
+        "REQ-OC-013"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/2.2",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/2.3",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/3.2",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/5.3",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/5.5",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/7.1",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names a file under docs/, which is never a label."
+    },
+    {
+      "task": "add-global-install-scope/7.2",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names a file under docs/, which is never a label."
+    },
+    {
+      "task": "add-global-install-scope/8.1",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-global-install-scope/8.5",
+      "reqs": [
+        "REQ-ATP-001",
+        "REQ-CG-003",
+        "REQ-CI-017",
+        "REQ-CI-018",
+        "REQ-CLC-013",
+        "REQ-CLC-014",
+        "REQ-CU-008",
+        "REQ-CU-009",
+        "REQ-GC-007",
+        "REQ-IS-001",
+        "REQ-IS-002",
+        "REQ-IS-003",
+        "REQ-IS-004",
+        "REQ-IS-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-tool-command-surface-capabilities/1.1",
+      "reqs": [
+        "REQ-CI-020",
+        "REQ-CI-021",
+        "REQ-CI-022",
+        "REQ-CU-010",
+        "REQ-CU-011",
+        "REQ-CU-012"
+      ],
+      "code": [
+        "src/core/config.ts"
+      ],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The task text names src/core/config.ts, which sits under the code glob."
+    },
+    {
+      "task": "add-tool-command-surface-capabilities/2.6",
+      "reqs": [
+        "REQ-CI-020",
+        "REQ-CI-021",
+        "REQ-CI-022",
+        "REQ-CU-010",
+        "REQ-CU-011",
+        "REQ-CU-012"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-tool-command-surface-capabilities/3.2",
+      "reqs": [
+        "REQ-CI-020",
+        "REQ-CI-021",
+        "REQ-CI-022",
+        "REQ-CU-010",
+        "REQ-CU-011",
+        "REQ-CU-012"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-tool-command-surface-capabilities/3.5",
+      "reqs": [
+        "REQ-CI-020",
+        "REQ-CI-021",
+        "REQ-CI-022",
+        "REQ-CU-010",
+        "REQ-CU-011",
+        "REQ-CU-012"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "add-tool-command-surface-capabilities/4.3",
+      "reqs": [
+        "REQ-CI-020",
+        "REQ-CI-021",
+        "REQ-CI-022",
+        "REQ-CU-010",
+        "REQ-CU-011",
+        "REQ-CU-012"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "unify-template-generation-pipeline/1.2",
+      "reqs": [
+        "REQ-TAP-001",
+        "REQ-TAP-002",
+        "REQ-TAP-003",
+        "REQ-TAP-004",
+        "REQ-TAP-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "unify-template-generation-pipeline/1.3",
+      "reqs": [
+        "REQ-TAP-001",
+        "REQ-TAP-002",
+        "REQ-TAP-003",
+        "REQ-TAP-004",
+        "REQ-TAP-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "unify-template-generation-pipeline/3.2",
+      "reqs": [
+        "REQ-TAP-001",
+        "REQ-TAP-002",
+        "REQ-TAP-003",
+        "REQ-TAP-004",
+        "REQ-TAP-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "unify-template-generation-pipeline/4.3",
+      "reqs": [
+        "REQ-TAP-001",
+        "REQ-TAP-002",
+        "REQ-TAP-003",
+        "REQ-TAP-004",
+        "REQ-TAP-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    },
+    {
+      "task": "unify-template-generation-pipeline/5.3",
+      "reqs": [
+        "REQ-TAP-001",
+        "REQ-TAP-002",
+        "REQ-TAP-003",
+        "REQ-TAP-004",
+        "REQ-TAP-005"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "The task text names no requirement ID, so reqs are the delta requirements of the change (054/D6). The text names no file under the code or tests globs."
+    }
+  ]
+}

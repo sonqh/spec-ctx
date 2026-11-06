@@ -1,0 +1,317 @@
+{
+  "repo": "spec-ctx",
+  "budget": 8000,
+  "seed": 54,
+  "sample": 20,
+  "changes": [
+    "045",
+    "046",
+    "047",
+    "048",
+    "049",
+    "050",
+    "051",
+    "052",
+    "053"
+  ],
+  "tasks": [
+    {
+      "task": "045/1.1",
+      "reqs": [
+        "REQ-IDX-008",
+        "REQ-IDX-009"
+      ],
+      "code": [
+        "src/cli/commands.ts",
+        "src/index/scan.ts",
+        "src/index/types.ts"
+      ],
+      "tests": [
+        "tests/index/codetag.test.ts",
+        "tests/index/taskpaths.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 0c18edf."
+    },
+    {
+      "task": "045/2.1",
+      "reqs": [
+        "REQ-QRY-006"
+      ],
+      "code": [
+        "src/graph/files.ts",
+        "src/graph/related.ts"
+      ],
+      "tests": [
+        "tests/query/file-edges.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 0c18edf."
+    },
+    {
+      "task": "045/3.2",
+      "reqs": [
+        "REQ-QRY-005",
+        "REQ-CLI-006"
+      ],
+      "code": [
+        "src/cli/help.ts"
+      ],
+      "tests": [
+        "tests/cli/help-path.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 0c18edf."
+    },
+    {
+      "task": "045/4.1",
+      "reqs": [
+        "REQ-QRY-005",
+        "REQ-QRY-006",
+        "REQ-IDX-008"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 0c18edf. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "046/1.1",
+      "reqs": [
+        "REQ-IDX-010",
+        "REQ-IDX-012",
+        "REQ-IDX-013"
+      ],
+      "code": [
+        "src/index/build.ts",
+        "src/index/structure.ts",
+        "src/index/types.ts"
+      ],
+      "tests": [
+        "tests/index/determinism.test.ts",
+        "tests/index/structure.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 8578aba."
+    },
+    {
+      "task": "046/2.1",
+      "reqs": [
+        "REQ-QRY-009",
+        "REQ-QRY-010",
+        "REQ-QRY-012",
+        "REQ-QRY-013",
+        "REQ-QRY-014"
+      ],
+      "code": [
+        "src/graph/bundle.ts",
+        "src/graph/links.ts",
+        "src/graph/query.ts",
+        "src/graph/related.ts"
+      ],
+      "tests": [
+        "tests/query/budget.test.ts",
+        "tests/query/plain.test.ts",
+        "tests/query/related.test.ts",
+        "tests/query/structural.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 8578aba."
+    },
+    {
+      "task": "046/3.1",
+      "reqs": [
+        "REQ-QRY-010",
+        "REQ-QRY-011"
+      ],
+      "code": [
+        "src/cli/commands.ts",
+        "src/cli/help.ts",
+        "src/graph/path.ts"
+      ],
+      "tests": [
+        "tests/cli/help-path.test.ts",
+        "tests/query/change-cli.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 8578aba."
+    },
+    {
+      "task": "047/2.1",
+      "reqs": [
+        "REQ-QRY-015",
+        "REQ-QRY-017",
+        "REQ-CLI-006"
+      ],
+      "code": [
+        "src/cli/args.ts",
+        "src/cli/commands.ts",
+        "src/cli/help.ts",
+        "src/graph/input.ts"
+      ],
+      "tests": [
+        "tests/query/context.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 9e88b92."
+    },
+    {
+      "task": "047/3.1",
+      "reqs": [
+        "REQ-TASK-002",
+        "REQ-TASK-007",
+        "REQ-STAT-002"
+      ],
+      "code": [
+        "src/cli/workflow.ts"
+      ],
+      "tests": [
+        "tests/tasks/next.test.ts",
+        "tests/tasks/start.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 9e88b92."
+    },
+    {
+      "task": "047/4.1",
+      "reqs": [
+        "REQ-QRY-015",
+        "REQ-QRY-016",
+        "REQ-QRY-017",
+        "REQ-TASK-002"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 9e88b92. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "048/2.1",
+      "reqs": [
+        "REQ-HND-004",
+        "REQ-HND-002"
+      ],
+      "code": [
+        "src/cli/args.ts",
+        "src/cli/help.ts",
+        "src/cli/workflow.ts",
+        "src/handoff/handoff.ts",
+        "src/handoff/questions.ts"
+      ],
+      "tests": [
+        "tests/handoff/handoff.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 6d4ce04."
+    },
+    {
+      "task": "048/3.1",
+      "reqs": [
+        "REQ-LOOP-015",
+        "REQ-LOOP-016",
+        "REQ-LOOP-007",
+        "REQ-LOOP-009",
+        "REQ-LOOP-005"
+      ],
+      "code": [
+        "src/loop/next.ts"
+      ],
+      "tests": [
+        "tests/cli/nextstep.test.ts",
+        "tests/cli/run-prefix.test.ts",
+        "tests/loop/archive-stop.test.ts",
+        "tests/loop/gate-rerun-line.test.ts",
+        "tests/loop/gate-strict.test.ts",
+        "tests/loop/next.test.ts",
+        "tests/loop/plan-flag.test.ts",
+        "tests/loop/plan-stop.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 6d4ce04."
+    },
+    {
+      "task": "048/4.1",
+      "reqs": [
+        "REQ-LOOP-015",
+        "REQ-LOOP-016",
+        "REQ-HND-004",
+        "REQ-QRY-016"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 6d4ce04. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "050/2.1",
+      "reqs": [
+        "REQ-QRY-018",
+        "REQ-QRY-019"
+      ],
+      "code": [
+        "src/cli/help.ts"
+      ],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit a598826."
+    },
+    {
+      "task": "050/3.1",
+      "reqs": [
+        "REQ-QRY-018",
+        "REQ-QRY-019"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit a598826. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "051/2.1",
+      "reqs": [
+        "REQ-GOV-012",
+        "REQ-GOV-003"
+      ],
+      "code": [],
+      "tests": [
+        "tests/gov/try-readme.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit b9db4f6."
+    },
+    {
+      "task": "051/2.2",
+      "reqs": [
+        "REQ-GOV-006",
+        "REQ-GOV-012"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit b9db4f6. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "051/3.1",
+      "reqs": [
+        "REQ-GOV-012",
+        "REQ-GOV-013"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit b9db4f6. No file fits both, so the task has no file label."
+    },
+    {
+      "task": "052/1.1",
+      "reqs": [
+        "REQ-CHK-010",
+        "REQ-CHK-004",
+        "REQ-CHK-008",
+        "REQ-CHK-009"
+      ],
+      "code": [
+        "src/check/check.ts",
+        "src/cli/commands.ts"
+      ],
+      "tests": [
+        "tests/baseline/baseline.test.ts",
+        "tests/check/deferred.test.ts",
+        "tests/check/dupkey.test.ts",
+        "tests/check/evidence.test.ts",
+        "tests/check/strict.test.ts"
+      ],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit 9aae05a."
+    },
+    {
+      "task": "053/1.2",
+      "reqs": [
+        "REQ-GOV-013"
+      ],
+      "code": [],
+      "tests": [],
+      "note": "reqs: the citations of the task. files: named in the task text or run by its Verify, and edited by the closing commit c4ab99b. No file fits both, so the task has no file label."
+    }
+  ]
+}

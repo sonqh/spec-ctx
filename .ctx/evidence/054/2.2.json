@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-06T15:12:12.954Z",
+  "bundle_chars": 7776,
+  "files": {
+    "tests/stat/recall.test.ts": "16aa904c76ad3864cef7da08e51d005041a18e60c3de1b06754e50367b19adc4"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-006"
+  ],
+  "started_at": "2026-11-06T15:12:12.753Z",
+  "task": "054/2.2",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "node scripts/recall.mjs --labels bench/recall/openspec-fixture.json --check-schema",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "48ecaa2ee48906b5f693b42bbac70b078e3c7058a232e9c8a40c56948013b098"
+  }
+}

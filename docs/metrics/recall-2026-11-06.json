@@ -1,0 +1,546 @@
+{
+  "date": "2026-11-06",
+  "node": "22.23.4",
+  "platform": "linux",
+  "arch": "x64",
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "spec_ctx_commit": "c085a9f486607de4215926315c65ff5710329f0b",
+  "repos": [
+    {
+      "repo": "spec-ctx",
+      "root_commit": "c085a9f486607de4215926315c65ff5710329f0b",
+      "labels_file": "spec-ctx.json",
+      "labels_sha256": "d8d60270b508131c8ccf0259f57dfb2c2518e8b9822b44bf4cb7fc7fb06acf0b",
+      "budget": 8000,
+      "tasks": 20,
+      "labels": {
+        "total": 114,
+        "reqs": 54,
+        "code": 30,
+        "tests": 30
+      },
+      "matched": {
+        "total": 80,
+        "reqs": 49,
+        "code": 17,
+        "tests": 14
+      },
+      "recall": 0.7018,
+      "recall_by_kind": {
+        "reqs": 0.9074,
+        "code": 0.5667,
+        "tests": 0.4667
+      },
+      "complete": 8,
+      "chars": {
+        "median": 7915,
+        "max": 8469
+      },
+      "runs": 5,
+      "p95_ms": 140.2011,
+      "per_task": [
+        {
+          "task": "045/1.1",
+          "chars": 7852,
+          "matched": 6,
+          "total": 7,
+          "misses": [
+            "src/cli/commands.ts"
+          ]
+        },
+        {
+          "task": "045/2.1",
+          "chars": 7350,
+          "matched": 3,
+          "total": 4,
+          "misses": [
+            "src/graph/related.ts"
+          ]
+        },
+        {
+          "task": "045/3.2",
+          "chars": 7881,
+          "matched": 4,
+          "total": 4,
+          "misses": []
+        },
+        {
+          "task": "045/4.1",
+          "chars": 8010,
+          "matched": 3,
+          "total": 3,
+          "misses": []
+        },
+        {
+          "task": "046/1.1",
+          "chars": 7845,
+          "matched": 6,
+          "total": 8,
+          "misses": [
+            "src/index/build.ts",
+            "tests/index/determinism.test.ts"
+          ]
+        },
+        {
+          "task": "046/2.1",
+          "chars": 8444,
+          "matched": 6,
+          "total": 13,
+          "misses": [
+            "src/graph/links.ts",
+            "src/graph/query.ts",
+            "src/graph/related.ts",
+            "tests/query/budget.test.ts",
+            "tests/query/plain.test.ts",
+            "tests/query/related.test.ts",
+            "tests/query/structural.test.ts"
+          ]
+        },
+        {
+          "task": "046/3.1",
+          "chars": 7820,
+          "matched": 6,
+          "total": 7,
+          "misses": [
+            "src/cli/help.ts"
+          ]
+        },
+        {
+          "task": "047/2.1",
+          "chars": 8079,
+          "matched": 6,
+          "total": 8,
+          "misses": [
+            "src/cli/args.ts",
+            "src/cli/commands.ts"
+          ]
+        },
+        {
+          "task": "047/3.1",
+          "chars": 7887,
+          "matched": 6,
+          "total": 6,
+          "misses": []
+        },
+        {
+          "task": "047/4.1",
+          "chars": 8246,
+          "matched": 3,
+          "total": 4,
+          "misses": [
+            "REQ-TASK-002"
+          ]
+        },
+        {
+          "task": "048/2.1",
+          "chars": 7853,
+          "matched": 6,
+          "total": 8,
+          "misses": [
+            "src/cli/args.ts",
+            "src/cli/help.ts"
+          ]
+        },
+        {
+          "task": "048/3.1",
+          "chars": 8469,
+          "matched": 3,
+          "total": 14,
+          "misses": [
+            "REQ-LOOP-015",
+            "REQ-LOOP-016",
+            "src/loop/next.ts",
+            "tests/cli/nextstep.test.ts",
+            "tests/cli/run-prefix.test.ts",
+            "tests/loop/archive-stop.test.ts",
+            "tests/loop/gate-rerun-line.test.ts",
+            "tests/loop/gate-strict.test.ts",
+            "tests/loop/next.test.ts",
+            "tests/loop/plan-flag.test.ts",
+            "tests/loop/plan-stop.test.ts"
+          ]
+        },
+        {
+          "task": "048/4.1",
+          "chars": 8126,
+          "matched": 3,
+          "total": 4,
+          "misses": [
+            "REQ-QRY-016"
+          ]
+        },
+        {
+          "task": "050/2.1",
+          "chars": 7871,
+          "matched": 2,
+          "total": 3,
+          "misses": [
+            "src/cli/help.ts"
+          ]
+        },
+        {
+          "task": "050/3.1",
+          "chars": 7934,
+          "matched": 2,
+          "total": 2,
+          "misses": []
+        },
+        {
+          "task": "051/2.1",
+          "chars": 8019,
+          "matched": 3,
+          "total": 3,
+          "misses": []
+        },
+        {
+          "task": "051/2.2",
+          "chars": 7882,
+          "matched": 2,
+          "total": 2,
+          "misses": []
+        },
+        {
+          "task": "051/3.1",
+          "chars": 8100,
+          "matched": 2,
+          "total": 2,
+          "misses": []
+        },
+        {
+          "task": "052/1.1",
+          "chars": 8149,
+          "matched": 7,
+          "total": 11,
+          "misses": [
+            "REQ-CHK-010",
+            "tests/baseline/baseline.test.ts",
+            "tests/check/evidence.test.ts",
+            "tests/check/strict.test.ts"
+          ]
+        },
+        {
+          "task": "053/1.2",
+          "chars": 7896,
+          "matched": 1,
+          "total": 1,
+          "misses": []
+        }
+      ]
+    },
+    {
+      "repo": "OpenSpec-spec-ctx",
+      "root_commit": "88991711f000a349714a6639523425dc4739b52a",
+      "labels_file": "openspec-fixture.json",
+      "labels_sha256": "4094ca4b78d75b7199f258211026b58e77207381bcbd20a194708836a750137a",
+      "budget": 8000,
+      "tasks": 20,
+      "labels": {
+        "total": 189,
+        "reqs": 188,
+        "code": 1,
+        "tests": 0
+      },
+      "matched": {
+        "total": 64,
+        "reqs": 64,
+        "code": 0,
+        "tests": 0
+      },
+      "recall": 0.3386,
+      "recall_by_kind": {
+        "reqs": 0.3404,
+        "code": 0,
+        "tests": null
+      },
+      "complete": 5,
+      "chars": {
+        "median": 7515.5,
+        "max": 8198
+      },
+      "runs": 5,
+      "p95_ms": 146.6414,
+      "per_task": [
+        {
+          "task": "add-change-stacking-awareness/2.1",
+          "chars": 7116,
+          "matched": 6,
+          "total": 7,
+          "misses": [
+            "REQ-OC-013"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/2.2",
+          "chars": 8144,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/2.3",
+          "chars": 8198,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/3.2",
+          "chars": 8125,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/5.3",
+          "chars": 8154,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/5.5",
+          "chars": 8142,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/7.1",
+          "chars": 8136,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/7.2",
+          "chars": 8108,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/8.1",
+          "chars": 8106,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-global-install-scope/8.5",
+          "chars": 8151,
+          "matched": 2,
+          "total": 14,
+          "misses": [
+            "REQ-CI-017",
+            "REQ-CI-018",
+            "REQ-CLC-013",
+            "REQ-CLC-014",
+            "REQ-CU-008",
+            "REQ-CU-009",
+            "REQ-GC-007",
+            "REQ-IS-001",
+            "REQ-IS-002",
+            "REQ-IS-003",
+            "REQ-IS-004",
+            "REQ-IS-005"
+          ]
+        },
+        {
+          "task": "add-tool-command-surface-capabilities/1.1",
+          "chars": 7432,
+          "matched": 3,
+          "total": 7,
+          "misses": [
+            "REQ-CI-022",
+            "REQ-CU-010",
+            "REQ-CU-012",
+            "src/core/config.ts"
+          ]
+        },
+        {
+          "task": "add-tool-command-surface-capabilities/2.6",
+          "chars": 7571,
+          "matched": 3,
+          "total": 6,
+          "misses": [
+            "REQ-CI-022",
+            "REQ-CU-010",
+            "REQ-CU-012"
+          ]
+        },
+        {
+          "task": "add-tool-command-surface-capabilities/3.2",
+          "chars": 7419,
+          "matched": 3,
+          "total": 6,
+          "misses": [
+            "REQ-CI-022",
+            "REQ-CU-010",
+            "REQ-CU-012"
+          ]
+        },
+        {
+          "task": "add-tool-command-surface-capabilities/3.5",
+          "chars": 7460,
+          "matched": 3,
+          "total": 6,
+          "misses": [
+            "REQ-CI-022",
+            "REQ-CU-010",
+            "REQ-CU-012"
+          ]
+        },
+        {
+          "task": "add-tool-command-surface-capabilities/4.3",
+          "chars": 7422,
+          "matched": 3,
+          "total": 6,
+          "misses": [
+            "REQ-CI-022",
+            "REQ-CU-010",
+            "REQ-CU-012"
+          ]
+        },
+        {
+          "task": "unify-template-generation-pipeline/1.2",
+          "chars": 5177,
+          "matched": 5,
+          "total": 5,
+          "misses": []
+        },
+        {
+          "task": "unify-template-generation-pipeline/1.3",
+          "chars": 5215,
+          "matched": 5,
+          "total": 5,
+          "misses": []
+        },
+        {
+          "task": "unify-template-generation-pipeline/3.2",
+          "chars": 5137,
+          "matched": 5,
+          "total": 5,
+          "misses": []
+        },
+        {
+          "task": "unify-template-generation-pipeline/4.3",
+          "chars": 5118,
+          "matched": 5,
+          "total": 5,
+          "misses": []
+        },
+        {
+          "task": "unify-template-generation-pipeline/5.3",
+          "chars": 5122,
+          "matched": 5,
+          "total": 5,
+          "misses": []
+        }
+      ]
+    }
+  ]
+}
