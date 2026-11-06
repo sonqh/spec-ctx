@@ -895,5 +895,16 @@
     "verdict": "approved",
     "answer": "Approved by the lead on 2026-11-06 after the architect diff review: no blocker. childEnv is pure, rerun keeps CI and SPECCTX_RERUN, tests restore the vars, stubs cannot pass vacuously, no golden changed.",
     "resolved_at": "2026-11-06T15:19:38.405Z"
+  },
+  {
+    "n": 94,
+    "asked_at": "2026-11-06T15:26:16.865Z",
+    "task": "059-intake-bugs",
+    "text": "plan ready for 059-intake-bugs. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-06 after PM and architect reviews, with edits. D2: in src/cli/help.ts drop --json from the global flags on the report page, the same way the lint pages drop them (line ~237), and keep the exit 2 line. REQ-JRN-008: add that the help page of report does not list --json, with a THEN clause in SCN-JRN-008-1. SCN-JRN-008-1 and task 2.1: drop the no-journal-file assertion, or run with journal 1 and assert the last line has exit 2. Draft the id new help strings in design D4 and lint them in Strict mode before the task. Task 2.1 record note: help.out changes too (report and id new summaries, --count line), not only pages.out. Task 3.1 wording: bun run build regenerates src/assets.generated.ts, init --skills --force rewrites only the skill copies. Cut the help assertion for SCN-IDS-006-2 in tests/ids/new.test.ts, the golden covers it. Proposal: cite the ADR-009 intake and ADR-007 item 3, drop the item 7 citation.",
+    "resolved_at": "2026-11-06T15:27:58.806Z"
   }
 ]
