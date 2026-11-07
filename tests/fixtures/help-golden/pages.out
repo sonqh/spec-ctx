@@ -102,6 +102,27 @@ Exit codes:
 Example:
   `specctx related src/graph/bundle.ts`
 
+== impact
+specctx impact: Print the requirements a file touches, the tasks that cite them, and the commands that check them.
+
+Usage:
+  `specctx impact <path> [flags]`
+
+Flags:
+  `--archived`                 List the archived tasks. The default counts them.
+  `--all`                      Show every command of the plan. The default shows 10.
+  `--root <path>`              Use this project root.
+  `--json`                     Print one JSON document.
+  `--help`                     Show this help.
+
+Exit codes:
+  `0` Success.
+  `2` A usage error, or a path that is not a file in the repository. It takes one file.
+  `3` An internal error.
+
+Example:
+  `specctx impact src/graph/bundle.ts`
+
 == bundle
 specctx bundle: Print the spec text for the IDs, files, or changes and their links.
 

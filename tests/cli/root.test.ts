@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 const COMMANDS = [
-  ["status"], ["build"], ["query", "x"], ["related", "REQ-AA-001"], ["bundle", "REQ-AA-001"], ["check"], ["check", "--strict"],
+  ["status"], ["build"], ["query", "x"], ["related", "REQ-AA-001"], ["bundle", "REQ-AA-001"], ["impact", "src/a.ts"], ["check"], ["check", "--strict"],
   ["gate"], ["stats"], ["adopt"], ["adopt", "--dry-run"], ["id", "new", "REQ", "AA"], ["task", "next"], ["task", "start", "001/1.1"],
   ["task", "done", "001/1.1"], ["handoff", "write"], ["handoff", "ask", "why"], ["baseline", "write"],
 ];

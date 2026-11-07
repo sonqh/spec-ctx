@@ -1,0 +1,36 @@
+{
+  "at": "2026-11-07T10:03:19.773Z",
+  "bundle_chars": 7867,
+  "diff": [
+    "openspec/changes/068-impact/design.md",
+    "openspec/changes/068-impact/specs/query/spec.md",
+    "src/graph/impact.ts",
+    "src/graph/trust.ts",
+    "src/tasks/files.ts",
+    "tests/query/impact.test.ts"
+  ],
+  "files": {
+    "openspec/changes/068-impact/design.md": "2e22f5162927648650e35602685f5839afc94792c81bfc732668b0eb674a7f9a",
+    "openspec/changes/068-impact/specs/query/spec.md": "ff3ee29eb18399c44b572e3aa9c8e3c83702bf4078d6e15fd8b3833396d36230",
+    "src/graph/impact.ts": "fc97fa0de4017d3f45284b064254f95ae6150bf201c63fd3e47f4d8ffdb0671d",
+    "src/graph/trust.ts": "2aeaec431a73245d1dc510934610a7546c5db036608e400f6c704e9cbefecf53",
+    "src/tasks/files.ts": "fca8099590c1a6a442b275fff4eb2b5cd494b97b2a33cbd338eba6562a71ff8e",
+    "tests/query/impact.test.ts": "1d4689f8f42e57d127196800eb99cb08c7e4125c504be7b9df24ca0337d37f7a"
+  },
+  "kind": "command",
+  "reason": "namesMissingPath dropped commands that still run: globs, redirects, regexes, URLs",
+  "reqs": [
+    "REQ-QRY-028",
+    "REQ-QRY-029",
+    "REQ-QRY-030"
+  ],
+  "started_at": "2026-11-07T10:01:15.503Z",
+  "task": "068/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 210 pass\n 0 fail\n 1057 expect() calls\nRan 210 tests across 28 files. [4.45s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -236,7 +236,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 ## Status
 
 - Published: `spec-ctx@0.6.0` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
-- Archived: 001 to 025, 027 to 034, and 036 to 067. No change is open.
+- Archived: 001 to 025, 027 to 034, and 036 to 068. No change is open.
 - Upstream: the ID scheme has a proposal in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured
@@ -247,7 +247,7 @@ The newest file is `docs/metrics/2026-11-07.md`. Its total row:
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0146 (n=177) | 0.95 (303/319) | 87 (of 161 reopens) | 53 (n=177) | 0 (0 baselined + 0 new) |
+| total | 0.0147 (n=179) | 0.95 (306/322) | 90 (of 167 reopens) | 52 (n=179) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.
