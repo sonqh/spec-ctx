@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T08:54:24.307Z",
+  "bundle_chars": 6814,
+  "files": {
+    "src/graph/bundle.ts": "a7dee0c3ef9c8ca1a40f04362585c200939c60261aa2c5c9f589ec989d971766",
+    "src/graph/links.ts": "d5e531474da569432b2897f99661b13349af1c8e9a0d2855813ef13244d123d4",
+    "src/index/changepath.ts": "7812dc97b72ec4f1f2e20c6f4a76ca6601078d82dd15396879eb70318d1c449a",
+    "src/index/scan.ts": "d90a8158c22a6f380af8e385e8cf6580a220b342baa87010b35f0c866851628c",
+    "tests/index/scan-glob.test.ts": "099a31e90de0af338a63bed294f266e33b6fb4db65f0002457c784b26ed8d575",
+    "tests/query/file-mentions.test.ts": "d78a86c284d6fdf1253b314070b5e205e07b5e76fe95d941cd97882980a68710",
+    "tests/query/structural.test.ts": "98f48840c16810ef8317f8fb41f57334ade40c69b82a50700aabb7ca46c310b9"
+  },
+  "kind": "command",
+  "reason": "tests and status.ts edited at archive review",
+  "reqs": [
+    "REQ-IDX-015"
+  ],
+  "started_at": "2026-11-07T08:51:21.686Z",
+  "task": "065/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/index tests/query tests/tasks tests/gate tests/cli tests/gov && npx vitest run tests/index tests/query && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 430 pass\n 0 fail\n 2324 expect() calls\nRan 430 tests across 70 files. [12.88s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "007c3fa903108588830dd28166945343a9fc5076dd861523c79b4f6287b5ead6"
+  }
+}

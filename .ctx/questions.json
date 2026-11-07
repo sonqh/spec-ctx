@@ -1079,5 +1079,27 @@
     "verdict": "approved",
     "answer": "Architect archive review: no blocker in code. Metrics file restored from HEAD (stats --write bug, ADR-010 item 4). CHANGELOG notes the rule applies to every bundle. Gate strict passes.",
     "resolved_at": "2026-11-07T08:22:36.443Z"
+  },
+  {
+    "n": 111,
+    "asked_at": "2026-11-07T08:48:22.791Z",
+    "task": "065-scan-glob",
+    "text": "plan ready for 065-scan-glob. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Bug fix of issue #29. Architect review applied: exact folder rules at query time through the loaded config, D1 wording, archive/x.md deviation recorded and tested, D5 out of scope with next stopping honestly. check and gate strict pass.",
+    "resolved_at": "2026-11-07T08:51:06.908Z"
+  },
+  {
+    "n": 112,
+    "asked_at": "2026-11-07T08:56:47.064Z",
+    "task": "065-scan-glob",
+    "text": "archive 065-scan-glob?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Architect archive review applied: archive cap folder test, status.ts date strip, partial glob test, out-of-scope note. Repair done, gate strict, parity, and ci:local pass.",
+    "resolved_at": "2026-11-07T09:02:28.408Z"
   }
 ]

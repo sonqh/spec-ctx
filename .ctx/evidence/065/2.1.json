@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-07T09:00:20.905Z",
+  "files": {
+    "src/graph/bundle.ts": "a7dee0c3ef9c8ca1a40f04362585c200939c60261aa2c5c9f589ec989d971766",
+    "src/graph/links.ts": "d5e531474da569432b2897f99661b13349af1c8e9a0d2855813ef13244d123d4",
+    "src/index/changepath.ts": "7812dc97b72ec4f1f2e20c6f4a76ca6601078d82dd15396879eb70318d1c449a",
+    "src/index/scan.ts": "d90a8158c22a6f380af8e385e8cf6580a220b342baa87010b35f0c866851628c",
+    "tests/index/scan-glob.test.ts": "539c10efd0b8a0700a797939ae122226621abb5dc41e0e7f626fc9c5ac72366d",
+    "tests/query/file-mentions.test.ts": "d78a86c284d6fdf1253b314070b5e205e07b5e76fe95d941cd97882980a68710",
+    "tests/query/structural.test.ts": "98f48840c16810ef8317f8fb41f57334ade40c69b82a50700aabb7ca46c310b9"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-IDX-015"
+  ],
+  "task": "065/2.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gov tests/cli && node dist/cli.js lint tells --baseline 0 docs/reference.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/reference.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 135 pass\n 0 fail\n 785 expect() calls\nRan 135 tests across 26 files. [6.45s]",
+    "stdout_sha256": "9f8713d02c2b03f55b2dd8ae588f1649d407f485356fa0c513cee3782635fc57"
+  }
+}

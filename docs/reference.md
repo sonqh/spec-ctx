@@ -212,6 +212,8 @@ archive = "ask"                         # "ask" stops before archive for a human
 run = "specctx"                         # the prefix of every command that spec-ctx prints. init writes npx -y spec-ctx@<version> under npx.
 ```
 
+The change name is the first folder under the fixed prefix of the `changes` glob. The fixed prefix is the literal path before the first wildcard. With `work/changes/**/*.md`, the file `work/changes/a/tasks.md` belongs to the change `a`. Under an `archive/` folder, the change is the next folder without its date. A file directly under the prefix has the change `main`. With several globs, the first glob that matches the path and yields a folder wins. `check`, `next`, and `gate --rerun` still read `openspec/changes`.
+
 With `brackets = true`, `init --schema` installs templates with `[REQ-<CAP>-NNN]` and `[SCN-<CAP>-NNN-N]` in the headers. The merged rules show the same form. Task citations, `Refs:` lines, and tags stay bare. After you change the value, run `specctx init --schema` again. It switches each template and rule that you did not edit. It keeps the ones you edited, unless you add `--force`.
 
 Two environment variables change the engine:

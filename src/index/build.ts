@@ -45,7 +45,7 @@ function buildOnce(root: string, cfg: Config, list: ScanFile[], s: Scanner, t0: 
     if (f.kind === "md") scanMarkdown(s, f.path, entries, problems);
     else scanSource(s, f.path, entries, scnNamed);
   }
-  addStructure(entries, list);
+  addStructure(entries, list, s.changes);
   markCanonical(entries);
   entries.sort((a, b) => cmpTuple([a.id, a.file, a.line], [b.id, b.file, b.line]));
   const uniq = new Map<string, Problem>();

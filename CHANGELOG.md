@@ -4,6 +4,8 @@ This file lists the notable changes in each release of `spec-ctx`. Versions foll
 
 ## Unreleased
 
+Change 065-scan-glob. GitHub issue #29. With a `[scan] changes` glob that is not `openspec/changes/**`, the scanner named every change `main`, so two tasks `1.1` shared the ID `main/1.1`. A change now takes its name from the first folder under the fixed prefix of the glob that matched. The `archive/` rule and the date strip stay. A file directly under the prefix has the change `main`. The query commands pass the rules to the graph walk. The default glob gives the same index as before, except that `openspec/changes/archive/tasks.md` has the change `main`, not `archive` (REQ-IDX-015).
+
 Change 064-body-recall. The recall report gains `body_recall`, the share of cited requirement bodies that print, and the means of `body_omitted` and `truncated` IDs per `context` run (REQ-STAT-008). The cards of the second and later lines of one file, and the `named by` cards, now fill after the bodies of cited requirements (REQ-QRY-027). On this repo `body_recall` rises from 0.80 to 0.83 and recall falls from 1.00 to 0.98. The rule applies to every bundle, so `related` and `bundle <REQ>` also fill those cards after the cited bodies when the budget is tight. See `docs/verification/064.md`.
 
 ## 0.6.0

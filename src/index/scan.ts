@@ -2,6 +2,7 @@
 import { lstatSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "../config.ts";
+import { changeFolder, changeRules, DEFAULT_RULES, type ChangeRules } from "./changepath.ts";
 import { anyMatch, globBase, globRe } from "../util/glob.ts";
 import { cmpStr, pyStrip, splitLines, squash } from "../util/pystr.ts";
 import type { Entry, Problem, Scanned, Status } from "./types.ts";
@@ -41,6 +42,8 @@ export interface Scanner {
   tests: RegExp[];
   ignore: RegExp[];
   bases: string[];
+  /** REQ-IDX-015 one rule for each `[scan] changes` glob */
+  changes: ChangeRules;
   taskRe: RegExp;
 }
 
@@ -53,6 +56,7 @@ export function scanner(root: string, cfg: Config): Scanner {
     src: [...s.code, ...s.tests].map(globRe),
     tests: s.tests.map(globRe),
     ignore: s.ignore.map(globRe),
+    changes: changeRules(s.changes),
     bases: [...new Set(all.map(globBase))].sort(cmpStr),
     taskRe: new RegExp(`^${S}*- \\[([ xX]?)\\]${S}*(${cfg.ids.task_pattern})${S}+(.*)$`, "s"),
   };
@@ -122,13 +126,9 @@ export function scannedOf(root: string, files: ScanFile[]): Scanned {
   return { count: files.length, newest_mtime_ms: newest };
 }
 
-export function changeOf(path: string): string {
-  const m = /^openspec\/changes\/(archive\/)?([^/]+)\//.exec(path);
-  if (!m) return "main";
-  let name = m[2]!;
-  // openspec archive prefixes the folder with a date: 2026-10-23-001-foundation
-  if (m[1]) name = name.replace(/^\d{4}-\d{2}-\d{2}-/, "");
-  return name;
+/** REQ-IDX-015 the change name of a path, or `main`. The default rules read `openspec/changes`. */
+export function changeOf(path: string, rules: ChangeRules = DEFAULT_RULES): string {
+  return changeFolder(path, rules)?.name ?? "main";
 }
 
 /**
@@ -200,8 +200,10 @@ function entry(e: Omit<Entry, "canonical" | "text"> & { text?: string }): Pendin
 
 export function scanMarkdown(sc: Scanner, rpath: string, entries: Entry[], problems: Problem[]): void {
   const lines = splitLines(readText(join(sc.root, rpath)));
-  const change = changeOf(rpath);
-  const status: Status = rpath.includes("/archive/") ? "archived" : "active";
+  // REQ-IDX-015 a folder of a changes glob decides the status. Any other file keeps the path test.
+  const cf = changeFolder(rpath, sc.changes);
+  const change = cf?.name ?? "main";
+  const status: Status = (cf ? cf.archived : rpath.includes("/archive/")) ? "archived" : "active";
   const isDesign = rpath.endsWith("design.md");
   const isTasks = rpath.endsWith("tasks.md");
   let curReq: string | null = null;

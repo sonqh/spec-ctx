@@ -1,18 +1,20 @@
 // REQ-QRY-009 REQ-QRY-010 REQ-QRY-011 structural edges. They come from the change, file, and status fields and from the
 // design links of tasks, at query time. The index stores no copy of them (046/D4).
+import { changeFolder, DEFAULT_RULES, type ChangeRules } from "../index/changepath.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpStr } from "../util/pystr.ts";
 
-const CHANGE_DIR = /^(openspec\/changes\/(?:archive\/)?[^/]+)\//;
 const CAP_SPEC = /(?:^|\/)specs\/([^/]+)\/spec\.md$/;
 
 /** The change folder that holds a file, or undefined. */
-export const folderOf = (file: string): string | undefined => CHANGE_DIR.exec(file)?.[1];
+// REQ-IDX-015 the rules come from the config of the caller (065/D4)
+export const folderOf = (file: string, rules: ChangeRules = DEFAULT_RULES): string | undefined => changeFolder(file, rules)?.dir;
 
 /** The capability name of a `specs/<cap>/spec.md` path, or undefined. */
 export const capNameOf = (file: string): string | undefined => CAP_SPEC.exec(file)?.[1];
 
 export interface Structure {
+  rules: ChangeRules;
   /** change folder to the IDs of the requirements and scenarios of its delta specs */
   deltas: Map<string, string[]>;
   /** change folder to the capability names its delta specs touch */
@@ -33,16 +35,18 @@ function push(m: Map<string, string[]>, k: string, v: string): void {
   else if (!l.includes(v)) l.push(v);
 }
 
-const cache = new WeakMap<Entry[], Structure>();
+const cache = new WeakMap<Entry[], Map<ChangeRules, Structure>>();
 
-export function structure(entries: Entry[]): Structure {
-  let s = cache.get(entries);
+export function structure(entries: Entry[], rules: ChangeRules = DEFAULT_RULES): Structure {
+  let byRules = cache.get(entries);
+  if (!byRules) cache.set(entries, (byRules = new Map()));
+  let s = byRules.get(rules);
   if (s) return s;
-  s = { deltas: new Map(), caps: new Map(), reqsOfCap: new Map(), designs: new Map(), tasksOf: new Map(), main: new Map() };
+  s = { rules, deltas: new Map(), caps: new Map(), reqsOfCap: new Map(), designs: new Map(), tasksOf: new Map(), main: new Map() };
   const modified = new Set<string>();
   for (const e of entries) {
     if (e.kind === "req" || e.kind === "scn") {
-      const dir = folderOf(e.file);
+      const dir = folderOf(e.file, rules);
       const cap = capNameOf(e.file);
       if (dir && cap) {
         push(s.deltas, dir, e.id);
@@ -65,7 +69,7 @@ export function structure(entries: Entry[]): Structure {
     }
   }
   for (const l of [s.caps, s.reqsOfCap, s.tasksOf]) for (const v of l.values()) v.sort(cmpStr);
-  cache.set(entries, s);
+  byRules.set(rules, s);
   return s;
 }
 
@@ -80,7 +84,7 @@ export function structuralEdges(s: Structure, ex: Entry, x: string, isStart: boo
   };
   if (ex.kind === "task") {
     // like a capability, a task reaches its deltas only as the start, so depth 2 adds no sibling (046/D5)
-    const dir = folderOf(ex.file);
+    const dir = folderOf(ex.file, s.rules);
     if (isStart) for (const id of (dir && s.deltas.get(dir)) || []) put(id, `delta in change of ${x}`);
     for (const id of s.designs.get(x) ?? []) put(id, `design named in ${x}`);
   } else if (ex.kind === "decision") {
@@ -91,7 +95,7 @@ export function structuralEdges(s: Structure, ex: Entry, x: string, isStart: boo
   } else if (ex.kind === "cap" && isStart) {
     for (const id of s.reqsOfCap.get(ex.title) ?? []) put(id, `requirement in ${x}`);
   } else if (ex.kind === "change") {
-    const dir = folderOf(ex.file);
+    const dir = folderOf(ex.file, s.rules);
     for (const id of (dir && s.deltas.get(dir)) || []) put(id, `delta in ${x}`);
     for (const c of (dir && s.caps.get(dir)) || []) put(`cap/${c}`, `capability touched by ${x}`);
   }
