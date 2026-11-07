@@ -170,7 +170,7 @@ describe("omitted trailer and requested IDs", () => {
       const j = await json(p, "bundle", "009/D1", "REQ-TH-001", "--budget", budget);
       const rows = j.text.split("\n").filter((l) => l.startsWith("-- 009/D1 |"));
       expect(rows.length, budget).toBe(1);
-      expect(rows[0]!.endsWith("| requested"), budget).toBe(true);
+      expect(rows[0]!.includes("| requested |"), budget).toBe(true);
       expect(j.omitted, budget).not.toContain("009/D1");
     }
   });

@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-07T03:18:35.814Z",
+  "files": {
+    "src/cli/commands.ts": "2d4d028666d061651ca629a9fab34dd55a9a34666c950ae3b054c187acf00d54",
+    "src/graph/bundle.ts": "9ba4c60250ff31be592d53e7a745316b65ff90c794870adcadc736aa2858a03b",
+    "src/graph/trust.ts": "3be707b9a80addb7e7c9f5db2b7e0f065ec984bb0c56f70a271f063e4ed5de6b",
+    "tests/gov/governance.test.ts": "5ba26a6e1e65cef37bed31469549eee805dff6f717b33fb5c19786437e6bce04",
+    "tests/query/budget.test.ts": "c38130bf5b14cd92c13ab81523a864fead860429a9568e160e290d28b07fdbba",
+    "tests/query/bundle.test.ts": "fcafd80d7cbbfdb0904c4dd06833ddff665827d6b27adbd9bb1975b00b95dbfa",
+    "tests/query/cards.test.ts": "98a7e3610e1f6413bec4dfa9c9eff56fd23c2d1a80cf83cfd4e754f149a60b39",
+    "tests/query/trust.test.ts": "1837ba6b8d2a409f4043cdda5d43f1b62888e72e4a9e2b0151e0520323d8cc32"
+  },
+  "kind": "command",
+  "reason": "lead fix in trust.ts after the architect review",
+  "reqs": [
+    "REQ-QRY-026",
+    "REQ-QRY-020",
+    "REQ-QRY-023"
+  ],
+  "task": "062/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/journal tests/stat tests/loop && npx vitest run tests/query tests/tasks && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 315 pass\n 0 fail\n 1809 expect() calls\nRan 315 tests across 47 files. [12.83s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "3a7f53b4d339f4510ab69fb1082b3b57dd32432012221042fe7143429161c142"
+  }
+}

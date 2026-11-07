@@ -88,8 +88,8 @@ describe("capability edges", () => {
     expect(r.code, r.err).toBe(0);
     const heads = r.out.split("\n").filter((l) => l.startsWith("-- REQ-TH-001 |"));
     expect(heads).toEqual([
-      "-- REQ-TH-001 | openspec/changes/009-add-x/specs/thing/spec.md:3 | modified | requested",
-      "-- REQ-TH-001 | openspec/specs/thing/spec.md:3 | active | main version of REQ-TH-001",
+      "-- REQ-TH-001 | openspec/changes/009-add-x/specs/thing/spec.md:3 | modified | requested | declared | unverified",
+      "-- REQ-TH-001 | openspec/specs/thing/spec.md:3 | active | main version of REQ-TH-001 | structural | unverified",
     ]);
     expect(r.out).toContain("The thing SHALL work well.");
     expect(r.out).toContain("The thing SHALL work.\n");

@@ -4,6 +4,7 @@ import { isAbsolute, join, normalize } from "node:path";
 import { canon, poolOf } from "../index/canonical.ts";
 import { blockRange, readText } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
+import { Trust, provenanceClass, taggedReq } from "./trust.ts";
 import { cmpStr, cmpTuple, cpLen, pyStrip, splitLines } from "../util/pystr.ts";
 import { KIND_RANK, mainVersion, walkFound, type Hit } from "./related.ts";
 
@@ -44,8 +45,8 @@ function rstrip(s: string): string {
   return t.slice(1);
 }
 
-export function provenance(e: Entry, reason: string): string {
-  return `-- ${e.id} | ${e.file}:${e.line} | ${e.status} | ${reason}\n`;
+export function provenance(e: Entry, reason: string, trust = ""): string {
+  return `-- ${e.id} | ${e.file}:${e.line} | ${e.status} | ${reason}${trust}\n`;
 }
 
 /** REQ-JRN-002 the ID of a provenance line, or null. It anchors on the start of `provenance()` (057/D3). */
@@ -61,6 +62,17 @@ export function reqBlocks(root: string, reqs: Entry[]): string {
 }
 
 // REQ-QRY-019 the completeness fields. complete says that no card and no body dropped, not that the text fits.
+/** REQ-QRY-026 one printed block of the bundle, in print order */
+export interface BlockInfo {
+  id: string;
+  file: string;
+  line: number;
+  status: string;
+  reason: string;
+  provenance: string;
+  evidence: string | null;
+}
+
 export interface BundleResult {
   text: string;
   /** The IDs that lost their card, in print order. */
@@ -72,6 +84,10 @@ export interface BundleResult {
   /** null in block mode, where no budget applies (050/D6). */
   budget: number | null;
   complete: boolean;
+  /** REQ-QRY-026 the code point length of the printed blocks, the figure of the budget */
+  used: number;
+  /** REQ-QRY-026 the printed blocks in print order, empty in block mode */
+  blocks: BlockInfo[];
 }
 
 /** REQ-QRY-012 the budget class of a block (046/D7). A lower class keeps its place first. */
@@ -192,9 +208,25 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   }
   const files = new Lines(root);
   // REQ-QRY-020 one state per block: 0 none, 1 card, 2 full. The fill sets it and the output reads it in print order.
+  // REQ-QRY-023 REQ-QRY-024 REQ-QRY-025 the trust columns of each card (062/D1 to D5)
+  const trust = new Trust(root, entries);
+  const labels = (e: Entry, reason: string): { provenance: string; evidence: string | null } => {
+    let prov: string = provenanceClass(reason);
+    if (prov === "tagged" && (e.kind === "code" || e.kind === "test")) {
+      const r = taggedReq(reason);
+      if (r && trust.lineVerified(e.file, r)) prov = "verified";
+    }
+    let ev: string | null = null;
+    if (e.kind === "task") ev = trust.taskState(e.id);
+    else if (e.kind === "req") ev = trust.reqState(e.id);
+    return { provenance: prov, evidence: ev };
+  };
   const blk: Blk[] = blocks.map(([e, reason, cls]) => {
     const body = blockText(e, files);
-    return { id: e.id, head: provenance(e, reason), body: body ? body + "\n" : "", cls, st: 0 };
+    const l = labels(e, reason);
+    const suffix = ` | ${l.provenance}` + (l.evidence ? ` | ${l.evidence}` : "");
+    return { id: e.id, head: provenance(e, reason, suffix), body: body ? body + "\n" : "", cls, st: 0,
+      info: { id: e.id, file: e.file, line: e.line, status: e.status, reason, ...l } };
   });
   // REQ-QRY-021 the files that a requested task names, as class 1 cards after the code and test lines (060/D4)
   const named: Blk[] = [];
@@ -206,7 +238,8 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
       for (const path of te.paths ?? []) {
         if (taken.has(path) || !isFile(root, path)) continue;
         taken.add(path);
-        named.push({ id: path, head: `-- ${path} | ${path} | active | named by ${t}\n`, body: "", cls: 1, st: 0 });
+        named.push({ id: path, head: `-- ${path} | ${path} | active | named by ${t} | declared\n`, body: "", cls: 1, st: 0,
+          info: { id: path, file: path, line: 0, status: "active", reason: `named by ${t}`, provenance: "declared", evidence: null } });
       }
     }
   }
@@ -273,7 +306,8 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   if (omitted.length) text += `truncated: ${omitted.length} entries omitted: ${omitted.join(", ")}\n`;
   // REQ-QRY-018 the over budget line goes last, so the 0.4.1 output stays a prefix (050/D4)
   if (used > budget) text += `over budget: ${used} of ${budget} characters\n`;
-  return { text, omitted, body_omitted: bodyOmitted, chars: cpLen(text), budget, complete: omitted.length === 0 && bodyOmitted.length === 0 };
+  const printed = blk.filter((b) => b.st).map((b) => b.info);
+  return { text, omitted, body_omitted: bodyOmitted, chars: cpLen(text), budget, complete: omitted.length === 0 && bodyOmitted.length === 0, used, blocks: printed };
 }
 
 /** REQ-QRY-020 a block with its head, its body, and its state: 0 none, 1 card, 2 full. */
@@ -283,6 +317,7 @@ interface Blk {
   body: string;
   cls: number;
   st: number;
+  info: BlockInfo;
 }
 
 const MARKER = " | body omitted";

@@ -29,8 +29,8 @@ describe("change as a start", () => {
     const r = await p.run("bundle", "009");
     expect(r.code, r.err).toBe(0);
     expect(r.out).toContain("-- REQ-TH-003 |");
-    expect(r.out).toContain("-- cap/thing | openspec/specs/thing/spec.md:1 | active | capability touched by change/009\n");
-    expect(r.out.startsWith("-- change/009 | openspec/changes/009-add-x/proposal.md:1 | active | requested\n")).toBe(true);
+    expect(r.out).toContain("-- cap/thing | openspec/specs/thing/spec.md:1 | active | capability touched by change/009 | structural\n");
+    expect(r.out.startsWith("-- change/009 | openspec/changes/009-add-x/proposal.md:1 | active | requested | declared\n")).toBe(true);
   });
 
   test("a change wins over a path", async () => {

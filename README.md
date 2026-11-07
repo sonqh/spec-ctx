@@ -188,7 +188,7 @@ graph LR
 
 The ID is the stable key. A reword of a header does not change it. The index is the graph of IDs: tasks, requirements, scenarios, decisions, code tags, and test tags. A decision record joins the graph through its `Refs:` line.
 
-`specctx context <task|ID|path|change>` is the one command to run before you edit. It walks the edges inside a character budget and prints one provenance line for each block. Each entry prints its card first. A card ends with `| body omitted` when its body does not fit, and `bundle <ID>` gets the body. A `truncated:` line names an entry that has no card. A task that cites no requirement gets a `note:` line. A task also gets one card for each file that its line names, with the reason `named by <task>`. `related` prints each neighbor and the reason for the link:
+`specctx context <task|ID|path|change>` is the one command to run before you edit. It walks the edges inside a character budget and prints one provenance line for each block. Each entry prints its card first. A card carries its trust labels: the provenance of the link (`declared`, `tagged`, `structural`, or `verified`) and, for a task or a requirement, the evidence state (`fresh`, `stale since <path>`, `no evidence`, `verified`, `unverified`). A card ends with `| body omitted` when its body does not fit, and `bundle <ID>` gets the body. A `truncated:` line names an entry that has no card. A task that cites no requirement gets a `note:` line. A task also gets one card for each file that its line names, with the reason `named by <task>`. `related` prints each neighbor and the reason for the link:
 
 ```text
 $ specctx related REQ-UA-004
@@ -245,7 +245,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 
 | change | context_ratio | evidence_ratio | stale_catches | cycle_time_median_s | debt |
 | --- | --- | --- | --- | --- | --- |
-| total | 0.0149 (n=168) | 0.95 (282/298) | 79 (of 144 reopens) | 54 (n=168) | 0 (0 baselined + 0 new) |
+| total | 0.0146 (n=168) | 0.95 (286/302) | 82 (of 151 reopens) | 54 (n=168) | 0 (0 baselined + 0 new) |
 
 - `context_ratio`: the size of one task bundle divided by the size of all spec text. Lower is better. Change 047 on 2026-10-30 made the bundle hold more, so older values do not compare.
 - `evidence_ratio`: done tasks with a passed Verify command, divided by all done tasks. Higher is better.

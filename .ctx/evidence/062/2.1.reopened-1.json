@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-07T03:12:42.845Z",
+  "bundle_chars": 8098,
+  "files": {
+    "src/cli/commands.ts": "2d4d028666d061651ca629a9fab34dd55a9a34666c950ae3b054c187acf00d54",
+    "src/graph/bundle.ts": "9ba4c60250ff31be592d53e7a745316b65ff90c794870adcadc736aa2858a03b",
+    "src/graph/trust.ts": "9f628f772b7a5c0254bf854716e1b7bfef92ae41ca75ff5c240f3aee8fb424bf",
+    "tests/gov/governance.test.ts": "5ba26a6e1e65cef37bed31469549eee805dff6f717b33fb5c19786437e6bce04",
+    "tests/query/budget.test.ts": "c38130bf5b14cd92c13ab81523a864fead860429a9568e160e290d28b07fdbba",
+    "tests/query/bundle.test.ts": "787c9529dc747ebf4e446b028aec1b75b2714bbc9dc1bff2b581ae204752ecf7",
+    "tests/query/cards.test.ts": "98a7e3610e1f6413bec4dfa9c9eff56fd23c2d1a80cf83cfd4e754f149a60b39",
+    "tests/query/trust.test.ts": "2c02525bca1a9ca56e3a2051380991f2c0be8bc41069e2c1fc2a7e005e64a3ff"
+  },
+  "kind": "command",
+  "reason": "lead raised the parity budget after close",
+  "reqs": [
+    "REQ-QRY-026",
+    "REQ-QRY-020",
+    "REQ-QRY-023"
+  ],
+  "started_at": "2026-11-07T03:10:27.701Z",
+  "task": "062/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/journal tests/stat tests/loop && npx vitest run tests/query tests/tasks && bash tests/parity/run.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 314 pass\n 0 fail\n 1804 expect() calls\nRan 314 tests across 47 files. [14.58s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "380bcda6ad0277da931383fb67aa7593210265fe955dbdff48cf9c9410eccb60"
+  }
+}

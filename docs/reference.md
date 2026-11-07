@@ -79,21 +79,24 @@ This is the output for task `045/2.1` of this repository, with the text of each 
 
 ```text
 $ specctx context 045/2.1
--- 045/2.1 | openspec/changes/archive/2026-10-30-045-query-by-file/tasks.md:11 | done | requested
--- 045/D2 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:22 | archived | design named in 045/2.1
--- 045/D3 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:23 | archived | design named in 045/2.1
--- REQ-IDX-008 | openspec/specs/index/spec.md:133 | active | delta in change of 045/2.1
--- REQ-IDX-009 | openspec/specs/index/spec.md:146 | active | delta in change of 045/2.1
--- REQ-QRY-005 | openspec/specs/query/spec.md:76 | active | delta in change of 045/2.1
--- REQ-QRY-006 | openspec/specs/query/spec.md:93 | active | ref from 045/2.1
--- REQ-QRY-008 | openspec/specs/query/spec.md:106 | active | delta in change of 045/2.1
--- src/graph/files.ts:1 | src/graph/files.ts:1 | active | implements REQ-QRY-006
--- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006
+-- 045/2.1 | openspec/changes/archive/2026-10-30-045-query-by-file/tasks.md:11 | done | requested | declared | fresh
+-- 045/D2 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:22 | archived | design named in 045/2.1 | structural
+-- 045/D3 | openspec/changes/archive/2026-10-30-045-query-by-file/design.md:23 | archived | design named in 045/2.1 | structural
+-- REQ-IDX-008 | openspec/specs/index/spec.md:137 | active | delta in change of 045/2.1 | structural | verified
+-- REQ-IDX-009 | openspec/specs/index/spec.md:150 | active | delta in change of 045/2.1 | structural | verified
+-- REQ-QRY-005 | openspec/specs/query/spec.md:76 | active | delta in change of 045/2.1 | structural | verified
+-- REQ-QRY-006 | openspec/specs/query/spec.md:93 | active | ref from 045/2.1 | declared | verified
+-- REQ-QRY-008 | openspec/specs/query/spec.md:106 | active | delta in change of 045/2.1 | structural | verified
+-- src/graph/files.ts:1 | src/graph/files.ts:1 | active | implements REQ-QRY-006 | verified
+-- tests/query/file-edges.test.ts:1 | tests/query/file-edges.test.ts:1 | active | covers REQ-QRY-006 | verified
+-- src/graph/related.ts | src/graph/related.ts | active | named by 045/2.1 | declared
+-- tests/query/bundle.test.ts | tests/query/bundle.test.ts | active | named by 045/2.1 | declared
+-- tests/query/related.test.ts | tests/query/related.test.ts | active | named by 045/2.1 | declared
 ```
 
 ### The budget
 
-`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. Every entry has a card, which is its provenance line. When the text passes the budget, the output fills in five steps. Each step runs in print order.
+`bundle` gives the same answer for one input. It also takes several inputs, `--block`, and `--all`. Every entry has a card, which is its provenance line. The card ends with trust labels: the provenance of the link (`declared`, `tagged`, `structural`, `verified`) and, for a task or a requirement, its evidence state (`fresh`, `stale since <path>`, `no evidence`, `verified`, `unverified`). `--json` lists the printed blocks with both labels and gives `used`, the length of the blocks. When the text passes the budget, the output fills in five steps. Each step runs in print order.
 
 1. The cards of the requirements that a task cites.
 2. The code and test cards.

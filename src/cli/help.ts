@@ -63,7 +63,7 @@ export const TABLE: CommandHelp[] = [
   {
     name: "context", group: "Read", args: "<task|ID|path|change>", summary: "Print what an agent needs before it edits a task, an ID, a file, or a change.",
     flags: [
-      ["--budget <n>", "Keep the blocks to n characters. Each entry prints its card first. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000."],
+      ["--budget <n>", "Keep the blocks to n characters. Each entry prints its card first. A card ends with its trust labels: the provenance and the evidence state. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000."],
       ["--depth <n>", "Follow links n steps. The default is 1."],
     ],
     exit: [OK, ["2", "A usage error, an unknown ID, or a bad path. It takes one input. Use `bundle` for several inputs or for `--block`."], INTERNAL], example: "specctx context 045/2.1",
@@ -76,7 +76,7 @@ export const TABLE: CommandHelp[] = [
   {
     name: "bundle", group: "Read", args: "<ID|path|change...>", summary: "Print the spec text for the IDs, files, or changes and their links.",
     flags: [
-      ["--budget <n>", "Keep the blocks to n characters. Each entry prints its card first. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000."],
+      ["--budget <n>", "Keep the blocks to n characters. Each entry prints its card first. A card ends with its trust labels: the provenance and the evidence state. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000."],
       ["--depth <n>", "Follow links n steps. The default is 1."],
       ["--all", "Show all copies of an ID."],
       ["--block", "Print only the requirement block, as it sits in the spec file. Each ID must be a requirement."],

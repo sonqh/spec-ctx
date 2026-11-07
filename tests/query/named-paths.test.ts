@@ -34,7 +34,7 @@ describe("named paths", () => {
     p = project();
     const b = await context(p, "009/1.1");
     const ls = b.text.split("\n");
-    const named = ls.indexOf("-- src/a.ts | src/a.ts | active | named by 009/1.1");
+    const named = ls.indexOf("-- src/a.ts | src/a.ts | active | named by 009/1.1 | declared");
     expect(named).toBeGreaterThan(0);
     const impl = ls.findIndex((l) => l.startsWith("-- src/b.ts:1 ") && l.includes("implements REQ-TH-001"));
     expect(impl).toBeGreaterThan(0);
@@ -46,7 +46,7 @@ describe("named paths", () => {
     const r = await p.run("bundle", "009-add-x", "009/1.1", "--json");
     expect(r.code, r.err).toBe(0);
     const ls = (JSON.parse(r.out) as B).text.split("\n");
-    const named = ls.indexOf("-- src/a.ts | src/a.ts | active | named by 009/1.1");
+    const named = ls.indexOf("-- src/a.ts | src/a.ts | active | named by 009/1.1 | declared");
     const req = ls.findIndex((l) => l.startsWith("-- REQ-TH-001 "));
     const impl = ls.findIndex((l) => l.startsWith("-- src/b.ts:1 "));
     expect(named).toBeGreaterThan(req);
@@ -65,7 +65,7 @@ describe("named paths", () => {
     const idx = await p.build();
     const t = idx.entries.find((e: any) => e.kind === "task");
     const b = await context(p, t.id);
-    expect(b.text).toContain(`-- src/a.ts | src/a.ts | active | named by ${t.id}\n`);
+    expect(b.text).toContain(`-- src/a.ts | src/a.ts | active | named by ${t.id} | declared\n`);
   });
 
   test("REQ-QRY-019 a named path that loses its card is in omitted, and a path with a lost tagged line gets no card", async () => {

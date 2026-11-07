@@ -56,8 +56,8 @@ describe("bundle", () => {
   });
 
   test("SCN-QRY-014-1 the trailer names only entries with no card, and a marker card is not in it", async () => {
-    // at 3000 every card fits, so the marker replaces the trailer
-    const wide = (await bundle(par, "REQ-APPLY-001", "--budget", "3000")).split("\n");
+    // at 3600 every card fits, so the marker replaces the trailer (3000 before the trust columns of 062)
+    const wide = (await bundle(par, "REQ-APPLY-001", "--budget", "3600")).split("\n");
     expect(wide.some((l) => l.startsWith("truncated: "))).toBe(false);
     expect(wide.some((l) => l.startsWith("-- ADR-002 | ") && l.endsWith(" | body omitted"))).toBe(true);
     // at 1500 some cards drop. The trailer lists them, and no listed ID has a card
@@ -72,7 +72,7 @@ describe("bundle", () => {
   test("SCN-QRY-003-2 code entries print file:line only, in the fixed order", async () => {
     const out = await bundle(p, "REQ-AAA-001", "--budget", "100000");
     expect(out).not.toContain("export const a");
-    expect(out).toContain("-- src/a.ts:1 | src/a.ts:1 | active | implements REQ-AAA-001\n");
+    expect(out).toMatch(/-- src\/a\.ts:1 \| src\/a\.ts:1 \| active \| implements REQ-AAA-001 \| (tagged|verified)\n/);
     const marks = ["-- REQ-AAA-001 |", "# ADR-001", "-- REQ-AAA-002 |", "-- 001/1.1 |", "-- src/a.ts:1 |", "-- tests/a.cases.ts:1 |"];
     const pos = marks.map((s) => out.indexOf(s));
     expect(pos.every((x) => x >= 0)).toBe(true);
@@ -91,13 +91,13 @@ describe("bundle", () => {
   test("SCN-QRY-003-4 parity: the output equals the Python golden", async () => {
     // the golden comes from the Python engine, recorded by tests/parity/run.sh --record
     const golden = readFileSync(new URL("../fixtures/parity-golden/bundle.out", import.meta.url), "utf8");
-    expect(await bundle(par, "REQ-APPLY-001", "--budget", "3000")).toBe(golden);
+    expect(await bundle(par, "REQ-APPLY-001", "--budget", "3600")).toBe(golden);
   });
 
   test("provenance lines and decisions", async () => {
     const first = (await bundle(p, "REQ-APPLY-001")).split("\n")[0]!;
     expect(first.startsWith("-- REQ-APPLY-001 | openspec/specs/apply-pipeline/spec.md:")).toBe(true);
-    expect(first.endsWith("requested")).toBe(true);
+    expect(first.includes("| requested |")).toBe(true);
     for (const l of (await bundle(p, "REQ-AAA-001")).split("\n")) {
       if (l.startsWith("-- ")) expect(l).toMatch(/^-- \S+ \| \S+:\d+ \| \w+ \| .+$/);
     }
@@ -106,7 +106,7 @@ describe("bundle", () => {
     p.write("openspec/changes/005-ux/design.md", "# Design\n\n## Decisions\n\n- `revert` prints one drift line. Refs: REQ-APPLY-007.\n");
     p.write("openspec/changes/005-ux/tasks.md", "# Tasks\n\n- [ ] 5.2 Revert line. [REQ-APPLY-007] Verify: a test.\n");
     const d0 = await bundle(p, "REQ-APPLY-007", "--depth", "0");
-    expect(d0).toContain("-- 005/D1 | openspec/changes/005-ux/design.md:5 | active | decision for REQ-APPLY-007\n- `revert` prints one drift line.");
+    expect(d0).toContain("-- 005/D1 | openspec/changes/005-ux/design.md:5 | active | decision for REQ-APPLY-007 | declared\n- `revert` prints one drift line.");
     const out = await bundle(p, "REQ-APPLY-007");
     expect(out.indexOf("# ADR-002")).toBeLessThan(out.indexOf("-- 005/D1"));
     expect(out.indexOf("-- 005/D1")).toBeLessThan(out.indexOf("-- 005/5.2"));

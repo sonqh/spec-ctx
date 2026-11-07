@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-07T03:18:06.827Z",
+  "files": {
+    "src/graph/bundle.ts": "9ba4c60250ff31be592d53e7a745316b65ff90c794870adcadc736aa2858a03b",
+    "src/graph/trust.ts": "3be707b9a80addb7e7c9f5db2b7e0f065ec984bb0c56f70a271f063e4ed5de6b",
+    "tests/query/trust.test.ts": "1837ba6b8d2a409f4043cdda5d43f1b62888e72e4a9e2b0151e0520323d8cc32"
+  },
+  "kind": "command",
+  "reason": "lead fix in trust.ts after the architect review",
+  "reqs": [
+    "REQ-QRY-023",
+    "REQ-QRY-024",
+    "REQ-QRY-025"
+  ],
+  "task": "062/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query/trust.test.ts && npx vitest run tests/query/trust.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 13 pass\n 0 fail\n 99 expect() calls\nRan 13 tests across 1 file. [186.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "abbceca74daee6d5617fb31507591f3a4243822c35c5f19a6f6201ef8fe3518d"
+  }
+}
