@@ -2,6 +2,10 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
+## Unreleased
+
+Change 064-body-recall. The recall report gains `body_recall`, the share of cited requirement bodies that print, and the means of `body_omitted` and `truncated` IDs per `context` run (REQ-STAT-008). The cards of the second and later lines of one file, and the `named by` cards, now fill after the bodies of cited requirements (REQ-QRY-027). On this repo `body_recall` rises from 0.80 to 0.83 and recall falls from 1.00 to 0.98. The rule applies to every bundle, so `related` and `bundle <REQ>` also fill those cards after the cited bodies when the budget is tight. See `docs/verification/064.md`.
+
 ## 0.6.0
 
 Change 062-trust-labels. Every card ends with trust labels. The fifth column is the provenance of the link: `declared`, `tagged`, `structural`, or `verified`. A task card adds `fresh`, `stale since <path>`, or `no evidence`. A requirement card adds `verified` or `unverified`. `--json` lists the printed blocks with both labels and gives `used`, the length of the blocks. The first four columns do not change. REQ-QRY-023, REQ-QRY-024, REQ-QRY-025, REQ-QRY-026.

@@ -1057,5 +1057,27 @@
     "verdict": "approved",
     "answer": "Approved by the lead on 2026-11-07 after the architect diff review, with both changes applied: a damaged evidence file reads stale as check does, and the reason table test names the class of every reason.",
     "resolved_at": "2026-11-07T03:20:40.593Z"
+  },
+  {
+    "n": 109,
+    "asked_at": "2026-11-07T08:03:30.872Z",
+    "task": "064-body-recall",
+    "text": "plan ready for 064-body-recall. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Owner chose option A on 2026-11-07: named-by and repeat line cards fill after cited bodies. Prototype: full body_recall 0.796 to 0.833, recall 0.98 above the 0.95 target. Product manager and architect reviews applied.",
+    "resolved_at": "2026-11-07T08:15:05.186Z"
+  },
+  {
+    "n": 110,
+    "asked_at": "2026-11-07T08:21:07.400Z",
+    "task": "064-body-recall",
+    "text": "archive 064-body-recall?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Architect archive review: no blocker in code. Metrics file restored from HEAD (stats --write bug, ADR-010 item 4). CHANGELOG notes the rule applies to every bundle. Gate strict passes.",
+    "resolved_at": "2026-11-07T08:22:36.443Z"
   }
 ]

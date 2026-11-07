@@ -1,4 +1,4 @@
-// Covers: REQ-STAT-007, REQ-STAT-006, SCN-STAT-007-1, SCN-STAT-007-2
+// Covers: REQ-STAT-007, REQ-STAT-006, REQ-STAT-008, SCN-STAT-007-1, SCN-STAT-007-2, SCN-STAT-008-1, SCN-STAT-008-2, SCN-STAT-008-3
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -152,6 +152,64 @@ describe("scripts/recall.mjs", () => {
     const repo = report(out).repos[0];
     expect(repo.card_only).toEqual({ total: 0, reqs: 0, code: 0, tests: 0 });
     expect(repo.cited_body_lost).toBe(0);
+  }, TEST_MS);
+
+  test("SCN-STAT-008-1 body_recall is the share of cited labelled requirements whose card has a body", () => {
+    const root = project();
+    const t12 = { ...T12, reqs: [], code: [], tests: [] };
+    const lost = temp("specctx-recall-out-");
+    let r = run("--labels", labels(root, [T11, t12], { budget: 480 }), "--root", root, "--out", lost, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const a = report(lost).repos[0];
+    expect(a.body_counts).toEqual({ cited: 1, printed: 0 });
+    expect(a.body_recall).toBe(0);
+    const full = temp("specctx-recall-out-");
+    r = run("--labels", labels(root, [T11, t12], { budget: 100000 }), "--root", root, "--out", full, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const b = report(full).repos[0];
+    expect(b.body_counts).toEqual({ cited: 1, printed: 1 });
+    expect(b.body_recall).toBe(1);
+    expect(readFileSync(join(full, "recall-2026-01-04.md"), "utf8")).toContain("body_recall 1.00 (1/1)");
+  }, TEST_MS);
+
+  test("SCN-STAT-008-2 a label with no ref from header adds nothing, and the figure is n/a when no label counts", () => {
+    const root = project();
+    const out = temp("specctx-recall-out-");
+    const t11 = { ...T11, reqs: [] };
+    const t12 = { ...T12, reqs: [], code: [], tests: [] };
+    const r = run("--labels", labels(root, [{ ...t11, reqs: ["REQ-BBB-001"] }, t12], { budget: 100000 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    expect(r.code, r.err).toBe(0);
+    const repo = report(out).repos[0];
+    expect(repo.body_counts).toEqual({ cited: 0, printed: 0 });
+    expect(repo.body_recall).toBeNull();
+    expect(readFileSync(join(out, "recall-2026-01-04.md"), "utf8")).toContain("body_recall n/a");
+  }, TEST_MS);
+
+  test("SCN-STAT-008-3 body_omitted_mean and truncated_mean are the mean lengths of the JSON lists over the tasks", () => {
+    const root = project();
+    const t12 = { ...T12, reqs: [], code: [], tests: [] };
+    const mean = (budget: number): { b: number; t: number } => {
+      let b = 0;
+      let t = 0;
+      for (const task of ["001/1.1", "001/1.2"]) {
+        const c = spawnSync(process.execPath, [join(REPO, "dist/cli.js"), "context", task, "--json", "--budget", String(budget)], { cwd: root, env: cleanEnv(), encoding: "utf8" });
+        const j = JSON.parse(c.stdout);
+        b += j.body_omitted.length;
+        t += j.omitted.length;
+      }
+      return { b: b / 2, t: t / 2 };
+    };
+    for (const budget of [480, 100000]) {
+      const out = temp("specctx-recall-out-");
+      const r = run("--labels", labels(root, [T11, t12], { budget }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+      expect(r.code, r.err).toBe(0);
+      const repo = report(out).repos[0];
+      const m = mean(budget);
+      expect(repo.body_omitted_mean).toBe(m.b);
+      expect(repo.truncated_mean).toBe(m.t);
+      expect(readFileSync(join(out, "recall-2026-01-04.md"), "utf8")).toContain("Mean body_omitted IDs per run");
+    }
+    expect(mean(480).b).toBeGreaterThan(0);
   }, TEST_MS);
 
   test("REQ-STAT-007 a file that only a named by card shows is a match, and not a match without the named cards", () => {

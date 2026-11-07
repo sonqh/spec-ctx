@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-07T08:19:01.714Z",
+  "bundle_chars": 7692,
+  "files": {
+    "src/graph/bundle.ts": "ef43743e2a242ec60ad124fcaa7ad938e8f5f460a1dc965f1de9a7e6aa4998c5",
+    "tests/query/repeat-lines.test.ts": "894965d5a795d3653a0418a18e62ede7dc0d307a1bc44fd7cb6ba3f0cd010693",
+    "tests/stat/recall.test.ts": "4cf098cd712f3cc09859b818a924adcf12d1d39a0e8b8e42547f6aa9ac03db3e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-008",
+    "REQ-QRY-027"
+  ],
+  "started_at": "2026-11-07T08:18:04.662Z",
+  "task": "064/4.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "grep -q \"REQ-STAT-008\" CHANGELOG.md && grep -q \"REQ-QRY-027\" CHANGELOG.md && grep -q \"body_omitted_mean\" docs/verification/064.md && grep -q \"truncated_mean\" docs/verification/064.md && git diff --quiet -- bench/recall && node dist/cli.js lint tells --baseline 0 docs/verification/064.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/064.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "d8b4365efeec9d8a0c233d0c7caaa23ddbc755269e2f83efef7e86606f70f3a4"
+  }
+}

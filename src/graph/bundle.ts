@@ -238,7 +238,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
       for (const path of te.paths ?? []) {
         if (taken.has(path) || !isFile(root, path)) continue;
         taken.add(path);
-        named.push({ id: path, head: `-- ${path} | ${path} | active | named by ${t} | declared\n`, body: "", cls: 1, st: 0,
+        named.push({ id: path, head: `-- ${path} | ${path} | active | named by ${t} | declared\n`, body: "", cls: 5, st: 0,
           info: { id: path, file: path, line: 0, status: "active", reason: `named by ${t}`, provenance: "declared", evidence: null } });
       }
     }
@@ -252,7 +252,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
   let used = 0;
   for (let k = 0; k < pinned; k++) used += cpLen(render(blk[k]!));
   const cost = (b: Blk, st: number): number => cpLen(renderAs(b, st));
-  // fill in five steps, in print order inside each: cards of class 0, cards of class 1, bodies of class 0, cards of class 2, bodies of class 2
+  // fill in seven steps, in print order inside each: cards of class 0, cards of class 1, bodies of class 0, cards of class 5, cards of class 7, cards of class 2, bodies of class 2
   const cards = (cls: number): void => {
     for (let k = pinned; k < blk.length; k++) {
       const b = blk[k]!;
@@ -274,9 +274,19 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
       used += d;
     }
   };
+  // REQ-QRY-027 the second and later line cards of a file are class 7, in print order. The named by cards are class 5 (064/D5).
   cards(0);
+  const seen = new Set<string>();
+  for (let k = pinned; k < blk.length; k++) {
+    const b = blk[k]!;
+    if (b.cls !== 1) continue;
+    if (seen.has(b.info.file)) b.cls = 7;
+    else seen.add(b.info.file);
+  }
   cards(1);
   bodies(0);
+  cards(5);
+  cards(7);
   cards(2);
   bodies(2);
   // class 3 fills as a whole block

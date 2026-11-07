@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-07T08:17:38.565Z",
+  "bundle_chars": 7491,
+  "files": {
+    "src/graph/bundle.ts": "ef43743e2a242ec60ad124fcaa7ad938e8f5f460a1dc965f1de9a7e6aa4998c5",
+    "src/graph/files.ts": "6dd7d15c9a4566b7e86a1d740da1cfe58c783d48ee719326954342856e03d3b2",
+    "tests/query/cards.test.ts": "98a7e3610e1f6413bec4dfa9c9eff56fd23c2d1a80cf83cfd4e754f149a60b39",
+    "tests/query/file-mentions.test.ts": "e8f07ba2166c758749cb66dbaaf1c3eee64f5eed1e98a356855d1d3189d7f290",
+    "tests/query/named-paths.test.ts": "38a8ae1841cd8eb41006416d5acb11e1ac6944da694a97b65ac9c5f28a57d1e0",
+    "tests/query/repeat-lines.test.ts": "894965d5a795d3653a0418a18e62ede7dc0d307a1bc44fd7cb6ba3f0cd010693"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-027",
+    "REQ-QRY-021"
+  ],
+  "started_at": "2026-11-07T08:16:26.488Z",
+  "task": "064/2.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks tests/gov tests/journal tests/stat tests/cli && npx vitest run tests/query tests/tasks && bash tests/parity/run.sh && node scripts/recall.mjs --labels bench/recall/spec-ctx.json --root . --check && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 387 pass\n 0 fail\n 2106 expect() calls\nRan 387 tests across 60 files. [16.11s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "395d95d294e465f8ea36333f0fcb408009f73188a9e5241b22174c6d5ec98b54"
+  }
+}
