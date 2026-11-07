@@ -12,7 +12,8 @@ describe("spec governance", () => {
   /** A copy of this repository in a temp project, for check --strict. */
   function copyRepo(): Project {
     const pr = new Project(null);
-    for (const d of ["openspec", "decisions", "src", "spec-ctx.toml"]) cpSync(join(REPO, d), pr.path(d), { recursive: true });
+    // files that evidence names (docs, CHANGELOG.md, and README.md, which task 4.1 names) must exist, or their digests read as stale
+    for (const d of ["openspec", "decisions", "src", "docs", "spec-ctx.toml", "CHANGELOG.md", "README.md"]) cpSync(join(REPO, d), pr.path(d), { recursive: true });
     if (existsSync(join(REPO, ".ctx/evidence"))) cpSync(join(REPO, ".ctx/evidence"), pr.path(".ctx/evidence"), { recursive: true });
     cpSync(join(REPO, "tests"), pr.path("tests"), { recursive: true, filter: (s) => !s.includes("/tests/fixtures") });
     return pr;

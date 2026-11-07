@@ -1,8 +1,6 @@
-// REQ-TASK-004 evidence files under .ctx/evidence/<change key>/<task>.json.
+// REQ-TASK-004 REQ-TASK-009 evidence files under .ctx/evidence/<change key>/<task>.json.
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { Entry } from "../index/types.ts";
-import { fileSha256 } from "../util/hash.ts";
 import { dumps } from "../util/json.ts";
 import { isoNow } from "../util/time.ts";
 import { VERSION } from "../version.ts";
@@ -14,6 +12,8 @@ export interface Evidence {
   kind: "command" | "manual";
   verify: { command: string | null; exit: number | null; stdout_sha256: string | null; stderr_tail: string };
   files: Record<string, string>;
+  /** REQ-TASK-004 the paths that REQ-TASK-009 added, sorted */
+  diff: string[];
   at: string;
   tool_version: string;
   note?: string;
@@ -22,28 +22,14 @@ export interface Evidence {
   cwd?: string;
 }
 
-/** Digests of every code and test file tagged with one of the REQs. */
-export function taggedFiles(root: string, entries: Entry[], reqs: string[]): Record<string, string> {
-  const want = new Set(reqs);
-  const paths = new Set<string>();
-  for (const e of entries) {
-    if ((e.kind === "code" || e.kind === "test") && e.refs.some((r) => want.has(r))) paths.add(e.file);
-  }
-  const out: Record<string, string> = {};
-  for (const p of [...paths].sort()) {
-    const d = fileSha256(join(root, p));
-    if (d) out[p] = d;
-  }
-  return out;
-}
-
-export function writeEvidence(root: string, t: Task, entries: Entry[], verify: Evidence["verify"], kind: Evidence["kind"], note?: string, cwd?: string): string {
+export function writeEvidence(root: string, t: Task, fl: { files: Record<string, string>; diff: string[] }, verify: Evidence["verify"], kind: Evidence["kind"], note?: string, cwd?: string): string {
   const ev: Evidence = {
     task: t.id,
     reqs: [...t.reqs],
     kind,
     verify,
-    files: taggedFiles(root, entries, t.reqs),
+    files: fl.files,
+    diff: fl.diff,
     at: isoNow(),
     tool_version: VERSION,
   };

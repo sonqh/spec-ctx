@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-07T09:21:19.719Z",
+  "bundle_chars": 7497,
+  "diff": [
+    "tests/check/evidence.test.ts",
+    "tests/cli/run-prefix.test.ts",
+    "tests/loop/stale.test.ts",
+    "tests/query/trust.test.ts"
+  ],
+  "files": {
+    "tests/check/evidence.test.ts": "6f28ae69f044886b697628ae4931f39a86f75d8388b5881fb937423c0126d5fc",
+    "tests/cli/run-prefix.test.ts": "7bbbfc09dcd58367c219e35caab668fef63f033d3206a26ec29c4e24c5419339",
+    "tests/cli/run-repo.test.ts": "82ae9565975c126dc88f0c6833b4cd57e84073022068944b81f15d8dc882aef2",
+    "tests/loop/stale.test.ts": "6002e402249f5315ad369801ac0b27c4271befceae65fdf0e5a03a180c4c2a35",
+    "tests/query/trust.test.ts": "697ff1d8ddc23b396e073d40a2c1e48a24336d5226b7638a2c010630a05c704d"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-004"
+  ],
+  "started_at": "2026-11-07T09:20:13.114Z",
+  "task": "066/3.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/check tests/loop tests/query tests/cli && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 368 pass\n 0 fail\n 2060 expect() calls\nRan 368 tests across 57 files. [7.84s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

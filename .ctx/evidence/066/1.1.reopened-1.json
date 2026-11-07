@@ -1,0 +1,29 @@
+{
+  "at": "2026-11-07T09:17:27.665Z",
+  "bundle_chars": 7821,
+  "files": {
+    "src/tasks/evidence.ts": "f48429e953e9e0850467becaaced90a5e9fda5ccac378f5dcf5646a9f2bdbe29",
+    "src/tasks/files.ts": "8cd09c19517210a7f1f5b0be432128cbe05c64cd2712422cad1c6e280c744021",
+    "src/util/hash.ts": "b3d5746f53dc39c5d92c3359b7954e1252b56627b90ad2659042f385d4ca12da",
+    "src/util/time.ts": "1dc9d1bec03f78ed785fc550ae40deeffa0984288ff3b8a51de3162c4f0f5038",
+    "tests/tasks/evidence.test.ts": "c1340cdc3c7526f36608596526f554c8359fd9c834cd300276cf0d9e494ee5af",
+    "tests/tasks/files.test.ts": "54bd70988547a94a3290d6fb12dd1569bc8f95d0526200b4ffdceba6dde7e9a1",
+    "tests/tasks/redact.test.ts": "c7f8fcb4c3e21e51d84eceb8cfb49c3af2cda9925328b5525a9f95a74ed843d2"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/tasks/evidence.ts (1.1 evidence written by the old tag rule)",
+  "reqs": [
+    "REQ-TASK-009",
+    "REQ-TASK-010",
+    "REQ-TASK-004"
+  ],
+  "started_at": "2026-11-07T09:16:02.162Z",
+  "task": "066/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/files.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 18 pass\n 0 fail\n 33 expect() calls\nRan 18 tests across 1 file. [1094.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

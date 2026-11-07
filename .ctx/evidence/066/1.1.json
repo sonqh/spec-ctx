@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-07T09:27:59.584Z",
+  "diff": [],
+  "files": {
+    "src/tasks/files.ts": "3fc7f7f7a53c445b320b6a5e2fb5dda4cd5674c99ea94e9d4a5224774b5e89f5",
+    "tests/tasks/files.test.ts": "53981984c6b486bfa8c3a529e86db05e9c8a5d59c1667aa8fe557baa2919aaf5"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-009",
+    "REQ-TASK-010",
+    "REQ-TASK-004"
+  ],
+  "task": "066/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks/files.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 19 pass\n 0 fail\n 34 expect() calls\nRan 19 tests across 1 file. [1284.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}
