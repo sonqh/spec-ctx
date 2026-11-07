@@ -1,4 +1,4 @@
-// Covers: REQ-TASK-004
+// Covers: REQ-TASK-004, SCN-TASK-004-1, SCN-TASK-004-2
 import { afterEach, describe, expect, test } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -16,16 +16,26 @@ function setup(): Project {
     "## ADDED Requirements\n\n### Requirement: REQ-TASK-001 Next\nText.\n\n#### Scenario: SCN-TASK-001-1 S\n- a\n");
   pr.write("src/a.ts", TAG + "TASK-001\nexport const a = 1;\n");
   pr.write("src/other.ts", TAG + "AAA-002\n");
-  pr.write(TASKS, "# Tasks\n\n- [ ] 2.1 Do. [REQ-TASK-001] Verify: `echo same && echo warn >&2`\n");
+  pr.write(TASKS, "# Tasks\n\n- [ ] 2.1 Do `src/a.ts`. [REQ-TASK-001] Verify: `echo same && echo warn >&2`\n");
   return pr;
 }
 
 describe("evidence shape", () => {
-  test("SCN-TASK-004-1 files maps each tagged file to its sha256", async () => {
+  test("SCN-TASK-004-1 files maps each named file to its sha256", async () => {
     p = setup();
     expect((await p.run("task", "done", "002/2.1")).code).toBe(0);
     const ev = JSON.parse(p.read(".ctx/evidence/002/2.1.json"));
     expect(ev.files).toEqual({ "src/a.ts": sha(p.path("src/a.ts")) });
+    expect(ev.diff).toEqual([]);
+  });
+
+  test("SCN-TASK-004-2 a tag alone adds no file, and a later edit leaves the task fresh", async () => {
+    p = setup();
+    p.write(TASKS, "# Tasks\n\n- [ ] 2.1 Do. [REQ-TASK-001] Verify: `echo same`\n");
+    expect((await p.run("task", "done", "002/2.1")).code).toBe(0);
+    expect(JSON.parse(p.read(".ctx/evidence/002/2.1.json")).files).toEqual({});
+    p.append("src/a.ts", "export const b = 2;\n");
+    expect((await p.run("check", "--strict")).out).not.toContain("stale-evidence  002/2.1");
   });
 
   test("keys are sorted and the fields have their types", async () => {
@@ -35,7 +45,7 @@ describe("evidence shape", () => {
       await p.run("task", "done", "002/2.1");
       const raw = p.read(".ctx/evidence/002/2.1.json");
       const ev = JSON.parse(raw);
-      expect(Object.keys(ev)).toEqual(["at", "files", "kind", "reqs", "task", "tool_version", "verify"]);
+      expect(Object.keys(ev)).toEqual(["at", "diff", "files", "kind", "reqs", "task", "tool_version", "verify"]);
       expect(Object.keys(ev.verify)).toEqual(["command", "exit", "stderr_tail", "stdout_sha256"]);
       expect(ev.at).toBe("2026-10-24T10:00:00.000Z");
       expect(ev.verify.stdout_sha256).toBe(createHash("sha256").update("same\n").digest("hex"));

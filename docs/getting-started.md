@@ -136,7 +136,7 @@ $ specctx task done add-greeting/1.2
 done add-greeting/1.2. Evidence: .ctx/evidence/add-greeting/1.2.json
 ```
 
-The checkbox in `tasks.md` is now `[x]`. The evidence file records the Verify command, its exit code, and a hash of each tagged file. `check --strict` reports a task whose tagged files changed after `task done` wrote its evidence.
+The checkbox in `tasks.md` is now `[x]`. The evidence file records the Verify command and its exit code. It also holds a hash of each file that the task line names, that Verify names, or that changed since `task start`. A tag alone adds none. `check --strict` reports a task when one of those files changed after `task done` wrote its evidence.
 
 ## A retitle under a stable ID
 

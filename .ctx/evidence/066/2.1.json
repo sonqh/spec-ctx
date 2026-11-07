@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T09:20:06.708Z",
+  "bundle_chars": 8027,
+  "diff": [],
+  "files": {
+    "src/cli/workflow.ts": "17657320051587d21ec1d02d9866068d20399bab4ee8f2974fe56d7ff77c950a",
+    "src/tasks/evidence.ts": "38fb0ebb92216a0b2d6b1f995999c2f56421dc618e5273a4a8fbdc682776ad5c",
+    "tests/tasks/evidence.test.ts": "8e0fe88e15e4ba508d982e2b7125455a450ccfa3155246c864bc57ebce60dfba",
+    "tests/tasks/stale-by-tag.test.ts": "e25a3c7477b4df26ea60336f54214a083c8c77f38aebcf5692006d66ce25cc58",
+    "tests/tasks/start.test.ts": "2c7dbd6ba981f8ef09eb9378a1a9779aae04c0c8260787574ab72181734da83f"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-TASK-009",
+    "REQ-TASK-010",
+    "REQ-TASK-004"
+  ],
+  "started_at": "2026-11-07T09:20:02.077Z",
+  "task": "066/2.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/tasks && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 73 pass\n 0 fail\n 278 expect() calls\nRan 73 tests across 9 files. [3.04s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

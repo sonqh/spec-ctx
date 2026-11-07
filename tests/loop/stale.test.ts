@@ -12,8 +12,8 @@ beforeEach(() => {
   rmSync(p.path(".ctx/evidence/001/1.1.json"));
   p.write("openspec/changes/001-x/tasks.md", [
     "# Tasks", "", "## 1. Alpha", "",
-    "- [ ] 1.1 A. [REQ-AAA-001] Verify: `test -d openspec`",
-    "- [ ] 1.2 B. [REQ-AAA-001] Verify: `test -d openspec`", "",
+    "- [ ] 1.1 A `src/a.ts`. [REQ-AAA-001] Verify: `test -d openspec`",
+    "- [ ] 1.2 B `src/a.ts`. [REQ-AAA-001] Verify: `test -d openspec`", "",
     "## 2. Beta", "",
     "- [ ] 2.1 C. [REQ-AAA-002] Verify: `test -d openspec`", "",
   ].join("\n"));

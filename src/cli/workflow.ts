@@ -102,7 +102,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       const { cpLen } = await import("../util/pystr.ts");
       // REQ-STAT-002 the bundle size goes next to the current task, so stats can compute the context ratio
       // REQ-TASK-002 the Verify command is frozen here, so task done can refuse a changed one (019/D3)
-      writeFileSync(join(c.root, CURRENT_PATH), dumps({ bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id, verify: t.verify.command }) + "\n");
+      // REQ-TASK-009 the diff base: the HEAD commit and the digest of each changed file. A project with no git has none.
+      const { snapshotBase } = await import("../tasks/files.ts");
+      const base = snapshotBase(c.root);
+      writeFileSync(join(c.root, CURRENT_PATH), dumps({ ...(base ? { base } : {}), bundle_chars: cpLen(b.text), started_at: isoNow(), task: t.id, verify: t.verify.command }) + "\n");
       // REQ-TASK-002 a task that cites no REQ gets one hint line, so the agent knows what to add
       const hint = t.reqs.length ? null : `task ${t.id} cites no REQ. Run ${rc(c, `query --change ${t.change} --kind req`)} to list its requirements, then add [REQ-<CAP>-NNN] to the task line.`;
       if (c.json) print(c, { bundle: b, hint, task: t.id });
@@ -122,7 +125,10 @@ export async function runWorkflow(c: Ctx): Promise<number> {
         if (t.verify.command !== null) throw new UsageExit(`task ${t.id} has a Verify command. Run it with ${rc(c, `task done ${t.id}`)}.`);
         if (t.done && hasEvidence(c.root, t)) throw new UsageExit(`task ${t.id} is done`);
         const { writeEvidence } = await import("../tasks/evidence.ts");
-        const rel = writeEvidence(c.root, t, entries, { command: null, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", manual.trim());
+        const { taskFiles } = await import("../tasks/files.ts");
+        const tf = taskFiles(c.root, t, c.root, readCurrent(c.root));
+        if (tf.note) c.io.err(tf.note + "\n");
+        const rel = writeEvidence(c.root, t, tf, { command: null, exit: null, stdout_sha256: null, stderr_tail: "" }, "manual", manual.trim());
         if (!t.done) setBox(c.root, t, true);
         clearCurrent(c.root, t.id);
         if (c.json) print(c, { evidence: rel, kind: "manual", task: t.id });
@@ -184,12 +190,14 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       }
       const { sha256 } = await import("../util/hash.ts");
       const { writeEvidence } = await import("../tasks/evidence.ts");
-      // the Verify command can change tagged files, so the digests come from the tree after the run
-      const { loadIndex } = await import("../index/build.ts");
-      const after = loadIndex(c.root, c.cfg).data.entries;
+      // REQ-TASK-004 the digests come from the tree after the run, because Verify can change files
+      const { taskFiles } = await import("../tasks/files.ts");
+      const tf = taskFiles(c.root, t, dir, readCurrent(c.root));
+      // REQ-TASK-009 one note on stderr when no diff base matches
+      if (tf.note) c.io.err(tf.note + "\n");
       // REQ-TASK-008 the stderr tail holds no machine path. verify.command stays as the task line has it (056/D5, 056/D6).
       const { redactPaths } = await import("../util/redact.ts");
-      const rel = writeEvidence(c.root, t, after, {
+      const rel = writeEvidence(c.root, t, tf, {
         command: t.verify.command, exit: 0, stdout_sha256: sha256(r.stdout), stderr_tail: redactPaths(tail(r.stderr.toString("utf8")), c.root),
       }, "command", undefined, t.verify.cwd);
       setBox(c.root, t, true);
@@ -258,11 +266,11 @@ export async function runWorkflow(c: Ctx): Promise<number> {
 }
 
 /** The current task file, or null when it is absent or damaged. */
-function readCurrent(root: string): { task?: string; verify?: unknown } | null {
+function readCurrent(root: string): { task?: string; verify?: unknown; base?: { head: string; files: Record<string, string> } } | null {
   const p = join(root, ".ctx/current.json");
   if (!existsSync(p)) return null;
   try {
-    return JSON.parse(readFileSync(p, "utf8")) as { task?: string; verify?: unknown };
+    return JSON.parse(readFileSync(p, "utf8")) as { task?: string; verify?: unknown; base?: { head: string; files: Record<string, string> } };
   } catch {
     return null;
   }

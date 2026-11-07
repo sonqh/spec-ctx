@@ -144,8 +144,9 @@ export function specCharsOf(entries: Entry[]): number {
     .reduce((a, e) => a + cpLen(e.text ?? ""), 0);
 }
 
-export function computeStats(root: string, entries: Entry[], strictFindings: Finding[], warnings: string[], only?: string): Stats {
-  const specChars = specCharsOf(entries);
+/** REQ-STAT-009 `specCharsOverride` is the size that the file of the day already holds, so new rows use the same denominator. */
+export function computeStats(root: string, entries: Entry[], strictFindings: Finding[], warnings: string[], only?: string, specCharsOverride?: number | null): Stats {
+  const specChars = specCharsOverride ?? specCharsOf(entries);
   const { live, reopened } = readEvidence(root);
   // REQ-IDX-005 the change name of each change key, from the task entries
   const names = new Map<string, string>();

@@ -15,7 +15,7 @@ beforeEach(() => {
   p.write("spec-ctx.toml", `[cli]\nrun = "${RUN}"\n`);
   p.write("openspec/changes/001-x/tasks.md", [
     "# Tasks", "", "## 1. Alpha", "",
-    "- [ ] 1.1 A. [REQ-AAA-001] Verify: `test -d openspec`", "",
+    "- [ ] 1.1 A `src/a.ts`. [REQ-AAA-001] Verify: `test -d openspec`", "",
   ].join("\n"));
 });
 afterEach(() => {
@@ -73,7 +73,7 @@ describe("the run prefix on next and status", () => {
 
   test("SCN-CLI-010-1 each part of a joined repair command carries the prefix", async () => {
     await approvePlan();
-    p.write("openspec/changes/001-x/tasks.md", "# Tasks\n\n## 1. Alpha\n\n- [ ] 1.1 A. [REQ-AAA-001] Verify: `test -d openspec`\n");
+    p.write("openspec/changes/001-x/tasks.md", "# Tasks\n\n## 1. Alpha\n\n- [ ] 1.1 A `src/a.ts`. [REQ-AAA-001] Verify: `test -d openspec`\n");
     expect((await p.run("task", "done", "001/1.1")).code).toBe(0);
     p.append("src/a.ts", "export const later = 2;\n");
     const r = await next();

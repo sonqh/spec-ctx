@@ -8,6 +8,7 @@ import type { Entry, Index, Problem } from "../index/types.ts";
 import { listEvidence } from "../tasks/evidence.ts";
 import { cmpTuple } from "../util/pystr.ts";
 import { evidenceFindings } from "./evidence.ts";
+import { deltaPurposeFindings } from "./purpose.ts";
 import { isWeakVerify, parseVerify } from "../verify/parse.ts";
 
 // the first ID of a retired row can be a scenario. Only a REQ or ADR can be reused, but the SCN still counts as the row ID.
@@ -257,6 +258,7 @@ export function check(root: string, cfg: Config, data: Index, strict: boolean): 
   for (const f of findings) uniq.set(JSON.stringify(f), f);
   const plain: Finding[] = [...uniq.values()].map(([file, line, rule, id]) => ({ file, line, rule, id }));
   // REQ-CHK-005 weak-verify is hard only in strict mode. Plain mode prints it as a warning (028/D3).
-  const all = [...plain, ...retitleFindings(root, entries), ...(strict ? weakVerifyFindings(entries) : [])];
+  // REQ-CHK-011 a new capability delta needs a Purpose before archive. Strict mode only (067/D2).
+  const all = [...plain, ...retitleFindings(root, entries), ...(strict ? [...weakVerifyFindings(entries), ...deltaPurposeFindings(root)] : [])];
   return all.sort((a, b) => cmpTuple([a.file, a.line, a.rule, a.id], [b.file, b.line, b.rule, b.id]));
 }

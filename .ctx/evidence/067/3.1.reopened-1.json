@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-07T09:43:50.183Z",
+  "diff": [],
+  "files": {
+    "src/cli/commands.ts": "8df3fd21e4339a72031c9868c8c21360e2a6cf7435b938ffa752dccb36389ee5",
+    "src/stats/merge.ts": "64d2bf05191735d91d5a9061a20d1f3028fe6c266e8c0c1fd5d533568e27429a",
+    "src/stats/stats.ts": "d1e3d88e8dc460dddfe80d3529fdee4fe90f282ab650aa6f4e48025634e16661",
+    "src/stats/write.ts": "356fb60a027b0134e37d4afa4a434b2252c0761ae44b2dd105a68c3faec51250",
+    "tests/gov/readme.test.ts": "84171c06e37fb68c76bab07d1085cbae79bc1400a704d6ecb05b6f3c5d7acb72",
+    "tests/stats/append.test.ts": "96272c7aab0cf039eb1649719275d10b966d6b7ce72b93ca81ed18d14107618a",
+    "tests/stats/cli.test.ts": "44d35826f2d3221af6bbf86813639ab319602a48eceaa5840abbb7635f610943"
+  },
+  "kind": "command",
+  "reason": "stale evidence: archive review fixes",
+  "reqs": [
+    "REQ-STAT-009",
+    "REQ-STAT-010",
+    "REQ-STAT-005"
+  ],
+  "task": "067/3.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/stats tests/gov && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 61 pass\n 0 fail\n 413 expect() calls\nRan 61 tests across 14 files. [3.46s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}
