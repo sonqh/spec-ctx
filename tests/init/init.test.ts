@@ -280,7 +280,7 @@ describe("init", () => {
     p.write(".gitignore", "dist/\n.claude/\n");
     const r = await p.run("init", "--skills");
     expect(r.code, r.err).toBe(0);
-    const note = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
+    const note = "note: .gitignore ignores .claude/. The skills under .claude/ stay out of git.";
     const lines = r.out.trimEnd().split("\n");
     expect(lines.filter((l) => l === note)).toHaveLength(1);
     // the note comes after the kept lines and before next:
@@ -288,11 +288,11 @@ describe("init", () => {
     expect(lines.at(-1)).toBe("next: specctx status");
     const j = JSON.parse((await p.run("init", "--skills", "--json")).out);
     expect(j.notes).toEqual([note]);
-    // no skills, no note
+    // no skills, the same note (REQ-DIST-018)
     p.cleanup();
     p = freshOpenspec();
     p.write(".gitignore", ".claude/\n");
-    expect((await p.run("init")).out).not.toContain("note:");
+    expect((await p.run("init")).out).toContain(note);
     // a .gitignore without the line gives no note
     p.cleanup();
     p = freshOpenspec();

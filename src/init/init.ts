@@ -411,18 +411,24 @@ export function writeGitignore(root: string): number {
   return add.length;
 }
 
-/** REQ-DIST-002 true when .gitignore has a line that ignores the whole .claude directory (017/D3). */
-export function ignoresClaude(root: string): boolean {
+/** REQ-DIST-018 the agent folders that .gitignore ignores as a whole, with or without a slash. */
+export function ignoredAgentDirs(root: string): string[] {
   const p = join(root, GITIGNORE);
-  if (!existsSync(p)) return false;
+  if (!existsSync(p)) return [];
   const lines = ignoreLines(readFileSync(p, "utf8"));
-  return lines.has(".claude") || lines.has(".claude/");
+  return [".claude", ".agents"].filter((d) => lines.has(d) || lines.has(`${d}/`));
+}
+
+/** REQ-DIST-018 one note for the ignored agent folders, or null when none is ignored. */
+export function ignoredNote(root: string): string | null {
+  const dirs = ignoredAgentDirs(root).map((d) => `${d}/`);
+  if (dirs.length === 0) return null;
+  const names = dirs.join(" and ");
+  return `note: .gitignore ignores ${names}. The skills under ${names} stay out of git.`;
 }
 
 /** REQ-SCH-003 where the templates with the ID placeholders are. Printed after the schema step (018/D5, 025/D4). */
 export const TEMPLATES_NOTE = `templates: ${TEMPLATES_DIR}/ (spec.md, tasks.md hold the ID placeholders)`;
-
-export const CLAUDE_NOTE = "note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.";
 
 export function runInit(root: string, o: InitOpts): InitResult {
   const res: InitResult = { written: [], kept: [], changed: [], merged: [], notes: [] };
@@ -450,7 +456,8 @@ export function runInit(root: string, o: InitOpts): InitResult {
     const m = o.schema ? mergeConfig(cur, fragment, otherFragment) : null;
     if (!m || (!m.added.length && !m.merged.length)) {
       res.nothing = true;
-      if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
+      const ign = ignoredNote(root); // REQ-DIST-018
+      if (ign) res.notes.push(ign);
       if (o.schema && hasLegacySchema(cur)) res.notes.push(LEGACY_SCHEMA_NOTE);
       if (o.schema) res.notes.push(TEMPLATES_NOTE);
       return res;
@@ -499,8 +506,9 @@ export function runInit(root: string, o: InitOpts): InitResult {
     if (added) res.written.push(`${GITIGNORE} (${added} line${added === 1 ? "" : "s"})`);
     else res.kept.push(GITIGNORE);
   }
-  // REQ-DIST-002 skills under an ignored .claude/ never reach git (017/D3)
-  if (o.skills && ignoresClaude(root)) res.notes.push(CLAUDE_NOTE);
+  // REQ-DIST-018 skills under an ignored agent folder never reach git (017/D3)
+  const ign = ignoredNote(root);
+  if (ign) res.notes.push(ign);
   // REQ-SCH-003 the templates line comes last, right before next: (018/D5)
   if (o.schema) res.notes.push(TEMPLATES_NOTE);
   return res;

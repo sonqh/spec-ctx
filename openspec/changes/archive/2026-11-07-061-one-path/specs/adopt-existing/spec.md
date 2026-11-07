@@ -1,13 +1,13 @@
 ## ADDED Requirements
 
 ### Requirement: REQ-ADOPT-011 Context after adopt
-After it wrote IDs, `adopt` SHALL end with `next: <run> context <task>` for the first open task of the index. With no open task it SHALL end with `next: <run> status`. The line before it SHALL say to run `<run> baseline write` to gate the old debt. `adopt --dry-run`, and `adopt` with nothing to write, SHALL print no such line.
+After it wrote IDs, `adopt` SHALL end with `next: <run> context <task>` for the task that `nextTask` picks, first by file and line in the lowest active change. With none it SHALL end with `next: <run> status`. The line before it SHALL say to run `<run> baseline write` to gate the old debt. It SHALL also say to commit it with a subject that starts with `baseline:`. `adopt --dry-run`, and `adopt` with nothing to write, SHALL print no such line.
 
 Refs: REQ-ADOPT-002, REQ-CLI-010
 
 #### Scenario: SCN-ADOPT-011-1 Open task
 - **WHEN** `adopt` writes IDs on the no-ID fixture
-- **THEN** the last line is `next: specctx context add-mfa/1.3` and the line before it says to run `specctx baseline write` to gate the old debt
+- **THEN** the last line is `next: specctx context add-mfa/1.3` and the line before it says to run `specctx baseline write` and to commit with a subject that starts with `baseline:`
 
 #### Scenario: SCN-ADOPT-011-2 No open task
 - **WHEN** `adopt` writes IDs in a project whose tasks are all done
@@ -42,8 +42,19 @@ Refs: REQ-ADOPT-001, REQ-CHK-001
 
 #### Scenario: SCN-ADOPT-002-5 Baseline step after adopt
 - **WHEN** `adopt` writes IDs on the no-ID fixture
-- **THEN** it writes no `.ctx/baseline.json`, and the line before the last line says to run `specctx baseline write` to gate the old debt
+- **THEN** it writes no `.ctx/baseline.json`, and the line before the last line says to run `specctx baseline write` and to commit with a subject that starts with `baseline:`
 
 #### Scenario: SCN-ADOPT-002-6 No step when nothing was written
 - **WHEN** `adopt` runs where no header needs an ID, or runs with `--dry-run`
 - **THEN** the output has no `baseline:` line and no `baseline write` line
+
+### Requirement: REQ-ADOPT-006 Two documented paths
+The README SHALL show a fresh path (`openspec init`, then `specctx init --all`) and an existing path (`init --all`, `adopt`, `context <task>`, then `baseline write` as the gate step). The existing path section SHALL say that legacy tasks stay in the baseline until an agent adds `[REQ-...]` citations and a Verify code span. `baseline prune` then drops them. Each path SHALL have an end to end test in CI that starts from a fixture and ends with `specctx gate --strict` exit 0.
+
+#### Scenario: SCN-ADOPT-006-1 Existing path end to end
+- **WHEN** `tests/paths/existing.sh` runs on the no-ID fixture
+- **THEN** it ends with `gate --strict` exit 0
+
+#### Scenario: SCN-ADOPT-006-2 Fresh path end to end
+- **WHEN** `tests/paths/fresh.sh` runs on an empty dir
+- **THEN** it ends with `gate --strict` exit 0

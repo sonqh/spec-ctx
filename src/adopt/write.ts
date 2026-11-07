@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { UsageExit } from "../cli/errors.ts";
-import { CONFIG_FILE, type Config } from "../config.ts";
+import { CONFIG_FILE, ConfigError, type Config } from "../config.ts";
 import { loadConfigOrExit } from "../cli/config.ts";
 import type { Io } from "../main.ts";
 import { runCommand } from "../runcmd.ts";
@@ -59,6 +59,19 @@ export function reportText(plan: Plan): string {
   return out.join("\n") + "\n";
 }
 
+/** REQ-ADOPT-011 the command after adopt. The codes in spec-ctx.toml changed, so the config loads again. */
+async function nextAfterAdopt(root: string, run: string): Promise<string> {
+  const { loadIndex } = await import("../index/build.ts");
+  const { nextTask } = await import("../tasks/tasks.ts");
+  try {
+    const task = nextTask(root, loadIndex(root, loadConfigOrExit(root)).data.entries);
+    return runCommand(run, task ? `context ${task.id}` : "status");
+  } catch (e) {
+    if (e instanceof UsageExit || e instanceof ConfigError) return runCommand(run, "status");
+    throw e;
+  }
+}
+
 export async function applyAdopt(root: string, cfg: Config, plan: Plan, io: Io, json: boolean): Promise<number> {
   const cfgPath = join(root, CONFIG_FILE);
   const cfgBefore = existsSync(cfgPath) ? readFileSync(cfgPath, "utf8") : null;
@@ -113,8 +126,11 @@ export async function applyAdopt(root: string, cfg: Config, plan: Plan, io: Io, 
     if (!report) io.out(`wrote the codes to ${CONFIG_FILE}\nnothing to adopt\n`);
     else {
       io.out(`adopted ${plan.edits.length} header(s) in ${files} file(s). Report: ${REPORT_FILE}\n`);
-      // REQ-ADOPT-002 adopt writes no baseline. The next step is a separate commit (044/D4, ADR-006 item 6).
-      io.out(`Commit the baseline with a subject that starts with baseline:.\nnext: ${runCommand(cfg.cli.run, "baseline write")}\n`);
+      // REQ-ADOPT-002 adopt writes no baseline. The gate step is a later, separate commit (044/D4, ADR-006 item 6).
+      // REQ-ADOPT-011 the last line names the context of the task that nextTask picks, or status
+      const run = cfg.cli.run;
+      io.out(`To gate the old debt later, run ${runCommand(run, "baseline write")} and commit it with a subject that starts with baseline:\n`);
+      io.out(`next: ${await nextAfterAdopt(root, run)}\n`);
     }
   }
   return 0;

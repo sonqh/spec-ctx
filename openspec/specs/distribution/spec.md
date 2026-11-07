@@ -49,7 +49,7 @@ Refs: ADR-001, ADR-006, REQ-SCH-003, REQ-SKL-002
 
 #### Scenario: SCN-DIST-002-7 Ignored skills dir
 - **WHEN** `.gitignore` has a line `.claude/` and `init --skills` writes the skills
-- **THEN** the output has one line `note: .gitignore ignores .claude/. The skills under .claude/skills/ stay out of git. The copies under .agents/skills/ are tracked.`
+- **THEN** the output has one line `note: .gitignore ignores .claude/. The skills under .claude/ stay out of git.` (REQ-DIST-018)
 
 #### Scenario: SCN-DIST-002-8 Test and code dirs
 - **WHEN** `init` runs in a project with `test/` and `lib/` at the root and no `tests/` or `src/`
@@ -264,3 +264,45 @@ Refs: REQ-DIST-002, REQ-CLI-004, REQ-LOOP-001, REQ-VER-001
 #### Scenario: SCN-DIST-016-5 The helper
 - **WHEN** the helper gets an object with the two variables, `npm_command`, and `PATH`
 - **THEN** the result lacks the two variables, keeps `npm_command` and `PATH` with the same values, and the input object keeps every key
+
+### Requirement: REQ-DIST-017 Init names the next command
+`init` SHALL read the specs without writing, with the adopt planner. When headers need an ID, it SHALL print `specs: <n> headers in <m> files need an ID (<k> capability codes). adopt --dry-run shows each one.` and end with `next: <run> adopt`. With none and an open task, it SHALL end with `next: <run> context <task>`. Otherwise it keeps `next: <run> status`. `--json` SHALL carry `needs_id` and `next`.
+
+Refs: REQ-ADOPT-001, REQ-DIST-002, REQ-CLI-010
+
+#### Scenario: SCN-DIST-017-1 Specs without IDs
+- **WHEN** `init --all` runs on a copy of the no-ID fixture
+- **THEN** the line before the last starts with `specs: 20 headers in 3 files need an ID (2 capability codes).` and the last line is `next: specctx adopt`
+
+#### Scenario: SCN-DIST-017-2 Specs with IDs and an open task
+- **WHEN** `init` runs on a project whose headers hold IDs and whose first open task is `001/1.1`
+- **THEN** the last line is `next: specctx context 001/1.1` and no `specs:` line prints
+
+#### Scenario: SCN-DIST-017-3 No open task
+- **WHEN** `init` runs with no header to adopt and no open task, or on a spec file that repeats a header name
+- **THEN** the last line is `next: specctx status`
+
+#### Scenario: SCN-DIST-017-4 Json
+- **WHEN** `init --json` runs on the no-ID fixture
+- **THEN** the object has `needs_id` equal to 20 and `next` equal to `specctx adopt`, and `init` wrote no spec file
+
+#### Scenario: SCN-DIST-017-5 Run prefix and a kept file
+- **WHEN** `[cli] run` is set, or a changed file stays without `--force`
+- **THEN** the `next:` line uses the prefix, and a kept changed file keeps its `init --all --force` line as the last line
+
+### Requirement: REQ-DIST-018 Ignored agent folders
+With or without `--skills`, `init` SHALL print one `note:` line when `.gitignore` ignores `.claude/` or `.agents/`. The line names each ignored folder and says that the skills under it stay out of git. It SHALL print no note when neither folder is ignored. A kept file or `nothing to do` run prints the note too.
+
+Refs: REQ-DIST-002
+
+#### Scenario: SCN-DIST-018-1 Claude folder without skills
+- **WHEN** `.gitignore` has a line `.claude/` and `init` runs without `--skills`
+- **THEN** the output has one line `note: .gitignore ignores .claude/. The skills under .claude/ stay out of git.`
+
+#### Scenario: SCN-DIST-018-2 Both folders
+- **WHEN** `.gitignore` has the lines `.claude/` and `.agents`
+- **THEN** one note line names `.claude/` and `.agents/`, and `--json` lists that line once under `notes`
+
+#### Scenario: SCN-DIST-018-3 No ignored folder
+- **WHEN** `.gitignore` ignores neither folder
+- **THEN** no `note:` line about `.gitignore` prints, with or without `--skills`

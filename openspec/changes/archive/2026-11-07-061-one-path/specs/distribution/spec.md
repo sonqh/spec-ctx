@@ -14,7 +14,7 @@ Refs: REQ-ADOPT-001, REQ-DIST-002, REQ-CLI-010
 - **THEN** the last line is `next: specctx context 001/1.1` and no `specs:` line prints
 
 #### Scenario: SCN-DIST-017-3 No open task
-- **WHEN** `init` runs in a project with no headers to adopt and no open task
+- **WHEN** `init` runs with no header to adopt and no open task, or on a spec file that repeats a header name
 - **THEN** the last line is `next: specctx status`
 
 #### Scenario: SCN-DIST-017-4 Json

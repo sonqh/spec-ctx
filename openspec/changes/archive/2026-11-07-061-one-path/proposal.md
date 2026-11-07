@@ -12,11 +12,11 @@ ADR-008 item 5 asks for one path for an existing project. Today a stranger canno
 
 ## What changes
 
-- `init` ends with a detection step. It reuses the adopt planner and writes nothing. When headers need an ID, it prints one summary line and the last line `next: specctx adopt`. When none do and the index holds an open task, the last line is `next: specctx context <task>`. Otherwise it stays `next: specctx status`. `--json` carries `needs_id` and `next`.
-- `adopt` ends with `next: specctx context <first open task>`, or `next: specctx status` when no task is open. The `baseline write` command moves to the line before it, as a later step.
+- `init` ends with a detection step. It reuses the adopt planner and writes nothing. When headers need an ID, it prints one summary line and the last line `next: specctx adopt`. When none do and the index holds an open task, the last line is `next: specctx context <task>`. Otherwise it stays `next: specctx status`. `--json` carries `needs_id` and `next`. The detection may write the gitignored `.ctx/index.json`.
+- `adopt` ends with `next: specctx context <task>`, where `<task>` is the pick of `nextTask`, or `next: specctx status` when no task is open. The `baseline write` command moves to the line before it, as a later step, with the `baseline:` subject rule.
 - `init` warns when `.gitignore` ignores `.claude/` or `.agents/`, with or without `--skills`. One note names the folders.
 - The README gets `## Try it on your own OpenSpec repo` with three commands. `docs/reference.md` and `docs/getting-started.md` show the three command path first, then the gate steps.
-- A record in `docs/verification/061.md`: the commands from `init` to the first useful `context <task>`, before and after, on a copy of the no-ID fixture.
+- A record in `docs/verification/061.md`: the commands from `init` to the first useful `context <task>`, before and after, on a copy of the no-ID fixture. It also holds the time of `init` on this repo and on the OpenSpec fork, before and after.
 
 ## Capabilities
 
@@ -26,8 +26,8 @@ None.
 
 ### Modified Capabilities
 
-- `distribution`: ADDED REQ-DIST-017 (init names the next command from the state of the specs), REQ-DIST-018 (ignored agent folders). MODIFIED REQ-DIST-002, whose scenario SCN-DIST-002-7 states the old note.
-- `adopt-existing`: ADDED REQ-ADOPT-011 (next command after adopt). MODIFIED REQ-ADOPT-002, which states the old `baseline write` line.
+- `distribution`: ADDED REQ-DIST-017 (init names the next command from the state of the specs), REQ-DIST-018 (ignored agent folders). MODIFIED REQ-DIST-002, whose scenario SCN-DIST-002-7 states the old note. MODIFIED REQ-CLI-007 (`cli` capability), which drops `init` from its fixed table sentence.
+- `adopt-existing`: ADDED REQ-ADOPT-011 (next command after adopt). MODIFIED REQ-ADOPT-002, which states the old `baseline write` line. MODIFIED REQ-ADOPT-006, which names the existing path of the README.
 - `spec-governance`: ADDED REQ-GOV-014 (README block for an own repo).
 
 ## Layer and benefit

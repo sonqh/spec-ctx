@@ -348,16 +348,21 @@ async function init(p: Parsed, io: Io): Promise<number> {
       return defaults().cli.run;
     }
   })();
-  if (p.flags.json) io.out(JSON.stringify(r, null, 2) + "\n");
-  else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + paint("dim", `next: ${runCommand(run, "status")}\n`, io.tty));
+  // REQ-DIST-017 the next command comes from the state of the specs
+  const { detectNext } = await import("../init/next.ts");
+  const d = detectNext(root, run);
+  const summary = d.summary ? `${d.summary}\n` : "";
+  if (p.flags.json) io.out(JSON.stringify({ ...r, needs_id: d.needs_id, next: d.next }, null, 2) + "\n");
+  else if (r.nothing) io.out("nothing to do\n" + r.notes.map((n) => `${n}\n`).join("") + summary + paint("dim", `next: ${d.next}\n`, io.tty));
   else {
     io.out(r.written.map((w) => `wrote ${w}\n`).join(""));
     io.out(r.merged.map((m) => `merged ${m}\n`).join(""));
     io.out(r.kept.map((k) => `kept ${k}\n`).join(""));
     io.out(r.notes.map((n) => `${n}\n`).join(""));
+    io.out(summary);
     // REQ-CLI-007 init ends with the next step. REQ-DIST-002 a kept changed file points to --force (014/D2).
     const again = [runCommand(run, "init"), all ? "--all" : [p.flags.schema ? "--schema" : "", p.flags.skills ? "--skills" : ""].filter(Boolean).join(" "), "--force"].filter(Boolean).join(" ");
-    io.out(paint("dim", `next: ${r.changed.length ? again : runCommand(run, "status")}\n`, io.tty));
+    io.out(paint("dim", `next: ${r.changed.length ? again : d.next}\n`, io.tty));
   }
   return 0;
 }

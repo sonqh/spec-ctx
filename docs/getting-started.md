@@ -197,9 +197,10 @@ All six exit 0. `openspec/specs/greeting/spec.md` carries `REQ-GRT-001` with its
 
 ## Existing project
 
-- Run `specctx init --all`, then `specctx adopt --dry-run` to see the ID each header gets.
-- Run `specctx adopt` to write them. It derives the capability code from the folder name.
-- Run `specctx baseline write` to record the debt of the day, then `specctx gate --strict`.
+- Run `specctx init --all`. It prints `next: specctx adopt` when headers need an ID.
+- Run `specctx adopt` to write the IDs. It derives the capability code from the folder name. `adopt --dry-run` shows each ID first.
+- Run `specctx context <task>` for the specs, code, and tests that the task needs.
+- Then, to gate the old debt, run `specctx baseline write` and `specctx gate --strict`. Commit the baseline with a subject that starts with `baseline:`.
 - The full path with its rules is in [`docs/reference.md`](reference.md#two-paths).
 
 ## Things to know
