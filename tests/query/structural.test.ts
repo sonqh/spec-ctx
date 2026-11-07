@@ -1,4 +1,4 @@
-// Covers: REQ-QRY-009, REQ-QRY-010, REQ-QRY-011
+// Covers: REQ-QRY-009, REQ-QRY-010, REQ-QRY-011, REQ-IDX-015
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { Project } from "../helpers.ts";
 
@@ -127,5 +127,27 @@ describe("change as a start", () => {
     expect(m.get("REQ-TH-003")![0]).toContain("delta in change/009");
     expect(m.get("cap/thing")![0]).toContain("capability touched by change/009");
     expect(m.has("009/1.1")).toBe(false);
+  });
+});
+
+describe("structural edges under a custom changes glob", () => {
+  test("REQ-IDX-015 related change/a lists the deltas and the capability of its folder", async () => {
+    const q = new Project(null);
+    try {
+      q.write("spec-ctx.toml", '[scan]\nchanges = ["work/changes/**/*.md"]\n');
+      q.write("openspec/specs/thing/spec.md", MAIN);
+      q.write("work/changes/a/proposal.md", "# Proposal\n");
+      q.write("work/changes/a/specs/thing/spec.md", DELTA);
+      q.write("work/changes/b/specs/other/spec.md", "## ADDED Requirements\n\n### Requirement: REQ-OT-001 Other\nOther SHALL work.\n");
+      await q.build();
+      const r = await q.run("related", "change/a");
+      expect(r.code, r.err).toBe(0);
+      expect(r.out).toContain("REQ-TH-003");
+      expect(r.out).toContain("delta in change/a");
+      expect(r.out).toContain("cap/thing");
+      expect(r.out).not.toContain("REQ-OT-001");
+    } finally {
+      q.cleanup();
+    }
   });
 });

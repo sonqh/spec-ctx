@@ -236,7 +236,7 @@ Tests and offline machines set `SPECCTX_OPENSPEC` to the command that runs OpenS
 ## Status
 
 - Published: `spec-ctx@0.6.0` on npm, with binaries on the GitHub release. See `CHANGELOG.md` for each release.
-- Archived: 001 to 025, 027 to 034, and 036 to 064. No change is open.
+- Archived: 001 to 025, 027 to 034, and 036 to 065. No change is open.
 - Upstream: the ID scheme has a proposal in [OpenSpec#1967](https://github.com/Fission-AI/OpenSpec/issues/1967#issuecomment-6414314730). The schema bundle is in the community table of [OpenSpec#2157](https://github.com/Fission-AI/OpenSpec/issues/2157).
 
 ## Measured

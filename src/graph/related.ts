@@ -1,5 +1,6 @@
 // REQ-QRY-002 IDs reachable from a start ID, with the reason each one was included.
 import { canon, poolOf } from "../index/canonical.ts";
+import { DEFAULT_RULES, type ChangeRules } from "../index/changepath.ts";
 import type { Entry } from "../index/types.ts";
 import { cmpStr, cmpTuple } from "../util/pystr.ts";
 import { fileEdges } from "./files.ts";
@@ -21,7 +22,7 @@ export interface Hit {
 }
 
 /** The walk behind `related` and `bundle`. The map keeps the insertion order and the depth of each entry (046/D7). */
-export function walkFound(entries: Entry[], start: string, depth: number, all = false): Map<string, Hit> {
+export function walkFound(entries: Entry[], start: string, depth: number, all = false, rules: ChangeRules = DEFAULT_RULES): Map<string, Hit> {
   const pool = poolOf(entries, all);
   const ids = canon(entries);
   for (const e of pool) if (!ids.has(e.id)) ids.set(e.id, e);
@@ -33,7 +34,7 @@ export function walkFound(entries: Entry[], start: string, depth: number, all = 
       s.add(e.id);
     }
   }
-  const S = structure(entries);
+  const S = structure(entries, rules);
   const found = new Map<string, Hit>();
   const add = (i: string, reason: string, d: number): boolean => {
     if (seeds && ids.get(i) && (ids.get(i)!.kind === "code" || ids.get(i)!.kind === "test")) return false;
@@ -84,15 +85,15 @@ export function walkFound(entries: Entry[], start: string, depth: number, all = 
 }
 
 /** The main version of a modified requirement, or undefined. */
-export function mainVersion(entries: Entry[], id: string): Entry | undefined {
-  return structure(entries).main.get(id);
+export function mainVersion(entries: Entry[], id: string, rules: ChangeRules = DEFAULT_RULES): Entry | undefined {
+  return structure(entries, rules).main.get(id);
 }
 
 /** REQ-QRY-005 a start that is no ID is a repository path. Its links seed the walk, and the walk adds no code or test row. */
-export function related(entries: Entry[], start: string, depth: number, all = false): [string, string][] {
+export function related(entries: Entry[], start: string, depth: number, all = false, rules: ChangeRules = DEFAULT_RULES): [string, string][] {
   const ids = canon(entries);
   for (const e of poolOf(entries, all)) if (!ids.has(e.id)) ids.set(e.id, e);
-  const found = walkFound(entries, start, depth, all);
+  const found = walkFound(entries, start, depth, all, rules);
   const rank = (i: string): [number, string] => {
     const e = ids.get(i);
     return [e ? (KIND_RANK[e.kind] ?? 9) : 9, i];
@@ -101,9 +102,9 @@ export function related(entries: Entry[], start: string, depth: number, all = fa
   // REQ-QRY-010 the main version of a modified requirement follows the pair of its delta. --all lists both copies already.
   const withMain = (i: string, reason: string): void => {
     out.push([i, reason]);
-    if (!all && mainVersion(entries, i)) out.push([i, `main version of ${i}`]);
+    if (!all && mainVersion(entries, i, rules)) out.push([i, `main version of ${i}`]);
   };
-  if (!all && mainVersion(entries, start)) out.push([start, `main version of ${start}`]);
+  if (!all && mainVersion(entries, start, rules)) out.push([start, `main version of ${start}`]);
   for (const i of [...found.keys()].sort((a, b) => cmpTuple(rank(a), rank(b)))) withMain(i, found.get(i)!.reason);
   return out;
 }

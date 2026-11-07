@@ -225,6 +225,8 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     case "related": {
       const { canon } = await import("../index/canonical.ts");
       const { related, mainVersion } = await import("../graph/related.ts");
+      const { changeRules } = await import("../index/changepath.ts");
+      const rules = changeRules(cfg.scan.changes);
       const ids = canon(entries);
       let id = p.positional[0]!;
       let isPath = false;
@@ -244,10 +246,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         }
       }
       const rows: [(typeof entries)[number], string][] = [];
-      for (const [i, reason] of related(entries, id, (f.depth as number | undefined) ?? 1, all)) {
+      for (const [i, reason] of related(entries, id, (f.depth as number | undefined) ?? 1, all, rules)) {
         // REQ-QRY-010 the pair of a main version stands for the non-canonical copy in the main spec
         if (!all && reason === `main version of ${i}`) {
-          const m = mainVersion(entries, i);
+          const m = mainVersion(entries, i, rules);
           if (m) rows.push([m, reason]);
           continue;
         }
@@ -293,8 +295,9 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       }
       // 047/D5 a task input passes the entry that findTask picks, so an active task wins over an archived one
       const task = taskId === undefined ? undefined : (await import("../tasks/tasks.ts")).findTask(root, entries, taskId).entry;
+      const { changeRules } = await import("../index/changepath.ts");
       const b = bundle(root, entries, wanted, (f.budget as number | undefined) ?? cfg.bundle.budget,
-        (f.depth as number | undefined) ?? cfg.bundle.depth, { all, task });
+        (f.depth as number | undefined) ?? cfg.bundle.depth, { all, task, rules: changeRules(cfg.scan.changes) });
       // REQ-JRN-002 only context emits the block signals. The sink is set only for the bin entry.
       if (cmd === "context" && io.journal) {
         const { contextSignals } = await import("../journal/signals.ts");

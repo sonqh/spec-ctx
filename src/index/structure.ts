@@ -1,10 +1,9 @@
 // REQ-IDX-010 REQ-IDX-012 REQ-IDX-013 change entries, capability entries, and the design links of tasks.
 import { cmpStr } from "../util/pystr.ts";
-import { changeKey, changeOf, resolveChange, taskPaths, type ScanFile } from "./scan.ts";
+import { changeFolder, DEFAULT_RULES, type ChangeRules } from "./changepath.ts";
+import { changeKey, resolveChange, taskPaths, type ScanFile } from "./scan.ts";
 import type { Entry } from "./types.ts";
 
-const CHANGE_DIR = /^(openspec\/changes\/(?:archive\/)?[^/]+)\//;
-const ARCHIVE_DATE = /^openspec\/changes\/archive\/(\d{4}-\d{2}-\d{2})-/;
 const CAP_SPEC = /(?:^|\/)specs\/([^/]+)\/spec\.md$/;
 // REQ-IDX-012 a full name `<key>/D<n>` or a bare `D<n>`. A bare D follows no letter, digit, slash, or hyphen.
 const FULL_DESIGN = /(?<![\w/-])([\w-]+)\/D(\d+)(?!\w)/g;
@@ -30,17 +29,14 @@ function better(a: Folder, b: Folder): boolean {
 }
 
 /** REQ-IDX-010 one change entry per key and one cap entry per capability name. */
-function structureEntries(files: ScanFile[]): Entry[] {
+function structureEntries(files: ScanFile[], rules: ChangeRules): Entry[] {
   const folders = new Map<string, Folder>();
   const caps = new Map<string, string[]>();
   for (const f of files) {
-    const m = CHANGE_DIR.exec(f.path);
+    const m = changeFolder(f.path, rules);
     if (m) {
-      let fo = folders.get(m[1]!);
-      if (!fo) {
-        const date = ARCHIVE_DATE.exec(f.path)?.[1] ?? "";
-        folders.set(m[1]!, (fo = { dir: m[1]!, change: changeOf(f.path), archived: f.path.includes("/archive/"), date, files: [] }));
-      }
+      let fo = folders.get(m.dir);
+      if (!fo) folders.set(m.dir, (fo = { dir: m.dir, change: m.name, archived: m.archived, date: m.date, files: [] }));
       fo.files.push(f.path);
     }
     const c = CAP_SPEC.exec(f.path);
@@ -95,7 +91,7 @@ function designLinks(entries: Entry[]): void {
 }
 
 /** Add the structural entries and the design links. It runs after the scan and before the canonical mark. */
-export function addStructure(entries: Entry[], files: ScanFile[]): void {
+export function addStructure(entries: Entry[], files: ScanFile[], rules: ChangeRules = DEFAULT_RULES): void {
   designLinks(entries);
-  entries.push(...structureEntries(files));
+  entries.push(...structureEntries(files, rules));
 }

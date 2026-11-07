@@ -6,6 +6,7 @@ import { blockRange, readText } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { Trust, provenanceClass, taggedReq } from "./trust.ts";
 import { cmpStr, cmpTuple, cpLen, pyStrip, splitLines } from "../util/pystr.ts";
+import type { ChangeRules } from "../index/changepath.ts";
 import { KIND_RANK, mainVersion, walkFound, type Hit } from "./related.ts";
 
 export class Lines {
@@ -103,6 +104,8 @@ export interface BundleOpts {
   all?: boolean;
   /** 047/D5 the task entry that the caller found. It wins over a task with the same ID that canon() holds. */
   task?: Entry;
+  /** REQ-IDX-015 the change rules of `[scan] changes`. The default reads `openspec/changes`. */
+  rules?: ChangeRules;
 }
 
 /**
@@ -157,7 +160,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
     if (all) copies.push(...entries.filter((e) => e.id === i && !e.canonical));
     for (const e of copies) blocks.push([e, "requested", 0]);
     // REQ-QRY-010 the main version of a modified requirement, also for a requested ID
-    const m = all ? undefined : mainVersion(entries, i);
+    const m = all ? undefined : mainVersion(entries, i, opts.rules);
     if (m) blocks.push([m, `main version of ${i}`, 0]);
   }
   // REQ-QRY-018 the count of blocks that the loop above pushed. They print first and always stay.
@@ -172,7 +175,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
       const cur = found.get(e.id);
       if (!cur || cur.depth > 1) found.set(e.id, { reason: `decision for ${i}`, depth: 1 });
     }
-    for (const [r, hit] of walkFound(entries, i, depth, all)) {
+    for (const [r, hit] of walkFound(entries, i, depth, all, opts.rules)) {
       if (!wanted.includes(r) && !found.has(r)) found.set(r, hit);
     }
   }
@@ -203,7 +206,7 @@ export function bundle(root: string, entries0: Entry[], wanted: string[], budget
     const e = ids.get(r2)!;
     const cls = citedSet.has(r2) ? 0 : budgetClass(e, false, hit);
     blocks.push([e, hit.reason, cls]);
-    const m = all ? undefined : mainVersion(entries, r2);
+    const m = all ? undefined : mainVersion(entries, r2, opts.rules);
     if (m) blocks.push([m, `main version of ${r2}`, cls]);
   }
   const files = new Lines(root);

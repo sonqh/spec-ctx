@@ -1,7 +1,6 @@
 // REQ-CLI-001 status reads the index, the handoff file, questions.json, and the .openspec.yaml of each archive folder.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { changeOf } from "../index/scan.ts";
 import type { Entry } from "../index/types.ts";
 import { readQuestions, renderQuestions } from "../handoff/questions.ts";
 import { cmpStr, pyStrip, splitLines } from "../util/pystr.ts";
@@ -68,7 +67,7 @@ export function statusReport(root: string, entries: Entry[]): StatusReport {
   const handoff = existsSync(join(root, HANDOFF_PATH));
   return {
     changes: [...changes.keys()].sort(cmpStr).map((c) => ({ change: c, ...changes.get(c)! })),
-    last_archived: last ? changeOf(`openspec/changes/archive/${last}/`) : null,
+    last_archived: last ? last.replace(/^\d{4}-\d{2}-\d{2}-/, "") : null,
     uncovered: uncovered.length,
     handoff,
     current: handoff ? handoffCurrent(root) : null,

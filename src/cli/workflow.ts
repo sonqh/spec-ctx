@@ -91,10 +91,11 @@ export async function runWorkflow(c: Ctx): Promise<number> {
       if (t.archived) throw new UsageExit(`task ${t.id} is in an archived change`);
       const { canon } = await import("../index/canonical.ts");
       const { bundle } = await import("../graph/bundle.ts");
+      const { changeRules } = await import("../index/changepath.ts");
       const ids = canon(entries);
       for (const r of t.reqs.filter((x) => !ids.has(x))) c.io.err(`warning: task ${t.id} cites ${r}, which the index does not hold\n`);
       // 047/D5 the entry that findTask found goes in, so an active task wins over an archived one with its number
-      const b = bundle(c.root, entries, [t.id], c.cfg.bundle.budget, c.cfg.bundle.depth, { task: t.entry });
+      const b = bundle(c.root, entries, [t.id], c.cfg.bundle.budget, c.cfg.bundle.depth, { task: t.entry, rules: changeRules(c.cfg.scan.changes) });
       const { isoNow } = await import("../util/time.ts");
       const { CURRENT_PATH } = await import("../handoff/handoff.ts");
       mkdirSync(join(c.root, ".ctx"), { recursive: true });
