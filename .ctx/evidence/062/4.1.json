@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-07T03:20:04.653Z",
+  "files": {
+    "src/cli/commands.ts": "2d4d028666d061651ca629a9fab34dd55a9a34666c950ae3b054c187acf00d54",
+    "src/graph/bundle.ts": "9ba4c60250ff31be592d53e7a745316b65ff90c794870adcadc736aa2858a03b",
+    "src/graph/trust.ts": "3be707b9a80addb7e7c9f5db2b7e0f065ec984bb0c56f70a271f063e4ed5de6b",
+    "tests/query/trust.test.ts": "1837ba6b8d2a409f4043cdda5d43f1b62888e72e4a9e2b0151e0520323d8cc32"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-026",
+    "REQ-QRY-025"
+  ],
+  "task": "062/4.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "grep -q \"REQ-QRY-023\" CHANGELOG.md && grep -q \"p95\" docs/verification/062.md && git diff --quiet -- bench/recall && node dist/cli.js lint tells --baseline 0 docs/verification/062.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/062.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e301bfe224a8cc3a02a51a47aceb3653458f84fa6d4b0b4c7df060f5dc01df12"
+  }
+}

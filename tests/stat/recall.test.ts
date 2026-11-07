@@ -121,7 +121,7 @@ describe("scripts/recall.mjs", () => {
     const out = temp("specctx-recall-out-");
     const t11 = { ...T11, reqs: ["REQ-AAA-001", "REQ-BBB-001"], code: [], tests: ["tests/a.cases.ts"] };
     const t12 = { ...T12, code: [], tests: [] };
-    const r = run("--labels", labels(root, [t11, t12], { budget: 250 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    const r = run("--labels", labels(root, [t11, t12], { budget: 320 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
     expect(r.code, r.err).toBe(0);
     const t = report(out).repos[0].per_task.find((x: any) => x.task === "001/1.1");
     expect(t.misses).toEqual(["REQ-BBB-001", "tests/a.cases.ts"]);
@@ -131,10 +131,10 @@ describe("scripts/recall.mjs", () => {
   test("SCN-STAT-007-1 a card with the marker and a plain card both match, and card_only counts the first", () => {
     const root = project();
     const out = temp("specctx-recall-out-");
-    // at 400 the card of REQ-AAA-001 has no body, and the code and test lines are plain cards
+    // at 480 the card of REQ-AAA-001 has no body, and the code and test lines are plain cards
     const t11 = { ...T11, code: ["src/a.ts"], tests: ["tests/a.cases.ts"] };
     const t12 = { ...T12, reqs: [], code: [], tests: [] };
-    const r = run("--labels", labels(root, [t11, t12], { budget: 400 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
+    const r = run("--labels", labels(root, [t11, t12], { budget: 480 }), "--root", root, "--out", out, "--date", "2026-01-04", "--runs", "1");
     expect(r.code, r.err).toBe(0);
     const repo = report(out).repos[0];
     expect(repo.matched).toEqual({ total: 3, reqs: 1, code: 1, tests: 1 });

@@ -285,7 +285,9 @@ export async function run(p: Parsed, io: Io): Promise<number> {
         const { reqBlocks } = await import("../graph/bundle.ts");
         const text = reqBlocks(root, p.positional.map((i) => ids.get(i)!));
         // REQ-QRY-019 block mode has no budget, so budget is null and the text is complete (050/D6)
-        if (json) print({ text, omitted: [], body_omitted: [], chars: (await import("../util/pystr.ts")).cpLen(text), budget: null, complete: true });
+        // REQ-QRY-026 block mode has no budget, so used equals chars and no block is listed
+        const n = (await import("../util/pystr.ts")).cpLen(text);
+        if (json) print({ text, omitted: [], body_omitted: [], chars: n, budget: null, complete: true, used: n, blocks: [] });
         else io.out(text);
         return 0;
       }

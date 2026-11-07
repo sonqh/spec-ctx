@@ -81,7 +81,7 @@ describe("task start", () => {
     expect(idx.entries.filter((e: any) => e.kind === "task" && e.id === "002/2.1").length).toBe(2);
     const r = await p.run("task", "start", "002/2.1");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("| ref from 002/2.1\n");
+    expect(r.out).toMatch(/\| ref from 002\/2\.1 \| declared \| (verified|unverified)\n/);
     expect(r.out).toContain("-- src/a.ts:1 |");
     expect(r.out).not.toContain("cites no REQ");
     const ctx = await p.run("context", "002/2.1");
@@ -147,7 +147,8 @@ describe("task start", () => {
     const [, n, pct, m] = /^-- bundle (\d+) chars, ([\d.]+)% of (\d+) chars/.exec(last)!;
     const cur = JSON.parse(p.read(".ctx/current.json"));
     expect(Number(n)).toBe(cur.bundle_chars);
-    expect(Number(m)).toBeGreaterThan(Number(n));
+    // the fixture is small, so a bundle with its cards can outgrow the spec text (062/D6)
+    expect(Number(m)).toBeGreaterThan(0);
     expect(Math.abs(Number(pct) - (100 * Number(n)) / Number(m))).toBeLessThan(0.06);
     const s = await p.run("stats", "--json");
     if (s.code === 0 && s.out.trim().startsWith("{")) expect(JSON.parse(s.out).spec_chars).toBe(Number(m));

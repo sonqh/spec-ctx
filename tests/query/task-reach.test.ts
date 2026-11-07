@@ -45,9 +45,9 @@ describe("task reach", () => {
     expect(b.omitted.length).toBeGreaterThan(0);
     expect(b.omitted.every((i) => /^\d+\/\d/.test(i) || /^REQ-TH-0[2-4]0$/.test(i) || i.startsWith("change/") || i.startsWith("cap/"))).toBe(true);
     const full = await bundleOf(p, 100000, "009/1.1");
-    expect(full.text).toContain("| implements REQ-TH-001\n");
-    expect(full.text).toContain("| covers REQ-TH-001\n");
-    expect(full.text).toContain("| ref from 009/1.1\n");
+    expect(full.text).toMatch(/\| implements REQ-TH-001 \| (tagged|verified)\n/);
+    expect(full.text).toMatch(/\| covers REQ-TH-001 \| (tagged|verified)\n/);
+    expect(full.text).toMatch(/\| ref from 009\/1\.1 \| declared \| (verified|unverified)\n/);
   });
 
   test("SCN-QRY-016-3 a task with no citation gets no code or test line", async () => {
@@ -68,7 +68,7 @@ describe("task reach", () => {
       const budget = ["009/1.1", "REQ-TH-001", "009/D1", "REQ-TH-020", "src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"].reduce((n, id) => n + size(full.text, id), 0) - 1;
       const b = await bundleOf(p, budget, "009/1.1", "--depth", String(depth));
       expect(b.text).toContain("-- 009/D1 |");
-      expect(b.text).toContain("| decision for REQ-TH-001\n");
+      expect(b.text).toContain("| decision for REQ-TH-001 | declared\n");
       expect(b.omitted).not.toContain("009/D1");
     });
   }
@@ -79,14 +79,14 @@ describe("task reach", () => {
     p.write("openspec/changes/009-add-x/design.md", "# Design\n\n## Decisions\n\n- D1 Pick one. Refs: REQ-TH-002\n");
     const ids = ["REQ-TH-001", "REQ-TH-002"];
     const one = await bundleOf(p, 100000, ...ids, "--depth", "1");
-    expect(one.text).toContain("| decision for REQ-TH-002\n");
+    expect(one.text).toContain("| decision for REQ-TH-002 | declared\n");
     const two = await bundleOf(p, 100000, ...ids, "--depth", "2");
-    expect(two.text).toContain("| decision for REQ-TH-002\n");
+    expect(two.text).toContain("| decision for REQ-TH-002 | declared\n");
     // room for the decision, or for one task that cites REQ-TH-001, but not for both
     const budget = ["REQ-TH-001", "REQ-TH-002", "cap/thing", "009/D1", "009/1.1", "src/c1.ts:1", "src/c2.ts:1", "src/c3.ts:1", "tests/t1.test.ts:1", "tests/t2.test.ts:1"].reduce((n, id) => n + size(one.text, id), 0) - 1;
     for (const depth of ["1", "2"]) {
       const b = await bundleOf(p, budget, ...ids, "--depth", depth);
-      expect(b.text).toContain("| decision for REQ-TH-002\n");
+      expect(b.text).toContain("| decision for REQ-TH-002 | declared\n");
       expect(b.omitted).not.toContain("009/D1");
     }
   });
@@ -103,7 +103,7 @@ describe("task reach", () => {
     const old = mine.find((e: any) => e.file.includes("/archive/"));
     const a = bundle(p.path("."), idx.entries, ["009/1.1"], 100000, 1, { task: active });
     expect(heads(a.text)).toContain("src/c1.ts:1");
-    expect(a.text).toContain("| ref from 009/1.1\n");
+    expect(a.text).toMatch(/\| ref from 009\/1\.1 \| declared \| (verified|unverified)\n/);
     const o = bundle(p.path("."), idx.entries, ["009/1.1"], 100000, 1, { task: old });
     expect(heads(o.text)).not.toContain("src/c1.ts:1");
   });
@@ -133,8 +133,8 @@ describe("file reach", () => {
     p.write("tests/a.test.ts", `// ${COVERS}REQ-AB-001\n`);
     const r = await p.run("bundle", "src/a.ts");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("-- src/a.ts:1 | src/a.ts:1 | active | implements REQ-AB-001\n");
-    expect(r.out).toContain("-- tests/a.test.ts:1 | tests/a.test.ts:1 | active | covers REQ-AB-001\n");
+    expect(r.out).toMatch(/-- src\/a\.ts:1 \| src\/a\.ts:1 \| active \| implements REQ-AB-001 \| (tagged|verified)\n/);
+    expect(r.out).toMatch(/-- tests\/a\.test\.ts:1 \| tests\/a\.test\.ts:1 \| active \| covers REQ-AB-001 \| (tagged|verified)\n/);
     const rel = await p.run("related", "src/a.ts");
     expect(rel.out.split("\n").some((l) => l.startsWith("code  ") || l.startsWith("test  "))).toBe(false);
   });

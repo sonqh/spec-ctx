@@ -121,10 +121,10 @@ describe("fixed text", () => {
     const r = await p.run("context", "009/1.1");
     expect(r.code, r.err).toBe(0);
     expect(r.out).toBe(
-      "-- 009/1.1 | openspec/changes/009-add-x/tasks.md:3 | open | requested\n" +
+      "-- 009/1.1 | openspec/changes/009-add-x/tasks.md:3 | open | requested | declared | no evidence\n" +
         "- [ ] 1.1 Edit `src/a.ts` and `src/zz.ts`. Verify: `true`\n\n" +
         "note: 009/1.1 cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.\n" +
-        "-- src/a.ts | src/a.ts | active | named by 009/1.1\n",
+        "-- src/a.ts | src/a.ts | active | named by 009/1.1 | declared\n",
     );
   });
 });

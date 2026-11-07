@@ -44,11 +44,11 @@ Command flags:
   `query --change <name>`      Show only entries of this change. The key or the full folder name works.
   `query --limit <n>`          Show n lines at most. The default is 20. Use 0 for no limit.
   `query --all`                Show all copies of an ID.
-  `context --budget <n>`       Keep the blocks to n characters. Each entry prints its card first. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000.
+  `context --budget <n>`       Keep the blocks to n characters. Each entry prints its card first. A card ends with its trust labels: the provenance and the evidence state. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000.
   `context --depth <n>`        Follow links n steps. The default is 1.
   `related --depth <n>`        Follow links n steps. The default is 1.
   `related --all`              Show all copies of an ID.
-  `bundle --budget <n>`        Keep the blocks to n characters. Each entry prints its card first. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000.
+  `bundle --budget <n>`        Keep the blocks to n characters. Each entry prints its card first. A card ends with its trust labels: the provenance and the evidence state. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000.
   `bundle --depth <n>`         Follow links n steps. The default is 1.
   `bundle --all`               Show all copies of an ID.
   `bundle --block`             Print only the requirement block, as it sits in the spec file. Each ID must be a requirement.

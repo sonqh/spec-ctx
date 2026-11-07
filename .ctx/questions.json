@@ -993,5 +993,47 @@
     "verdict": "approved",
     "answer": "Approved by the lead on 2026-11-07, same grounds as the previous archive question.",
     "resolved_at": "2026-11-07T01:03:29.527Z"
+  },
+  {
+    "n": 103,
+    "asked_at": "2026-11-07T03:10:16.646Z",
+    "task": "062-trust-labels",
+    "text": "plan ready for 062-trust-labels. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-07. Plan drafted by the engineer and finished by the lead after the agent stopped. Layer 1, ADR-008 item 6. Architect diff review at the archive stop.",
+    "resolved_at": "2026-11-07T03:10:16.804Z"
+  },
+  {
+    "n": 104,
+    "asked_at": "2026-11-07T03:14:11.501Z",
+    "task": "062/3.1",
+    "text": "task 062/3.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-2 check --strict passes with an active change that holds an open task (055/D2) [703.34ms]. What should change?",
+    "status": "resolved",
+    "stage": "cap",
+    "answer": "The lead fixes the Verify of 3.1.",
+    "resolved_at": "2026-11-07T03:14:15.413Z"
+  },
+  {
+    "n": 105,
+    "asked_at": "2026-11-07T03:19:14.772Z",
+    "task": "062/3.1",
+    "text": "task 062/3.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-2 check --strict passes with an active change that holds an open task (055/D2) [587.29ms]. What should change?",
+    "status": "resolved",
+    "stage": "cap",
+    "answer": "The lead repairs the stale tasks in order.",
+    "resolved_at": "2026-11-07T03:19:24.095Z"
+  },
+  {
+    "n": 106,
+    "asked_at": "2026-11-07T03:20:40.448Z",
+    "task": "062-trust-labels",
+    "text": "archive 062-trust-labels?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-07 after the architect diff review, with both changes applied: a damaged evidence file reads stale as check does, and the reason table test names the class of every reason.",
+    "resolved_at": "2026-11-07T03:20:40.593Z"
   }
 ]

@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-07T03:20:22.089Z",
+  "files": {
+    "src/graph/bundle.ts": "9ba4c60250ff31be592d53e7a745316b65ff90c794870adcadc736aa2858a03b",
+    "src/graph/trust.ts": "3be707b9a80addb7e7c9f5db2b7e0f065ec984bb0c56f70a271f063e4ed5de6b",
+    "tests/query/trust.test.ts": "1837ba6b8d2a409f4043cdda5d43f1b62888e72e4a9e2b0151e0520323d8cc32"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-023",
+    "REQ-QRY-024"
+  ],
+  "task": "062/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/cli tests/skills tests/gov && node dist/cli.js lint tells --baseline 0 README.md docs/reference.md skills/specctx-run/SKILL.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation README.md docs/reference.md skills/specctx-run/SKILL.md && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 152 pass\n 0 fail\n 874 expect() calls\nRan 152 tests across 28 files. [10.48s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "797b3463ad043c54b5c44120b82361c0143ca43220bf04d8ce68fe1eac942e1e"
+  }
+}

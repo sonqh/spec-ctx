@@ -16,7 +16,7 @@ export SPECCTX_JOURNAL=0
 record=0
 [ "${1:-}" = "--record" ] && record=1
 
-cmds=("build" "status" "query push main" "related REQ-APPLY-005" "bundle REQ-APPLY-001 --budget 3000" "check" "check --strict")
+cmds=("build" "status" "query push main" "related REQ-APPLY-005" "bundle REQ-APPLY-001 --budget 3600" "check" "check --strict")
 names=(build status query related bundle check check-strict)
 
 [ -f "$here/dist/cli.js" ] || { echo "dist/cli.js is missing. Run bun run build first." >&2; exit 2; }

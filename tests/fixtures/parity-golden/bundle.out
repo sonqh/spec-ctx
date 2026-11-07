@@ -1,4 +1,4 @@
--- REQ-APPLY-001 | openspec/specs/apply-pipeline/spec.md:8 | active | requested
+-- REQ-APPLY-001 | openspec/specs/apply-pipeline/spec.md:8 | active | requested | declared | unverified
 ### Requirement: REQ-APPLY-001 Plan is read-only
 `plan` SHALL compile, render for every enabled and installed agent, read current disk state, and print one line per artifact with one of `create`, `update`, `unchanged`, `skip`, `remove`. `remove` SHALL apply to an owned artifact the last apply wrote that the profile no longer renders. `plan` SHALL write nothing.
 
@@ -12,27 +12,31 @@ Refs: ADR-002, REQ-ADPT-006, REQ-APPLY-005
 - **WHEN** the last apply wrote `rules/lang-python.md` and the profile no longer lists python
 - **THEN** `plan` lists `rules/lang-python.md` as `remove`
 
--- ADR-002 | decisions/ADR-002-no-llm-in-compile.md:1 | active | ref from REQ-APPLY-001 | body omitted
--- 007/D2 | openspec/changes/007-parity-plant/design.md:6 | active | decision for REQ-APPLY-001
+-- ADR-002 | decisions/ADR-002-no-llm-in-compile.md:1 | active | ref from REQ-APPLY-001 | declared | body omitted
+-- 007/D2 | openspec/changes/007-parity-plant/design.md:6 | active | decision for REQ-APPLY-001 | declared
 - The second decision spans
   two lines! It refs a plan. Refs: REQ-APPLY-001, ADR-004.
 
--- REQ-ADPT-006 | openspec/specs/adapter-contract/spec.md:57 | active | ref from REQ-APPLY-001 | body omitted
--- REQ-APPLY-005 | openspec/changes/007-parity-plant/specs/apply-pipeline/spec.md:3 | modified | ref from REQ-APPLY-001 | body omitted
--- REQ-APPLY-005 | openspec/specs/apply-pipeline/spec.md:54 | active | main version of REQ-APPLY-005 | body omitted
--- 002/1.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:5 | done | task cites REQ-APPLY-001 | body omitted
--- 002/5.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:42 | done | task cites REQ-APPLY-001 | body omitted
--- 005/1.1 | openspec/changes/archive/2026-10-24-005-ux-polish/tasks.md:5 | done | task cites REQ-APPLY-001 | body omitted
--- 007/1.2 | openspec/changes/007-parity-plant/tasks.md:6 | open | task cites REQ-APPLY-001
+-- REQ-ADPT-006 | openspec/specs/adapter-contract/spec.md:57 | active | ref from REQ-APPLY-001 | declared | unverified | body omitted
+-- REQ-APPLY-005 | openspec/changes/007-parity-plant/specs/apply-pipeline/spec.md:3 | modified | ref from REQ-APPLY-001 | declared | unverified | body omitted
+-- REQ-APPLY-005 | openspec/specs/apply-pipeline/spec.md:54 | active | main version of REQ-APPLY-005 | structural | unverified | body omitted
+-- 002/1.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:5 | done | task cites REQ-APPLY-001 | declared | no evidence
+- [x] 1.1 Implement `src/apply/plan.ts`: compile, render, read, classify create/update/unchanged/skip. [REQ-APPLY-001] Verify: `tests/apply/plan.test.ts` covers SCN-APPLY-001-1 and asserts no filesystem writes with a temp home.
+
+-- 002/5.1 | openspec/changes/archive/2026-10-24-002-core-compile-apply/tasks.md:42 | done | task cites REQ-APPLY-001 | declared | no evidence | body omitted
+-- 005/1.1 | openspec/changes/archive/2026-10-24-005-ux-polish/tasks.md:5 | done | task cites REQ-APPLY-001 | declared | no evidence | body omitted
+-- 007/1.2 | openspec/changes/007-parity-plant/tasks.md:6 | open | task cites REQ-APPLY-001 | declared | no evidence
 - [ ] 1.2 Open task that cites two IDs. [REQ-APPLY-001, REQ-ZZZ-001] Verify: `true`
 
--- 007/1.4 | openspec/changes/007-parity-plant/tasks.md:8 | open | task cites REQ-APPLY-001 | body omitted
--- src/apply/pipeline.ts:160 | src/apply/pipeline.ts:160 | active | implements REQ-APPLY-001
--- src/cli/commands.ts:115 | src/cli/commands.ts:115 | active | implements REQ-APPLY-001
--- src/plant.ts:4 | src/plant.ts:4 | active | implements REQ-APPLY-001
--- tests/apply/plan.test.ts:12 | tests/apply/plan.test.ts:12 | active | covers REQ-APPLY-001
--- tests/apply/plan.test.ts:23 | tests/apply/plan.test.ts:23 | active | covers REQ-APPLY-001
--- tests/apply/plan.test.ts:37 | tests/apply/plan.test.ts:37 | active | covers REQ-APPLY-001
--- tests/apply/plan.test.ts:48 | tests/apply/plan.test.ts:48 | active | covers REQ-APPLY-001
--- tests/e2e/init.test.ts:6 | tests/e2e/init.test.ts:6 | active | covers REQ-APPLY-001
--- cap/apply-pipeline | openspec/specs/apply-pipeline/spec.md:1 | active | capability of REQ-APPLY-001
+-- 007/1.4 | openspec/changes/007-parity-plant/tasks.md:8 | open | task cites REQ-APPLY-001 | declared | no evidence
+- [ ] 1.4 Task without a check. [REQ-APPLY-001]
+
+-- src/apply/pipeline.ts:160 | src/apply/pipeline.ts:160 | active | implements REQ-APPLY-001 | tagged
+-- src/cli/commands.ts:115 | src/cli/commands.ts:115 | active | implements REQ-APPLY-001 | tagged
+-- src/plant.ts:4 | src/plant.ts:4 | active | implements REQ-APPLY-001 | tagged
+-- tests/apply/plan.test.ts:12 | tests/apply/plan.test.ts:12 | active | covers REQ-APPLY-001 | tagged
+-- tests/apply/plan.test.ts:23 | tests/apply/plan.test.ts:23 | active | covers REQ-APPLY-001 | tagged
+-- tests/apply/plan.test.ts:37 | tests/apply/plan.test.ts:37 | active | covers REQ-APPLY-001 | tagged
+-- tests/apply/plan.test.ts:48 | tests/apply/plan.test.ts:48 | active | covers REQ-APPLY-001 | tagged
+-- tests/e2e/init.test.ts:6 | tests/e2e/init.test.ts:6 | active | covers REQ-APPLY-001 | tagged
+-- cap/apply-pipeline | openspec/specs/apply-pipeline/spec.md:1 | active | capability of REQ-APPLY-001 | structural

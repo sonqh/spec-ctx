@@ -49,7 +49,7 @@ describe("uncited note", () => {
     const at = ls.indexOf(note("009/1.1"));
     expect(at).toBeGreaterThan(0);
     expect(ls.slice(0, at).some((l) => l.startsWith("-- ") && !l.startsWith("-- 009/1.1 |"))).toBe(false);
-    expect(ls.slice(at).some((l) => l.startsWith("-- REQ-TH-009 |") && l.endsWith("delta in change of 009/1.1"))).toBe(true);
+    expect(ls.slice(at).some((l) => l.startsWith("-- REQ-TH-009 |") && l.includes("| delta in change of 009/1.1 | structural"))).toBe(true);
     expect(b.chars).toBe([...b.text].length);
   });
 

@@ -71,7 +71,7 @@ describe("bundle by path", () => {
   test("SCN-QRY-005-2 prints the blocks with the reason of the file", async () => {
     const r = await p.run("bundle", "src/a.ts");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("-- REQ-AB-001 | openspec/specs/ab/spec.md:1 | active | implements, tag at src/a.ts:1\n### Requirement: REQ-AB-001");
+    expect(r.out).toContain("-- REQ-AB-001 | openspec/specs/ab/spec.md:1 | active | implements, tag at src/a.ts:1 | tagged | unverified\n### Requirement: REQ-AB-001");
     expect(r.out).toContain("-- REQ-AB-002 |");
     expect(r.out).not.toContain("| requested");
   });
@@ -79,7 +79,7 @@ describe("bundle by path", () => {
   test("an ID and a path together keep the requested block", async () => {
     const r = await p.run("bundle", "src/b.ts", "REQ-AB-001");
     expect(r.code, r.err).toBe(0);
-    expect(r.out).toContain("| requested\n### Requirement: REQ-AB-001");
+    expect(r.out).toMatch(/\| requested \| declared \| (verified|unverified)\n### Requirement: REQ-AB-001/);
     expect(r.out).toContain("mentions, in task line");
   });
 
