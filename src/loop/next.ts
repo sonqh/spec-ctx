@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { applyBaseline } from "../baseline/baseline.ts";
 import { check } from "../check/check.ts";
+import { deltaPurposeFindings } from "../check/purpose.ts";
 import { staleOf } from "../check/evidence.ts";
 import type { Config } from "../config.ts";
 import { readQuestions, type Question } from "../handoff/questions.ts";
@@ -221,6 +222,17 @@ export function decideNext(root: string, cfg: Config, data: Index, want?: string
   // step 7: the next open task
   const open = nextTask(root, entries, folder);
   if (open) return done({ action: "start", command: rc(`task start ${open.id}`), state: "task_open", task: open.id });
+
+  // REQ-LOOP-019 step 7b: no archive while a new capability delta has no Purpose. The rule is the one of check (067/D3).
+  const noPurpose = applyBaseline(root, deltaPurposeFindings(root, folder), []).findings[0];
+  if (noPurpose) {
+    return done({
+      action: "gate",
+      command: rc("check --strict"),
+      reason: `delta-without-purpose ${noPurpose.id} at ${noPurpose.file}. Add a ## Purpose section before ## ADDED Requirements. Archive copies it into the new main spec.`,
+      state: "purpose_missing",
+    });
+  }
 
   // step 8: the gate must pass after the newest evidence
   const gate = lastGate(root);

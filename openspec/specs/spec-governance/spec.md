@@ -118,13 +118,13 @@ Refs: REQ-GOV-003, REQ-TASK-002, REQ-TASK-003, REQ-CLI-008
 - **THEN** the character count and the percent in the README equal the ones in the footer
 
 ### Requirement: REQ-GOV-009 Archive guidance of this repository
-`openspec/config.yaml` of this repository SHALL list under `operations.archive.guidance` every pre-archive step. The steps are `node dist/cli.js stats --write`, the README `## Measured` total row from the newest `docs/metrics/` file, the README `Archived:` line, the change in `## Unreleased` of `CHANGELOG.md`, `docs/verification/<NNN>.md`, and `bun run ci:local`. The rebuild line SHALL name `node dist/cli.js build`. The existing guidance lines SHALL stay.
+`openspec/config.yaml` of this repository SHALL list under `operations.archive.guidance` every pre-archive step. The steps are `node dist/cli.js stats --write`, which also sets the README `## Measured` total row. Then a `## Purpose` in a new capability delta, the README `Archived:` line, the change in `## Unreleased` of `CHANGELOG.md`, `docs/verification/<NNN>.md`, and `bun run ci:local`. The rebuild line SHALL name `node dist/cli.js build`.
 
-Refs: REQ-SKL-003, REQ-GOV-004
+Refs: REQ-SKL-003, REQ-GOV-004, REQ-STAT-010
 
 #### Scenario: SCN-GOV-009-1 Guidance names every step
 - **WHEN** the test reads `operations.archive.guidance` in `openspec/config.yaml`
-- **THEN** it finds each of the six steps, and it finds the lines that name `check --strict`, `Rebuild the index`, and `openspec validate --all --strict`. The `Rebuild the index` line names `node dist/cli.js build`
+- **THEN** it finds each of the steps, and it finds the lines that name `check --strict`, `Rebuild the index`, and `openspec validate --all --strict`. The `Rebuild the index` line names `node dist/cli.js build`
 
 ### Requirement: REQ-GOV-010 CI rerun job
 `.github/workflows/ci.yml` SHALL have a job `rerun` that runs on `pull_request` only, with `permissions: contents: read`. It SHALL check out with `fetch-depth: 0`, install and build, then run the local action with `rerun: true`, `base: origin/${{ github.base_ref }}`, and `specctx: node dist/cli.js`.

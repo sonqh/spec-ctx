@@ -26,12 +26,16 @@ describe("archive guidance of this repository", () => {
       "`node dist/cli.js stats --write`",
       "`## Measured`",
       "`docs/metrics/`",
+      "`## Purpose`",
       "`Archived:`",
       "`## Unreleased`",
       "CHANGELOG.md",
       "`docs/verification/<NNN>.md`",
       "`bun run ci:local`",
     ]) expect(has(step), step).toBe(true);
+    // 067/D6 one line runs stats --write and names the README total row, so no hand step stays
+    expect(g.some((l) => l.includes("`node dist/cli.js stats --write`") && l.includes("`## Measured`") && l.includes("README.md"))).toBe(true);
+    expect(g.some((l) => l.startsWith("Update the total row"))).toBe(false);
     // the three lines from before 030 stay
     expect(has("check --strict")).toBe(true);
     expect(has("Rebuild the index")).toBe(true);

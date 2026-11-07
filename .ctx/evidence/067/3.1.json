@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T09:50:43.354Z",
+  "diff": [],
+  "files": {
+    "src/cli/commands.ts": "df4fb15efd929fa0c565c874818c1573e0f4f6cb7b964b710e932b82f6f1c0e5",
+    "src/stats/merge.ts": "fbcd572b9b045abad9ddcfbc00f794c0b2317c3583f14c7e781462c12620a508",
+    "src/stats/stats.ts": "d1e3d88e8dc460dddfe80d3529fdee4fe90f282ab650aa6f4e48025634e16661",
+    "src/stats/write.ts": "b4f75549bce4cdcf685390dcf81a2d9bbf475513586414e4287ea24aafcf8359",
+    "tests/gov/readme.test.ts": "84171c06e37fb68c76bab07d1085cbae79bc1400a704d6ecb05b6f3c5d7acb72",
+    "tests/stats/append.test.ts": "2fd13e885cb3b6f1a64cc27744d306bd04abbc45253d7e021dcd3748c5d5c65e",
+    "tests/stats/cli.test.ts": "44d35826f2d3221af6bbf86813639ab319602a48eceaa5840abbb7635f610943"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-009",
+    "REQ-STAT-010",
+    "REQ-STAT-005"
+  ],
+  "task": "067/3.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/stats tests/gov && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 63 pass\n 0 fail\n 427 expect() calls\nRan 63 tests across 14 files. [3.67s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

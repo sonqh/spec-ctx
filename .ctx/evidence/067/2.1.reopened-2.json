@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-07T09:43:45.125Z",
+  "diff": [],
+  "files": {
+    "src/check/purpose.ts": "56e11eb3889a17189ebaf4236bd27097e727b885785098506803e3f7938b1142",
+    "src/loop/next.ts": "9b2514083714dbf4cb99c9ca53a78b5b410cf48a83182343fc06f3f770c750ea",
+    "tests/loop/purpose-stop.test.ts": "b605ffb17ee90a68c604380fd8962e5cc433d03ab4373fad17f9b37fbc944630"
+  },
+  "kind": "command",
+  "reason": "stale evidence: archive review fixes",
+  "reqs": [
+    "REQ-LOOP-019"
+  ],
+  "task": "067/2.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/loop tests/cli tests/gate && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 216 pass\n 0 fail\n 1213 expect() calls\nRan 216 tests across 37 files. [10.40s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

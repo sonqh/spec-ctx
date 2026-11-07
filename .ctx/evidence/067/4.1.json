@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-07T09:44:21.344Z",
+  "bundle_chars": 7950,
+  "diff": [],
+  "files": {
+    "openspec/config.yaml": "1f877725d96160362f46477b2aefb06ef3b1486d205414740a4820b3094ca9f5",
+    "src/init/init.ts": "12ff3cac4776f6d570a9645eab50521aed84c23c6d6ff5012804817ecf8f5ff8",
+    "tests/gov/archive-guidance.test.ts": "55153fcce7c975b62e501bf70ae311325d2d9e1ac5a9f286989c5bd2bb446369"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-GOV-009"
+  ],
+  "started_at": "2026-11-07T09:44:19.535Z",
+  "task": "067/4.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gov/archive-guidance.test.ts tests/init tests/schema",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 51 pass\n 0 fail\n 409 expect() calls\nRan 51 tests across 11 files. [1014.00ms]",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

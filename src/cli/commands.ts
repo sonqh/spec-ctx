@@ -25,6 +25,9 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
     const { listEvidence } = await import("../tasks/evidence.ts");
     warnings = manualWarnings(root, data.entries, listEvidence(root));
   }
+  // REQ-CHK-011 a placeholder Purpose is a warning in both modes
+  const { placeholderPurposeWarnings } = await import("../check/purpose.ts");
+  warnings = [...warnings, ...placeholderPurposeWarnings(root)];
   return applyBaseline(root, findings, warnings);
 }
 
@@ -314,10 +317,13 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { manualWarnings } = await import("../check/evidence.ts");
       const { listEvidence } = await import("../tasks/evidence.ts");
       const { computeStats, statsTable } = await import("../stats/stats.ts");
-      const s = computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), f.change as string | undefined);
+      const { dayChars, writeStats } = await import("../stats/write.ts");
+      // REQ-STAT-009 a write on a day that has a file uses the size of that file
+      const s = computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), f.change as string | undefined, f.write ? dayChars(root) : null);
       if (f.write) {
-        const { writeStats } = await import("../stats/write.ts");
-        const rel = writeStats(root, s);
+        // under --change the file and the README keep the whole repository: the rows come from every change (067/D5)
+        const whole = f.change ? computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), undefined, dayChars(root)) : s;
+        const rel = writeStats(root, whole, !f.change, (m) => io.err(m));
         if (!json) io.out(`wrote ${rel}\n`);
       }
       if (json) print(s);

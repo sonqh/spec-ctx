@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-07T09:44:07.141Z",
+  "bundle_chars": 7991,
+  "diff": [],
+  "files": {
+    "src/check/check.ts": "9b0d3bf7a3f041c7f0be34ca935be28dee4f6911828465bab1a61f94c577264b",
+    "src/check/hints.ts": "12806ba7be71d63ad80063dd14e32590f2dd43e7e48ef4bf939d1342ffc96329",
+    "src/check/purpose.ts": "56e11eb3889a17189ebaf4236bd27097e727b885785098506803e3f7938b1142",
+    "tests/check/purpose.test.ts": "bb8d769034e35c97dfbf1e8dc91fd19a79a246d5c042fb465ea30b6739a800c0",
+    "tests/parity/run.sh": "a8844107cc8c3527ce000f5fe1efd3961f36c28829140dec489f45168359e735"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-CHK-011"
+  ],
+  "started_at": "2026-11-07T09:44:00.000Z",
+  "task": "067/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/check tests/index tests/gov && bun run typecheck && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 189 pass\n 0 fail\n 972 expect() calls\nRan 189 tests across 34 files. [5.11s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}
