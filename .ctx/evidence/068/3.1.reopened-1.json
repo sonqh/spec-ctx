@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T10:15:31.017Z",
+  "bundle_chars": 7905,
+  "diff": [],
+  "files": {
+    "CHANGELOG.md": "a9e0fc6f1ab39a6f12e9aa9474cb71a6162eb6beb9d0a7ce53442205ab36a0e7",
+    "docs/reference.md": "3fed0e416d77337b336ffcfd89f917ef151c33e954514cb6e11ac9a9721fdee8",
+    "docs/verification/068.md": "fcf7ae7f02fc4c6add4091c0b74b14d590229c047b96039e9283c9d5f97a2178",
+    "src/graph/bundle.ts": "a7dee0c3ef9c8ca1a40f04362585c200939c60261aa2c5c9f589ec989d971766"
+  },
+  "kind": "command",
+  "reason": "verification record updated with the existence filter fix and the second measure",
+  "reqs": [
+    "REQ-QRY-028",
+    "REQ-QRY-029",
+    "REQ-QRY-030"
+  ],
+  "started_at": "2026-11-07T10:15:27.683Z",
+  "task": "068/3.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 CHANGELOG.md docs/reference.md docs/verification/068.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation CHANGELOG.md docs/reference.md docs/verification/068.md && bun test tests/gov",
+    "exit": 0,
+    "stderr_tail": "\n 37 pass\n 0 fail\n 267 expect() calls\nRan 37 tests across 11 files. [3.04s]",
+    "stdout_sha256": "1f91929560dd78af586b6a5d3680bbf8337b3bb545564739dcc273c51fe21325"
+  }
+}

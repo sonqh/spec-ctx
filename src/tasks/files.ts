@@ -107,13 +107,22 @@ export function namedFiles(root: string, paths: string[]): string[] {
   return keep(root, paths.map((p) => p.replace(/^(\.\/)+/, "")).filter((p) => !isAbsolute(p) && !p.startsWith("../")));
 }
 
-/** REQ-TASK-004 the existing files that a Verify command names, inside the root (066/D3). */
-export function verifyFiles(root: string, dir: string, command: string): string[] {
+/** REQ-TASK-004 the path tokens of a Verify command: the rule of 066/D3, before any file check. */
+export function verifyTokens(command: string): string[] {
   const out: string[] = [];
   for (const raw of command.split(/\s+/)) {
     const t = raw.replace(/[;()<>"'`]/g, "").replace(/^[A-Za-z_][A-Za-z0-9_]*=/, "");
     if (!t || t.startsWith("-") || !(t.includes("/") || t.includes("."))) continue;
     if (isAbsolute(t) || t.startsWith("&")) continue;
+    out.push(t);
+  }
+  return out;
+}
+
+/** REQ-TASK-004 the existing files that a Verify command names, inside the root (066/D3). */
+export function verifyFiles(root: string, dir: string, command: string): string[] {
+  const out: string[] = [];
+  for (const t of verifyTokens(command)) {
     for (const base of [dir, root]) {
       const abs = resolve(base, t);
       const rel = relative(root, abs);
@@ -125,6 +134,34 @@ export function verifyFiles(root: string, dir: string, command: string): string[
     }
   }
   return keep(root, out);
+}
+
+/**
+ * REQ-QRY-030 true when a path token of the command names nothing under the root (068/D3). An npm package spec,
+ * a token that starts with `@` or holds `@` after a name, is no path. A token outside the root is not checked.
+ * A glob, a regex, a jq path, a URL, and a name that ends in `.` are no path either. A redirect prefix such as `2>`
+ * is cut first. Only this check reads these rules, so `verifyFiles` and the evidence of change 066 stay as they are.
+ */
+export function namesMissingPath(root: string, dir: string, command: string): boolean {
+  const tokens = command.split(/\s+/).flatMap((raw) => verifyTokens(raw.replace(/^\d*[<>]+/, "")));
+  for (const t of tokens) {
+    if (t.startsWith("@") || /[^/@]@/.test(t) || /[*?[\]$^\\:#]/.test(t) || t.endsWith(".")) continue;
+    let outside = false;
+    let found = false;
+    for (const base of [dir, root]) {
+      const rel = relative(root, resolve(base, t));
+      if (rel.startsWith("..") || isAbsolute(rel)) {
+        outside = true;
+        break;
+      }
+      if (existsSync(resolve(base, t))) {
+        found = true;
+        break;
+      }
+    }
+    if (!found && !outside) return true;
+  }
+  return false;
 }
 
 /** REQ-TASK-010 the `diff` paths of the newest reopened copy, or none when it has no such field. */

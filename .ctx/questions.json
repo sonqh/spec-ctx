@@ -1123,5 +1123,49 @@
     "verdict": "approved",
     "answer": "Architect archive review applied: git env built on childEnv with GIT_REPO_VARS, D6 wording, governance test owned by 3.2, README named in 4.1, deviations recorded. Repairs done, gate, parity, ci:local pass.",
     "resolved_at": "2026-11-07T09:30:57.934Z"
+  },
+  {
+    "n": 115,
+    "asked_at": "2026-11-07T09:35:20.243Z",
+    "task": "067-archive-hygiene",
+    "text": "plan ready for 067-archive-hygiene. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Bug fix plan. Architect review applied: placeholder-purpose is a warning, delta-without-purpose hard in strict, gate rows kept or replaced as one set, spec_chars from the day file, README edited only with all three anchors, check-strict golden recorded in 1.1. check and gate strict pass.",
+    "resolved_at": "2026-11-07T09:37:56.792Z"
+  },
+  {
+    "n": 116,
+    "asked_at": "2026-11-07T09:47:28.696Z",
+    "task": "067-archive-hygiene",
+    "text": "archive 067-archive-hygiene?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Architect archive review applied: stats --write --change keeps the other rows and leaves README, next applies the baseline to the purpose rule, README skip prints a note. End-to-end archive guidance kept every old metrics row. Gate, parity, ci:local pass.",
+    "resolved_at": "2026-11-07T09:52:40.581Z"
+  },
+  {
+    "n": 117,
+    "asked_at": "2026-11-07T09:56:48.497Z",
+    "task": "068-impact",
+    "text": "plan ready for 068-impact. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "PM and architect reviews applied. Default plan includes archived Verify commands whose path tokens exist, capped at 10 with --all (lead decision for the ADR-010 goal). Reason reuses the structural task names prefix. Verify text from the index. Condition: npm package specs are not path tokens; fix in task 1.1 with a test. check and gate strict pass.",
+    "resolved_at": "2026-11-07T10:00:50.021Z"
+  },
+  {
+    "n": 118,
+    "asked_at": "2026-11-07T10:17:39.916Z",
+    "task": "068-impact",
+    "text": "archive 068-impact?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Architect archive review applied: namesMissingPath skips globs, redirects, regexes, jq paths and trailing dots; verifyFiles unchanged. Measure redone: 43 default-plan commands exit 0, p95 60 ms. Gate, parity, ci:local pass.",
+    "resolved_at": "2026-11-07T10:26:46.008Z"
   }
 ]

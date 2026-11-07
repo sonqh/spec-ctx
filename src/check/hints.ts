@@ -27,6 +27,9 @@ export const RULES: Record<string, { level: "hard" | "advisory"; hint: string }>
   "evidence-without-done": { level: "hard", hint: "Run {run} task done, or remove the evidence file." },
   // REQ-CHK-005 advisory in plain check. check --strict reports it as a hard finding (028/D5).
   "weak-verify": { level: "advisory", hint: "Name a test file or a command whose exit code proves the task." },
+  // REQ-CHK-011 the hint names the section and the place (067/D1)
+  "delta-without-purpose": { level: "hard", hint: "Add a ## Purpose section with one sentence before ## ADDED Requirements in the delta. Archive copies it into the new main spec." },
+  "placeholder-purpose": { level: "advisory", hint: "Replace the placeholder under ## Purpose in the main spec with one sentence." },
   "manual-evidence": { level: "advisory", hint: "Give the task a Verify command and run {run} task done again." },
   // REQ-CHK-001 the hint is the block to paste. The finding line carries the ID and both titles (021/D3).
   // REQ-ADOPT-010 FROM copies the main header and TO copies the delta header, each in its own form (027/D4).

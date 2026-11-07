@@ -133,6 +133,27 @@ task  002/3.3  done  openspec/changes/archive/2026-10-24-002-ids-and-tasks/tasks
 
 A path that is not a file in the repository exits 2. A file with no links prints `no links: <path>` and exits 0.
 
+### Ask what a file affects
+
+`specctx impact <file>` prints what an edit of one file touches. It reads the direct edges only: the code tags, the `Covers:` tags, and the task lines that name the file. It prints three sections.
+
+- `requirements` lists each requirement with `verified` or `unverified` and the reason for the link. A task line that names the file adds the requirements that task cites, with the reason `task names <path> in <task>`.
+- `tasks` lists the active tasks that cite those requirements or name the file. Each task has its state: `fresh`, `stale since <path>`, or `no evidence`.
+- `verify` is the plan. It holds the `Verify:` commands of those tasks and of archived tasks, once each. Active tasks come first. A command whose path names a missing file stays out. The plan shows 10 commands. `--all` shows the rest. `--archived` lists the archived tasks. `--json` prints the same facts.
+
+```text
+$ specctx impact src/stats/write.ts
+impact src/stats/write.ts
+requirements (3)
+  REQ-STAT-005  verified  implements, tag at src/stats/write.ts:1  Gate log and series
+tasks (0)
+verify (8)
+  bun run build && bun test tests/stats
+archived: 9 tasks, 1 Verify commands dropped. Use --archived to list the tasks.
+```
+
+`related` lists every neighbor to a depth, with no state and no command. `impact` stops at the direct edges and adds the state and the plan. A path that is not a file exits 2. A file with no links prints `no links: <path>` and exits 0.
+
 ### Ask about a change or a task
 
 `related`, `context`, and `bundle` take a change key or a folder name where they take an ID. A change reaches the requirements and scenarios of its delta specs and the capabilities they touch. For example, `specctx related 045` lists the 5 requirements and 13 scenarios of change 045, then `cap/index` and `cap/query`.
@@ -149,8 +170,9 @@ A task reaches the same delta entries and the design decisions that its line nam
 | `query <term...>` | Entries that hold every term. Flags: `--kind`, `--change`, `--limit`, `--all`. |
 | `context <task\|ID\|path\|change>` | The spec text, code lines, and test lines that relate to one input, in a budget. `task start` prints the same answer. Flags: `--budget`, `--depth`. |
 | `related <ID\|path\|change>` | Linked entries with the reason for each link. A file path or a change works too. Flags: `--depth`, `--all`. |
+| `impact <path>` | The requirements that a file touches, the tasks that cite them with their state, and the `Verify:` commands as a plan. Flags: `--archived`, `--all`. |
 | `bundle <ID\|path\|change...>` | The answer of `context` for several inputs. Flags: `--budget`, `--depth`, `--all`, `--block`. |
-| `check` | ID and link integrity. `--strict` adds test coverage and evidence. For an active change, the coverage rules start when the change has a task and no open task. While a task is open, or when the change has no task, `--strict` prints `deferred: <change>  <n> untested delta items, <k> open tasks` for the delta items that have no test yet. A count of 1 is singular. `--strict --json` holds the same in a `deferred` array. A clean result with a `deferred:` line does not show that the tests are complete. A change with no task shows `0 open tasks`. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. |
+| `check` | ID and link integrity. `--strict` adds test coverage and evidence. For an active change, the coverage rules start when the change has a task and no open task. While a task is open, or when the change has no task, `--strict` prints `deferred: <change>  <n> untested delta items, <k> open tasks` for the delta items that have no test yet. A count of 1 is singular. `--strict --json` holds the same in a `deferred` array. A clean result with a `deferred:` line does not show that the tests are complete. A change with no task shows `0 open tasks`. `retitle-needs-renamed` names a retitled delta header that needs a RENAMED pair before `openspec archive`. `--strict` reports `delta-without-purpose` for a delta of a new capability with no `## Purpose` text, because `openspec archive` copies that section into the new main spec. `check` and `check --strict` warn `placeholder-purpose` for a main spec whose Purpose starts with `TBD` or `TODO`. |
 | `id new`, `id retire` | Allocate and retire IDs. |
 | `task next`, `start`, `verify`, `done`, `reopen` | The task state machine. |
 | `handoff write`, `ask`, `resolve` | The session handoff and its open questions in `.ctx/questions.json`. A plan or archive question needs `--approve` or `--reject`, and a rejection keeps the stop. |
@@ -159,7 +181,7 @@ A task reaches the same delta entries and the design decisions that its line nam
 | `baseline write`, `prune` | The debt ratchet in `.ctx/baseline.json`. |
 | `gate` | `check`, the baseline against the merge base, both markdown linters, `openspec validate`, and the 500 character length check on active deltas. |
 | `lint tells`, `lint ste` | The two markdown linters. Flags: `--baseline`, `--disable`, `--json`, `--selftest`. |
-| `stats` | The metrics of this repository. `--write` saves them to `docs/metrics/`. |
+| `stats` | The metrics of this repository. `--write` saves them to `docs/metrics/`. A second write on the same day keeps the old change rows and the gate rows, adds rows for new changes, and recomputes the total. It also sets the path and the total row under `## Measured` in `README.md`, when that section has both. |
 | `help <command>` | The page of one command. `specctx <command> --help` prints the same page. |
 
 Every command takes `--root <path>` and `--json`. A task ID takes the change key, such as `008/1.1` or `add-mfa/1.1`, or the full folder name. Outside an OpenSpec project every command but `init` exits 2.

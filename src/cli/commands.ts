@@ -25,6 +25,9 @@ async function runCheck(root: string, cfg: import("../config.ts").Config, data: 
     const { listEvidence } = await import("../tasks/evidence.ts");
     warnings = manualWarnings(root, data.entries, listEvidence(root));
   }
+  // REQ-CHK-011 a placeholder Purpose is a warning in both modes
+  const { placeholderPurposeWarnings } = await import("../check/purpose.ts");
+  warnings = [...warnings, ...placeholderPurposeWarnings(root)];
   return applyBaseline(root, findings, warnings);
 }
 
@@ -177,6 +180,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     need(1, "one ID, path, or change");
     if (p.positional.length > 1) throw new UsageExit("related takes one ID, path, or change");
   }
+  if (cmd === "impact") {
+    need(1, "one file");
+    if (p.positional.length > 1) throw new UsageExit("impact takes one file");
+  }
   if (cmd === "bundle") need(1, "at least one ID, path, or change");
   if (cmd === "context") {
     need(1, "one task, ID, path, or change");
@@ -263,6 +270,21 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       else io.out(rows.map(([e, r]) => `${e.kind}  ${e.id}  ${e.status}  ${e.file}:${e.line}  ${r}\n`).join(""));
       return 0;
     }
+    case "impact": {
+      // REQ-QRY-028 REQ-QRY-029 REQ-QRY-030 the requirements, tasks, and verify plan of one file
+      const { resolveFileInput } = await import("../graph/path.ts");
+      const { impactOf, impactLines } = await import("../graph/impact.ts");
+      const r = resolveFileInput(root, io.cwd, p.positional[0]!);
+      if ("error" in r) {
+        io.err(`${r.error}\n`);
+        return 2;
+      }
+      const i = impactOf(root, entries, r.rel, { archived: !!f.archived, all: !!f.all });
+      if (json) print(i);
+      else if (!i.requirements.length && !i.tasks.length && !i.archived.tasks) io.out(`no links: ${r.rel}\n`);
+      else io.out(impactLines(i).map((l) => l + "\n").join(""));
+      return 0;
+    }
     case "context":
     case "bundle": {
       const { canon } = await import("../index/canonical.ts");
@@ -314,10 +336,13 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       const { manualWarnings } = await import("../check/evidence.ts");
       const { listEvidence } = await import("../tasks/evidence.ts");
       const { computeStats, statsTable } = await import("../stats/stats.ts");
-      const s = computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), f.change as string | undefined);
+      const { dayChars, writeStats } = await import("../stats/write.ts");
+      // REQ-STAT-009 a write on a day that has a file uses the size of that file
+      const s = computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), f.change as string | undefined, f.write ? dayChars(root) : null);
       if (f.write) {
-        const { writeStats } = await import("../stats/write.ts");
-        const rel = writeStats(root, s);
+        // under --change the file and the README keep the whole repository: the rows come from every change (067/D5)
+        const whole = f.change ? computeStats(root, entries, check(root, cfg, data, true), manualWarnings(root, entries, listEvidence(root)), undefined, dayChars(root)) : s;
+        const rel = writeStats(root, whole, !f.change, (m) => io.err(m));
         if (!json) io.out(`wrote ${rel}\n`);
       }
       if (json) print(s);
