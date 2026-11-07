@@ -1,6 +1,6 @@
 {
   "name": "spec-ctx",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Deterministic context engine and task workflow for OpenSpec projects.",
   "type": "module",
   "license": "MIT",

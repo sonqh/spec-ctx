@@ -2,7 +2,7 @@
 
 This file lists the notable changes in each release of `spec-ctx`. Versions follow semver.
 
-## Unreleased
+## 0.6.0
 
 Change 062-trust-labels. Every card ends with trust labels. The fifth column is the provenance of the link: `declared`, `tagged`, `structural`, or `verified`. A task card adds `fresh`, `stale since <path>`, or `no evidence`. A requirement card adds `verified` or `unverified`. `--json` lists the printed blocks with both labels and gives `used`, the length of the blocks. The first four columns do not change. REQ-QRY-023, REQ-QRY-024, REQ-QRY-025, REQ-QRY-026.
 Change 063-readable-caps. `adopt` finds families: three or more capability folders with one first kebab segment. Each member takes a six letter code, three letters of the first segment and three of the rest, so `cli-config` is `CLICON` and `cli-version` is `CLIVER`. A collision falls through to the old candidates. The dry run and the report name each family and its prefix. REQ-ADOPT-012.
