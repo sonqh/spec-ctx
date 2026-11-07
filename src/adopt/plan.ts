@@ -25,6 +25,8 @@ export interface Edit {
 export interface Plan {
   edits: Edit[];
   caps: { code: string; path: string; derived: boolean }[];
+  /** REQ-ADOPT-012 the families of three or more paths with one first segment */
+  families: { segment: string; prefix: string; count: number }[];
   unmatched: { file: string; line: number; header: string }[];
 }
 
@@ -124,19 +126,40 @@ function parse(root: string, rel: string, cap: string): SpecFile {
   return { rel, cap, lines, blocks, renames };
 }
 
-/** REQ-ADOPT-004 candidate codes in order: the base code, then two and three letters of the first segment, then a suffix letter. */
-export function codeCandidates(path: string): string[] {
+/** REQ-ADOPT-012 the family code of a path with two or more segments: three letters of the first, three of the rest. */
+export function familyCode(path: string): string | null {
+  const segs = path.split(/[/-]/).map((x) => x.toUpperCase().replace(/[^A-Z]/g, "")).filter(Boolean);
+  if (segs.length < 2) return null;
+  const code = segs[0]!.slice(0, 3) + segs.slice(1).join("").slice(0, 3);
+  return /^[A-Z]{2,6}$/.test(code) ? code : null;
+}
+
+/** REQ-ADOPT-012 the first segment of a path, the key of its family */
+export function familySegment(path: string): string {
+  return path.split(/[/-]/)[0] ?? path;
+}
+
+/** REQ-ADOPT-012 the segments shared by three or more paths */
+export function familiesOf(paths: string[]): Set<string> {
+  const count = new Map<string, number>();
+  for (const p of paths) count.set(familySegment(p), (count.get(familySegment(p)) ?? 0) + 1);
+  return new Set([...count].filter(([, n]) => n >= 3).map(([s]) => s));
+}
+
+/** REQ-ADOPT-004 candidate codes in order: the base code, then two and three letters of the first segment, then a suffix letter. REQ-ADOPT-012 a family member gets its family code first. */
+export function codeCandidates(path: string, family = false): string[] {
   const segs = path.split(/[/-]/).map((x) => x.toUpperCase().replace(/[^A-Z]/g, "")).filter(Boolean);
   if (!segs.length) return [];
   const rest = segs.slice(1).map((x) => x[0]!).join("");
   const base = segs.length === 1 ? segs[0]!.slice(0, 3) : segs.map((x) => x[0]!).join("").slice(0, 6);
-  const out = [base, (segs[0]!.slice(0, 2) + rest).slice(0, 6), (segs[0]!.slice(0, 3) + rest).slice(0, 6)];
+  const fam = family ? familyCode(path) : null;
+  const out = [...(fam ? [fam] : []), base, (segs[0]!.slice(0, 2) + rest).slice(0, 6), (segs[0]!.slice(0, 3) + rest).slice(0, 6)];
   for (let c = 66; c <= 90; c++) out.push((base.slice(0, 5) + String.fromCharCode(c)));
   return [...new Set(out.filter((x) => /^[A-Z]{2,6}$/.test(x)))];
 }
 
-export function deriveCode(path: string, taken: Set<string> = new Set()): string {
-  const code = codeCandidates(path).find((c) => !taken.has(c));
+export function deriveCode(path: string, taken: Set<string> = new Set(), family = false): string {
+  const code = codeCandidates(path, family).find((c) => !taken.has(c));
   if (!code) throw new UsageExit(`no free capability code for ${path}. Add one under [ids.paths] in spec-ctx.toml`);
   return code;
 }
@@ -163,6 +186,8 @@ export function planAdopt(root: string, cfg: Config): Plan {
   // on a collision the shorter path keeps the base code: user-auth keeps UA, upload-api takes UPA
   const capList = [...new Set(files.map((f) => f.cap))].sort((a, b) => a.length - b.length || cmpStr(a, b));
   const taken = new Set<string>([...cfg.ids.caps, ...codeOfPath.values()]);
+  // REQ-ADOPT-012 a family is three or more paths with one first segment (063/D1)
+  const families = familiesOf(capList);
   const caps: Plan["caps"] = [];
   for (const cap of capList) {
     let code = codeOfPath.get(cap);
@@ -172,7 +197,7 @@ export function planAdopt(root: string, cfg: Config): Plan {
       if (existing) code = HAS_REQ.exec(existing.id!)![1]!;
     }
     if (!code) {
-      code = deriveCode(cap, taken);
+      code = deriveCode(cap, taken, families.has(familySegment(cap)));
       derived = true;
       taken.add(code);
     }
@@ -293,13 +318,24 @@ export function planAdopt(root: string, cfg: Config): Plan {
     }
   }
   edits.sort((a, b) => cmpStr(a.file, b.file) || a.line - b.line);
-  return { edits, caps, unmatched };
+  // a family whose segment has no letters gives no code, so it is not listed
+  const familyList = [...families]
+    .sort(cmpStr)
+    .map((segment) => ({
+      segment,
+      prefix: segment.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3),
+      count: capList.filter((c) => familySegment(c) === segment).length,
+    }))
+    .filter((f) => f.prefix.length >= 2);
+  return { edits, caps, families: familyList, unmatched };
 }
 
 export function planLines(p: Plan): string[] {
   const out = p.edits.map((e) => `${e.file}:${e.line}  ${e.old}  ->  ${e.new}`);
   const derived = p.caps.filter((c) => c.derived);
   if (derived.length) out.push(...derived.map((c) => `cap: ${c.code} ${c.path}`));
+  // REQ-ADOPT-012 one line per family, after the cap lines (063/D5)
+  out.push(...p.families.map((f) => `family: ${f.segment}  prefix ${f.prefix}  ${f.count} codes`));
   for (const u of p.unmatched) out.push(`unmatched: ${u.file}:${u.line}  ${u.header}`);
   return out;
 }

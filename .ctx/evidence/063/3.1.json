@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-07T01:26:03.252Z",
+  "files": {
+    "src/adopt/plan.ts": "318eef82a4c957e7ec3cb6bb07504ad1da40035060b983c00445e212703005e5",
+    "src/adopt/write.ts": "a3e99f5bec007e15a0ec4811c15463085152c38121a0139564957834983705d9",
+    "tests/adopt/caps.test.ts": "f715aec90bf2968a802b1a85d4175f90cc42c981dbbb98a6be7c0a7c0dbb43c7"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-012"
+  ],
+  "task": "063/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "grep -q \"REQ-ADOPT-012\" CHANGELOG.md && grep -q \"CLICON\" docs/verification/063.md && node dist/cli.js lint tells --baseline 0 docs/verification/063.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/063.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "29a3a5bd9f38a2f8668000babc89b2aa417cf78a1b3d7635ddd4b34ed8c2aa81"
+  }
+}

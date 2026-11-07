@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-07T01:22:57.656Z",
+  "bundle_chars": 4074,
+  "files": {
+    "src/adopt/config-write.ts": "16670593ca2a9e6ed258fe22351e2aac948774c864951db8427db684a2d1b168",
+    "src/adopt/plan.ts": "0948457333d335731ae5797c67e46146e3ddbd657c4280aed76c48e8b991490f",
+    "tests/adopt/caps.test.ts": "2dac1b1301e9a07042719aaf538102350c1fcdec9fe2dcd29a5d65ad0b8f09ea",
+    "tests/adopt/write.test.ts": "855aa63f959c21d7249989e690200aadfaeeffa9b65e653332fa1801177ae6a2"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/adopt/plan.ts",
+  "reqs": [
+    "REQ-ADOPT-012",
+    "REQ-ADOPT-004"
+  ],
+  "started_at": "2026-11-07T01:21:42.353Z",
+  "task": "063/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/adopt && npx vitest run tests/adopt/caps.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 38 pass\n 0 fail\n 210 expect() calls\nRan 38 tests across 7 files. [1339.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "6ba1caac83839b76fec15492ccbab0fb20e84a21f53b22621649ce23cff5e8be"
+  }
+}

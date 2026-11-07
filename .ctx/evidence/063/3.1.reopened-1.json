@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-07T01:24:34.390Z",
+  "bundle_chars": 2896,
+  "files": {
+    "src/adopt/plan.ts": "6cabde27ff9c933ba77f890240eb17146417a0d9509016845fe48a68c487d9ba",
+    "src/adopt/write.ts": "173f5b2938b5f858cc3ec12bd48523138c1657b86a7743405e04ba512d6d717c",
+    "tests/adopt/caps.test.ts": "56a3b3d1c7f57c1788bc33d18ffb33c0273583d1e34e08d65df31c5c3cdd3420"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/adopt/plan.ts",
+  "reqs": [
+    "REQ-ADOPT-012"
+  ],
+  "started_at": "2026-11-07T01:24:33.939Z",
+  "task": "063/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "grep -q \"REQ-ADOPT-012\" CHANGELOG.md && grep -q \"CLICON\" docs/verification/063.md && node dist/cli.js lint tells --baseline 0 docs/verification/063.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/063.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "29a3a5bd9f38a2f8668000babc89b2aa417cf78a1b3d7635ddd4b34ed8c2aa81"
+  }
+}

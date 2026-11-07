@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-07T01:26:02.319Z",
+  "files": {
+    "src/adopt/plan.ts": "318eef82a4c957e7ec3cb6bb07504ad1da40035060b983c00445e212703005e5",
+    "src/adopt/write.ts": "a3e99f5bec007e15a0ec4811c15463085152c38121a0139564957834983705d9",
+    "tests/adopt/caps.test.ts": "f715aec90bf2968a802b1a85d4175f90cc42c981dbbb98a6be7c0a7c0dbb43c7"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-012"
+  ],
+  "task": "063/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/adopt tests/cli && npx vitest run tests/adopt && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 136 pass\n 0 fail\n 736 expect() calls\nRan 136 tests across 22 files. [4.37s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "ccab41fa01752c002e7819acfa1b5d46cac5bb04c8d80582bcca605ef837a9f3"
+  }
+}

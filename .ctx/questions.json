@@ -996,6 +996,28 @@
   },
   {
     "n": 103,
+    "asked_at": "2026-11-07T01:21:40.955Z",
+    "task": "063-readable-caps",
+    "text": "plan ready for 063-readable-caps. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-07. Lead-written plan for ADR-008 item 7, small and in layer 1. No PM review: the scope is fixed by ADR-008. Architect diff review at the archive stop.",
+    "resolved_at": "2026-11-07T01:21:41.099Z"
+  },
+  {
+    "n": 104,
+    "asked_at": "2026-11-07T01:26:19.433Z",
+    "task": "063-readable-caps",
+    "text": "archive 063-readable-caps?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Approved by the lead on 2026-11-07 after the architect diff review, with the three changes applied: families in adopt --json, a family with no letters is not listed, the report wording.",
+    "resolved_at": "2026-11-07T01:26:19.578Z"
+  },
+  {
+    "n": 105,
     "asked_at": "2026-11-07T03:10:16.646Z",
     "task": "062-trust-labels",
     "text": "plan ready for 062-trust-labels. Approve to start the tasks?",
@@ -1006,7 +1028,7 @@
     "resolved_at": "2026-11-07T03:10:16.804Z"
   },
   {
-    "n": 104,
+    "n": 106,
     "asked_at": "2026-11-07T03:14:11.501Z",
     "task": "062/3.1",
     "text": "task 062/3.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-2 check --strict passes with an active change that holds an open task (055/D2) [703.34ms]. What should change?",
@@ -1016,7 +1038,7 @@
     "resolved_at": "2026-11-07T03:14:15.413Z"
   },
   {
-    "n": 105,
+    "n": 107,
     "asked_at": "2026-11-07T03:19:14.772Z",
     "task": "062/3.1",
     "text": "task 062/3.1 failed Verify 3 times. Last: (fail) spec governance > SCN-GOV-001-2 check --strict passes with an active change that holds an open task (055/D2) [587.29ms]. What should change?",
@@ -1026,7 +1048,7 @@
     "resolved_at": "2026-11-07T03:19:24.095Z"
   },
   {
-    "n": 106,
+    "n": 108,
     "asked_at": "2026-11-07T03:20:40.448Z",
     "task": "062-trust-labels",
     "text": "archive 062-trust-labels?",
