@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-07T08:17:56.613Z",
+  "bundle_chars": 6498,
+  "files": {
+    "src/graph/bundle.ts": "ef43743e2a242ec60ad124fcaa7ad938e8f5f460a1dc965f1de9a7e6aa4998c5",
+    "tests/query/repeat-lines.test.ts": "894965d5a795d3653a0418a18e62ede7dc0d307a1bc44fd7cb6ba3f0cd010693"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-027"
+  ],
+  "started_at": "2026-11-07T08:17:43.973Z",
+  "task": "064/3.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gov tests/cli && node dist/cli.js lint tells --baseline 0 docs/reference.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/reference.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 135 pass\n 0 fail\n 785 expect() calls\nRan 135 tests across 26 files. [6.17s]",
+    "stdout_sha256": "9e13f261cb1b4b67a270024938961be97b61ae46dc484ca173d3d581986bb327"
+  }
+}

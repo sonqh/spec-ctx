@@ -1,6 +1,6 @@
 # ADR-010 After the stranger
 
-Status: proposed. Date: 2026-11-07. The lead drafted it for the owner. It keeps every decision of ADR-006 to ADR-009. It adds the next order of work after the one of ADR-008, which is complete.
+Status: accepted. Date: 2026-11-07. The owner accepted it on 2026-11-07. The lead drafted it for the owner. It keeps every decision of ADR-006 to ADR-009. It adds the next order of work after the one of ADR-008, which is complete.
 
 ## Context
 

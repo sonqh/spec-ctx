@@ -14,6 +14,7 @@ The owner set this direction in `decisions/ADR-007-query-first.md`. It binds eve
 - Every proposal names its layer and its benefit. The product manager and the architect agents in `.claude/agents/` review each plan stop against this section before the lead approves.
 - Adjust existing work to serve the two layers. Do not remove it.
 - `decisions/ADR-008-stranger-first.md` sets the order of work for 30 days from 2026-11-03. A stranger gets a useful `context <task>` on their own repo within 5 minutes. `decisions/ADR-009-run-journal.md` lifted the freeze of item 4 on 2026-11-05. Gate, lint, Action, and loop features are in scope again. The 5-minute stranger goal stays. The scope rules of ADR-007 and the priority of layer 1 still apply.
+- `decisions/ADR-010-after-the-stranger.md` sets the next order of work, accepted on 2026-11-07. The agent acts on what `context` prints and reads less by hand. The measures are `body_recall`, with a target of 0.8 on this repo, and the number of `bundle <ID>` calls after one `context`.
 
 ## First thing in every session
 

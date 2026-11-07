@@ -106,7 +106,7 @@ $ specctx context 045/2.1
 
 Then the archived decisions and the entries two steps away print whole or not at all.
 
-A card whose body did not fit ends with `| body omitted`. Run `bundle <ID>` to get that body. The `truncated:` line names only the entries that lost their card, and is not in the budget. The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`.
+A card whose body did not fit ends with `| body omitted`. Run `bundle <ID>` to get that body. The cards of a repeat line of one file and the `named by` cards fill after the bodies of cited requirements. They can go to `truncated:`. The `truncated:` line names only the entries that lost their card, and is not in the budget. The input itself never drops. Its block prints also when it is longer than the budget, and then the output ends with `over budget: <used> of <budget> characters`.
 
 For a task, `bundle` also prints one card for each file that the task line names in backticks. The reason is `named by <task>`. These cards print after the `implements` and `covers` lines. A path that is no file, or that already has a line, prints no card. A task that cites no requirement that the index holds gets one line after its block: `note: <task> cites no requirement that the index holds. The blocks come from its change and the paths it names. Add a [REQ-...] citation.` The note is outside the budget.
 

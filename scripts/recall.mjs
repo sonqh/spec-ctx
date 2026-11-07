@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// REQ-STAT-006 REQ-STAT-007 the recall benchmark of ADR-007 item 6 (change 054).
+// REQ-STAT-006 REQ-STAT-007 REQ-STAT-008 the recall benchmark of ADR-007 item 6 (change 054).
 // It runs `context <task>` of this repository's dist/cli.js once per labelled task and compares the printed entries with the labels.
 // Node APIs only (ADR-001). See openspec/changes/archive/*-054-recall-benchmark/design.md for D1 to D10.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -244,6 +244,10 @@ function score(file, d, root, head, runs) {
   const cardOnly = { total: 0, reqs: 0, code: 0, tests: 0 };
   const unnamed = { total: 0, reqs: 0, code: 0, tests: 0 };
   let citedBodyLost = 0;
+  // REQ-STAT-008 body_recall: the labelled requirements that the task cites, and the ones among them whose full body printed
+  const bodies = { cited: 0, printed: 0 };
+  let omittedIds = 0;
+  let truncatedIds = 0;
   context(root, d.tasks[0].task, d.budget); // warm-up
   for (const t of d.tasks) {
     const { json } = context(root, t.task, d.budget);
@@ -252,6 +256,8 @@ function score(file, d, root, head, runs) {
     const lost = h.filter((x) => x.marked && x.reason === `ref from ${t.task}`).length;
     citedBodyLost += lost;
     const misses = [];
+    let citedLabelled = 0;
+    let bodyPrinted = 0;
     let hit = 0;
     let all = 0;
     for (const k of KINDS)
@@ -260,6 +266,11 @@ function score(file, d, root, head, runs) {
         labels.total++;
         labels[k]++;
         const found = h.filter((x) => (k === "reqs" ? x.id === label : x.path === label));
+        const cites = k === "reqs" ? found.filter((x) => x.reason === `ref from ${t.task}`) : [];
+        if (cites.length) {
+          citedLabelled++;
+          if (cites.some((x) => !x.marked)) bodyPrinted++;
+        }
         if (found.length) {
           hit++;
           matched.total++;
@@ -274,8 +285,12 @@ function score(file, d, root, head, runs) {
           }
         } else misses.push(label);
       }
+    bodies.cited += citedLabelled;
+    bodies.printed += bodyPrinted;
+    omittedIds += json.body_omitted.length;
+    truncatedIds += json.omitted.length;
     for (let i = 0; i < runs; i++) timed.push(context(root, t.task, d.budget).ms);
-    perTask.push({ task: t.task, chars: json.chars, matched: hit, total: all, cited_body_lost: lost, misses });
+    perTask.push({ task: t.task, chars: json.chars, matched: hit, total: all, cited_body_lost: lost, cited_labelled: citedLabelled, body_printed: bodyPrinted, misses });
   }
   const chars = perTask.map((t) => t.chars);
   return {
@@ -291,6 +306,11 @@ function score(file, d, root, head, runs) {
     recall_by_kind: Object.fromEntries(KINDS.map((k) => [k, ratio(matched[k], labels[k])])),
     card_only: cardOnly,
     cited_body_lost: citedBodyLost,
+    body_recall: ratio(bodies.printed, bodies.cited),
+    body_counts: bodies,
+    // the proxy of ADR-010 item 1: the mean count of body_omitted IDs for one context run, and of IDs cut to truncated
+    body_omitted_mean: round(omittedIds / d.tasks.length),
+    truncated_mean: round(truncatedIds / d.tasks.length),
     matched_without_named: unnamed,
     recall_without_named: ratio(unnamed.total, labels.total),
     recall_without_named_by_kind: Object.fromEntries(KINDS.map((k) => [k, ratio(unnamed[k], labels[k])])),
@@ -319,7 +339,7 @@ function markdown(r) {
     out.push(
       `| ${show(x.recall)} (${x.matched.total}/${x.labels.total}) | ${show(x.recall_by_kind.reqs)} (${x.matched.reqs}/${x.labels.reqs}) | ${show(x.recall_by_kind.code)} (${x.matched.code}/${x.labels.code}) | ${show(x.recall_by_kind.tests)} (${x.matched.tests}/${x.labels.tests}) | ${co.total} (reqs ${co.reqs}, code ${co.code}, tests ${co.tests}) | ${x.complete} of ${x.tasks} | ${x.labels.total} | ${x.chars.median} | ${x.chars.max} | ${x.p95_ms} |`,
     );
-    out.push("", `Without the \`named by\` cards: recall ${show(x.recall_without_named)} (${x.matched_without_named.total}/${x.labels.total}), code ${show(x.recall_without_named_by_kind.code)}, tests ${show(x.recall_without_named_by_kind.tests)}. Cited requirements that lost their body: ${x.cited_body_lost}.`);
+    out.push("", `Without the \`named by\` cards: recall ${show(x.recall_without_named)} (${x.matched_without_named.total}/${x.labels.total}), code ${show(x.recall_without_named_by_kind.code)}, tests ${show(x.recall_without_named_by_kind.tests)}. Cited requirements that lost their body: ${x.cited_body_lost}. body_recall ${show(x.body_recall)} (${x.body_counts.printed}/${x.body_counts.cited}). Mean body_omitted IDs per run: ${x.body_omitted_mean}. Mean truncated IDs per run: ${x.truncated_mean}.`);
     out.push("", "| task | matched | chars | misses |", "| --- | --- | --- | --- |");
     for (const t of x.per_task) out.push(`| ${t.task} | ${t.matched} of ${t.total} | ${t.chars} | ${t.misses.length ? t.misses.map((m) => `\`${m}\``).join(", ") : "none"} |`);
     out.push("");

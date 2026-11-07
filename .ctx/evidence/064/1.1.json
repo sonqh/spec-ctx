@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-07T08:16:14.570Z",
+  "bundle_chars": 5010,
+  "files": {
+    "tests/stat/recall.test.ts": "4cf098cd712f3cc09859b818a924adcf12d1d39a0e8b8e42547f6aa9ac03db3e"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-STAT-008"
+  ],
+  "started_at": "2026-11-07T08:15:18.832Z",
+  "task": "064/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/stat && npx vitest run tests/stat && node scripts/recall.mjs --labels bench/recall/spec-ctx.json --root . --check && git diff --quiet -- bench/recall && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 31 pass\n 0 fail\n 212 expect() calls\nRan 31 tests across 3 files. [5.41s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "587a14cd35e21661c828d425f793c4030fdfcc9ee12fb0ee3a7d277955acf969"
+  }
+}
