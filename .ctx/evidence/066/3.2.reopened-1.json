@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-07T09:21:59.276Z",
+  "bundle_chars": 7615,
+  "diff": [
+    "docs/getting-started.md"
+  ],
+  "files": {
+    "docs/getting-started.md": "9d9b580e09ce461b13dbc1a1dd406b093737cc68843e546b8e03b04968d80f50"
+  },
+  "kind": "command",
+  "reason": "own tests/gov/governance.test.ts, named in the task line now",
+  "reqs": [
+    "REQ-TASK-004"
+  ],
+  "started_at": "2026-11-07T09:21:19.924Z",
+  "task": "066/3.2",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/gov && node dist/cli.js lint tells --baseline 0 docs/getting-started.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/getting-started.md",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 37 pass\n 0 fail\n 264 expect() calls\nRan 37 tests across 11 files. [3.02s]",
+    "stdout_sha256": "2ac35fe45e4a3710c8e5bc88cbfa035c4a2a6033cdf6676bbd14856fdf25f993"
+  }
+}

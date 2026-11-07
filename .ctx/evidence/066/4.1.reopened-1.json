@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T09:22:32.745Z",
+  "bundle_chars": 7925,
+  "diff": [
+    "CHANGELOG.md",
+    "docs/verification/066.md"
+  ],
+  "files": {
+    "CHANGELOG.md": "ea7378eee8198de9d31d32c84473a8a28b17bdb778ea1537049fe8864f9a285d",
+    "docs/verification/066.md": "fd7f7a4d74e4b6fb036374f51ae8ec217072d35503e2ccc3bf35fc5b6c74b9b8"
+  },
+  "kind": "command",
+  "reason": "stale evidence: docs/verification/066.md (deviations added)",
+  "reqs": [
+    "REQ-TASK-009",
+    "REQ-TASK-004"
+  ],
+  "started_at": "2026-11-07T09:22:26.034Z",
+  "task": "066/4.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "grep -q \"REQ-TASK-009\" CHANGELOG.md && grep -q \"## Verified lines by task\" docs/verification/066.md && node dist/cli.js lint tells --baseline 0 docs/verification/066.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/066.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "b5c3369d79ddbad8c7ebd2c1705d193a5d0defb15d4c79f0ab993b48cb67ea61"
+  }
+}

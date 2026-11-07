@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-07T09:28:04.222Z",
+  "diff": [
+    "CHANGELOG.md",
+    "docs/verification/066.md"
+  ],
+  "files": {
+    "CHANGELOG.md": "ea7378eee8198de9d31d32c84473a8a28b17bdb778ea1537049fe8864f9a285d",
+    "README.md": "e0d05ffa76f22dd31c3bd2899e8103def690b40e016233a3718fa878eef3ac81",
+    "docs/verification/066.md": "dd4f0749bc8d4568882c490a01ed046b1b1ef170199a7b5ac07daabfc9f463c2"
+  },
+  "kind": "command",
+  "reason": "stale evidence: docs/verification/066.md (README.md in the copy list)",
+  "reqs": [
+    "REQ-TASK-009",
+    "REQ-TASK-004"
+  ],
+  "task": "066/4.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "grep -q \"REQ-TASK-009\" CHANGELOG.md && grep -q \"## Verified lines by task\" docs/verification/066.md && node dist/cli.js lint tells --baseline 0 docs/verification/066.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/066.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "e7cf8b483f60c0ea50725e4cb91f9061b4032294c3f555acfdf3726250fbefa4"
+  }
+}

@@ -1101,5 +1101,27 @@
     "verdict": "approved",
     "answer": "Architect archive review applied: archive cap folder test, status.ts date strip, partial glob test, out-of-scope note. Repair done, gate strict, parity, and ci:local pass.",
     "resolved_at": "2026-11-07T09:02:28.408Z"
+  },
+  {
+    "n": 113,
+    "asked_at": "2026-11-07T09:09:36.420Z",
+    "task": "066-stale-by-tag",
+    "text": "plan ready for 066-stale-by-tag. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "PM and architect reviews applied. Replay of 061 and 060: verified lines 70 to 64 and 47 to 46, cited bodies unchanged, far above the stop line. Repair carries only the new diff field, so pre-066 tag-only files never return. check and gate strict pass.",
+    "resolved_at": "2026-11-07T09:15:46.921Z"
+  },
+  {
+    "n": 114,
+    "asked_at": "2026-11-07T09:25:29.416Z",
+    "task": "066-stale-by-tag",
+    "text": "archive 066-stale-by-tag?",
+    "status": "resolved",
+    "stage": "archive",
+    "verdict": "approved",
+    "answer": "Architect archive review applied: git env built on childEnv with GIT_REPO_VARS, D6 wording, governance test owned by 3.2, README named in 4.1, deviations recorded. Repairs done, gate, parity, ci:local pass.",
+    "resolved_at": "2026-11-07T09:30:57.934Z"
   }
 ]

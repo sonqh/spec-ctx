@@ -39,7 +39,7 @@ function project(): Project {
   q.write("tests/a.test.ts", `// ${COVERS}REQ-TH-001\n`);
   q.write(
     "openspec/changes/009-add-x/tasks.md",
-    "# Tasks\n\n- [ ] 1.1 Do it. [REQ-TH-001] Verify: `true`\n- [ ] 1.2 Also. [REQ-TH-001] Verify: `true`\n- [ ] 1.3 Other. [REQ-TH-002] Verify: `true`\n",
+    "# Tasks\n\n- [ ] 1.1 Do it `src/a.ts` `tests/a.test.ts`. [REQ-TH-001] Verify: `true`\n- [ ] 1.2 Also `src/a.ts` `tests/a.test.ts`. [REQ-TH-001] Verify: `true`\n- [ ] 1.3 Other. [REQ-TH-002] Verify: `true`\n",
   );
   return q;
 }
