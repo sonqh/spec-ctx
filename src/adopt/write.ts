@@ -47,6 +47,11 @@ export function reportText(plan: Plan): string {
   const out = ["# Adopt report", "", "`specctx adopt` gave these headers an ID. Review the diff in the pull request, then delete this file.", ""];
   out.push("## Capability codes", "", "Rename a code in `spec-ctx.toml` before the IDs spread.", "", "| Code | Path | Source |", "| --- | --- | --- |");
   for (const c of plan.caps) out.push(`| ${c.code} | ${c.path} | ${c.derived ? "derived" : "existing"} |`);
+  // REQ-ADOPT-012 the families and their prefix (063/D5)
+  if (plan.families.length) {
+    out.push("", "Families of three or more paths with one first segment take a family code first. The prefix is the first three letters of that segment.", "");
+    for (const f of plan.families) out.push(`- \`${f.segment}\`: prefix \`${f.prefix}\`, ${f.count} codes`);
+  }
   out.push("", "## Headers", "", "| File | Line | Old header | New header |", "| --- | --- | --- | --- |");
   const cell = (s: string): string => "`" + s.replace(/\|/g, "\\|").replace(/`/g, "'") + "`";
   for (const e of plan.edits) out.push(`| ${e.file} | ${e.line} | ${cell(e.old)} | ${cell(e.new)} |`);
@@ -119,7 +124,7 @@ export async function applyAdopt(root: string, cfg: Config, plan: Plan, io: Io, 
   rmSync(join(root, ".ctx/index.json"), { force: true });
   const files = new Set(plan.edits.map((e) => e.file)).size;
   const report = plan.edits.length ? REPORT_FILE : null;
-  if (json) io.out(dumps({ adopted: plan.edits.length, caps: plan.caps, files, report, unmatched: plan.unmatched }) + "\n");
+  if (json) io.out(dumps({ adopted: plan.edits.length, caps: plan.caps, families: plan.families, files, report, unmatched: plan.unmatched }) + "\n");
   else {
     io.out(plan.unmatched.map((u) => `unmatched: ${u.file}:${u.line}  ${u.header}\n`).join(""));
     // REQ-CLI-007 only the codes in spec-ctx.toml changed: no header, no report

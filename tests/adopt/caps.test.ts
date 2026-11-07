@@ -1,8 +1,8 @@
-// Covers: REQ-ADOPT-004
+// Covers: REQ-ADOPT-004, REQ-ADOPT-012, SCN-ADOPT-012-1, SCN-ADOPT-012-2, SCN-ADOPT-012-3
 import { afterEach, describe, expect, test } from "vitest";
 import { parse } from "smol-toml";
 import { withCaps } from "../../src/adopt/config-write.ts";
-import { codeCandidates, deriveCode } from "../../src/adopt/plan.ts";
+import { codeCandidates, deriveCode, familyCode } from "../../src/adopt/plan.ts";
 import { INIT_TEXT, loadConfig } from "../../src/config.ts";
 import { NO_ID_FIXTURE, Project } from "../helpers.ts";
 
@@ -42,6 +42,50 @@ describe("CAP derivation", () => {
     expect(deriveCode("telemetry", new Set(["TEL"]))).toBe("TE");
     for (const c of codeCandidates("a-b-c-d-e-f-g-h")) expect(c).toMatch(/^[A-Z]{2,6}$/);
     expect(codeCandidates("a-b-c-d-e-f-g-h")[0]).toBe("ABCDEF");
+  });
+
+  test("SCN-ADOPT-012-1 a family of three takes family codes", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    for (const c of ["cli-config", "cli-completion", "cli-version"]) p.write(`openspec/specs/${c}/spec.md`, SPEC(c));
+    const c = await codes(p);
+    expect(c["cli-config"]).toBe("CLICON");
+    expect(c["cli-completion"]).toBe("CLICOM");
+    expect(c["cli-version"]).toBe("CLIVER");
+    expect(c["user-auth"]).toBe("UA");
+    const r = await p.run("adopt", "--dry-run");
+    expect(r.out).toContain("family: cli  prefix CLI  3 codes");
+    const j = JSON.parse((await p.run("adopt", "--dry-run", "--json")).out);
+    expect(j.families).toEqual([{ segment: "cli", prefix: "CLI", count: 3 }]);
+    const w = JSON.parse((await p.run("adopt", "--json")).out);
+    expect(w.families).toEqual([{ segment: "cli", prefix: "CLI", count: 3 }]);
+    expect(p.read("adopt-report.md")).toContain("- `cli`: prefix `CLI`, 3 codes");
+  });
+
+  test("SCN-ADOPT-012-2 two members are no family", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    p.write("openspec/specs/user-profile/spec.md", SPEC("user-profile"));
+    const c = await codes(p);
+    expect(c["user-auth"]).toBe("UA");
+    expect(c["user-profile"]).toBe("UP");
+  });
+
+  test("SCN-ADOPT-012-3 a collision in a family falls through", async () => {
+    p = new Project(NO_ID_FIXTURE);
+    for (const c of ["cli-config", "cli-configure", "cli-version"]) p.write(`openspec/specs/${c}/spec.md`, SPEC(c));
+    const c = await codes(p);
+    expect(c["cli-config"]).toBe("CLICON");
+    expect(c["cli-configure"]).toBe("CC");
+    expect(c["cli-version"]).toBe("CLIVER");
+  });
+
+  test("REQ-ADOPT-012 the family code and the candidate order", () => {
+    expect(familyCode("cli-config")).toBe("CLICON");
+    expect(familyCode("cli")).toBeNull();
+    expect(familyCode("2024-a")).toBeNull();
+    expect(familyCode("opsx-apply-skill")).toBe("OPSAPP");
+    expect(codeCandidates("cli-config", true).slice(0, 2)).toEqual(["CLICON", "CC"]);
+    expect(codeCandidates("cli-config").slice(0, 1)).toEqual(["CC"]);
+    expect(deriveCode("cli-config", new Set(["CLICON"]), true)).toBe("CC");
   });
 
   test("a code from [ids.paths] wins over derivation", async () => {
