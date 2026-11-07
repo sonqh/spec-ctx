@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-07T00:47:20.062Z",
+  "files": {
+    "src/cli/commands.ts": "392f5952a018a1be5fbca5cc80f43260702cc07a56e8562b7b4dcc147c4a19e2",
+    "src/cli/gate.ts": "29ca135ecb18258a89b41645d180b2a8d8f64ed95fe5560266316eff72ea5e38",
+    "src/config.ts": "72550253e8bf6f3a42cee4df366369b79b89d280e62b230af1c3461a163f9c6e",
+    "src/init/init.ts": "12ff3cac4776f6d570a9645eab50521aed84c23c6d6ff5012804817ecf8f5ff8",
+    "tests/cli/gate.test.ts": "21566ae84de018ed07cd2f78230947a84e6919ed295773e5d3915b8ad41438e0",
+    "tests/config.test.ts": "4f1f08d7fd45541d15da4c4c2b520c92b5d012bd2d4372b81a54b3fe45507b84",
+    "tests/init/brackets.test.ts": "ff9ad3b61c2a0030d292d9a0af2cf23481d0bc18a5a304c045564e39e5480a3c",
+    "tests/init/ignored.test.ts": "98b3275c170504dcf3cf21eeb6d6f36843ae297ba1f73a09280213ac01169686",
+    "tests/init/init.test.ts": "ccb3398cda0d312960485e47a65534fed227cca9c232b8da788ba2ca72a8f194",
+    "tests/init/npx-env.test.ts": "9510c932b2510776150583a754597b0fe08277a856fc657a096a6038553a9016"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-DIST-018",
+    "REQ-DIST-002"
+  ],
+  "task": "061/1.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/init && npx vitest run tests/init/ignored.test.ts tests/init/init.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 42 pass\n 0 fail\n 336 expect() calls\nRan 42 tests across 8 files. [421.00ms]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "48f458ed3dbb36b857dc131e63994f33186e0f5edbfa2f35552b996a918991fe"
+  }
+}

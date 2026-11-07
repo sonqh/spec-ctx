@@ -1,0 +1,42 @@
+{
+  "at": "2026-11-07T00:48:59.377Z",
+  "files": {
+    "src/adopt/write.ts": "e939541bea65f6d57e545dda7296b8a88274d381bceaa1d5640242944f837b64",
+    "src/check/hints.ts": "fe7d93c8ed0d5bbc8b1a348a16a5db1794da89e192b9235e05d81f76dd8b8799",
+    "src/cli/commands.ts": "392f5952a018a1be5fbca5cc80f43260702cc07a56e8562b7b4dcc147c4a19e2",
+    "src/cli/root.ts": "285ebe8a7be1b09e6ac276b9f47ba13b977f562a593fa1ef702d01151628439b",
+    "src/cli/status.ts": "309b482520e6e25b75cd9fb026bfffa708a3b2a5a5cba798d0f82f4ae9771985",
+    "src/cli/workflow.ts": "c4a0122d14c8b18a8f1db20ac572fb1db71c6f2b8f3d97e77e91aa37b8f1029d",
+    "src/config.ts": "72550253e8bf6f3a42cee4df366369b79b89d280e62b230af1c3461a163f9c6e",
+    "src/init/init.ts": "12ff3cac4776f6d570a9645eab50521aed84c23c6d6ff5012804817ecf8f5ff8",
+    "src/init/next.ts": "5f308b7fa150938f479581562033ffe4aa88818c141d06f828e597c4a832157b",
+    "src/loop/next.ts": "3c6d15f5b50b53d3744e0ccfd51bf26e0cf81819217547778c7c61930384642f",
+    "src/runcmd.ts": "5b1bae178f4005aafc1d831b56afe150d963802bd7bd57b6804d67cc05af9fe4",
+    "tests/cli/cli.test.ts": "4974a441cfe067ef2abc4550b6e24598cdb160f95566d7a3b608d6bc821f57e4",
+    "tests/cli/nextstep.test.ts": "bc83ac6f6d05d52bdeb5d027438cb2c08907d25327f79b2e87b07db7da994f23",
+    "tests/cli/root.test.ts": "b243ad4dd5da5eec9452b0c362812ebf2f3ec5db343be18ff7d8204a892fc960",
+    "tests/cli/run-config.test.ts": "39e1ab517bba8a1212cc16dba2c0c4aa2387b99b00428927cc12cabaf85fb8a6",
+    "tests/cli/run-prefix.test.ts": "0f1de06a504a3c0f1699bf23b2b76a75b3b799de3a1eab00f3e5e21a1ba02c21",
+    "tests/cli/run-repo.test.ts": "82ae9565975c126dc88f0c6833b4cd57e84073022068944b81f15d8dc882aef2",
+    "tests/cli/run-source.test.ts": "b6b19ba90534824df02b06c6b1ff83fa004a6acec227d2797300df6505f14245",
+    "tests/helpers.ts": "a7a7cb48bff0fa845b2a2cc2d827dc2d43c4fb975f28834015d94514f3e4bee9",
+    "tests/init/next.test.ts": "2868057a53d4519b4f2d0aaa91c5e1f864b2efc3a6b1741ce3f511cd261fba79",
+    "tests/init/run-key.test.ts": "2e2871b08b9c1b94e319cf3eae4ec10346c60d89840df7c0e0611a8b9a662ba3",
+    "tests/loop/next.test.ts": "b1f047f98f2ff805c6f6bd8b95e9dcf11c20283dd33c4dfb399cbaa89bffad44"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/init/next.ts",
+  "reqs": [
+    "REQ-DIST-017",
+    "REQ-CLI-010",
+    "REQ-CLI-007"
+  ],
+  "task": "061/2.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/init tests/cli tests/gov/try-readme.test.ts && npx vitest run tests/init/next.test.ts && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 144 pass\n 0 fail\n 874 expect() calls\nRan 144 tests across 24 files. [4.50s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "dd7a641d6e394160cdeea556ed9481b455a2dfe5dbba8592a87b3fbcf1fee60c"
+  }
+}

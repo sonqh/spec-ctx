@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-07T00:48:36.126Z",
+  "bundle_chars": 8094,
+  "files": {
+    "src/adopt/write.ts": "e939541bea65f6d57e545dda7296b8a88274d381bceaa1d5640242944f837b64",
+    "tests/adopt/baseline-hint.test.ts": "6fc2c972fb29b476e753c7e2b1fc9f56dbe793087d51f18dd896f739e6e97a92",
+    "tests/adopt/next.test.ts": "3b3b5459aeb058b5b8b88f5f5600abd1d431f76222fba499a51da52401fcf60c",
+    "tests/adopt/write.test.ts": "855aa63f959c21d7249989e690200aadfaeeffa9b65e653332fa1801177ae6a2"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-ADOPT-011",
+    "REQ-ADOPT-002"
+  ],
+  "started_at": "2026-11-07T00:47:04.908Z",
+  "task": "061/3.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "bun run build && bun test tests/adopt tests/cli tests/paths && npx vitest run tests/adopt/next.test.ts tests/adopt/baseline-hint.test.ts && bash tests/paths/existing.sh && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 132 pass\n 0 fail\n 716 expect() calls\nRan 132 tests across 22 files. [4.35s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "a488efa3ca4c50786ce8440417578b8d4a75927b6a4ccb184d04e137d11b7d52"
+  }
+}

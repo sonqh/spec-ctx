@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-07T00:51:30.103Z",
+  "bundle_chars": 7896,
+  "files": {
+    "src/adopt/write.ts": "e939541bea65f6d57e545dda7296b8a88274d381bceaa1d5640242944f837b64",
+    "src/cli/commands.ts": "392f5952a018a1be5fbca5cc80f43260702cc07a56e8562b7b4dcc147c4a19e2",
+    "src/init/next.ts": "5f308b7fa150938f479581562033ffe4aa88818c141d06f828e597c4a832157b",
+    "tests/adopt/next.test.ts": "3b3b5459aeb058b5b8b88f5f5600abd1d431f76222fba499a51da52401fcf60c",
+    "tests/init/next.test.ts": "2868057a53d4519b4f2d0aaa91c5e1f864b2efc3a6b1741ce3f511cd261fba79"
+  },
+  "kind": "command",
+  "reason": "stale evidence: src/init/next.ts",
+  "reqs": [
+    "REQ-DIST-017",
+    "REQ-ADOPT-011"
+  ],
+  "started_at": "2026-11-07T00:49:56.616Z",
+  "task": "061/5.1",
+  "tool_version": "0.5.0",
+  "verify": {
+    "command": "grep -q \"REQ-DIST-017\" CHANGELOG.md && grep -q \"context-has-code-or-test\" docs/verification/061.md && git diff --quiet -- bench/recall && node dist/cli.js lint tells --baseline 0 docs/verification/061.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation docs/verification/061.md",
+    "exit": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "779e4173db5c8b3ca1df10044965da281c92cdcfcd801cd1bbe38cef3dc5cc95"
+  }
+}

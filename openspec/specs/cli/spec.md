@@ -91,7 +91,7 @@ Refs: REQ-CLI-001
 - **THEN** the printed command list contains `help` and `lint`
 
 ### Requirement: REQ-CLI-007 Next steps and project detection
-Every command except `init`, `--help`, and `--version` SHALL exit 2 with `not an OpenSpec project (no openspec/ under <root>)` and write nothing when `openspec/` is missing. `status` SHALL end with `next: <command>` from `specctx next`. `task next`, `init`, and `adopt --dry-run` SHALL end with a `next:` line from a fixed table. `init` with every file present and equal SHALL print `nothing to do` and exit 0. `adopt` with no header to change SHALL write no `adopt-report.md`.
+Every command except `init`, `--help`, and `--version` SHALL exit 2 with `not an OpenSpec project (no openspec/ under <root>)` and write nothing when `openspec/` is missing. `status` SHALL end with `next: <command>` from `next`. `task next` and `adopt --dry-run` SHALL end with a `next:` line from a fixed table. `init` follows REQ-DIST-017. `init` with every file equal SHALL print `nothing to do` and exit 0. `adopt` with no header to change SHALL write no `adopt-report.md`.
 
 Refs: REQ-LOOP-001
 

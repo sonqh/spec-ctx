@@ -44,9 +44,16 @@ specctx gate --strict
 ### Existing OpenSpec project
 
 ```bash
-npx spec-ctx init --all
-specctx adopt --dry-run                 # the ID that each header gets. Writes nothing.
+npx spec-ctx init --all                 # prints `next: specctx adopt` when headers need an ID
 specctx adopt                           # writes the IDs into main specs and active deltas
+specctx context <task>                  # the specs, code, and tests that the task needs
+```
+
+`adopt --dry-run` shows the ID that each header gets and writes nothing. `adopt` ends with the `context` command for the next open task.
+
+Then, to gate the old debt, record it and run the gate. Commit the baseline with a subject that starts with `baseline:`.
+
+```bash
 specctx baseline write
 specctx gate --strict
 ```
