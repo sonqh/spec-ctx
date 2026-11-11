@@ -32,7 +32,7 @@ interface Evidence {
  */
 export class Trust {
   private readonly tasks = new Map<string, Entry>();
-  private readonly citing = new Map<string, string[]>();
+  private readonly citedBy = new Map<string, string[]>();
   private readonly states = new Map<string, TaskState>();
   private readonly evidence = new Map<string, Evidence | null>();
   private readonly hashes = new Map<string, string | null>();
@@ -49,11 +49,21 @@ export class Trust {
     }
     for (const t of this.tasks.values()) {
       for (const r of t.refs) {
-        const l = this.citing.get(r) ?? [];
+        const l = this.citedBy.get(r) ?? [];
         l.push(t.id);
-        this.citing.set(r, l);
+        this.citedBy.set(r, l);
       }
     }
+  }
+
+  /** REQ-QRY-028 the tasks that cite a requirement, from the deduped map (068/D2) */
+  citing(req: string): Entry[] {
+    return (this.citedBy.get(req) ?? []).map((id) => this.tasks.get(id)!);
+  }
+
+  /** REQ-QRY-028 the task that an ID names, an active copy before an archived one */
+  task(id: string): Entry | undefined {
+    return this.tasks.get(id);
   }
 
   private readEvidence(task: string): Evidence | null {
@@ -96,7 +106,7 @@ export class Trust {
 
   /** REQ-QRY-025 verified when one citing task is fresh, with an early stop (062/D3) */
   reqState(id: string): "verified" | "unverified" {
-    for (const t of this.citing.get(id) ?? []) if (this.taskState(t) === "fresh") return "verified";
+    for (const t of this.citedBy.get(id) ?? []) if (this.taskState(t) === "fresh") return "verified";
     return "unverified";
   }
 
@@ -105,7 +115,7 @@ export class Trust {
    * evidence with the current hash (062/D1a). An archived task counts too, so a changed line never reads verified.
    */
   lineVerified(file: string, req: string): boolean {
-    for (const t of this.citing.get(req) ?? []) {
+    for (const t of this.citedBy.get(req) ?? []) {
       const task = this.tasks.get(t);
       if (!task || task.status !== "done") continue;
       const ev = this.readEvidence(t);

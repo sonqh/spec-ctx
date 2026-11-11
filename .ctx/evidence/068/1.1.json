@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-07T10:19:45.014Z",
+  "bundle_chars": 7961,
+  "diff": [],
+  "files": {
+    "src/graph/impact.ts": "fc97fa0de4017d3f45284b064254f95ae6150bf201c63fd3e47f4d8ffdb0671d",
+    "src/graph/trust.ts": "2aeaec431a73245d1dc510934610a7546c5db036608e400f6c704e9cbefecf53",
+    "src/tasks/files.ts": "af2fa4dfa9bc7f69f6393bc59c571231100dfb76602f3bac4d06dd2f002bcc2f",
+    "tests/query/impact.test.ts": "57e51828793fa980061e659811df717142390a09bc76f62050c6a6bfe1765f53"
+  },
+  "kind": "command",
+  "reqs": [
+    "REQ-QRY-028",
+    "REQ-QRY-029",
+    "REQ-QRY-030"
+  ],
+  "started_at": "2026-11-07T10:19:38.953Z",
+  "task": "068/1.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/tasks && bun run typecheck",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\n\n 217 pass\n 0 fail\n 1095 expect() calls\nRan 217 tests across 29 files. [4.45s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "b574e3f7fa125026a09e7dbb99f53275a721043250c3aecd152874b0eeb4e1e0"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-07T10:04:14.030Z",
+  "bundle_chars": 8051,
+  "diff": [
+    "src/cli/args.ts",
+    "src/cli/commands.ts",
+    "src/cli/help.ts",
+    "tests/cli/root.test.ts",
+    "tests/fixtures/help-golden/help.out",
+    "tests/fixtures/help-golden/pages.out",
+    "tests/query/impact-cli.test.ts"
+  ],
+  "files": {
+    "src/cli/args.ts": "1362f5a2b755486fb8c234f0c9a12babd96f8d484694d1c84e41cbca93432c99",
+    "src/cli/commands.ts": "c3fa7d00394a463972a3fc52f4abb6472550a3443092985bec651c63a46c9bed",
+    "src/cli/help.ts": "010b40d24c4c908c89a6c170dcd003ed6c9a48461e82d698c0b579eeed83cd00",
+    "tests/cli/root.test.ts": "97df9562c6d50c75d93cfeca615ee5503387d6bfd02d33bb8c6731679cd51735",
+    "tests/fixtures/help-golden/help.out": "6eb894bc371cbdfc895a75a0be2ed769748b994c09193d0440b39cb767b11c57",
+    "tests/fixtures/help-golden/pages.out": "8c696b82828b0812fb14980d3930cb00dac4c833e7a45bbd184e165a12f4a8cd",
+    "tests/parity/run.sh": "a8844107cc8c3527ce000f5fe1efd3961f36c28829140dec489f45168359e735",
+    "tests/query/impact-cli.test.ts": "5c0ac9efb81cbc1e6013483fde7bc8a9fcd85f452d48e6cc659663cd2783669e"
+  },
+  "kind": "command",
+  "reason": "task text named fixture files, which the gov copy test excludes",
+  "reqs": [
+    "REQ-QRY-028",
+    "REQ-QRY-029",
+    "REQ-QRY-030",
+    "REQ-CLI-006"
+  ],
+  "started_at": "2026-11-07T10:03:25.264Z",
+  "task": "068/2.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "bun run build && bun test tests/query tests/cli && bun run typecheck && bash tests/parity/run.sh",
+    "exit": 0,
+    "stderr_tail": "$ bun run prepare\n$ node scripts/gen-assets.mjs && tsc -p tsconfig.build.json && node scripts/chmod-bin.mjs\nindex rebuilt\n\n 240 pass\n 0 fail\n 1340 expect() calls\nRan 240 tests across 35 files. [4.97s]\n$ tsc -p tsconfig.json",
+    "stdout_sha256": "f0fd2f56fea5316dcacd8f8f49393ae638f8c19678b6e5c4898501e58aa9279f"
+  }
+}

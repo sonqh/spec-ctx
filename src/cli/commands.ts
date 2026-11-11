@@ -180,6 +180,10 @@ export async function run(p: Parsed, io: Io): Promise<number> {
     need(1, "one ID, path, or change");
     if (p.positional.length > 1) throw new UsageExit("related takes one ID, path, or change");
   }
+  if (cmd === "impact") {
+    need(1, "one file");
+    if (p.positional.length > 1) throw new UsageExit("impact takes one file");
+  }
   if (cmd === "bundle") need(1, "at least one ID, path, or change");
   if (cmd === "context") {
     need(1, "one task, ID, path, or change");
@@ -264,6 +268,21 @@ export async function run(p: Parsed, io: Io): Promise<number> {
       if (json) print(rows.map(([e, reason]) => ({ ...e, reason })));
       else if (isPath && rows.length === 0) io.out(`no links: ${id}\n`);
       else io.out(rows.map(([e, r]) => `${e.kind}  ${e.id}  ${e.status}  ${e.file}:${e.line}  ${r}\n`).join(""));
+      return 0;
+    }
+    case "impact": {
+      // REQ-QRY-028 REQ-QRY-029 REQ-QRY-030 the requirements, tasks, and verify plan of one file
+      const { resolveFileInput } = await import("../graph/path.ts");
+      const { impactOf, impactLines } = await import("../graph/impact.ts");
+      const r = resolveFileInput(root, io.cwd, p.positional[0]!);
+      if ("error" in r) {
+        io.err(`${r.error}\n`);
+        return 2;
+      }
+      const i = impactOf(root, entries, r.rel, { archived: !!f.archived, all: !!f.all });
+      if (json) print(i);
+      else if (!i.requirements.length && !i.tasks.length && !i.archived.tasks) io.out(`no links: ${r.rel}\n`);
+      else io.out(impactLines(i).map((l) => l + "\n").join(""));
       return 0;
     }
     case "context":

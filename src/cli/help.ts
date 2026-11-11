@@ -74,6 +74,14 @@ export const TABLE: CommandHelp[] = [
     exit: [OK, ["2", "A usage error, an unknown ID, or a path that is not a file in the repository."], INTERNAL], example: "specctx related src/graph/bundle.ts",
   },
   {
+    name: "impact", group: "Read", args: "<path>", summary: "Print the requirements a file touches, the tasks that cite them, and the commands that check them.",
+    flags: [
+      ["--archived", "List the archived tasks. The default counts them."],
+      ["--all", "Show every command of the plan. The default shows 10."],
+    ],
+    exit: [OK, ["2", "A usage error, or a path that is not a file in the repository. It takes one file."], INTERNAL], example: "specctx impact src/graph/bundle.ts",
+  },
+  {
     name: "bundle", group: "Read", args: "<ID|path|change...>", summary: "Print the spec text for the IDs, files, or changes and their links.",
     flags: [
       ["--budget <n>", "Keep the blocks to n characters. Each entry prints its card first. A card ends with its trust labels: the provenance and the evidence state. A card can end with | body omitted. Run bundle with its ID to get the body. A requested block always prints, also when it is longer. Then the over budget line gives the size. The truncated line names the entries that have no card. It is not in this limit. The default is 8000."],
