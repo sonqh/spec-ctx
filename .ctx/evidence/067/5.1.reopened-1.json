@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-07T09:45:07.934Z",
+  "bundle_chars": 7535,
+  "diff": [
+    "docs/verification/067.md"
+  ],
+  "files": {
+    "CHANGELOG.md": "fa00be75c1dd16fc02b2d5ef0c4891e363490bb324c718ec0bed8ec84218815c",
+    "docs/reference.md": "c741e30a7aea5a39dda0d1aa596660b28822802f31c456b5ffc60b28ed35d04d",
+    "docs/verification/067.md": "df9591ddc32ae4d2cbb0ef65aff1e8af09a4e86c09e0d77f31fdc425df9dc327"
+  },
+  "kind": "command",
+  "reason": "stale evidence: archive review fixes",
+  "reqs": [
+    "REQ-CHK-011",
+    "REQ-STAT-009"
+  ],
+  "started_at": "2026-11-07T09:44:56.877Z",
+  "task": "067/5.1",
+  "tool_version": "0.6.0",
+  "verify": {
+    "command": "node dist/cli.js lint tells --baseline 0 CHANGELOG.md docs/reference.md docs/verification/067.md && node dist/cli.js lint ste --baseline 0 --disable synonym-rotation CHANGELOG.md docs/reference.md docs/verification/067.md && bun test tests/gov",
+    "exit": 0,
+    "stderr_tail": "\n 37 pass\n 0 fail\n 267 expect() calls\nRan 37 tests across 11 files. [3.23s]",
+    "stdout_sha256": "43d9872778f51f5b22883c9ce16c46c89b329e6ee39b87fbf67da9a23f9eae75"
+  }
+}

@@ -1,5 +1,8 @@
 # beta
 
+## Purpose
+Beta adds one thing to the fixture.
+
 ## ADDED Requirements
 
 ### Requirement: REQ-BBB-001 Beta thing

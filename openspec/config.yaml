@@ -35,8 +35,8 @@ operations:
   archive:
     guidance:
       - 'Run `node dist/cli.js check --strict` and `openspec validate --all --strict`. Both must pass before archive.'
-      - 'Run `node dist/cli.js stats --write`.'
-      - 'Update the total row under `## Measured` in README.md from the newest file under `docs/metrics/`.'
+      - 'Run `node dist/cli.js stats --write`. It keeps the old rows of the file of the day and adds rows for new changes. It also sets the total row under `## Measured` in README.md from the newest file under `docs/metrics/`.'
+      - 'Write a `## Purpose` section of one sentence at the top of each delta spec of a new capability, from the proposal. `openspec archive` copies it into the main spec. `node dist/cli.js check --strict` fails without it.'
       - 'Update the `Archived:` line in README.md.'
       - 'Add the change to `## Unreleased` in CHANGELOG.md.'
       - 'Write `docs/verification/<NNN>.md` like the verification record of the last change.'
